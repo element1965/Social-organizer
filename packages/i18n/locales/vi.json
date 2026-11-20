@@ -680,11 +680,12 @@
       "language": "Ngôn ngữ",
       "themeDark": "Chuyển sang giao diện tối",
       "themeLight": "Chuyển sang giao diện sáng",
-      "footerNote": "Mã nguồn mở · Dự án phi lợi nhuận",
+      "footerNote": "Mã nguồn mở · Miễn phí, không thu phí",
       "privacy": "Quyền riêng tư",
       "terms": "Điều khoản",
       "deleteAccount": "Xóa tài khoản",
-      "groups": "Dành cho nhóm"
+      "groups": "Dành cho nhóm",
+      "press": "Báo chí"
     },
     "start": {
       "play": "Google Play",
@@ -843,7 +844,9 @@
         "q3": "Đây có phải một đợt quyên góp không?",
         "a3": "Không. Nhu cầu chỉ tới những người có liên hệ với người đăng qua người quen, và lần sau người cần nhờ có thể là bạn.",
         "q4": "Đây có phải mô hình kim tự tháp không?",
-        "a4": "Không. Không ai phải trả tiền để vào, và không ai kiếm tiền từ lời mời."
+        "a4": "Không. Không ai phải trả tiền để vào, và không ai kiếm tiền từ lời mời.",
+        "q6": "Các bạn lưu những dữ liệu nào?",
+        "a6": "Chúng tôi lưu thông tin tài khoản và hồ sơ, như tên, email, mã định danh của dịch vụ đăng nhập và thông tin bạn thêm như ảnh, số điện thoại hoặc vị trí. Chúng tôi lưu các cài đặt như ngôn ngữ và giao diện, lịch sử lời mời và kết nối, nhu cầu đã thông báo, việc tham gia và số tiền đã nêu. Chúng tôi cũng lưu mã đăng nhập, dữ liệu gửi thông báo và lịch sử thông báo, cùng các báo cáo vi phạm hoặc tin nhắn bạn gửi cho bộ phận hỗ trợ. Ứng dụng không đụng tới tiền và không hỏi thông tin thẻ hay tài khoản ngân hàng."
       },
       "start": {
         "label": "Ứng dụng",
@@ -863,7 +866,7 @@
         "tg": "Telegram"
       },
       "footer": {
-        "about": "Social Organizer · dự án phi lợi nhuận, mã nguồn mở",
+        "about": "Social Organizer · dự án miễn phí, mã nguồn mở",
         "credits": "Hình minh họa do AI tạo · Biểu tượng: {{icons}}",
         "links": "Liên kết"
       }
@@ -1101,6 +1104,62 @@
     "cta": {
       "title": "Bắt đầu cùng nhóm của bạn",
       "note": "Cần giúp giải thích bằng lời của nhóm bạn? Hãy nhắn cho đội ngũ."
+    }
+  },
+  "team": {
+    "title": "Ai làm ra dự án này",
+    "lubalin": {
+      "name": "Andrei Lubalin",
+      "role": "Tác giả của lý thuyết và của dự án"
+    },
+    "tvardovskyi": {
+      "name": "Sviatoslav Tvardovskyi",
+      "role": "Đóng góp lớn cho dự án"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "Báo chí — Social Organizer",
+      "description": "Social Organizer là gì, ai làm ra nó, các thông tin chính, logo và ảnh chụp màn hình để tải về, và cách liên hệ với nhóm."
+    },
+    "hero": {
+      "title": "Dành cho báo chí",
+      "lead": "Trong Social Organizer, mọi người xây dựng một mạng lưới gồm những người họ quen ngoài đời: bạn thêm một người bạn quen, và cả hai xác nhận là quen nhau. Khi ai đó trong mạng gặp khó khăn, người đó thông báo một nhu cầu. Nếu còn thiếu {{need}}, thông tin sẽ đến với tối đa {{reach}} người, bắt đầu từ những kết nối gần nhất trong mạng. Bạn thấy mình kết nối với người thông báo qua ai, và tự quyết định có tham gia hay không. Ai muốn thì nêu một số tiền, từ {{min}}: đó là dự định, không phải khoản thanh toán. Mọi người thống nhất trong nhóm chat riêng và tự đưa tiền cho nhau; ứng dụng không bao giờ đụng tới tiền."
+    },
+    "facts": {
+      "title": "Thông tin",
+      "price": "Giá",
+      "priceValue": "Miễn phí, không thu phí",
+      "money": "Tiền",
+      "moneyValue": "Ứng dụng không bao giờ đụng tới tiền. Mọi người tự đưa tiền cho nhau.",
+      "code": "Mã nguồn",
+      "codeValue": "Mã nguồn mở theo giấy phép AGPL-3.0-or-later, trên <code>GitHub</code>",
+      "platforms": "Nền tảng",
+      "platformsValue": "<web>Web</web>, <play>Android</play>, <ios>iOS</ios> và <tg>Telegram</tg>",
+      "languages": "Ngôn ngữ",
+      "network": "Mạng lưới",
+      "theory": "Lý thuyết",
+      "theoryValue": "Báo cáo của Andrei Lubalin <report>From Human Behaviour to Social Coordination</report>"
+    },
+    "brand": {
+      "title": "Logo",
+      "note": "Giấy phép của mã nguồn, AGPL, không áp dụng cho tên “Social Organizer” và logo. Nếu muốn dùng chúng vào việc khác ngoài viết về dự án, hãy hỏi nhóm trước.",
+      "icon": "Biểu tượng ứng dụng",
+      "small": "Biểu tượng ứng dụng cỡ nhỏ",
+      "wide": "Logo kèm tên"
+    },
+    "shots": {
+      "title": "Ảnh chụp màn hình",
+      "lead": "Màn hình ứng dụng bằng tiếng Anh. Người và số tiền trong đó chỉ là ví dụ.",
+      "circle": "Vòng tròn của bạn: mạng lưới những người bạn quen",
+      "need": "Một nhu cầu, qua góc nhìn của người tham gia",
+      "ask": "Thông báo nhu cầu",
+      "banner": "Banner cho cửa hàng ứng dụng"
+    },
+    "download": "Tải về",
+    "contact": {
+      "title": "Liên hệ",
+      "lead": "Hãy nhắn cho nhóm trên Telegram hoặc mở issue trên GitHub."
     }
   },
   "legal": {

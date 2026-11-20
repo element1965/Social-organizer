@@ -688,11 +688,12 @@
       "language": "Idioma",
       "themeDark": "Mudar para o tema escuro",
       "themeLight": "Mudar para o tema claro",
-      "footerNote": "Código aberto · Projeto sem fins lucrativos",
+      "footerNote": "Código aberto · Grátis, sem taxas",
       "privacy": "Privacidade",
       "terms": "Termos",
       "deleteAccount": "Excluir conta",
-      "groups": "Para grupos"
+      "groups": "Para grupos",
+      "press": "Imprensa"
     },
     "start": {
       "play": "Google Play",
@@ -859,7 +860,9 @@
         "q3": "Isso é uma campanha de doações?",
         "a3": "Não. Uma necessidade chega só a pessoas ligadas ao autor por conhecidos, e na próxima vez quem pede pode ser você.",
         "q4": "Isso é uma pirâmide?",
-        "a4": "Não. Ninguém paga para entrar e ninguém ganha com convites."
+        "a4": "Não. Ninguém paga para entrar e ninguém ganha com convites.",
+        "q6": "Que dados vocês guardam?",
+        "a6": "Guardamos dados da conta e do perfil, como nome, e-mail, identificadores do serviço de login e informações que você adiciona, como foto, telefone ou localização. Guardamos também configurações como idioma e tema, histórico de convites e conexões, necessidades informadas, participação e valores indicados. Também guardamos códigos de acesso, dados para envio de notificações e seu histórico, além das denúncias e mensagens que você envia ao suporte. O aplicativo não movimenta dinheiro nem pede dados de cartão ou conta bancária."
       },
       "start": {
         "label": "O aplicativo",
@@ -879,7 +882,7 @@
         "tg": "Telegram"
       },
       "footer": {
-        "about": "Social Organizer · projeto sem fins lucrativos e de código aberto",
+        "about": "Social Organizer · projeto gratuito e de código aberto",
         "credits": "Ilustrações geradas por IA · Ícones: {{icons}}",
         "links": "Links"
       }
@@ -1117,6 +1120,62 @@
     "cta": {
       "title": "Comece com o seu grupo",
       "note": "Quer ajuda para explicar com as palavras do seu grupo? Escreva para a equipe."
+    }
+  },
+  "team": {
+    "title": "Quem faz isso",
+    "lubalin": {
+      "name": "Andrei Lubalin",
+      "role": "Autor da teoria e do projeto"
+    },
+    "tvardovskyi": {
+      "name": "Sviatoslav Tvardovskyi",
+      "role": "Contribuiu muito para o projeto"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "Imprensa — Social Organizer",
+      "description": "O que é o Social Organizer, quem faz, os principais fatos, o logotipo e capturas de tela para baixar, e como falar com a equipe."
+    },
+    "hero": {
+      "title": "Para a imprensa",
+      "lead": "No Social Organizer, as pessoas formam uma rede de quem conhecem pessoalmente: você adiciona alguém que conhece, e vocês confirmam que se conhecem. Quando alguém da rede passa por um aperto, essa pessoa informa uma necessidade. Se faltam {{need}}, até {{reach}} pessoas ficam sabendo, começando pelas conexões mais próximas na rede. Você vê por meio de quem chega a quem informou a necessidade e decide se participa. Quem quiser indica um valor a partir de {{min}}: é uma intenção, não um pagamento. As pessoas combinam tudo no próprio chat e entregam o dinheiro diretamente; o aplicativo nunca mexe nele."
+    },
+    "facts": {
+      "title": "Fatos",
+      "price": "Preço",
+      "priceValue": "Grátis, sem taxas",
+      "money": "Dinheiro",
+      "moneyValue": "O aplicativo nunca mexe em dinheiro. As pessoas o entregam diretamente umas às outras.",
+      "code": "Código",
+      "codeValue": "Aberto, sob a licença AGPL-3.0-or-later, no <code>GitHub</code>",
+      "platforms": "Plataformas",
+      "platformsValue": "<web>Web</web>, <play>Android</play>, <ios>iOS</ios> e <tg>Telegram</tg>",
+      "languages": "Idiomas",
+      "network": "Rede",
+      "theory": "Teoria",
+      "theoryValue": "Relatório de Andrei Lubalin <report>From Human Behaviour to Social Coordination</report>"
+    },
+    "brand": {
+      "title": "Logotipo",
+      "note": "A licença do código, a AGPL, não cobre o nome “Social Organizer” nem o logotipo. Para usá-los em outra coisa que não seja escrever sobre o projeto, fale antes com a equipe.",
+      "icon": "Ícone do aplicativo",
+      "small": "Ícone pequeno do aplicativo",
+      "wide": "Logotipo com o nome"
+    },
+    "shots": {
+      "title": "Capturas de tela",
+      "lead": "Telas do aplicativo em inglês. As pessoas e os valores são um exemplo.",
+      "circle": "Seu círculo: a rede de pessoas que você conhece",
+      "need": "Uma necessidade, vista por quem participa",
+      "ask": "Informar uma necessidade",
+      "banner": "Banner para a loja"
+    },
+    "download": "Baixar",
+    "contact": {
+      "title": "Contato",
+      "lead": "Escreva para a equipe pelo Telegram ou abra uma issue no GitHub."
     }
   },
   "legal": {

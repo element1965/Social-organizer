@@ -30,7 +30,7 @@ the network comes first, signals travel inside it, coordination is a consequence
    while the Need is open.
 4. Participants talk and agree directly, in a chat in any messenger.
 5. Social Organizer does not accept, transfer or hold money, takes no fee, does not judge, and
-   guarantees nothing. Open source, non-profit.
+   guarantees nothing. Free and open source.
 6. What happened stays visible as activity history: facts, not ratings.
 
 ### Canonical lines

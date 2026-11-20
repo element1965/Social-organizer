@@ -7,7 +7,8 @@ import { QRCodeSVG } from 'qrcode.react';
 import { RTL_LANGUAGES } from '@so/i18n/languages';
 import { GITHUB_URL, LanguageSelect, useLoginHref } from '../components/site/SiteHeader';
 import { usePendingInvite } from '../components/site/DeviceEntry';
-import { useDocumentTitle, useSitePhone } from '../components/site/hooks';
+import { useDocumentTitle, useLivePeopleCount, useSitePhone } from '../components/site/hooks';
+import { REPORT_URL, TEAM_URL } from '../components/site/team';
 import { SITE_ORIGIN, storeLinks, useDevice } from '../lib/device';
 import { IconGlobe } from '../components/site/icons';
 import { initGlide } from '../components/landing/glide';
@@ -28,9 +29,7 @@ import '../components/landing/landing.css';
  */
 
 const STUDY_URL = 'https://research.facebook.com/blog/2016/02/three-and-a-half-degrees-of-separation/';
-const REPORT_URL = 'https://zenodo.org/records/21629935';
 const BOT_URL = TELEGRAM_BOT_URL;
-const TEAM_URL = `${BOT_URL}?start=team`;
 const ICON_CREDITS = 'Gil Barbara logos (CC0)';
 /** People with connections in the network on the date in `join.now`. */
 const NETWORK_NOW = 287;
@@ -69,7 +68,8 @@ const BEATS: readonly { key: number; phases: number; tall?: boolean }[] = [
 ];
 /** The last beat: the network as the app shows it; it carries the call to action. */
 const LAST_BEAT = 9;
-const FAQ = [1, 2, 3, 4] as const;
+/** Question 6 says what data is kept (the people behind the project are named on /press, not on the landing). */
+const FAQ = [1, 2, 3, 4, 6] as const;
 
 const ext = { target: '_blank', rel: 'noopener noreferrer' } as const;
 const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -105,22 +105,12 @@ export function LandingPage() {
   const links = storeLinks(invite, firstTouchCampaign());
   const { search } = useLocation();
   const viewed = useRef<string | undefined>(undefined);
-  const [liveCount, setLiveCount] = useState<number>();
+  const liveCount = useLivePeopleCount();
   useEffect(() => {
     if (viewed.current === search) return;
     viewed.current = search;
     recordLandingEvent('view', search);
   }, [search]);
-  useEffect(() => {
-    const controller = new AbortController();
-    void fetch('/api/landing/people', { credentials: 'omit', signal: controller.signal })
-      .then((response) => response.ok ? response.json() : undefined)
-      .then((count: unknown) => {
-        if (typeof count === 'number' && Number.isSafeInteger(count) && count >= 0) setLiveCount(count);
-      })
-      .catch(() => undefined);
-    return () => controller.abort();
-  }, []);
   const qrValue = `${SITE_ORIGIN}/get${invite ? `?invite=${encodeURIComponent(invite)}` : ''}`;
   useDocumentTitle(t('landing.v2.meta.title'), t('landing.v2.meta.description'));
 
@@ -642,12 +632,13 @@ export function LandingPage() {
         <section className="sec faq screen" id="faq" aria-labelledby="lv-faq-title">
           <div className="wrap grid">
             <h2 id="lv-faq-title">{t('landing.v2.faq.title')}</h2>
-            <div>
+            <div className="qs">
               {FAQ.map((n) => (
                 <details key={n} ref={n === 1 ? firstFaqRef : undefined}>
                   <summary onClick={toggleFaq}>{t(`landing.v2.faq.q${n}`)}</summary>
                   <div className="a">
-                    <p>{t(`landing.v2.faq.a${n}`)}</p>
+                    <p>{t(`landing.v2.faq.a${n}`, { bot: '@' + TELEGRAM_BOT_USERNAME })}</p>
+                    {n === 6 && <p>{t('legal.policy.campaigns')}</p>}
                   </div>
                 </details>
               ))}
@@ -709,6 +700,7 @@ export function LandingPage() {
           <nav className="fr" aria-label={t('landing.v2.footer.links')}>
             <Link to="/how">{t('landing.site.how')}</Link>
             <Link to="/groups">{t('landing.site.groups')}</Link>
+            <Link to="/press">{t('landing.site.press')}</Link>
             <Link to="/privacy">{t('landing.site.privacy')}</Link>
             <Link to="/terms">{t('landing.site.terms')}</Link>
             <Link to="/delete-account">{t('landing.site.deleteAccount')}</Link>

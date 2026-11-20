@@ -692,11 +692,12 @@
       "language": "Jazyk",
       "themeDark": "Přepnout na tmavé téma",
       "themeLight": "Přepnout na světlé téma",
-      "footerNote": "Otevřený kód · Neziskový projekt",
+      "footerNote": "Otevřený kód · Zdarma, bez poplatků",
       "privacy": "Soukromí",
       "terms": "Podmínky",
       "deleteAccount": "Smazat účet",
-      "groups": "Pro skupiny"
+      "groups": "Pro skupiny",
+      "press": "Pro média"
     },
     "start": {
       "play": "Google Play",
@@ -867,7 +868,9 @@
         "q3": "Je to sbírka darů?",
         "a3": "Ne. Potřebu vidí jen lidé, kteří jsou s autorem spojeni přes známé, a příště můžete o pomoc žádat vy.",
         "q4": "Je to pyramidová hra?",
-        "a4": "Ne. Nikdo neplatí za vstup a nikdo nevydělává na pozvánkách."
+        "a4": "Ne. Nikdo neplatí za vstup a nikdo nevydělává na pozvánkách.",
+        "q6": "Jaká data uchováváte?",
+        "a6": "Uchováváme údaje o účtu a profilu, například jméno, e-mail, identifikátory přihlašovací služby a údaje, které přidáte, třeba fotku, telefon či polohu. Dále uchováváme nastavení, jako je jazyk a motiv, historii pozvánek a spojení, nahlášené potřeby, účast i uvedené částky. Ukládáme také přihlašovací kódy, údaje pro oznámení a jejich historii i stížnosti a zprávy, které pošlete podpoře. Aplikace s penězi nenakládá a nežádá údaje o kartě ani bankovním účtu."
       },
       "start": {
         "label": "Aplikace",
@@ -887,7 +890,7 @@
         "tg": "Telegram"
       },
       "footer": {
-        "about": "Social Organizer · neziskový projekt s otevřeným kódem",
+        "about": "Social Organizer · bezplatný projekt s otevřeným kódem",
         "credits": "Ilustrace vytvořila umělá inteligence · Ikony: {{icons}}",
         "links": "Odkazy"
       }
@@ -1125,6 +1128,62 @@
     "cta": {
       "title": "Začněte se svou skupinou",
       "note": "Chcete pomoct vysvětlit to slovy vaší skupiny? Napište týmu."
+    }
+  },
+  "team": {
+    "title": "Kdo za tím stojí",
+    "lubalin": {
+      "name": "Andrei Lubalin",
+      "role": "Autor teorie a projektu"
+    },
+    "tvardovskyi": {
+      "name": "Sviatoslav Tvardovskyi",
+      "role": "Výrazně přispěl k projektu"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "Pro média — Social Organizer",
+      "description": "Co je Social Organizer, kdo za ním stojí, hlavní fakta, logo a snímky obrazovky ke stažení a jak kontaktovat tým."
+    },
+    "hero": {
+      "title": "Pro média",
+      "lead": "V Social Organizer lidé tvoří síť z těch, které znají osobně: přidáte někoho, koho znáte, a oba potvrdíte, že se znáte. Když se někdo v síti dostane do potíží, oznámí potřebu. Pokud chybí {{need}}, dozví se o potřebě až {{reach}} lidí, od nejbližších v síti. Vidíte, přes koho vede vaše spojení k tomu, kdo potřebu oznámil, a sami se rozhodnete, zda se zapojíte. Kdo chce, uvede částku od {{min}}: je to záměr, ne platba. Lidé se domluví ve vlastním chatu a peníze si předají sami; aplikace na ně nesahá."
+    },
+    "facts": {
+      "title": "Fakta",
+      "price": "Cena",
+      "priceValue": "Zdarma, bez poplatků",
+      "money": "Peníze",
+      "moneyValue": "Aplikace na peníze nesahá. Lidé si je předávají sami.",
+      "code": "Kód",
+      "codeValue": "Otevřený, pod licencí AGPL-3.0-or-later, na <code>GitHub</code>u",
+      "platforms": "Platformy",
+      "platformsValue": "<web>Web</web>, <play>Android</play>, <ios>iOS</ios> a <tg>Telegram</tg>",
+      "languages": "Jazyky",
+      "network": "Síť",
+      "theory": "Teorie",
+      "theoryValue": "Zpráva <report>From Human Behaviour to Social Coordination</report>, autor Andrei Lubalin"
+    },
+    "brand": {
+      "title": "Logo",
+      "note": "Licence kódu, AGPL, se nevztahuje na název „Social Organizer“ ani na logo. Pokud je chcete použít k něčemu jinému než k textu o projektu, nejdřív se zeptejte týmu.",
+      "icon": "Ikona aplikace",
+      "small": "Malá ikona aplikace",
+      "wide": "Logo s názvem"
+    },
+    "shots": {
+      "title": "Snímky obrazovky",
+      "lead": "Obrazovky aplikace v angličtině. Lidé a částky jsou jen příklad.",
+      "circle": "Váš kruh: síť lidí, které znáte",
+      "need": "Potřeba, jak ji vidí zapojený člověk",
+      "ask": "Oznámení potřeby",
+      "banner": "Banner do obchodu"
+    },
+    "download": "Stáhnout",
+    "contact": {
+      "title": "Kontakt",
+      "lead": "Napište týmu na Telegramu nebo založte issue na GitHubu."
     }
   },
   "legal": {

@@ -680,11 +680,12 @@
       "language": "Bahasa",
       "themeDark": "Beralih ke tema gelap",
       "themeLight": "Beralih ke tema terang",
-      "footerNote": "Sumber terbuka · Proyek nirlaba",
+      "footerNote": "Sumber terbuka · Gratis, tanpa biaya",
       "privacy": "Privasi",
       "terms": "Ketentuan",
       "deleteAccount": "Hapus akun",
-      "groups": "Untuk kelompok"
+      "groups": "Untuk kelompok",
+      "press": "Untuk pers"
     },
     "start": {
       "play": "Google Play",
@@ -843,7 +844,9 @@
         "q3": "Apakah ini penggalangan donasi?",
         "a3": "Bukan. Kebutuhan hanya sampai ke orang yang terhubung dengan penyampainya lewat kenalan, dan lain kali mungkin Anda yang meminta.",
         "q4": "Apakah ini skema piramida?",
-        "a4": "Bukan. Tidak ada yang membayar untuk bergabung dan tidak ada yang mendapat uang dari undangan."
+        "a4": "Bukan. Tidak ada yang membayar untuk bergabung dan tidak ada yang mendapat uang dari undangan.",
+        "q6": "Data apa yang kalian simpan?",
+        "a6": "Kami menyimpan data akun dan profil, seperti nama, email, pengenal layanan masuk, serta data yang Anda tambahkan, seperti foto, nomor telepon, atau lokasi. Kami juga menyimpan pengaturan seperti bahasa dan tema, riwayat undangan dan hubungan, kebutuhan yang dilaporkan, partisipasi, serta jumlah yang disebutkan. Kami menyimpan kode masuk, data untuk mengirim notifikasi dan riwayatnya, serta keluhan dan pesan dukungan yang Anda kirim. Aplikasi tidak menangani uang dan tidak meminta data kartu atau rekening bank."
       },
       "start": {
         "label": "Aplikasi",
@@ -863,7 +866,7 @@
         "tg": "Telegram"
       },
       "footer": {
-        "about": "Social Organizer · proyek nirlaba dengan kode sumber terbuka",
+        "about": "Social Organizer · proyek gratis dengan kode sumber terbuka",
         "credits": "Ilustrasi dibuat dengan AI · Ikon: {{icons}}",
         "links": "Tautan"
       }
@@ -1101,6 +1104,62 @@
     "cta": {
       "title": "Mulai bersama kelompok Anda",
       "note": "Ingin bantuan menjelaskannya dengan bahasa kelompok Anda? Tulis ke tim."
+    }
+  },
+  "team": {
+    "title": "Siapa yang membuat ini",
+    "lubalin": {
+      "name": "Andrei Lubalin",
+      "role": "Pencipta teori dan proyek ini"
+    },
+    "tvardovskyi": {
+      "name": "Sviatoslav Tvardovskyi",
+      "role": "Banyak berkontribusi pada proyek"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "Untuk pers — Social Organizer",
+      "description": "Apa itu Social Organizer, siapa pembuatnya, fakta utama, logo dan tangkapan layar untuk diunduh, serta cara menghubungi tim."
+    },
+    "hero": {
+      "title": "Untuk pers",
+      "lead": "Di Social Organizer, orang membangun jaringan dari orang-orang yang mereka kenal secara langsung: Anda menambahkan orang yang Anda kenal, dan Anda berdua mengonfirmasi bahwa Anda saling mengenal. Saat seseorang di jaringan sedang kesulitan, orang itu menyampaikan kebutuhan. Jika kurang {{need}}, kabar ini menjangkau hingga {{reach}} orang, mulai dari hubungan terdekat dalam jaringan. Anda melihat lewat siapa Anda terhubung dengan orang yang menyampaikan kebutuhan, dan Anda sendiri yang memutuskan ikut atau tidak. Siapa pun yang mau menyebutkan jumlah, mulai dari {{min}}: itu niat, bukan pembayaran. Orang-orang bersepakat di chat mereka sendiri dan menyerahkan uang sendiri; aplikasi tidak pernah menyentuhnya."
+    },
+    "facts": {
+      "title": "Fakta",
+      "price": "Harga",
+      "priceValue": "Gratis, tanpa biaya",
+      "money": "Uang",
+      "moneyValue": "Aplikasi tidak pernah menyentuh uang. Orang menyerahkannya sendiri satu sama lain.",
+      "code": "Kode",
+      "codeValue": "Sumber terbuka dengan lisensi AGPL-3.0-or-later, di <code>GitHub</code>",
+      "platforms": "Platform",
+      "platformsValue": "<web>Web</web>, <play>Android</play>, <ios>iOS</ios>, dan <tg>Telegram</tg>",
+      "languages": "Bahasa",
+      "network": "Jaringan",
+      "theory": "Teori",
+      "theoryValue": "Laporan Andrei Lubalin <report>From Human Behaviour to Social Coordination</report>"
+    },
+    "brand": {
+      "title": "Logo",
+      "note": "Lisensi kode, AGPL, tidak mencakup nama “Social Organizer” dan logonya. Untuk memakainya selain untuk menulis tentang proyek ini, tanyakan dulu kepada tim.",
+      "icon": "Ikon aplikasi",
+      "small": "Ikon aplikasi kecil",
+      "wide": "Logo dengan nama"
+    },
+    "shots": {
+      "title": "Tangkapan layar",
+      "lead": "Layar aplikasi dalam bahasa Inggris. Orang dan jumlah di dalamnya hanya contoh.",
+      "circle": "Lingkaran Anda: jaringan orang yang Anda kenal",
+      "need": "Kebutuhan, dilihat oleh orang yang berpartisipasi",
+      "ask": "Menyampaikan kebutuhan",
+      "banner": "Banner toko aplikasi"
+    },
+    "download": "Unduh",
+    "contact": {
+      "title": "Kontak",
+      "lead": "Tulis ke tim di Telegram atau buka issue di GitHub."
     }
   },
   "legal": {

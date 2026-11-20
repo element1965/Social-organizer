@@ -684,11 +684,12 @@
       "language": "Taal",
       "themeDark": "Naar donker thema",
       "themeLight": "Naar licht thema",
-      "footerNote": "Open source · Project zonder winstoogmerk",
+      "footerNote": "Open source · Gratis, geen commissie",
       "privacy": "Privacy",
       "terms": "Voorwaarden",
       "deleteAccount": "Account verwijderen",
-      "groups": "Voor groepen"
+      "groups": "Voor groepen",
+      "press": "Voor de pers"
     },
     "start": {
       "play": "Google Play",
@@ -851,7 +852,9 @@
         "q3": "Is dit een inzamelingsactie?",
         "a3": "Nee. Een behoefte bereikt alleen mensen die via kennissen met de indiener verbonden zijn, en de volgende keer ben jij misschien degene die vraagt.",
         "q4": "Is dit een piramidespel?",
-        "a4": "Nee. Niemand betaalt om mee te doen en niemand verdient aan uitnodigingen."
+        "a4": "Nee. Niemand betaalt om mee te doen en niemand verdient aan uitnodigingen.",
+        "q6": "Welke gegevens bewaren jullie?",
+        "a6": "We bewaren account- en profielgegevens zoals je naam, e-mailadres, gegevens die je account bij de inlogdienst identificeren en wat je zelf toevoegt, zoals een foto, telefoonnummer of locatie. We bewaren ook je instellingen (zoals taal en thema), je uitnodigingen en verbindingen, gemelde behoeften, deelname en genoemde bedragen. Ook bewaren we inlogcodes, gegevens voor meldingen en je meldingsgeschiedenis, en klachten of supportberichten die je stuurt. De app verwerkt geen geld en vraagt geen kaart- of bankgegevens."
       },
       "start": {
         "label": "De app",
@@ -871,7 +874,7 @@
         "tg": "Telegram"
       },
       "footer": {
-        "about": "Social Organizer · een opensourceproject zonder winstoogmerk",
+        "about": "Social Organizer · een gratis opensourceproject",
         "credits": "Illustraties gemaakt met AI · Iconen: {{icons}}",
         "links": "Links"
       }
@@ -1109,6 +1112,62 @@
     "cta": {
       "title": "Begin met je groep",
       "note": "Hulp nodig om het in de woorden van je groep uit te leggen? Schrijf het team."
+    }
+  },
+  "team": {
+    "title": "Wie dit maakt",
+    "lubalin": {
+      "name": "Andrei Lubalin",
+      "role": "Auteur van de theorie en van het project"
+    },
+    "tvardovskyi": {
+      "name": "Sviatoslav Tvardovskyi",
+      "role": "Heeft veel aan het project bijgedragen"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "Voor de pers — Social Organizer",
+      "description": "Wat Social Organizer is, wie het maakt, de belangrijkste feiten, het logo en screenshots om te downloaden, en hoe je het team bereikt."
+    },
+    "hero": {
+      "title": "Voor de pers",
+      "lead": "In Social Organizer bouwen mensen een netwerk van mensen die ze persoonlijk kennen: je voegt iemand toe die je kent, en jullie bevestigen allebei dat jullie elkaar kennen. Als iemand in het netwerk in de problemen zit, meldt die persoon een behoefte. Bij een tekort van {{need}} krijgen maximaal {{reach}} mensen bericht, te beginnen bij de nauwste verbindingen in het netwerk. Je ziet via wie je met de melder verbonden bent en beslist zelf of je meedoet. Wie wil, noemt een bedrag vanaf {{min}}: dat is een intentie, geen betaling. Mensen spreken het af in hun eigen chat en dragen geld zelf over; er loopt nooit geld via de app."
+    },
+    "facts": {
+      "title": "Feiten",
+      "price": "Prijs",
+      "priceValue": "Gratis, geen commissie",
+      "money": "Geld",
+      "moneyValue": "Er loopt nooit geld via de app. Mensen dragen het zelf aan elkaar over.",
+      "code": "Code",
+      "codeValue": "Open source onder AGPL-3.0-or-later, op <code>GitHub</code>",
+      "platforms": "Platforms",
+      "platformsValue": "<web>Web</web>, <play>Android</play>, <ios>iOS</ios> en <tg>Telegram</tg>",
+      "languages": "Talen",
+      "network": "Netwerk",
+      "theory": "Theorie",
+      "theoryValue": "Rapport van Andrei Lubalin <report>From Human Behaviour to Social Coordination</report>"
+    },
+    "brand": {
+      "title": "Logo",
+      "note": "De licentie van de code, de AGPL, geldt niet voor de naam ‘Social Organizer’ en het logo. Wil je ze voor iets anders gebruiken dan om over het project te schrijven, vraag het dan eerst aan het team.",
+      "icon": "App-icoon",
+      "small": "Klein app-icoon",
+      "wide": "Logo met naam"
+    },
+    "shots": {
+      "title": "Screenshots",
+      "lead": "Schermen van de app in het Engels. De mensen en bedragen zijn een voorbeeld.",
+      "circle": "Je kring: het netwerk van mensen die je kent",
+      "need": "Een behoefte, zoals iemand die meedoet die ziet",
+      "ask": "Een behoefte melden",
+      "banner": "Banner voor de store"
+    },
+    "download": "Downloaden",
+    "contact": {
+      "title": "Contact",
+      "lead": "Schrijf het team via Telegram of open een issue op GitHub."
     }
   },
   "legal": {

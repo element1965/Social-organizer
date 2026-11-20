@@ -52,7 +52,7 @@ note it affects.
 ### Funding decisions
 
 1. ~~Independence condition.~~ Decided 2026-11-18: not a question for this stage; the core stays
-   open and non-profit, commercial ideas may later be added on top, carefully.
+   free and open source, commercial ideas may later be added on top, carefully.
 2. **Two tracks** (later, when funding talks start). How to arrange institutional funding of SO and personal patronage of the author
    (possibly separate agreements).
 3. **Verify the funder facts** the chat gave (programmes, grant sizes) before any outreach.

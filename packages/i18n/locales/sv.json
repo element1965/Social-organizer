@@ -684,11 +684,12 @@
       "language": "Språk",
       "themeDark": "Byt till mörkt tema",
       "themeLight": "Byt till ljust tema",
-      "footerNote": "Öppen källkod · Ideellt projekt",
+      "footerNote": "Öppen källkod · Gratis, inga avgifter",
       "privacy": "Integritet",
       "terms": "Villkor",
       "deleteAccount": "Radera konto",
-      "groups": "För grupper"
+      "groups": "För grupper",
+      "press": "Press"
     },
     "start": {
       "play": "Google Play",
@@ -851,7 +852,9 @@
         "q3": "Är det här en insamling?",
         "a3": "Nej. Ett behov når bara människor som via bekanta är kopplade till den som anmälde det, och nästa gång kan det vara du som ber om hjälp.",
         "q4": "Är det här ett pyramidspel?",
-        "a4": "Nej. Ingen betalar för att gå med och ingen tjänar på inbjudningar."
+        "a4": "Nej. Ingen betalar för att gå med och ingen tjänar på inbjudningar.",
+        "q6": "Vilka uppgifter sparar ni?",
+        "a6": "Vi sparar konto- och profiluppgifter som namn, e-postadress och identifierare från inloggningstjänsten samt det du lägger till, till exempel foto, telefonnummer eller plats. Vi sparar också inställningar som språk och tema, historik för inbjudningar och kopplingar, anmälda behov, deltagande och angivna belopp. Vi sparar inloggningskoder, uppgifter för att skicka notiser och notishistorik samt klagomål och supportmeddelanden som du skickar. Appen hanterar inga pengar och ber aldrig om kort- eller bankuppgifter."
       },
       "start": {
         "label": "Appen",
@@ -871,7 +874,7 @@
         "tg": "Telegram"
       },
       "footer": {
-        "about": "Social Organizer · ett ideellt projekt med öppen källkod",
+        "about": "Social Organizer · ett gratis projekt med öppen källkod",
         "credits": "Illustrationerna är AI-genererade · Ikoner: {{icons}}",
         "links": "Länkar"
       }
@@ -1109,6 +1112,62 @@
     "cta": {
       "title": "Börja med din grupp",
       "note": "Vill du ha hjälp att förklara det med gruppens egna ord? Skriv till teamet."
+    }
+  },
+  "team": {
+    "title": "Vem som står bakom",
+    "lubalin": {
+      "name": "Andrei Lubalin",
+      "role": "Författare till teorin och projektet"
+    },
+    "tvardovskyi": {
+      "name": "Sviatoslav Tvardovskyi",
+      "role": "Har bidragit mycket till projektet"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "Press — Social Organizer",
+      "description": "Vad Social Organizer är, vem som står bakom, de viktigaste fakta, logotyp och skärmbilder att ladda ner, och hur du når teamet."
+    },
+    "hero": {
+      "title": "För press",
+      "lead": "I Social Organizer bygger människor ett nätverk av folk de känner personligen: du lägger till någon du känner, och ni bekräftar båda att ni känner varandra. När någon i nätverket hamnar i svårigheter anmäler den personen ett behov. Fattas det {{need}}, får upp till {{reach}} personer veta det, med de närmaste kontakterna i nätverket först. Du ser via vem du är kopplad till den som anmält behovet och bestämmer själv om du vill delta. Den som vill anger ett belopp från {{min}}: det är en avsikt, ingen betalning. Folk kommer överens i sin egen chatt och lämnar själva över pengarna; appen rör dem aldrig."
+    },
+    "facts": {
+      "title": "Fakta",
+      "price": "Pris",
+      "priceValue": "Gratis, inga avgifter",
+      "money": "Pengar",
+      "moneyValue": "Appen rör aldrig pengar. Folk lämnar själva över dem till varandra.",
+      "code": "Kod",
+      "codeValue": "Öppen källkod under AGPL-3.0-or-later, på <code>GitHub</code>",
+      "platforms": "Plattformar",
+      "platformsValue": "<web>Webb</web>, <play>Android</play>, <ios>iOS</ios> och <tg>Telegram</tg>",
+      "languages": "Språk",
+      "network": "Nätverk",
+      "theory": "Teori",
+      "theoryValue": "Andrei Lubalins rapport <report>From Human Behaviour to Social Coordination</report>"
+    },
+    "brand": {
+      "title": "Logotyp",
+      "note": "Kodens licens, AGPL, omfattar inte namnet ”Social Organizer” eller logotypen. Vill du använda dem till annat än att skriva om projektet, fråga teamet först.",
+      "icon": "Appikon",
+      "small": "Liten appikon",
+      "wide": "Logotyp med namn"
+    },
+    "shots": {
+      "title": "Skärmbilder",
+      "lead": "Skärmar från appen på engelska. Personerna och beloppen är ett exempel.",
+      "circle": "Din krets: nätverket av människor du känner",
+      "need": "Ett behov, som någon som deltar ser det",
+      "ask": "Anmäla ett behov",
+      "banner": "Banner för butiken"
+    },
+    "download": "Ladda ner",
+    "contact": {
+      "title": "Kontakt",
+      "lead": "Skriv till teamet på Telegram eller öppna ett issue på GitHub."
     }
   },
   "legal": {

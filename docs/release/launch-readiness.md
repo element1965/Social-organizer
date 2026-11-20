@@ -115,7 +115,7 @@ Social Organizer — инструмент координации для люде
 
 Принципы: добровольное участие, независимое решение, прямая связь участников, минимальная координация без централизованного распределения.
 
-Social Organizer не принимает, не переводит и не удерживает средства и не гарантирует результат: он зависит от решений и действий участников. Открытый код, некоммерческий проект.
+Social Organizer не принимает, не переводит и не удерживает средства и не гарантирует результат: он зависит от решений и действий участников. Бесплатный проект с открытым кодом, без комиссий.
 
 **Full description (EN)**
 Social Organizer is a coordination tool for people who know each other.
@@ -130,7 +130,7 @@ How it works:
 
 Principles: voluntary participation, independent decision, direct connection between participants, minimal coordination with no centralised distribution.
 
-Social Organizer does not accept, transfer or hold funds and does not guarantee an outcome: it depends on the decisions and actions of participants. Open source, a non-profit project.
+Social Organizer does not accept, transfer or hold funds and does not guarantee an outcome: it depends on the decisions and actions of participants. Free, open source, with no fees.
 
 ## 6. Scale steps
 

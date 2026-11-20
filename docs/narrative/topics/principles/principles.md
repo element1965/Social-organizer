@@ -43,7 +43,7 @@ team changes the principle explicitly.
    compensation is not guaranteed. Visibility makes deception costly, not impossible.
 10. **One signal, no pressure.** A Need notifies each person once, nearest first, as many people as
     it names dollars. No reminder spam, no scheduled messages that people did not ask for.
-11. **Open and non-profit at the core.** The code is open; the project is non-profit; one shared
+11. **Free and open source at the core.** The code is open; the app is free; one shared
     network. Commercial ideas may later be built on top of the core, carefully, without changing it
     (user, 2026-11-18).
 12. **Informational only.** Every operation in the app is a message: it moves no resources, creates

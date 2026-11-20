@@ -112,6 +112,7 @@ const TermsPage = lazyPage(() => import('./pages/TermsPage'), 'TermsPage');
 const DeleteAccountPage = lazyPage(() => import('./pages/DeleteAccountPage'), 'DeleteAccountPage');
 const HowPage = lazyPage(() => import('./pages/HowPage'), 'HowPage');
 const GroupsPage = lazyPage(() => import('./pages/GroupsPage'), 'GroupsPage');
+const PressPage = lazyPage(() => import('./pages/PressPage'), 'PressPage');
 const GoogleCallbackPage = lazyPage(() => import('./pages/GoogleCallbackPage'), 'GoogleCallbackPage');
 const AppleCallbackPage = lazyPage(() => import('./pages/AppleCallbackPage'), 'AppleCallbackPage');
 const loadPeople = () => import('./pages/PeoplePage');
@@ -428,6 +429,7 @@ export function App() {
               {!import.meta.env.DEV && <Route path={SOS_PREVIEW_PATH} element={<NotFoundPage />} />}
               <Route path={WEB_ROUTES.HOW} element={<HowPage />} />
               <Route path={WEB_ROUTES.GROUPS} element={<GroupsPage />} />
+              <Route path={WEB_ROUTES.PRESS} element={<PressPage />} />
               <Route path={WEB_ROUTES.INTRO} element={<ProtectedRoute><IntroPage /></ProtectedRoute>} />
               <Route path={WEB_ROUTES.SEED} element={<ProtectedRoute><SeedPage /></ProtectedRoute>} />
             </Route>

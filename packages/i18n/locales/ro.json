@@ -688,11 +688,12 @@
       "language": "Limbă",
       "themeDark": "Treci la tema întunecată",
       "themeLight": "Treci la tema luminoasă",
-      "footerNote": "Cod deschis · Proiect non-profit",
+      "footerNote": "Cod deschis · Gratuit, fără comisioane",
       "privacy": "Confidențialitate",
       "terms": "Condiții",
       "deleteAccount": "Șterge contul",
-      "groups": "Pentru grupuri"
+      "groups": "Pentru grupuri",
+      "press": "Presă"
     },
     "start": {
       "play": "Google Play",
@@ -859,7 +860,9 @@
         "q3": "Este o campanie de donații?",
         "a3": "Nu. O nevoie ajunge doar la oameni legați de autor prin cunoscuți, iar data viitoare s-ar putea să ceri tu.",
         "q4": "Este o schemă piramidală?",
-        "a4": "Nu. Nimeni nu plătește ca să intre și nimeni nu câștigă din invitații."
+        "a4": "Nu. Nimeni nu plătește ca să intre și nimeni nu câștigă din invitații.",
+        "q6": "Ce date păstrați?",
+        "a6": "Păstrăm datele contului și ale profilului, cum ar fi numele, adresa de e-mail, identificatorii serviciului de autentificare și informațiile adăugate, cum ar fi fotografia, numărul de telefon sau locația. Păstrăm și setările, precum limba și tema, istoricul invitațiilor și al legăturilor, nevoile anunțate, participarea și sumele indicate. Mai păstrăm codurile de autentificare, datele pentru trimiterea notificărilor și istoricul lor, precum și sesizările și mesajele trimise echipei de asistență. Aplicația nu gestionează bani și nu solicită datele cardului sau ale contului bancar."
       },
       "start": {
         "label": "Aplicația",
@@ -879,7 +882,7 @@
         "tg": "Telegram"
       },
       "footer": {
-        "about": "Social Organizer · proiect non-profit, cu cod deschis",
+        "about": "Social Organizer · proiect gratuit, cu cod deschis",
         "credits": "Ilustrații generate cu AI · Pictograme: {{icons}}",
         "links": "Linkuri"
       }
@@ -1117,6 +1120,62 @@
     "cta": {
       "title": "Începe cu grupul tău",
       "note": "Vrei ajutor ca s-o explici cu vorbele grupului tău? Scrie-i echipei."
+    }
+  },
+  "team": {
+    "title": "Cine face asta",
+    "lubalin": {
+      "name": "Andrei Lubalin",
+      "role": "Autorul teoriei și al proiectului"
+    },
+    "tvardovskyi": {
+      "name": "Sviatoslav Tvardovskyi",
+      "role": "A contribuit mult la proiect"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "Presă — Social Organizer",
+      "description": "Ce este Social Organizer, cine îl face, faptele principale, logoul și capturi de ecran de descărcat și cum contactezi echipa."
+    },
+    "hero": {
+      "title": "Pentru presă",
+      "lead": "În Social Organizer, oamenii își fac o rețea din cei pe care îi cunosc personal: adaugi pe cineva pe care îl cunoști, iar amândoi confirmați că vă cunoașteți. Când cineva din rețea are necazuri, persoana respectivă anunță o nevoie. Pentru un deficit de {{need}}, află de nevoie până la {{reach}} de oameni, începând cu legăturile cele mai apropiate din rețea. Vezi prin cine ajungi la persoana care a anunțat nevoia și tu decizi dacă participi. Cine vrea indică o sumă de la {{min}} în sus: e o intenție, nu o plată. Oamenii se înțeleg în propriul chat și își dau banii direct; aplicația nu se atinge de ei."
+    },
+    "facts": {
+      "title": "Fapte",
+      "price": "Preț",
+      "priceValue": "Gratuit, fără comisioane",
+      "money": "Bani",
+      "moneyValue": "Aplicația nu se atinge de bani. Oamenii și-i dau direct unii altora.",
+      "code": "Cod",
+      "codeValue": "Deschis, sub licența AGPL-3.0-or-later, pe <code>GitHub</code>",
+      "platforms": "Platforme",
+      "platformsValue": "<web>Web</web>, <play>Android</play>, <ios>iOS</ios> și <tg>Telegram</tg>",
+      "languages": "Limbi",
+      "network": "Rețea",
+      "theory": "Teorie",
+      "theoryValue": "Raportul lui Andrei Lubalin <report>From Human Behaviour to Social Coordination</report>"
+    },
+    "brand": {
+      "title": "Logo",
+      "note": "Licența codului, AGPL, nu acoperă numele „Social Organizer” și nici logoul. Ca să le folosești în alt scop decât pentru a scrie despre proiect, întreabă mai întâi echipa.",
+      "icon": "Pictograma aplicației",
+      "small": "Pictogramă mică a aplicației",
+      "wide": "Logo cu nume"
+    },
+    "shots": {
+      "title": "Capturi de ecran",
+      "lead": "Ecrane ale aplicației în engleză. Oamenii și sumele sunt un exemplu.",
+      "circle": "Cercul tău: rețeaua oamenilor pe care îi cunoști",
+      "need": "O nevoie, așa cum o vede cine participă",
+      "ask": "Anunțarea unei nevoi",
+      "banner": "Banner pentru magazin"
+    },
+    "download": "Descarcă",
+    "contact": {
+      "title": "Contact",
+      "lead": "Scrie echipei pe Telegram sau deschide un issue pe GitHub."
     }
   },
   "legal": {

@@ -684,11 +684,12 @@
       "language": "Språk",
       "themeDark": "Bytt til mørkt tema",
       "themeLight": "Bytt til lyst tema",
-      "footerNote": "Åpen kildekode · Ideelt prosjekt",
+      "footerNote": "Åpen kildekode · Gratis, ingen gebyrer",
       "privacy": "Personvern",
       "terms": "Vilkår",
       "deleteAccount": "Slett konto",
-      "groups": "For grupper"
+      "groups": "For grupper",
+      "press": "Presse"
     },
     "start": {
       "play": "Google Play",
@@ -851,7 +852,9 @@
         "q3": "Er dette en innsamlingsaksjon?",
         "a3": "Nei. Et behov når bare folk som via bekjente er knyttet til den som meldte det, og neste gang kan det være du som ber om hjelp.",
         "q4": "Er dette et pyramidespill?",
-        "a4": "Nei. Ingen betaler for å bli med, og ingen tjener på invitasjoner."
+        "a4": "Nei. Ingen betaler for å bli med, og ingen tjener på invitasjoner.",
+        "q6": "Hvilke data lagrer dere?",
+        "a6": "Vi lagrer konto- og profilopplysninger som navn, e-post og identifikatorer fra innloggingstjenesten, og det du legger til, som bilde, telefonnummer eller sted. Vi lagrer også innstillinger som språk og tema, invitasjons- og forbindelseshistorikk, meldte behov, deltakelse og oppgitte beløp. Vi lagrer innloggingskoder, data til varsler og varslingshistorikk, samt klager og meldinger du sender til brukerstøtte. Appen håndterer ikke penger og ber ikke om kort- eller bankopplysninger."
       },
       "start": {
         "label": "Appen",
@@ -871,7 +874,7 @@
         "tg": "Telegram"
       },
       "footer": {
-        "about": "Social Organizer · et ideelt prosjekt med åpen kildekode",
+        "about": "Social Organizer · et gratis prosjekt med åpen kildekode",
         "credits": "Illustrasjonene er laget med KI · Ikoner: {{icons}}",
         "links": "Lenker"
       }
@@ -1109,6 +1112,62 @@
     "cta": {
       "title": "Start med gruppen din",
       "note": "Vil du ha hjelp til å forklare det med gruppens egne ord? Skriv til teamet."
+    }
+  },
+  "team": {
+    "title": "Hvem står bak",
+    "lubalin": {
+      "name": "Andrei Lubalin",
+      "role": "Forfatter av teorien og prosjektet"
+    },
+    "tvardovskyi": {
+      "name": "Sviatoslav Tvardovskyi",
+      "role": "Har bidratt mye til prosjektet"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "Presse — Social Organizer",
+      "description": "Hva Social Organizer er, hvem som står bak, de viktigste faktaene, logo og skjermbilder til nedlasting, og hvordan du når teamet."
+    },
+    "hero": {
+      "title": "For pressen",
+      "lead": "I Social Organizer bygger folk et nettverk av mennesker de kjenner personlig: du legger til noen du kjenner, og dere bekrefter begge at dere kjenner hverandre. Når noen i nettverket kommer i en vanskelig situasjon, melder vedkommende om et behov. Mangler det {{need}}, får opptil {{reach}} personer vite om behovet, med de nærmeste forbindelsene i nettverket først. Du ser hvem som knytter deg til den som meldte behovet, og bestemmer selv om du vil delta. Den som vil, oppgir et beløp fra {{min}}: det er en intensjon, ikke en betaling. Folk avtaler i sin egen chat og gir pengene videre selv; appen rører dem aldri."
+    },
+    "facts": {
+      "title": "Fakta",
+      "price": "Pris",
+      "priceValue": "Gratis, ingen gebyrer",
+      "money": "Penger",
+      "moneyValue": "Appen rører aldri penger. Folk gir dem videre til hverandre selv.",
+      "code": "Kode",
+      "codeValue": "Åpen kildekode under AGPL-3.0-or-later, på <code>GitHub</code>",
+      "platforms": "Plattformer",
+      "platformsValue": "<web>Nett</web>, <play>Android</play>, <ios>iOS</ios> og <tg>Telegram</tg>",
+      "languages": "Språk",
+      "network": "Nettverk",
+      "theory": "Teori",
+      "theoryValue": "Rapporten til Andrei Lubalin <report>From Human Behaviour to Social Coordination</report>"
+    },
+    "brand": {
+      "title": "Logo",
+      "note": "Kodens lisens, AGPL, dekker ikke navnet «Social Organizer» eller logoen. Vil du bruke dem til noe annet enn å skrive om prosjektet, spør teamet først.",
+      "icon": "App-ikon",
+      "small": "Lite app-ikon",
+      "wide": "Logo med navn"
+    },
+    "shots": {
+      "title": "Skjermbilder",
+      "lead": "Skjermer fra appen på engelsk. Personene og beløpene er et eksempel.",
+      "circle": "Kretsen din: nettverket av folk du kjenner",
+      "need": "Et behov, slik en deltaker ser det",
+      "ask": "Melde om et behov",
+      "banner": "Banner for butikken"
+    },
+    "download": "Last ned",
+    "contact": {
+      "title": "Kontakt",
+      "lead": "Skriv til teamet på Telegram, eller opprett et issue på GitHub."
     }
   },
   "legal": {

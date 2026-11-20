@@ -32,7 +32,7 @@ same scenes serve both the interactive page and a video.
 
 Hero: *The world is already connected. Now we can act together.* Sub: *Discover what becomes
 possible when real human connections form a network.* Buttons: *Explore the network* / *Watch how
-it works*. Line: *Open source · Non-profit · Voluntary participation*.
+it works*. Line: *Open source · Free, no fees · Voluntary participation*.
 
 | # | Scene | What happens | Caption |
 |---|---|---|---|

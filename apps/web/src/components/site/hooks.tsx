@@ -23,6 +23,25 @@ export function useSitePhone(): boolean {
   return useMediaQuery('(max-width: 600px)');
 }
 
+/**
+ * The live number of people with connections in the network (the landing's cached public count), or undefined
+ * while it loads or when the request fails. No cookies go with the request.
+ */
+export function useLivePeopleCount(): number | undefined {
+  const [count, setCount] = useState<number>();
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetch('/api/landing/people', { credentials: 'omit', signal: controller.signal })
+      .then((response) => (response.ok ? response.json() : undefined))
+      .then((value: unknown) => {
+        if (typeof value === 'number' && Number.isSafeInteger(value) && value >= 0) setCount(value);
+      })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, []);
+  return count;
+}
+
 /** The description from index.html; every page restores it when it leaves. */
 const BASE_DESCRIPTION =
   typeof document === 'undefined' ? '' : document.querySelector('meta[name="description"]')?.getAttribute('content') ?? '';

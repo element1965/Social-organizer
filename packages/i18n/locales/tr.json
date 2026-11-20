@@ -684,11 +684,12 @@
       "language": "Dil",
       "themeDark": "Koyu temaya geç",
       "themeLight": "Açık temaya geç",
-      "footerNote": "Açık kaynak · Kâr amacı gütmeyen proje",
+      "footerNote": "Açık kaynak · Ücretsiz, komisyon yok",
       "privacy": "Gizlilik",
       "terms": "Koşullar",
       "deleteAccount": "Hesabı sil",
-      "groups": "Gruplar için"
+      "groups": "Gruplar için",
+      "press": "Basın"
     },
     "start": {
       "play": "Google Play",
@@ -851,7 +852,9 @@
         "q3": "Bu bir bağış kampanyası mı?",
         "a3": "Hayır. İhtiyaç yalnızca sahibiyle tanıdıklar üzerinden bağlantılı kişilere ulaşır ve bir dahaki sefere isteyen siz olabilirsiniz.",
         "q4": "Bu bir saadet zinciri mi?",
-        "a4": "Hayır. Kimse katılmak için para ödemez, kimse davetlerden kazanç sağlamaz."
+        "a4": "Hayır. Kimse katılmak için para ödemez, kimse davetlerden kazanç sağlamaz.",
+        "q6": "Hangi verileri saklıyorsunuz?",
+        "a6": "Ad, e-posta, giriş yaptığınız hizmetteki hesap kimlikleri ve eklediğiniz fotoğraf, telefon numarası veya konum gibi hesap ve profil bilgilerini saklarız. Dil ve tema gibi ayarları, davet ve bağlantı geçmişini, bildirilen ihtiyaçları, katılımı ve belirtilen tutarları da saklarız. Giriş kodlarını, bildirim gönderme verilerini ve bildirim geçmişini, ayrıca gönderdiğiniz şikâyet ve destek mesajlarını saklarız. Uygulama paraya dokunmaz, kart veya banka bilgisi istemez."
       },
       "start": {
         "label": "Uygulama",
@@ -871,7 +874,7 @@
         "tg": "Telegram'da"
       },
       "footer": {
-        "about": "Social Organizer · kâr amacı gütmeyen, açık kaynaklı bir proje",
+        "about": "Social Organizer · ücretsiz, açık kaynaklı bir proje",
         "credits": "Görseller yapay zekâyla üretildi · Simgeler: {{icons}}",
         "links": "Bağlantılar"
       }
@@ -1109,6 +1112,62 @@
     "cta": {
       "title": "Grubunuzla başlayın",
       "note": "Bunu grubunuzun kendi sözleriyle anlatmak için yardım ister misiniz? Ekibe yazın."
+    }
+  },
+  "team": {
+    "title": "Bunu kim yapıyor",
+    "lubalin": {
+      "name": "Andrei Lubalin",
+      "role": "Teorinin ve projenin yazarı"
+    },
+    "tvardovskyi": {
+      "name": "Sviatoslav Tvardovskyi",
+      "role": "Projeye büyük katkı verdi"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "Basın — Social Organizer",
+      "description": "Social Organizer nedir, kim yapıyor, temel bilgiler, indirilebilir logo ve ekran görüntüleri ve ekiple nasıl iletişime geçilir."
+    },
+    "hero": {
+      "title": "Basın için",
+      "lead": "Social Organizer’da insanlar yüz yüze tanıdıkları kişilerden bir ağ kurar: tanıdığınız birini eklersiniz ve ikiniz de tanıştığınızı onaylarsınız. Ağdaki biri zor durumda kaldığında bir ihtiyaç bildirir. {{need}} eksikse ağdaki en yakın bağlantılardan başlayarak en fazla {{reach}} kişi bunu öğrenir. İhtiyacı bildiren kişiyle kimin üzerinden bağlı olduğunuzu görür, katılıp katılmayacağınıza kendiniz karar verirsiniz. İsteyen en az {{min}} olmak üzere bir tutar belirtir: bu bir niyettir, ödeme değil. İnsanlar kendi sohbetlerinde anlaşır ve parayı birbirlerine kendileri verir; uygulama paraya hiç dokunmaz."
+    },
+    "facts": {
+      "title": "Bilgiler",
+      "price": "Fiyat",
+      "priceValue": "Ücretsiz, komisyon yok",
+      "money": "Para",
+      "moneyValue": "Uygulama paraya hiç dokunmaz. İnsanlar parayı birbirlerine kendileri verir.",
+      "code": "Kod",
+      "codeValue": "Açık kaynak, AGPL-3.0-or-later lisansıyla, <code>GitHub</code>’da",
+      "platforms": "Platformlar",
+      "platformsValue": "<web>Web</web>, <play>Android</play>, <ios>iOS</ios> ve <tg>Telegram</tg>",
+      "languages": "Diller",
+      "network": "Ağ",
+      "theory": "Teori",
+      "theoryValue": "Andrei Lubalin’in raporu <report>From Human Behaviour to Social Coordination</report>"
+    },
+    "brand": {
+      "title": "Logo",
+      "note": "Kodun lisansı olan AGPL, “Social Organizer” adını ve logoyu kapsamaz. Bunları proje hakkında yazmak dışında bir amaçla kullanmak isterseniz önce ekibe sorun.",
+      "icon": "Uygulama simgesi",
+      "small": "Küçük uygulama simgesi",
+      "wide": "Adıyla birlikte logo"
+    },
+    "shots": {
+      "title": "Ekran görüntüleri",
+      "lead": "Uygulamanın İngilizce ekranları. Kişiler ve tutarlar örnektir.",
+      "circle": "Çevreniz: tanıdığınız insanlardan oluşan ağ",
+      "need": "Katılan birinin gözünden bir ihtiyaç",
+      "ask": "İhtiyaç bildirmek",
+      "banner": "Mağaza afişi"
+    },
+    "download": "İndir",
+    "contact": {
+      "title": "İletişim",
+      "lead": "Ekibe Telegram’dan yazın ya da GitHub’da bir issue açın."
     }
   },
   "legal": {
