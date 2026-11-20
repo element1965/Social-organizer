@@ -707,6 +707,11 @@ export function LandingPage() {
             <span>{t('landing.v2.footer.about')}</span>
           </div>
           <nav className="fr" aria-label={t('landing.v2.footer.links')}>
+            <Link to="/how">{t('landing.site.how')}</Link>
+            <Link to="/groups">{t('landing.site.groups')}</Link>
+            <Link to="/privacy">{t('landing.site.privacy')}</Link>
+            <Link to="/terms">{t('landing.site.terms')}</Link>
+            <Link to="/delete-account">{t('landing.site.deleteAccount')}</Link>
             <a href={GITHUB_URL} {...ext}>
               GitHub
             </a>
