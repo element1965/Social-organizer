@@ -31,6 +31,8 @@ Upload screenshots + text metadata (no binary, no submit)
 
 Upload screenshots only
 
+The `screenshots/ru` folder needs a Russian localization of the app in App Store Connect before `deliver` runs. The screenshots are made by `node scripts/capture-store-shots.mjs` from the repository root.
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

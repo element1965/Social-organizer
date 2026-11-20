@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Store screenshots (dev only)</title>
+    <style>html, body { margin: 0; }</style>
+    <!-- The native app's shell: Capacitor reports a platform, so the app keeps the phone tab bar at every width -->
+    <script>window.CapacitorCustomPlatform = { name: 'store-shots', plugins: {} };</script>
+  </head>
+  <body>
+    <!-- Served by the Vite dev server only; see src/components/landing/app/store-shots.tsx -->
+    <div id="root"></div>
+    <script type="module" src="/src/components/landing/app/store-shots.tsx"></script>
+  </body>
+</html>
