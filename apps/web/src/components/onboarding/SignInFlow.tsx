@@ -147,11 +147,10 @@ export function SignInFlow({
   }, [signIn.error, step]);
 
   // ---- Account linking (№13): Google/Apple brought the e-mail of an old password account ----
-  if (step === 'main' && (urlError === 'account_exists' || signIn.linking)) {
+  if (step === 'main' && urlError === 'account_exists') {
     // Validated, then rendered as a React text child (never interpolated into the translation)
-    const masked = safeMasked(signIn.linking?.masked) ?? safeMasked(urlMasked);
+    const masked = safeMasked(urlMasked);
     const leave = () => {
-      signIn.clearLinking();
       const nextParams = new URLSearchParams(params);
       clearUrlError(nextParams);
       setParams(nextParams, { replace: true });
@@ -164,10 +163,7 @@ export function SignInFlow({
             <Button
               className="w-full"
               icon={<MailMark />}
-              onClick={() => {
-                signIn.clearLinking();
-                goTo('email');
-              }}
+              onClick={() => goTo('email')}
             >
               {t('login.linkByCode')}
             </Button>

@@ -2,12 +2,12 @@ import { firstTouchCampaign } from '../../lib/campaign';
 import { TELEGRAM_BOT_USERNAME, APPLE_RETURN_URL, GOOGLE_RETURN_URL } from '../../lib/deployment';
 /*
  * Every sign-in path of the app in one hook, shared by the Login and Invite screens.
- * Ported one-to-one from the previous LoginPage: Google (GIS on desktop, full redirect on mobile browsers,
- * system browser + deep link in the native app), Apple (form_post via the backend, deep link in the app),
+ * Ported from the previous LoginPage: Google (full-page redirect in every browser, system browser + deep link
+ * in the native app), Apple (form_post via the backend, deep link in the app),
  * Telegram (mini-app initData, Login Widget on the website, otherwise the bot), e-mail code and the
- * legacy password form. Only the UI moved; the flows did not change.
+ * legacy password form. The UI moved; since 2026-11-20 Google on a computer also uses the full-page redirect.
  */
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Capacitor } from '@capacitor/core';
@@ -16,7 +16,10 @@ import { isTelegramWebApp, getTGInitData } from '@so/tg-adapter';
 import { useAuth, markLoginMethod, type LoginMethod } from '../../hooks/useAuth';
 import { trpc } from '../../lib/trpc';
 import { AUTH_ORDER, detectDevice, type AuthProvider } from '../../lib/device';
-import { afterSignInPath, readPendingInvite, safeInviteToken, safeMasked, safePath, savePendingSos, sosIdFromPath } from './flow';
+import {
+  afterSignInPath, isOnboarded, newGoogleState, randomHex, readPendingInvite, safeInviteToken, safePath, savePendingSos,
+  sosIdFromPath,
+} from './flow';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
 const APPLE_SERVICE_ID = import.meta.env.VITE_APPLE_SERVICE_ID as string | undefined;
@@ -51,20 +54,6 @@ function parseErr(message: string): [string, number | null] {
   return [code ?? '', n != null && n !== '' ? Number(n) : null];
 }
 
-/** Reads user.me with a fresh token (the store is not signed in yet). Errors and timeouts count as onboarded. */
-async function isOnboarded(accessToken: string): Promise<boolean> {
-  try {
-    const res = await fetch('/trpc/user.me', {
-      headers: { Authorization: `Bearer ${accessToken}` },
-      signal: AbortSignal.timeout(5000),
-    });
-    const body = (await res.json()) as { result?: { data?: { onboardingCompleted?: boolean } } };
-    return body.result?.data?.onboardingCompleted !== false;
-  } catch {
-    return true;
-  }
-}
-
 type Tokens = { accessToken: string; refreshToken: string; userId: string; isNew?: boolean };
 
 export interface UseSignInOptions {
@@ -74,27 +63,6 @@ export interface UseSignInOptions {
   onCodeSent?: () => void;
   /** The website opened the Telegram bot in a new tab (no widget, no Mini App). */
   onTelegramOpened?: () => void;
-}
-
-let googleScript: Promise<void> | undefined;
-function loadGoogleSignIn(): Promise<void> {
-  if (window.google?.accounts?.id) return Promise.resolve();
-  googleScript ??= new Promise<void>((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.onload = () => {
-      if (window.google?.accounts?.id) resolve();
-      else reject(new Error('Google sign-in unavailable'));
-    };
-    script.onerror = () => reject(new Error('Google sign-in failed to load'));
-    document.head.append(script);
-  }).catch((error) => {
-    document.querySelector('script[src="https://accounts.google.com/gsi/client"]')?.remove();
-    googleScript = undefined;
-    throw error;
-  });
-  return googleScript;
 }
 
 export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInOptions = {}) {
@@ -118,8 +86,6 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
   /** TOO_MANY_CODES: no new code until this moment (ms since epoch). */
   const [blockedUntil, setBlockedUntil] = useState(0);
   const [now, setNow] = useState(() => Date.now());
-  /** Google/Apple brought an e-mail that belongs to an old password account (masked, may be empty). */
-  const [linking, setLinking] = useState<{ masked: string | null } | null>(null);
 
   const setError = useCallback((text: string, code: string | null = null) => {
     setErrorText(text);
@@ -277,63 +243,6 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
   };
 
   // ---- Google ----
-  const googleLoginMutation = trpc.auth.loginWithGoogle.useMutation({
-    meta: { notifyOnError: false },
-    onSuccess: onTokens('google'),
-    onError: (err) => {
-      if (err.message === 'ACCOUNT_EXISTS_OTHER_METHOD') {
-        const masked = safeMasked((err.data as { maskedEmail?: unknown } | undefined)?.maskedEmail);
-        setLinking({ masked });
-        return;
-      }
-      setError(t('login.failedWith', { provider: 'Google' }), 'PROVIDER_FAILED');
-    },
-  });
-  const gisInitialized = useRef(false);
-  const [googleButtonRequested, setGoogleButtonRequested] = useState(false);
-  const { mutate: loginWithGoogle } = googleLoginMutation;
-
-  const handleGoogleCredential = useCallback((response: GoogleCredentialResponse) => {
-    setLoading(true);
-    setError('');
-    loginWithGoogle({ idToken: response.credential, campaign: firstTouchCampaign() }, { onSettled: () => setLoading(false) });
-  }, [loginWithGoogle, setError]);
-
-  const initializeGoogle = useCallback((google: GoogleAccountsId) => {
-    if (!GOOGLE_CLIENT_ID || gisInitialized.current) return;
-    google.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleCredential, use_fedcm_for_prompt: true });
-    gisInitialized.current = true;
-  }, [handleGoogleCredential]);
-
-  const usesGoogleScript = !inTelegram && !Capacitor.isNativePlatform() && detectDevice() === 'desktop';
-  const googleLoadError = t('signin.errFailed');
-  const googleBtnRef = useCallback((container: HTMLDivElement | null) => {
-    if (!container || !usesGoogleScript) return;
-    if (!googleButtonRequested) {
-      // The Google option is visible even while the server's methods query is pending.
-      void loadGoogleSignIn().catch(() => undefined);
-      return;
-    }
-
-    let mounted = true;
-    void loadGoogleSignIn().then(() => {
-      const google = window.google?.accounts?.id;
-      if (!mounted || !google) return;
-      initializeGoogle(google);
-      google.renderButton(container, {
-        type: 'standard', theme: 'outline', size: 'large', width: container.offsetWidth || 320, text: 'continue_with',
-      });
-    }).catch(() => {
-      if (!mounted) return;
-      setGoogleButtonRequested(false);
-      setError(googleLoadError);
-    });
-    return () => {
-      mounted = false;
-      container.replaceChildren();
-    };
-  }, [usesGoogleScript, googleButtonRequested, initializeGoogle, googleLoadError, setError]);
-
   const handleGoogle = useCallback(() => {
     setError('');
     if (inTelegram) {
@@ -357,30 +266,23 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
       Browser.open({ url: `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}` });
       return;
     }
-    // Mobile browsers (iOS Safari especially): the GIS popup hangs after the account is picked,
-    // so use a full-page redirect; GoogleCallbackPage finishes sign-in and restores the invite
-    if (!usesGoogleScript) {
-      savePendingSos(sosId);
-      markLoginMethod('google');
-      const params = new URLSearchParams({
-        response_type: 'id_token',
-        client_id: GOOGLE_CLIENT_ID,
-        redirect_uri: `${window.location.origin}/auth/google/callback`,
-        scope: 'openid email profile',
-        nonce: Math.random().toString(36).slice(2),
-        prompt: 'select_account',
-      });
-      window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
-      return;
-    }
+    // Every browser: a full-page redirect straight to Google's account chooser on the first click.
+    // (Google's own script needed a second click on its own button when One Tap stayed hidden,
+    // and its popup hangs in iOS Safari.) GoogleCallbackPage finishes sign-in and restores the invite.
+    savePendingSos(sosId);
     markLoginMethod('google');
-    setGoogleButtonRequested(true);
-    const google = window.google?.accounts?.id;
-    if (google) {
-      initializeGoogle(google);
-      google.prompt();
-    }
-  }, [t, inTelegram, usesGoogleScript, initializeGoogle, sosId, setError]);
+    const params = new URLSearchParams({
+      response_type: 'id_token',
+      client_id: GOOGLE_CLIENT_ID,
+      redirect_uri: `${window.location.origin}/auth/google/callback`,
+      scope: 'openid email profile',
+      nonce: randomHex(),
+      prompt: 'select_account',
+      // s: checked against this tab's copy on return (login CSRF); r: the ?redirect= to come back to
+      state: JSON.stringify({ s: newGoogleState(), r: explicitRedirect ?? undefined }),
+    });
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+  }, [t, inTelegram, sosId, explicitRedirect, setError]);
 
   // ---- Apple ----
   const handleApple = useCallback(() => {
@@ -421,7 +323,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
   /** E-mail codes can be switched off on the server; then the e-mail entry opens the password form. */
   const emailCodes = methods?.email !== false;
 
-  const busy = loading || requestCode.isPending || verifyCode.isPending || googleLoginMutation.isPending
+  const busy = loading || requestCode.isPending || verifyCode.isPending
     || telegramWidgetMutation.isPending || telegramLoginMutation.isPending || loginEmailMutation.isPending;
 
   const start = (provider: Exclude<AuthProvider, 'email'>) => {
@@ -434,15 +336,10 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     providers,
     start,
     emailCodes,
-    googleBtnRef,
-    googleButtonRequested,
     busy,
     error,
     errorCode,
     setError,
-    /** Google/Apple account-linking state (desktop Google sign-in); the URL carries it for redirects. */
-    linking,
-    clearLinking: () => setLinking(null),
     telegramBotUrl,
     // e-mail code
     sendCode,

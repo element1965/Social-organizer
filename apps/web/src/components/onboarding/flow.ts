@@ -187,3 +187,53 @@ export function afterSignInPath(userId: string, isNew: boolean, redirect?: strin
 export function safeMasked(raw: unknown): string | null {
   return typeof raw === 'string' && /^[^\s<>@]{1,3}•••@[A-Za-z0-9.-]{1,253}$/.test(raw) ? raw : null;
 }
+
+/** Reads user.me with a fresh token (the store is not signed in yet). Errors and timeouts count as onboarded. */
+export async function isOnboarded(accessToken: string): Promise<boolean> {
+  try {
+    const res = await fetch('/trpc/user.me', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      signal: AbortSignal.timeout(5000),
+    });
+    const body = (await res.json()) as { result?: { data?: { onboardingCompleted?: boolean } } };
+    return body.result?.data?.onboardingCompleted !== false;
+  } catch {
+    return true;
+  }
+}
+
+const GOOGLE_STATE_KEY = 'so.googleState';
+
+/** 128 random bits as hex. */
+export function randomHex(): string {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+/** A fresh random value for the Google web redirect, kept in this tab until GoogleCallbackPage checks it. */
+export function newGoogleState(): string {
+  const value = randomHex();
+  try {
+    window.sessionStorage.setItem(GOOGLE_STATE_KEY, value);
+  } catch {
+    /* storage blocked: the callback cannot read it either and skips the check */
+  }
+  return value;
+}
+
+/**
+ * Login CSRF guard for the web callback (single use): true only when the returned state is the one this tab
+ * stored before leaving for Google, so a link carrying someone else's Google token signs no one in.
+ * Blocked storage skips the check: a page cannot make the visitor's storage throw.
+ */
+export function takeGoogleState(received: unknown): boolean {
+  let stored: string | null;
+  try {
+    stored = window.sessionStorage.getItem(GOOGLE_STATE_KEY);
+    window.sessionStorage.removeItem(GOOGLE_STATE_KEY);
+  } catch {
+    return true;
+  }
+  return !!stored && received === stored;
+}

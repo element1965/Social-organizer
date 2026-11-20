@@ -160,7 +160,7 @@ The landing (`pages/LandingPage.tsx`, imperative parts in `components/landing/`)
 
 Public links can select any of the 28 supported languages with `?lang=pt` or another supported code. The browser saves that display preference. The built server localizes the metadata for the landing, How, Groups and legal pages, with all language alternatives in the HTML and sitemap.
 
-`GET /api/landing/people` returns the count of non-deleted members with at least one non-deleted connection partner, cached for ten minutes. The landing formats the date in the reader's language and keeps a dated snapshot if the request fails. The opening photo is a responsive WebP poster. The Three.js scene loads as a story beat approaches the viewport. Google Identity Services loads for desktop web sign-in.
+`GET /api/landing/people` returns the count of non-deleted members with at least one non-deleted connection partner, cached for ten minutes. The landing formats the date in the reader's language and keeps a dated snapshot if the request fails. The opening photo is a responsive WebP poster. The Three.js scene loads as a story beat approaches the viewport. Google sign-in on the web is a full-page redirect to Google's account chooser (no Google script on the page).
 
 Arabic and Hebrew set `dir="rtl"` on the document. Layout spacing and navigation arrows follow the reading direction. The feed counters, input placeholders and 12 px tab labels share the accessible secondary text token.
 
