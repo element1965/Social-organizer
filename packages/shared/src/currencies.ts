@@ -1,3 +1,5 @@
+import { formatUnbrokenNumber, groupNumber } from './number-format.js';
+
 export interface CurrencyInfo {
   code: string;
   name: string;
@@ -264,12 +266,12 @@ export function getCurrencyByCountry(countryCode: string): string {
 // Format amount with currency symbol
 export function formatCurrency(amount: number, currencyCode: string): string {
   const currency = getCurrency(currencyCode);
-  if (!currency) return `${amount} ${currencyCode}`;
+  if (!currency) return `${groupNumber(amount)}\u00a0${currencyCode}`;
 
-  const formatted = amount.toLocaleString('en-US', {
+  const formatter = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: currency.decimals,
     maximumFractionDigits: currency.decimals,
   });
 
-  return `${currency.symbol}${formatted}`;
+  return `${currency.symbol}${formatUnbrokenNumber(formatter, amount)}`;
 }

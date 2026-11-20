@@ -213,6 +213,7 @@ export function EventFeed({ myId, events, loading, onOpen, onDismiss }: EventFee
                       icon={ICONS[event.kind]}
                       title={event.title}
                       subtitle={event.subtitle}
+                      wrapSubtitle={event.kind === 'accepted'}
                       note={event.note}
                       amount={event.amount}
                       hot={event.hot}

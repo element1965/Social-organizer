@@ -94,6 +94,8 @@
 
 ## 5. Тексты для сторов
 
+Before running Fastlane `deliver`, add a Russian localization in App Store Connect for the screenshots in `apps/web/ios/App/fastlane/screenshots/ru/`.
+
 **Короткое описание (RU, до 80 знаков)**
 Сообщайте о потребностях и об участии. Решения и действия — между людьми.
 

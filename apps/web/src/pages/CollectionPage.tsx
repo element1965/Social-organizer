@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useLocation, useNavigate, useNavigationType, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { MAX_CHAT_LINK_LENGTH, MIN_COLLECTION_AMOUNT, MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
+import { formatUnbrokenNumber, MAX_CHAT_LINK_LENGTH, MIN_COLLECTION_AMOUNT, MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
 import { IconClock, IconPen, IconQr, IconShare } from '../components/collection/icons';
 import { MyParticipationCard, NeedSummaryCard } from '../components/collection/NeedCards';
 import { PreviousCycles } from '../components/collection/PreviousCycles';
@@ -537,8 +537,8 @@ function CollectionScreen({ id }: { id: string | undefined }) {
             error={joinError || serverFieldError(createObligation.error, 'amount', t('errors.invalid'))}
             hint={intention == null ? undefined : intention === 0 ? (
               <>
-                {t('collection.zeroStake', { amount: money.format(intention) })}
-                <span className="block">{t('collection.participationMinimum', { amount: money.format(MIN_OBLIGATION_AMOUNT) })}</span>
+                {t('collection.zeroStake', { amount: formatUnbrokenNumber(money, intention) })}
+                <span className="block">{t('collection.participationMinimum', { amount: formatUnbrokenNumber(money, MIN_OBLIGATION_AMOUNT) })}</span>
               </>
             ) : t('collection.minStake', { amount: formatMoney(intention) })}
           />

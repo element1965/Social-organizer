@@ -4,7 +4,7 @@ import { graphStats } from './graph-cache.service.js';
 /**
  * One line a minute about what limits a single API process: how long the event loop was blocked,
  * memory, how the handshake graph was kept up to date, and how long network walks took.
- * It answers "when is the next scale step due": the launch plan names the thresholds
+ * These measurements help identify when the process needs more capacity
  * (event loop p95 over 100 ms, a walk over 50 ms, full graph reloads over 1 s or more often than hourly).
  * Numbers only: nothing about a person or a request is logged.
  */

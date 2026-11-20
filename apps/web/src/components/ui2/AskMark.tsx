@@ -36,7 +36,7 @@ export function AskMark({ progress, className }: AskMarkProps) {
           ready ? 'bg-sos text-sos-on' : 'text-ink-subtle',
         )}
       >
-        <IconHand className="h-4 w-4" />
+        <IconHand className={cn('h-4 w-4', !ready && 'opacity-60')} />
       </span>
     </span>
   );
