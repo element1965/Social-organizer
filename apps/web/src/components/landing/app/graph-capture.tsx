@@ -4,6 +4,7 @@
  * apps/web/dev/landing-app-graph.html, and scripts/capture-landing-app-graph.mjs photographs it in both themes and
  * writes the pictures and the label positions. The box is the Circle's scene on a 390 x 844 phone with the feed
  * open (CirclePage, PhoneCircle): the graph above the sheet, the header and the ring chips over it.
+ * ?w=&h= draw another box (the store screenshots' iPad Circle, scripts/capture-store-shots.mjs).
  */
 import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -38,9 +39,12 @@ const nodes: GraphNode[] = net.nodes.map((n) => ({ id: n.id, name: '​', photoU
 const edges = net.edges.map((e) => ({ source: e.from, target: e.to }));
 const impulses = [{ id: 'need', path: net.need }];
 const LABELS: DemoLabel[] = ['you', 'tom', 'sarah', 'emma'];
+const query = new URLSearchParams(location.search);
+const size = (key: string, fallback: number) => Number(query.get(key)) || fallback;
+const BOX = { ...SCENE_BOX, width: size('w', SCENE_BOX.width), height: size('h', SCENE_BOX.height) };
 
 function Capture() {
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => (new URLSearchParams(location.search).get('theme') === 'dark' ? 'dark' : 'light'));
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => (query.get('theme') === 'dark' ? 'dark' : 'light'));
   document.documentElement.classList.toggle('dark', theme === 'dark');
   Object.assign(window, {
     __setTheme: setTheme,
@@ -52,7 +56,7 @@ function Capture() {
       for (const n of simNodes(fg)) {
         if (!LABELS.includes(n.id as DemoLabel)) continue;
         const p = fg.graph2ScreenCoords(n.x ?? 0, n.y ?? 0, n.z ?? 0);
-        out[n.id as DemoLabel] = [Math.round((p.x / SCENE_BOX.width) * 1000) / 1000, Math.round((p.y / SCENE_BOX.height) * 1000) / 1000];
+        out[n.id as DemoLabel] = [Math.round((p.x / BOX.width) * 1000) / 1000, Math.round((p.y / BOX.height) * 1000) / 1000];
       }
       return out;
     },
@@ -61,17 +65,17 @@ function Capture() {
     <div
       id="scene"
       className="scene-follows-theme relative overflow-hidden bg-scene bg-[radial-gradient(120%_90%_at_50%_38%,rgb(var(--so-scene-2))_0%,rgb(var(--so-scene))_60%)]"
-      style={{ width: SCENE_BOX.width, height: SCENE_BOX.height }}
+      style={{ width: BOX.width, height: BOX.height }}
     >
       <NetworkGraph
         nodes={nodes}
         edges={edges}
         impulses={impulses}
         farRings={[DEMO_FAR]}
-        width={SCENE_BOX.width}
-        height={SCENE_BOX.height}
-        insetTop={SCENE_BOX.insetTop}
-        labelInsetBottom={SCENE_BOX.insetBottom}
+        width={BOX.width}
+        height={BOX.height}
+        insetTop={BOX.insetTop}
+        labelInsetBottom={BOX.insetBottom}
         showControls={false}
         theme={theme}
         sceneTheme={theme}

@@ -1,0 +1,128 @@
+/*
+ * The store screenshots (store-shots.tsx, dev only): the caption in white on the care colour, as on the app icon,
+ * and the app's screen in a dark frame below. Colours come from the app's tokens; the type is the app's Manrope.
+ */
+.ss-canvas {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: rgb(var(--so-care));
+  color: rgb(var(--so-on-care));
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  --pad: 40px;
+  --title: 33px;
+  --sub: 17px;
+  --gap: 18px;
+  --head: 220px;
+}
+.ss-iphone { --pad: 34px; --title: 28px; --sub: 15px; --gap: 16px; --head: 196px; }
+.ss-ipad { --pad: 104px; --title: 56px; --sub: 27px; --gap: 28px; --head: 340px; }
+
+/*
+ * The caption block has one height per device, so the screen below has the same size on every shot; the text sits
+ * at its bottom, next to the screen; a longer caption grows upward into the top margin.
+ */
+.ss-head {
+  box-sizing: border-box;
+  height: var(--head);
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 var(--pad);
+  text-align: start;
+}
+.ss-mark { color: rgb(var(--so-on-care)); margin-bottom: var(--gap); }
+.ss-title {
+  margin: 0;
+  font-size: var(--title);
+  line-height: 1.16;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.ss-line-of { display: block; text-wrap: balance; }
+.ss-sub {
+  margin: calc(var(--gap) * 0.6) 0 0;
+  font-size: var(--sub);
+  line-height: 1.4;
+  font-weight: 600;
+  color: rgb(var(--so-on-care) / 0.86);
+  text-wrap: pretty;
+}
+
+/* the frame hangs from under the caption, centred, and may run off the bottom edge */
+.ss-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin-top: calc(var(--gap) * 1.6);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.ss-frame {
+  position: relative;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  background: rgb(var(--so-ink));
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), 0 28px 60px rgba(0, 0, 0, 0.32);
+}
+.ss-screen {
+  position: relative;
+  overflow: hidden;
+  transform-origin: 0 0;
+  font: 400 16px/1.5 var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* "Example", on the frame's top corner (as on the landing) */
+.ss-tag {
+  position: absolute;
+  top: -13px;
+  inset-inline-start: 24px;
+  z-index: 3;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgb(var(--so-warm));
+  color: rgb(var(--so-ink));
+  font: 800 12px/1 var(--font);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.ss-ipad .ss-tag { top: -18px; inset-inline-start: 40px; padding: 10px 18px; font-size: 18px; }
+
+/* the live QR card leaning out of the Add screen */
+.ss-qr {
+  position: absolute;
+  z-index: 3;
+  bottom: 18%;
+  inset-inline-end: -9%;
+  overflow: hidden;
+  border-radius: 22px;
+}
+/* on the iPad the frame is nearly as wide as the canvas: the card stays inside it */
+.ss-ipad .ss-qr { inset-inline-end: 6%; bottom: 34%; }
+
+/* the graph's names over its picture, as graph-3d draws them (the landing's .lvapp-name) */
+.ss-screen .lvapp-name {
+  position: absolute;
+  transform: translate(-50%, 11px);
+  font: 800 12px/1.15 var(--font);
+  color: rgb(var(--so-node-1));
+  white-space: nowrap;
+  text-shadow: 0 0 2px rgb(var(--so-scene)), 0 0 4px rgb(var(--so-scene)), 0 0 8px rgb(var(--so-scene));
+}
+.ss-screen .lvapp-me { transform: translate(-50%, 24px); font-size: 14px; }
+.ss-screen .lvapp-asker { color: rgb(var(--so-care-scene)); }
+
+/* the feature graphic: text on the left, the Circle on a phone at the right, running off the bottom edge */
+.ss-feature { flex-direction: row; align-items: center; }
+.ss-feature-text { flex: 1; padding: 0 0 0 76px; }
+.ss-feature .ss-mark { margin-bottom: 26px; }
+.ss-name { margin: 0; font-size: 58px; line-height: 1.05; font-weight: 800; letter-spacing: -0.025em; }
+.ss-line { margin: 18px 0 0; max-width: 19em; text-wrap: balance; font-size: 28px; line-height: 1.25; font-weight: 600; color: rgb(var(--so-on-care) / 0.88); }
+.ss-feature-phone { position: absolute; top: 58px; inset-inline-end: 84px; }
