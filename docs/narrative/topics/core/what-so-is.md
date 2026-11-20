@@ -3,7 +3,7 @@ id: 20261118-what-so-is
 title: What Social Organizer is (and is not)
 tags: [core, vocabulary]
 created: 2026-11-18
-updated: 2026-11-18
+updated: 2026-11-20
 related: [20261118-causal-chain, 20261118-principles, 20261118-vocabulary, 20261118-claims, 20261118-comparables, 20261118-invitational-coordination, 20261118-latent-connectedness, 20261118-landing-concepts]
 summary: Canonical descriptions of Social Organizer at several lengths (EN and RU), what it is not, and the facts that stay true in every description.
 ---
@@ -32,6 +32,15 @@ the network comes first, signals travel inside it, coordination is a consequence
 5. Social Organizer does not accept, transfer or hold money, takes no fee, does not judge, and
    guarantees nothing. Free and open source.
 6. What happened stays visible as activity history: facts, not ratings.
+
+### Where it comes from
+
+Social Organizer is the open-source utility of EXODUS 2.0, a digital societal innovation (DSI):
+direct peer-to-peer coordination of people who are already connected, without a central authority.
+The theory behind it is Andrei Lubalin's report *From Human Behaviour to Social Coordination*
+([invitational coordination](../theory/invitational-coordination.md)); the
+[DSI EXODUS 2.0 assistant](https://chatgpt.com/g/g-MXYLLg8W3-dsi-exodus-2-0) answers questions about it
+([sources](../meta/sources.md)).
 
 ### Canonical lines
 
