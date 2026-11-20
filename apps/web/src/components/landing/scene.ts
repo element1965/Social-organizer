@@ -1032,13 +1032,15 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const setG = (i: number, c: THREE.Color, s = 1) => setT(i, tmpC.copy(C.base).lerp(c, GI[i]!), s);
   /**
    * Until the scene is ready every late word is shown. Words already on screen or above it when it arrives stay
-   * shown until the reader goes back before their beat, so nothing the reader has seen vanishes.
+   * shown until the reader goes back before their beat and the words have left the screen below, so nothing the
+   * reader has seen vanishes (a sticky paragraph can be on screen while the scene time is still in the beat before).
+   * The position is read only while a word is kept and the time is before its beat.
    */
   const keepLate = els.lates.map((el) => !!el && el.getBoundingClientRect().top < innerHeight);
   const showLates = (t: number) =>
     els.lates.forEach((el, j) => {
       if (!el) return;
-      if (keepLate[j] && t < (phaseStart[j] ?? 0)) keepLate[j] = false;
+      if (keepLate[j] && t < (phaseStart[j] ?? 0) && el.getBoundingClientRect().top >= innerHeight) keepLate[j] = false;
       el.classList.toggle('on', t > (lateAt[j] ?? Infinity) || !!keepLate[j]);
     });
   const beatState = (t: number): BeatOut => {

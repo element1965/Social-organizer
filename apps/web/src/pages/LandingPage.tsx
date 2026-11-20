@@ -267,8 +267,13 @@ export function LandingPage() {
     let frame = 0;
     let idle = 0;
     let timer = 0;
+    let photoWait = 0;
+    let armed = false;
     const photo = skyRef.current?.querySelector('img');
     const whenIdle = () => {
+      if (armed) return;
+      armed = true;
+      window.clearTimeout(photoWait);
       frame = requestAnimationFrame(() => {
         if (typeof window.requestIdleCallback === 'function') idle = window.requestIdleCallback(loadScene, { timeout: 1200 });
         else timer = window.setTimeout(loadScene, 300);
@@ -280,6 +285,7 @@ export function LandingPage() {
       cancelAnimationFrame(frame);
       if (idle && typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idle);
       window.clearTimeout(timer);
+      window.clearTimeout(photoWait);
     }
     const visiblePart = 0.05;
     const observer = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver((entries) => {
@@ -295,6 +301,8 @@ export function LandingPage() {
     else {
       photo.addEventListener('load', whenIdle, { once: true });
       photo.addEventListener('error', whenIdle, { once: true });
+      // a stalled photograph must not keep the opening screen without birds: wait for it 2.5 s at most
+      photoWait = window.setTimeout(whenIdle, 2500);
     }
     return () => {
       cancelled = true;
