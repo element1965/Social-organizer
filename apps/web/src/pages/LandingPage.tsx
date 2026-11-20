@@ -206,13 +206,22 @@ export function LandingPage() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Show the photograph and story copy while the dynamic scene is loading. Observe the story copy
-  // beyond the opening screen so fast jumps and links into later chapters also initialize the scene.
+  // Show the photograph and story copy while the dynamic scene is loading. The scene loads once the opening
+  // photograph is in and the browser is idle, so the flock can fly in on the opening screen; the story copy
+  // beyond the opening screen is observed too, so a fast scroll or a link into a later chapter loads it sooner.
   useEffect(() => {
     const root = rootRef.current;
     let cancelled = false;
+    let started = false;
+    // opened at a later section: the browser may still be scrolling there, so the scene fades in, no fly-in
+    const hash = window.location.hash.slice(1);
+    const deepLink = !!hash && hash !== 'top';
     const showAllWords = () => lateRefs.current.forEach((el) => el?.classList.add('on'));
     const loadScene = () => {
+      if (started || cancelled) return;
+      started = true;
+      observer?.disconnect();
+      cancelIdle();
       void import('../components/landing/scene')
         .then(({ initScene }) => {
           if (cancelled) return;
@@ -242,6 +251,7 @@ export function LandingPage() {
                 railLinks: railLinkRefs.current.filter((a): a is HTMLAnchorElement => !!a),
               },
               optionsRef.current.scene,
+              { flyIn: !deepLink },
             );
             root.classList.add('scene-ready');
           } catch {
@@ -252,23 +262,52 @@ export function LandingPage() {
           if (!cancelled) showAllWords();
         });
     };
+    // whichever comes first: an idle moment once the opening photograph is in (so the scene's chunks never
+    // compete with it for the network), at most about a second later; or the story copy coming into view
+    let frame = 0;
+    let idle = 0;
+    let timer = 0;
+    let photoWait = 0;
+    let armed = false;
+    const photo = skyRef.current?.querySelector('img');
+    const whenIdle = () => {
+      if (armed) return;
+      armed = true;
+      window.clearTimeout(photoWait);
+      frame = requestAnimationFrame(() => {
+        if (typeof window.requestIdleCallback === 'function') idle = window.requestIdleCallback(loadScene, { timeout: 1200 });
+        else timer = window.setTimeout(loadScene, 300);
+      });
+    };
+    function cancelIdle() {
+      photo?.removeEventListener('load', whenIdle);
+      photo?.removeEventListener('error', whenIdle);
+      cancelAnimationFrame(frame);
+      if (idle && typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idle);
+      window.clearTimeout(timer);
+      window.clearTimeout(photoWait);
+    }
     const visiblePart = 0.05;
     const observer = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver((entries) => {
-      if (!entries.some((entry) => entry.intersectionRatio >= visiblePart)) return;
-      observer?.disconnect();
-      loadScene();
+      if (entries.some((entry) => entry.intersectionRatio >= visiblePart)) loadScene();
     }, { threshold: visiblePart });
     if (observer) {
       beatRefs.current.slice(1).forEach((beat) => {
         const copy = beat?.querySelector('.copy');
         if (copy) observer.observe(copy);
       });
-    } else {
-      loadScene();
+    }
+    if (!photo || photo.complete) whenIdle();
+    else {
+      photo.addEventListener('load', whenIdle, { once: true });
+      photo.addEventListener('error', whenIdle, { once: true });
+      // a stalled photograph must not keep the opening screen without birds: wait for it 2.5 s at most
+      photoWait = window.setTimeout(whenIdle, 2500);
     }
     return () => {
       cancelled = true;
       observer?.disconnect();
+      cancelIdle();
       sceneHandle.current?.destroy();
       root?.classList.remove('scene-ready');
       sceneHandle.current = null;

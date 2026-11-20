@@ -50,6 +50,14 @@ export interface SceneHandle {
   destroy(): void;
 }
 
+export interface SceneIntro {
+  /**
+   * The flock may fly into the frame if the reader is still on the opening screen when the scene is ready. False
+   * when the page was opened at a later section (it may still be scrolling there): then the scene only fades in.
+   */
+  flyIn?: boolean;
+}
+
 interface Shot {
   t: THREE.Vector3;
   d: number;
@@ -75,7 +83,7 @@ const remap = (x: number, a: number, b: number) => clamp((x - a) / (b - a));
 const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 const easeIO = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
 
-export function initScene(els: SceneElements, initial: SceneOptions): SceneHandle {
+export function initScene(els: SceneElements, initial: SceneOptions, intro: SceneIntro = {}): SceneHandle {
   let opts = initial;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const small = innerWidth < 760;
@@ -200,30 +208,40 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   const knn = (k: number): number[][] => {
     grid(NET);
     const res: number[][] = new Array(N);
+    // the k nearest so far, nearest first. A candidate goes after those at the same distance and a bucket met
+    // twice is skipped, so this keeps exactly the neighbours, in the order, that a stable sort of all candidates
+    // would; it only spares the sort (it ran for most of a second on a desktop before the flock could fly in).
+    const bd = new Float64Array(k);
+    const bj = new Int32Array(k);
     for (let i = 0; i < N; i++) {
       const gx = Math.floor(NET[i * 3]! / CELL);
       const gy = Math.floor(NET[i * 3 + 1]! / CELL);
       const gz = Math.floor(NET[i * 3 + 2]! / CELL);
-      const cand: [number, number][] = [];
+      let n = 0;
       for (let a = -2; a <= 2; a++)
         for (let b = -2; b <= 2; b++)
           for (let c = -2; c <= 2; c++)
-            for (let j = head[hh(gx + a, gy + b, gz + c)]!; j !== -1; j = nxt[j]!)
-              if (j !== i)
-                cand.push([
-                  (NET[j * 3]! - NET[i * 3]!) ** 2 + (NET[j * 3 + 1]! - NET[i * 3 + 1]!) ** 2 + (NET[j * 3 + 2]! - NET[i * 3 + 2]!) ** 2,
-                  j,
-                ]);
-      cand.sort((p, q) => p[0] - q[0]);
-      res[i] = [];
-      const seen = new Set<number>();
-      for (const [, j] of cand) {
-        if (!seen.has(j)) {
-          seen.add(j);
-          res[i]!.push(j);
-        }
-        if (res[i]!.length === k) break;
-      }
+            for (let j = head[hh(gx + a, gy + b, gz + c)]!; j !== -1; j = nxt[j]!) {
+              if (j === i) continue;
+              const d = (NET[j * 3]! - NET[i * 3]!) ** 2 + (NET[j * 3 + 1]! - NET[i * 3 + 1]!) ** 2 + (NET[j * 3 + 2]! - NET[i * 3 + 2]!) ** 2;
+              if (n === k && d >= bd[k - 1]!) continue;
+              let dup = false;
+              for (let m = 0; m < n; m++)
+                if (bj[m] === j) {
+                  dup = true;
+                  break;
+                }
+              if (dup) continue;
+              let p = n < k ? n++ : k - 1;
+              while (p > 0 && bd[p - 1]! > d) {
+                bd[p] = bd[p - 1]!;
+                bj[p] = bj[p - 1]!;
+                p--;
+              }
+              bd[p] = d;
+              bj[p] = j;
+            }
+      res[i] = Array.from(bj.subarray(0, n));
     }
     for (let i = 0; i < N; i++) for (const j of res[i]!) if (!res[j]!.includes(i)) res[j]!.push(i);
     return res;
@@ -682,8 +700,24 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
 
   // ---- motion: the shape breathes and drifts; every bird flaps and bobs; neighbours stay neighbours ----
   const PREV = new Float32Array(N * 3);
-  const DIR = new Float32Array(N * 3);
-  for (let i = 0; i < N; i++) DIR[i * 3] = 1;
+  /** Each bird starts facing along the ribbon. */
+  const DIR = new Float32Array(TAN);
+  // ---- the arrival: on the opening screen the flock flies in from beyond the left edge, out of the haze ----
+  // Each bird carries an offset from its place that decays to nothing; the scroll-driven state underneath is
+  // untouched, so scrolling during the arrival only makes the offset die away sooner, it never jumps.
+  /** A bird's start minus its place in the ribbon. */
+  const AOFF = new Float32Array(N * 3);
+  /** A bend on the way, up or down: no two birds fly the same straight line. */
+  const ALIFT = new Float32Array(N);
+  /** When a bird sets off, in seconds: the head of the ribbon first, its tail streaming in after. */
+  const ADEL = new Float32Array(N);
+  /** Each bird's flight, in seconds: some birds take longer, so the cloud loosens and gathers as it comes. */
+  const AFLY = new Float32Array(N);
+  /** How much of the offset the scroll leaves: 1 while the reader stays, 0 once they have moved on; 0 = no arrival. */
+  let arrK = 0;
+  /** Seconds of the arrival shown so far (only drawn frames count). */
+  let arrT = 0;
+  let arrEnd = 0;
   const place = (T: number, morph: number, calm: number, g: number) => {
     const ampH = 1.8;
     const ampN = lerp(1.6, 0.7, calm);
@@ -726,6 +760,14 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
         px = lerp(px, GPOS[ix]!, gi);
         py = lerp(py, GPOS[ix + 1]!, gi) + Math.sin(Math.PI * gi) * (1 + 2 * ((ph * 3) % 1));
         pz = lerp(pz, GPOS[ix + 2]!, gi);
+      }
+      if (arrK > 0) {
+        // fast in, settling slowly (ease-out cubic): what is left of the way is (1 - a)^3
+        const rest = (1 - clamp((arrT - ADEL[i]!) / AFLY[i]!)) ** 3;
+        const w = rest * arrK;
+        px += AOFF[ix]! * w;
+        py += AOFF[ix + 1]! * w + Math.sin(Math.PI * rest) * ALIFT[i]! * arrK;
+        pz += AOFF[ix + 2]! * w;
       }
       P[ix] = px;
       P[ix + 1] = py;
@@ -988,12 +1030,23 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   };
   /** In the graph a colour is reached as the bird arrives: a dark bird on the sky, a light dot on the scene. */
   const setG = (i: number, c: THREE.Color, s = 1) => setT(i, tmpC.copy(C.base).lerp(c, GI[i]!), s);
+  /**
+   * Until the scene is ready every late word is shown. Words already on screen or above it when it arrives stay
+   * shown until the reader goes back before their beat and the words have left the screen below, so nothing the
+   * reader has seen vanishes (a sticky paragraph can be on screen while the scene time is still in the beat before).
+   * The position is read only while a word is kept and the time is before its beat.
+   */
+  const keepLate = els.lates.map((el) => !!el && el.getBoundingClientRect().top < innerHeight);
+  const showLates = (t: number) =>
+    els.lates.forEach((el, j) => {
+      if (!el) return;
+      if (keepLate[j] && t < (phaseStart[j] ?? 0) && el.getBoundingClientRect().top >= innerHeight) keepLate[j] = false;
+      el.classList.toggle('on', t > (lateAt[j] ?? Infinity) || !!keepLate[j]);
+    });
   const beatState = (t: number): BeatOut => {
     const k = Math.floor(t);
     const p = t - k;
-    els.lates.forEach((el, j) => {
-      if (el) el.classList.toggle('on', t > (lateAt[j] ?? Infinity));
-    });
+    showLates(t);
     const out: BeatOut = { thin: [], thick: [], path: null, halo: -1, ring: -1, T: {} };
     if (k >= MORPH) for (let i = 0; i < N; i++) setG(i, ringCol(i), 1);
     else for (let i = 0; i < N; i++) setT(i, C.base, 1);
@@ -1188,11 +1241,64 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   let graphOn = false;
   const fogNight = new THREE.Color();
   const tmpP = new THREE.Vector3();
+
+  // The scene never pops in: on the opening screen the flock flies in; anywhere else (a link to a later section,
+  // a fast scroll, a slow network) or with reduced motion, the scene only fades in, and so do the evening and the
+  // app's scene over the photograph. The sky eases into the camera's framing instead of jumping to it.
+  const flyIn = !reduce && intro.flyIn !== false && tD < 0.3;
+  const FADE = flyIn ? 0.5 : reduce ? 0.3 : 0.6;
+  const SETTLE = flyIn ? 1.8 : FADE;
+  let introT = 0;
+  let introDone = false;
+  canvas.style.opacity = '0';
+  /** Page time when the arrival began, and the furthest the reader has scrolled from it since. */
+  let arrFrom = tD;
+  let arrGone = 0;
+  if (flyIn) {
+    frameCamera(tS, 0, 0); // the opening shot as the first frame shows it
+    let s = 23; // a sequence of its own: the birds' places must not change
+    const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+    const h = new THREE.Vector3();
+    const ray = new THREE.Vector3();
+    for (let i = 0; i < N; i++) {
+      const ix = i * 3;
+      h.set(RIB[ix]!, RIB[ix + 1]!, RIB[ix + 2]!);
+      const far = h.distanceTo(camera.position) * (1.3 + 0.45 * r());
+      h.project(camera);
+      // the start: just beyond the left edge of the frame, higher up, and further away, so the birds come out
+      // of the haze; a loose cloud that tightens into the ribbon as it arrives
+      ray.set(-1.1 - 0.35 * r(), lerp(h.y, 0.35, 0.5) + (r() - 0.5) * 0.6, 0.5).unproject(camera).sub(camera.position).normalize();
+      AOFF[ix] = camera.position.x + ray.x * far - RIB[ix]!;
+      AOFF[ix + 1] = camera.position.y + ray.y * far - RIB[ix + 1]!;
+      AOFF[ix + 2] = camera.position.z + ray.z * far - RIB[ix + 2]!;
+      ADEL[i] = 0.3 * (1 - U[i]!) + 0.12 * r();
+      AFLY[i] = 1.2 + 0.45 * r();
+      ALIFT[i] = (r() - 0.4) * 14;
+      arrEnd = Math.max(arrEnd, ADEL[i]! + AFLY[i]!);
+    }
+    arrK = 1;
+  }
+  /** The first drawn frame has no previous one: the birds start without a turn. */
+  let primed = false;
+
   const tick = (dt: number, target: number) => {
     clock += reduce ? 0 : dt;
     uTime.value = clock;
     tD += (target - tD) * (reduce ? 1 : Math.min(1, dt * 4));
     tS = sceneT(tD);
+    if (arrK > 0) {
+      // the arrival dies away in time, and sooner as the reader scrolls on: half the opening beat ends it
+      arrT += dt;
+      arrGone = Math.max(arrGone, tD - arrFrom);
+      arrK = arrT >= arrEnd ? 0 : 1 - ease(clamp(arrGone / 0.5));
+    }
+    introT += dt;
+    const fade = ease(clamp(introT / FADE));
+    const settle = ease(clamp(introT / SETTLE));
+    if (!introDone) {
+      canvas.style.opacity = fade < 1 ? fade.toFixed(3) : '';
+      introDone = fade >= 1 && settle >= 1;
+    }
     // the graph has its own, slower pace: the flock takes a moment to gather however fast the page moves
     const gTarget = clamp((tS - MORPH) / 0.3);
     gS += (gTarget - gS) * (reduce ? 1 : Math.min(1, dt * 1.1));
@@ -1205,6 +1311,10 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     for (let i = 0; i < N * 3; i++) col[i]! += (colT[i]! - col[i]!) * 0.14;
     const allDots = gS >= 1;
     birds.visible = !allDots;
+    if (!primed) {
+      PREV.set(P);
+      primed = true;
+    }
     if (!allDots) {
       if (birds.instanceColor) birds.instanceColor.needsUpdate = true;
       syncBirds(morph);
@@ -1269,11 +1379,11 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     }
     // the evening darkens as the story goes on; then the app's scene takes over, its wash centred on you
     const nt = clamp((tS - 2.6) / 5);
-    nightEl.style.opacity = (nt * 0.62).toFixed(3);
+    nightEl.style.opacity = (nt * 0.62 * fade).toFixed(3);
     const bgA = ease(gS);
     if (bgA > 0) {
       V(you, tmpP).project(camera);
-      const bg = `${bgA.toFixed(3)}|${Math.round(((tmpP.x + 1) / 2) * innerWidth)}|${Math.round(((1 - tmpP.y) / 2) * innerHeight)}`;
+      const bg = `${(bgA * fade).toFixed(3)}|${Math.round(((tmpP.x + 1) / 2) * innerWidth)}|${Math.round(((1 - tmpP.y) / 2) * innerHeight)}`;
       if (bg !== lastBg) {
         lastBg = bg;
         const [a, gx, gy] = bg.split('|');
@@ -1289,7 +1399,8 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     // and closes in on close shots
     if (bgA < 1) {
       const close = clamp((94 - CS.d) / 80);
-      skyEl.style.transform = `translate3d(${(-CS.yaw * 9 + CS.off * 5).toFixed(2)}%, ${(clamp(tS / 3) * 5 + CS.pitch * 18).toFixed(2)}%, 0) scale(${(1.04 + close * 0.14).toFixed(3)})`;
+      // (before the scene the photograph is unmoved: it eases from there into the framing)
+      skyEl.style.transform = `translate3d(${((-CS.yaw * 9 + CS.off * 5) * settle).toFixed(2)}%, ${((clamp(tS / 3) * 5 + CS.pitch * 18) * settle).toFixed(2)}%, 0) scale(${(1 + (0.04 + close * 0.14) * settle).toFixed(3)})`;
     }
     fogNight.setRGB(lerp(0.42, 0.07, nt), lerp(0.5, 0.14, nt), lerp(0.53, 0.13, nt));
     fog.color.copy(fogNight).lerp(C.scene, bgA);
@@ -1299,12 +1410,15 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   let raf = 0;
   const frame = (now: number) => {
     raf = requestAnimationFrame(frame);
-    const dt = Math.min(0.05, (now - last) / 1000);
+    // the first frame's timestamp can precede the end of the setup above: no negative step
+    const dt = clamp((now - last) / 1000, 0, 0.05);
     last = now;
     if (!visible || document.hidden) return;
     tick(dt, storyT());
   };
   raf = requestAnimationFrame(frame);
+  // the late words take their state now, before the page marks the scene ready, not a frame later
+  showLates(tS);
 
   if (import.meta.env.DEV) {
     (window as unknown as { __lvScene?: unknown }).__lvScene = {
@@ -1313,10 +1427,21 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
         for (let i = 0; i < n; i++) tick(1 / 60, d);
         return tS;
       },
+      /** Plays the scene's entrance again from where the page is (the fly-in only if the page opened with it). */
+      replay: () => {
+        introT = 0;
+        introDone = false;
+        if (flyIn) {
+          arrT = 0;
+          arrGone = 0;
+          arrFrom = tD;
+          arrK = 1;
+        }
+      },
       state: () => {
         const d = storyT();
         const t = sceneT(d);
-        return { y: Math.round(scrollY), page: +d.toFixed(3), beat: Math.floor(t), p: +(t % 1).toFixed(3), g: +gS.toFixed(3), spin: +spin.toFixed(2), spinning };
+        return { y: Math.round(scrollY), page: +d.toFixed(3), beat: Math.floor(t), p: +(t % 1).toFixed(3), g: +gS.toFixed(3), spin: +spin.toFixed(2), spinning, flyIn, arrival: +arrK.toFixed(3), arrT: +arrT.toFixed(2) };
       },
       cast: {
         you,
@@ -1346,6 +1471,7 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       io.disconnect();
       logo.onload = null;
       els.root.classList.remove('past', 'graph');
+      canvas.style.opacity = '';
       geo.dispose();
       mat.dispose();
       glowTex.dispose();

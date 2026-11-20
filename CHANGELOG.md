@@ -4,6 +4,10 @@ All notable changes to Social Organizer are documented here. The format follows 
 
 ## [Unreleased]
 
+### Fixed
+
+- The landing's starlings fly into the opening screen soon after it loads instead of popping in once the visitor scrolls; opened at a later section or with reduced motion, the scene fades in.
+
 ## [1.0.0] - 2026-11-20
 
 First public release of the code.
