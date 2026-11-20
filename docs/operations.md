@@ -8,6 +8,7 @@
 - **Services:** PostgreSQL 17, Redis 7, Fastify API
 - **Migrations:** Railway does not run them; apply them by hand before deploying code that needs them. First set `DATABASE_URL` to the production database's public URL from the Railway variables: export it in your shell. An exported variable wins over `packages/db/.env`. Then run `cd packages/db && npx prisma migrate deploy`.
 - **GitHub:** https://github.com/element1965/Social-organizer
+- **Lambertain auto-delivery:** commits titled "Lambertain auto-delivery" (author `info@lambertain.agency`) are pushed straight to `main` by [Lambertain](https://www.lambertain.site/), the company of contributor Nikita Solovey. They deploy to production like any other push. After the history rewrite of 20.11.2026 the delivery runs only from a fresh clone, by fast-forward, never with a force push.
 
 The API serves the site icons, web manifest and robots.txt from the built web files. The sitemap lists the six public pages and their language alternatives. Invite and public Need pages send `X-Robots-Tag: noindex` and use the site link-preview image when the person has no photo.
 

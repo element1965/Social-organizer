@@ -153,6 +153,7 @@
 .site-press .pr-people div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .site-press .pr-people b { font-size: 18px; letter-spacing: -.01em; }
 .site-press .pr-people div > span { font-size: 15px; line-height: 1.45; color: var(--muted); }
+.site-press .pr-people .pr-org { align-self: flex-start; font-size: 15px; font-weight: 700; color: var(--care-text); text-decoration: underline; text-underline-offset: 3px; }
 .site-press .pr-facts { margin-top: 24px; max-width: 860px; }
 .site-press .pr-facts > div { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 4px 24px; padding: 14px 0; border-top: 1px solid var(--line-soft); }
 .site-press .pr-facts > div:last-child { border-bottom: 1px solid var(--line-soft); }

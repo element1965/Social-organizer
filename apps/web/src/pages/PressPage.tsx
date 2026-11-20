@@ -8,7 +8,7 @@ import { Avatar, formatMoney } from '../components/ui2';
 import { Reveal, useLivePeopleCount } from '../components/site/hooks';
 import { GITHUB_URL } from '../components/site/SiteHeader';
 import { SitePage } from '../components/site/SitePage';
-import { REPORT_URL, TEAM, TEAM_URL } from '../components/site/team';
+import { REPORT_URL, TEAM, TEAM_ORGS, TEAM_URL } from '../components/site/team';
 
 const ext = { target: '_blank', rel: 'noopener noreferrer' } as const;
 /** The example Need of the about paragraph: N dollars reach up to N people. */
@@ -97,12 +97,18 @@ export function PressPage() {
         <ul className="pr-people">
           {TEAM.map((id) => {
             const name = t(`team.${id}.name`);
+            const org = TEAM_ORGS[id];
             return (
               <li key={id}>
                 <Avatar name={name} size={48} />
                 <div>
                   <b>{name}</b>
                   <span>{t(`team.${id}.role`)}</span>
+                  {org && (
+                    <a className="pr-org" href={org.url} target="_blank" rel="noopener noreferrer">
+                      {org.name}
+                    </a>
+                  )}
                 </div>
               </li>
             );
