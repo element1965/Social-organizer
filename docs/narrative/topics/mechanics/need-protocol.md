@@ -14,7 +14,7 @@ summary: Verified fact sheet of what the production app does today (network, acc
 
 ## Context
 
-Checked against the code on `main` (production) at `f354569c` on 2026-11-18; the three later
+Checked against the code on `main` (production) at `ad02ee81` on 2026-11-18; the three later
 Lambertain commits on `main` change iOS push, the login invitation code and one invite string, not
 these mechanics. **Code and `packages/i18n/locales/en.json` are the source of truth; `SPEC.md` is
 partly outdated** (table at the end). Re-verify before any video or landing goes out, and bump

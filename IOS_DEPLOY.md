@@ -6,7 +6,7 @@ App: **Social Orginizer** · Apple ID `6768132198` · Bundle `com.socialorganize
 
 ### ⚠️ Reject 2026-06-10 (build 1) — исправлено в коде, нужен новый бинарник build 2
 
-Apple отклонила build 1 на iPad Air 11" (iPadOS 26.5) по трём пунктам. Все три исправлены (коммит a53058e):
+Apple отклонила build 1 на iPad Air 11" (iPadOS 26.5) по трём пунктам. Все три исправлены (коммит 59ea005):
 
 1. **2.1a — краш камеры.** Аватар грузится через `<input type="file" accept="image/*">` (SettingsPage). На iPad iOS крашит без usage-описаний. Фикс: в `Info.plist` добавлены `NSCameraUsageDescription`, `NSPhotoLibraryUsageDescription`, `NSPhotoLibraryAddUsageDescription`.
 2. **2.1a — зависает Sign in with Apple.** Deep link `socialorganizer://auth-success` не возвращался в приложение. Фикс: в `Info.plist` добавлен `CFBundleURLTypes` со схемой `socialorganizer`.
@@ -18,7 +18,7 @@ Build 2 собран в Xcode и загружен (2026-06-12), привязан
 
 Камера/push/Apple-зависание **приняты**. Остался один пункт:
 
-- **2.1a — петля загрузки после Sign in with Apple** на iPad, приложение не открывалось. Причина: `NativePushBootstrap` показывал полноэкранный блокирующий спиннер (permStatus `checking`) при инициализации push на ВСЕХ native; вход через Apple делает полную перезагрузку (`window.location.href`), которая перемонтирует компонент, и на iOS инициализация push могла зависнуть → бесконечный спиннер. Фикс (коммит 49e3562): push-бутстрап работает **только на Android**, на iOS никогда не блокирует UI. Плюс добавлен роут `/onboarding`→`/dashboard` и catch-all, чтобы новые юзеры не попадали на пустую страницу. Заодно фикс рефералки Apple: invite-токен прокидывается через OAuth round-trip (`state.inv`), чтобы приглашённый присоединялся в кластер пригласившего на первом рукопожатии (как TG `startapp`).
+- **2.1a — петля загрузки после Sign in with Apple** на iPad, приложение не открывалось. Причина: `NativePushBootstrap` показывал полноэкранный блокирующий спиннер (permStatus `checking`) при инициализации push на ВСЕХ native; вход через Apple делает полную перезагрузку (`window.location.href`), которая перемонтирует компонент, и на iOS инициализация push могла зависнуть → бесконечный спиннер. Фикс (коммит f3b2eeb): push-бутстрап работает **только на Android**, на iOS никогда не блокирует UI. Плюс добавлен роут `/onboarding`→`/dashboard` и catch-all, чтобы новые юзеры не попадали на пустую страницу. Заодно фикс рефералки Apple: invite-токен прокидывается через OAuth round-trip (`state.inv`), чтобы приглашённый присоединялся в кластер пригласившего на первом рукопожатии (как TG `startapp`).
 
 > 💡 **Важно:** приложение — webview, грузит `www.orginizer.com`. Любые баги фронта/бэка чинятся деплоем на Railway + повторной отправкой ТОГО ЖЕ бинарника. Новый Xcode-архив нужен только для изменений в Info.plist/нативном коде.
 
@@ -26,7 +26,7 @@ Build 2 собран в Xcode и загружен (2026-06-12), привязан
 
 ### ⚠️ Reject 2026-06-15 (build 2) — петля перезагрузок, веб-фикс без бинарника
 
-- **2.1a — «flashed between blue and white screen repeatedly»** после Sign in with Apple. По скриншотам: синий = нативный фон Capacitor (`#1e293b`) во время перезагрузки webview, белый+спиннер = `ProtectedRoute`. Это петля перезагрузок. Причина: нативный deep-link хендлер завершал вход полной перезагрузкой `window.location.href`, а на iPad `CapApp.getLaunchUrl()` после каждой перезагрузки снова отдаёт тот же deep link → хендлер опять логинит → опять перезагрузка → бесконечно. Фикс (коммит 1c4eb2e): навигация через React Router `navigate()` без перезагрузки + дедуп каждого auth-URL (`processedRef`). tRPC берёт токен из localStorage на каждый запрос, перезагрузка не нужна.
+- **2.1a — «flashed between blue and white screen repeatedly»** после Sign in with Apple. По скриншотам: синий = нативный фон Capacitor (`#1e293b`) во время перезагрузки webview, белый+спиннер = `ProtectedRoute`. Это петля перезагрузок. Причина: нативный deep-link хендлер завершал вход полной перезагрузкой `window.location.href`, а на iPad `CapApp.getLaunchUrl()` после каждой перезагрузки снова отдаёт тот же deep link → хендлер опять логинит → опять перезагрузка → бесконечно. Фикс (коммит d08d75b): навигация через React Router `navigate()` без перезагрузки + дедуп каждого auth-URL (`processedRef`). tRPC берёт токен из localStorage на каждый запрос, перезагрузка не нужна.
 - **План Б, если не пройдёт:** нативный плагин Sign in with Apple (`@capacitor-community/apple-sign-in`) — без системного браузера и deep link. Нужен build 3 + capability в Xcode + App ID в Apple Developer.
 
 **2026-06-16:** веб-фикс задеплоен, build 2 пере-отправлен → `WAITING_FOR_REVIEW`.

@@ -39,7 +39,7 @@ public repository; the notes keep the substance.
 | [Early glossary (Russian)](../../../archive/glossary_social_organizer.md) | — | The author's earlier framing (Dunbar, six degrees, autocatalytic growth) | what-so-is |
 | `SPEC.md` | partly outdated | Original rules; see the "outdated" table in the protocol note | need-protocol |
 | Landing and `/how` strings in `packages/i18n/locales/en.json` | 2026-11-18 | Current public copy | what-so-is, vocabulary |
-| Code check of `main` at `f354569c` (plus the three later Lambertain commits reviewed) | 2026-11-18 | Verified mechanics, numbers, strings, gaps | need-protocol, user-journey, open-questions |
+| Code check of `main` at `ad02ee81` (plus the three later Lambertain commits reviewed) | 2026-11-18 | Verified mechanics, numbers, strings, gaps | need-protocol, user-journey, open-questions |
 
 ### Missing
 

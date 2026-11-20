@@ -6,7 +6,7 @@
 > - **Special roles:** a collection of an `AUTHOR`/`DEVELOPER` or an admin with an amount is announced at creation like any other; the `special-notify` worker is scheduled.
 > - **Repeat waves** (`re-notify`, every 12 hours) are on for one-time collections only. A regular collection still notifies once.
 
-This document is based only on the repository code (branch `main`, commit `3924fe4`). File paths are given
+This document is based only on the repository code (branch `main`, commit `87d52d0`). File paths are given
 so that every statement can be checked. Next to it are the video instructions
 `apps/web/public/videos/regular-collection/<locale>.mp4` (one per app language), recorded on a local copy of the app.
 In the app they open from the play button next to the "Regular" type on the create screen and next to the QR block
