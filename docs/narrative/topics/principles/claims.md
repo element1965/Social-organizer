@@ -26,7 +26,7 @@ compensation"). This note sorts claims by how safe they are.
 - Each connection is confirmed by both people.
 - Participation is voluntary, starts at $1 and can be changed or withdrawn while the Need is open.
 - Every Need has a participants' chat, in any messenger.
-- SO does not accept, transfer or hold money and takes no fee. Open source, non-profit.
+- SO does not accept, transfer or hold money and takes no fee. Free and open source.
 - Everyone sees the handshake chain to the author and the author's activity facts.
 - Nobody scores or rates people in SO.
 - No operation in the app moves money, creates an obligation or assigns anyone to act (the report's "zero direct operational harm").

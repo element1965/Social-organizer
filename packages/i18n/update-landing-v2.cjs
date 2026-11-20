@@ -23,7 +23,7 @@ const translations = {
     block6Title: 'ليست منصة. أداة اجتماعية بسيطة',
     block6Text: 'لا تحكم\nلا وسطاء\n\nلا تعالج المدفوعات\nلا تحتجز الأموال\n\nكل شيء يحدث بين الناس',
     ctaTitle: 'ابدأ مع من تعرفهم بالفعل',
-    footer: 'مفتوح المصدر. غير تجاري.',
+    footer: 'مفتوح المصدر · مجاني، بلا عمولات',
   },
   be: {
     heroSubtitle: 'Прамая ўзаемная падтрымка праз сапраўдныя сувязі.',
@@ -42,7 +42,7 @@ const translations = {
     block6Title: 'Не платформа. Просты сацыяльны інструмент',
     block6Text: 'Ніякага кантролю\nНіякіх пасрэднікаў\n\nНе апрацоўвае плацяжы\nНе ўтрымлівае сродкі\n\nУсё адбываецца паміж людзьмі',
     ctaTitle: 'Пачніце з людзьмі, якіх вы ўжо ведаеце',
-    footer: 'Адкрыты код. Некамерцыйны.',
+    footer: 'Адкрыты код · Бясплатна, без камісій',
   },
   cs: {
     heroSubtitle: 'Přímá vzájemná podpora prostřednictvím skutečných vztahů.',
@@ -61,7 +61,7 @@ const translations = {
     block6Title: 'Ne platforma. Jednoduchý sociální nástroj',
     block6Text: 'Žádná kontrola\nŽádní zprostředkovatelé\n\nNezpracovává platby\nNedržuje finanční prostředky\n\nVše probíhá mezi lidmi',
     ctaTitle: 'Začněte s lidmi, které již znáte',
-    footer: 'Otevřený zdrojový kód. Nekomerční.',
+    footer: 'Otevřený kód · Zdarma, bez poplatků',
   },
   da: {
     heroSubtitle: 'Direkte gensidig støtte gennem ægte forbindelser.',
@@ -80,7 +80,7 @@ const translations = {
     block6Title: 'Ikke en platform. Et enkelt socialt værktøj',
     block6Text: 'Ingen kontrol\nIngen mellemmænd\n\nBehandler ikke betalinger\nOpbevarer ikke midler\n\nAlt sker mellem folk',
     ctaTitle: 'Start med folk du allerede kender',
-    footer: 'Open-source. Ikke-kommerciel.',
+    footer: 'Åben kildekode · Gratis, ingen gebyrer',
   },
   de: {
     heroSubtitle: 'Direkte gegenseitige Unterstützung durch echte Verbindungen.',
@@ -99,7 +99,7 @@ const translations = {
     block6Title: 'Keine Plattform. Ein einfaches soziales Werkzeug',
     block6Text: 'Keine Kontrolle\nKeine Vermittler\n\nVerarbeitet keine Zahlungen\nHält keine Gelder\n\nAlles passiert zwischen Menschen',
     ctaTitle: 'Beginne mit Menschen, die du bereits kennst',
-    footer: 'Open-Source. Nicht kommerziell.',
+    footer: 'Open Source · Kostenlos, ohne Gebühren',
   },
   en: {
     heroSubtitle: 'Direct mutual support through real connections.',
@@ -118,7 +118,7 @@ const translations = {
     block6Title: 'Not a platform. A simple social utility',
     block6Text: 'No control\nNo intermediaries\n\nIt doesn\'t process payments\nIt doesn\'t hold funds\n\nEverything happens between people',
     ctaTitle: 'Start with people you already know',
-    footer: 'Open-source. Non-commercial.',
+    footer: 'Open source · Free, no fees',
   },
   es: {
     heroSubtitle: 'Apoyo mutuo directo a través de conexiones reales.',
@@ -137,7 +137,7 @@ const translations = {
     block6Title: 'No una plataforma. Una simple utilidad social',
     block6Text: 'Sin control\nSin intermediarios\n\nNo procesa pagos\nNo retiene fondos\n\nTodo sucede entre personas',
     ctaTitle: 'Comienza con personas que ya conoces',
-    footer: 'Código abierto. Sin fines de lucro.',
+    footer: 'Código abierto · Gratis, sin comisiones',
   },
   fi: {
     heroSubtitle: 'Suoraa keskinäistä tukea todellisten yhteyksien kautta.',
@@ -156,7 +156,7 @@ const translations = {
     block6Title: 'Ei alusta. Yksinkertainen sosiaalinen työkalu',
     block6Text: 'Ei valvontaa\nEi välittäjiä\n\nEi käsittele maksuja\nEi pidä varoja\n\nKaikki tapahtuu ihmisten välillä',
     ctaTitle: 'Aloita ihmisistä, jotka jo tunnet',
-    footer: 'Avoimen lähdekoodin. Ei-kaupallinen.',
+    footer: 'Avoin lähdekoodi · Ilmainen, ei palvelumaksuja',
   },
   fr: {
     heroSubtitle: 'Soutien mutuel direct à travers de vraies relations.',
@@ -175,7 +175,7 @@ const translations = {
     block6Title: 'Pas une plateforme. Un simple outil social',
     block6Text: 'Pas de contrôle\nPas d\'intermédiaires\n\nNe traite pas les paiements\nNe détient pas de fonds\n\nTout se passe entre les gens',
     ctaTitle: 'Commencez avec des personnes que vous connaissez déjà',
-    footer: 'Open-source. Non commercial.',
+    footer: 'Open source · Gratuit, sans commission',
   },
   he: {
     heroSubtitle: 'תמיכה הדדית ישירה דרך קשרים אמיתיים.',
@@ -194,7 +194,7 @@ const translations = {
     block6Title: 'לא פלטפורמה. כלי חברתי פשוט',
     block6Text: 'אין שליטה\nאין מתווכים\n\nלא מעבד תשלומים\nלא מחזיק כספים\n\nהכל קורה בין אנשים',
     ctaTitle: 'התחל עם אנשים שאתה כבר מכיר',
-    footer: 'קוד פתוח. לא מסחרי.',
+    footer: 'קוד פתוח · חינם, בלי עמלות',
   },
   hi: {
     heroSubtitle: 'वास्तविक संबंधों के माध्यम से प्रत्यक्ष पारस्परिक समर्थन।',
@@ -213,7 +213,7 @@ const translations = {
     block6Title: 'कोई प्लेटफ़ॉर्म नहीं। एक सरल सामाजिक उपकरण',
     block6Text: 'कोई नियंत्रण नहीं\nकोई बिचौलिया नहीं\n\nभुगतान संसाधित नहीं करता\nधन नहीं रखता\n\nसब कुछ लोगों के बीच होता है',
     ctaTitle: 'उन लोगों के साथ शुरू करें जिन्हें आप पहले से जानते हैं',
-    footer: 'ओपन-सोर्स. गैर-व्यावसायिक.',
+    footer: 'ओपन सोर्स · मुफ़्त, कोई शुल्क नहीं',
   },
   id: {
     heroSubtitle: 'Dukungan saling langsung melalui hubungan nyata.',
@@ -232,7 +232,7 @@ const translations = {
     block6Title: 'Bukan platform. Utilitas sosial sederhana',
     block6Text: 'Tidak ada kontrol\nTidak ada perantara\n\nTidak memproses pembayaran\nTidak menyimpan dana\n\nSemua terjadi antar orang',
     ctaTitle: 'Mulailah dengan orang yang sudah Anda kenal',
-    footer: 'Open-source. Nirlaba.',
+    footer: 'Sumber terbuka · Gratis, tanpa biaya',
   },
   it: {
     heroSubtitle: 'Supporto reciproco diretto attraverso connessioni reali.',
@@ -251,7 +251,7 @@ const translations = {
     block6Title: 'Non una piattaforma. Una semplice utilità sociale',
     block6Text: 'Nessun controllo\nNessun intermediario\n\nNon elabora pagamenti\nNon detiene fondi\n\nTutto accade tra le persone',
     ctaTitle: 'Inizia con le persone che già conosci',
-    footer: 'Open-source. Non commerciale.',
+    footer: 'Codice aperto · Gratis, senza commissioni',
   },
   ja: {
     heroSubtitle: '本物のつながりを通じた直接的な相互支援。',
@@ -270,7 +270,7 @@ const translations = {
     block6Title: 'プラットフォームではない。シンプルな社会ツール',
     block6Text: 'コントロールなし\n仲介者なし\n\n支払いを処理しない\n資金を保持しない\n\nすべては人々の間で起きる',
     ctaTitle: 'すでに知っている人から始めよう',
-    footer: 'オープンソース。非商業的。',
+    footer: 'オープンソース · 無料、手数料なし',
   },
   ko: {
     heroSubtitle: '실제 연결을 통한 직접적인 상호 지원.',
@@ -289,7 +289,7 @@ const translations = {
     block6Title: '플랫폼이 아닙니다. 간단한 사회적 유틸리티',
     block6Text: '통제 없음\n중개자 없음\n\n결제를 처리하지 않습니다\n자금을 보유하지 않습니다\n\n모든 것은 사람들 사이에서 일어납니다',
     ctaTitle: '이미 아는 사람들과 시작하세요',
-    footer: '오픈소스. 비상업적.',
+    footer: '오픈 소스 · 무료, 수수료 없음',
   },
   nl: {
     heroSubtitle: 'Directe onderlinge steun via echte verbindingen.',
@@ -308,7 +308,7 @@ const translations = {
     block6Title: 'Geen platform. Een eenvoudig sociaal hulpmiddel',
     block6Text: 'Geen controle\nGeen tussenpersonen\n\nVerwerkt geen betalingen\nBeheert geen gelden\n\nAlles gebeurt tussen mensen',
     ctaTitle: 'Begin met mensen die je al kent',
-    footer: 'Open-source. Niet-commercieel.',
+    footer: 'Open source · Gratis, geen commissie',
   },
   no: {
     heroSubtitle: 'Direkte gjensidig støtte gjennom ekte forbindelser.',
@@ -327,7 +327,7 @@ const translations = {
     block6Title: 'Ikke en plattform. Et enkelt sosialt verktøy',
     block6Text: 'Ingen kontroll\nIngen mellomledd\n\nBehandler ikke betalinger\nHolder ikke midler\n\nAlt skjer mellom folk',
     ctaTitle: 'Start med folk du allerede kjenner',
-    footer: 'Åpen kildekode. Ikke-kommersiell.',
+    footer: 'Åpen kildekode · Gratis, ingen gebyrer',
   },
   pl: {
     heroSubtitle: 'Bezpośrednie wzajemne wsparcie poprzez prawdziwe relacje.',
@@ -346,7 +346,7 @@ const translations = {
     block6Title: 'Nie platforma. Proste narzędzie społeczne',
     block6Text: 'Brak kontroli\nBrak pośredników\n\nNie przetwarza płatności\nNie trzyma środków\n\nWszystko dzieje się między ludźmi',
     ctaTitle: 'Zacznij od osób, które już znasz',
-    footer: 'Open-source. Niekomercyjny.',
+    footer: 'Otwarty kod · Za darmo, bez prowizji',
   },
   pt: {
     heroSubtitle: 'Apoio mútuo direto através de conexões reais.',
@@ -365,7 +365,7 @@ const translations = {
     block6Title: 'Não uma plataforma. Um simples utilitário social',
     block6Text: 'Sem controle\nSem intermediários\n\nNão processa pagamentos\nNão retém fundos\n\nTudo acontece entre as pessoas',
     ctaTitle: 'Comece com as pessoas que você já conhece',
-    footer: 'Código aberto. Não comercial.',
+    footer: 'Código aberto · Grátis, sem taxas',
   },
   ro: {
     heroSubtitle: 'Sprijin reciproc direct prin conexiuni reale.',
@@ -384,7 +384,7 @@ const translations = {
     block6Title: 'Nu o platformă. O simplă utilitate socială',
     block6Text: 'Fără control\nFără intermediari\n\nNu procesează plăți\nNu deține fonduri\n\nTotul se întâmplă între oameni',
     ctaTitle: 'Începe cu oamenii pe care îi cunoști deja',
-    footer: 'Open-source. Non-comercial.',
+    footer: 'Cod deschis · Gratuit, fără comisioane',
   },
   ru: {
     heroSubtitle: 'Прямая взаимная поддержка через реальные связи.',
@@ -403,7 +403,7 @@ const translations = {
     block6Title: 'Не платформа. Простая социальная утилита',
     block6Text: 'Нет контроля\nНет посредников\n\nНе обрабатывает платежи\nНе хранит средства\n\nВсё происходит между людьми',
     ctaTitle: 'Начните с людей, которых вы уже знаете',
-    footer: 'Открытый исходный код. Некоммерческий.',
+    footer: 'Открытый код · Бесплатно, без комиссий',
   },
   sr: {
     heroSubtitle: 'Директна узајамна подршка кроз стварне везе.',
@@ -422,7 +422,7 @@ const translations = {
     block6Title: 'Није платформа. Једноставан друштвени алат',
     block6Text: 'Без контроле\nБез посредника\n\nНе обрађује плаћања\nНе чува средства\n\nСве се дешава међу људима',
     ctaTitle: 'Почни са људима које већ познајеш',
-    footer: 'Отворени код. Некомерцијалан.',
+    footer: 'Отворени код · Бесплатно, без провизије',
   },
   sv: {
     heroSubtitle: 'Direkt ömsesidigt stöd genom verkliga förbindelser.',
@@ -441,7 +441,7 @@ const translations = {
     block6Title: 'Inte en plattform. Ett enkelt socialt verktyg',
     block6Text: 'Ingen kontroll\nInga mellanhänder\n\nBehandlar inte betalningar\nHåller inte medel\n\nAllt sker mellan människor',
     ctaTitle: 'Börja med folk du redan känner',
-    footer: 'Öppen källkod. Icke-kommersiell.',
+    footer: 'Öppen källkod · Gratis, inga avgifter',
   },
   th: {
     heroSubtitle: 'การสนับสนุนร่วมกันโดยตรงผ่านความสัมพันธ์จริง',
@@ -460,7 +460,7 @@ const translations = {
     block6Title: 'ไม่ใช่แพลตฟอร์ม เครื่องมือทางสังคมง่ายๆ',
     block6Text: 'ไม่มีการควบคุม\nไม่มีตัวกลาง\n\nไม่ประมวลผลการชำระเงิน\nไม่ถือครองเงินทุน\n\nทุกอย่างเกิดขึ้นระหว่างผู้คน',
     ctaTitle: 'เริ่มต้นกับคนที่คุณรู้จักอยู่แล้ว',
-    footer: 'โอเพนซอร์ส ไม่ใช่เชิงพาณิชย์',
+    footer: 'โอเพนซอร์ส · ฟรี ไม่มีค่าธรรมเนียม',
   },
   tr: {
     heroSubtitle: 'Gerçek bağlantılar aracılığıyla doğrudan karşılıklı destek.',
@@ -479,7 +479,7 @@ const translations = {
     block6Title: 'Bir platform değil. Basit bir sosyal araç',
     block6Text: 'Kontrol yok\nAracı yok\n\nÖdemeleri işlemiyor\nFon tutmuyor\n\nHer şey insanlar arasında olur',
     ctaTitle: 'Zaten tanıdığınız kişilerle başlayın',
-    footer: 'Açık kaynak. Ticari değil.',
+    footer: 'Açık kaynak · Ücretsiz, komisyon yok',
   },
   uk: {
     heroSubtitle: 'Пряма взаємна підтримка через реальні зв\'язки.',
@@ -498,7 +498,7 @@ const translations = {
     block6Title: 'Не платформа. Простий соціальний інструмент',
     block6Text: 'Без контролю\nБез посередників\n\nНе обробляє платежі\nНе зберігає кошти\n\nВсе відбувається між людьми',
     ctaTitle: 'Почніть з людей, яких ви вже знаєте',
-    footer: 'Відкритий код. Некомерційний.',
+    footer: 'Відкритий код · Безкоштовно, без комісій',
   },
   vi: {
     heroSubtitle: 'Hỗ trợ lẫn nhau trực tiếp qua các kết nối thực.',
@@ -517,7 +517,7 @@ const translations = {
     block6Title: 'Không phải nền tảng. Một tiện ích xã hội đơn giản',
     block6Text: 'Không kiểm soát\nKhông có trung gian\n\nKhông xử lý thanh toán\nKhông giữ quỹ\n\nMọi thứ xảy ra giữa mọi người',
     ctaTitle: 'Bắt đầu với những người bạn đã biết',
-    footer: 'Mã nguồn mở. Phi thương mại.',
+    footer: 'Mã nguồn mở · Miễn phí, không thu phí',
   },
   zh: {
     heroSubtitle: '通过真实连接进行直接的相互支持。',
@@ -536,7 +536,7 @@ const translations = {
     block6Title: '不是平台。一个简单的社交工具',
     block6Text: '无控制\n无中介\n\n不处理付款\n不持有资金\n\n一切发生在人与人之间',
     ctaTitle: '从你已经认识的人开始',
-    footer: '开源。非商业。',
+    footer: '开源 · 免费，无手续费',
   },
 };
 

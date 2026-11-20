@@ -123,6 +123,7 @@ const ROOT_PATHS = [
   '/me',
   '/how',
   '/groups',
+  '/press',
   '/get',
   '/privacy',
   '/terms',

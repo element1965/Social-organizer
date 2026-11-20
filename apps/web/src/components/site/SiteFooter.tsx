@@ -19,6 +19,7 @@ export function SiteFooter() {
           {t('landing.site.help')}
         </a>
         <Link to="/groups">{t('landing.site.groups')}</Link>
+        <Link to="/press">{t('landing.site.press')}</Link>
         <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
           {t('landing.site.github')}
         </a>

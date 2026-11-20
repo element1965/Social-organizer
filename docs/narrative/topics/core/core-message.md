@@ -109,7 +109,7 @@ in the app, where people meet it: in a pitch it read as recruiting.
 | Question | RU | EN |
 |---|---|---|
 | Кто проследит, чтобы люди выполнили обещанное? / Who makes sure people keep their word? | Без посредников. Вы сами решаете, кому доверять, и договариваетесь с людьми напрямую. А через цепочку знакомых вы можете узнать, с кем имеете дело. | There are no middlemen. You decide whom to trust and deal with people directly, and through the chain of friends you can find out who you're dealing with. |
-| Берёт ли приложение процент? / Does the app take a cut? | Нет, никаких комиссий. Код открыт, проект некоммерческий. | No, there are no fees. The code is open and the project is non-profit. |
+| Берёт ли приложение процент? / Does the app take a cut? | Нет, никаких комиссий. Код открыт, приложение бесплатное. | No, there are no fees. The app is free and open source. |
 | Участие — это платёж? / Is Participation a payment? | Нет. Вы только сообщаете, сколько готовы дать. Пока потребность открыта, вы можете изменить сумму или отозвать участие. | No. You only say how much you're ready to give. While the Need is open, you can change the amount or withdraw. |
 
 ### 7. Почему этому можно верить / Why believe it

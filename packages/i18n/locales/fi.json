@@ -684,11 +684,12 @@
       "language": "Kieli",
       "themeDark": "Vaihda tummaan teemaan",
       "themeLight": "Vaihda vaaleaan teemaan",
-      "footerNote": "Avoin lähdekoodi · Voittoa tavoittelematon hanke",
+      "footerNote": "Avoin lähdekoodi · Ilmainen, ei palvelumaksuja",
       "privacy": "Tietosuoja",
       "terms": "Ehdot",
       "deleteAccount": "Poista tili",
-      "groups": "Ryhmille"
+      "groups": "Ryhmille",
+      "press": "Medialle"
     },
     "start": {
       "play": "Google Play",
@@ -851,7 +852,9 @@
         "q3": "Onko tämä lahjoituskeräys?",
         "a3": "Ei. Tarve tavoittaa vain ihmiset, jotka ovat tuttujen kautta yhteydessä sen ilmoittajaan, ja ensi kerralla pyytäjä voit olla sinä.",
         "q4": "Onko tämä pyramidipeli?",
-        "a4": "Ei. Kukaan ei maksa liittymisestä eikä kukaan ansaitse kutsuilla."
+        "a4": "Ei. Kukaan ei maksa liittymisestä eikä kukaan ansaitse kutsuilla.",
+        "q6": "Mitä tietoja säilytätte?",
+        "a6": "Säilytämme tili- ja profiilitietoja, kuten nimen, sähköpostin ja kirjautumispalvelun tunnisteet, sekä lisäämäsi tiedot, kuten kuvan, puhelinnumeron tai sijainnin. Säilytämme myös asetukset, kuten kielen ja teeman, kutsu- ja yhteyshistorian, ilmoitetut tarpeet, osallistumisen sekä ilmoitetut summat. Lisäksi tallennamme kirjautumiskoodit, ilmoituksiin tarvittavat tiedot ja ilmoitushistorian sekä lähettämäsi valitukset ja tukiviestit. Sovellus ei käsittele rahaa eikä pyydä kortti- tai pankkitietoja."
       },
       "start": {
         "label": "Sovellus",
@@ -871,7 +874,7 @@
         "tg": "Telegramissa"
       },
       "footer": {
-        "about": "Social Organizer · voittoa tavoittelematon avoimen lähdekoodin hanke",
+        "about": "Social Organizer · ilmainen avoimen lähdekoodin hanke",
         "credits": "Kuvitukset on luotu tekoälyllä · Kuvakkeet: {{icons}}",
         "links": "Linkit"
       }
@@ -1109,6 +1112,62 @@
     "cta": {
       "title": "Aloita ryhmäsi kanssa",
       "note": "Haluatko apua sen selittämiseen ryhmäsi omin sanoin? Kirjoita tiimille."
+    }
+  },
+  "team": {
+    "title": "Kuka tätä tekee",
+    "lubalin": {
+      "name": "Andrei Lubalin",
+      "role": "Teorian ja hankkeen tekijä"
+    },
+    "tvardovskyi": {
+      "name": "Sviatoslav Tvardovskyi",
+      "role": "On antanut hankkeeseen suuren panoksen"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "Medialle — Social Organizer",
+      "description": "Mikä Social Organizer on, kuka sitä tekee, tärkeimmät faktat, logo ja kuvakaappaukset ladattavaksi sekä tiimin yhteystiedot."
+    },
+    "hero": {
+      "title": "Medialle",
+      "lead": "Social Organizerissa ihmiset rakentavat verkoston niistä, jotka he tuntevat henkilökohtaisesti: lisäät jonkun, jonka tunnet, ja vahvistatte molemmat tuntevanne toisenne. Kun joku verkostossa joutuu vaikeuksiin, hän ilmoittaa tarpeesta. Jos rahaa puuttuu {{need}}, tieto tavoittaa enintään {{reach}} ihmistä lähimmistä verkoston yhteyksistä alkaen. Näet, kenen kautta olet yhteydessä tarpeen ilmoittajaan, ja päätät itse, osallistutko. Halukkaat ilmoittavat summan, joka on vähintään {{min}}: se on aikomus, ei maksu. Ihmiset sopivat asiasta omassa keskustelussaan ja luovuttavat rahat itse; sovellus ei koske rahaan."
+    },
+    "facts": {
+      "title": "Faktat",
+      "price": "Hinta",
+      "priceValue": "Ilmainen, ei palvelumaksuja",
+      "money": "Raha",
+      "moneyValue": "Sovellus ei koske rahaan. Ihmiset luovuttavat sen toisilleen itse.",
+      "code": "Koodi",
+      "codeValue": "Avoin lähdekoodi, lisenssi AGPL-3.0-or-later, <code>GitHub</code>issa",
+      "platforms": "Alustat",
+      "platformsValue": "<web>Verkko</web>, <play>Android</play>, <ios>iOS</ios> ja <tg>Telegram</tg>",
+      "languages": "Kielet",
+      "network": "Verkosto",
+      "theory": "Teoria",
+      "theoryValue": "Andrei Lubalinin raportti <report>From Human Behaviour to Social Coordination</report>"
+    },
+    "brand": {
+      "title": "Logo",
+      "note": "Koodin lisenssi AGPL ei koske nimeä ”Social Organizer” eikä logoa. Jos haluat käyttää niitä muuhun kuin hankkeesta kirjoittamiseen, kysy ensin tiimiltä.",
+      "icon": "Sovelluksen kuvake",
+      "small": "Pieni sovelluksen kuvake",
+      "wide": "Logo ja nimi"
+    },
+    "shots": {
+      "title": "Kuvakaappaukset",
+      "lead": "Sovelluksen näkymät englanniksi. Ihmiset ja summat ovat esimerkkejä.",
+      "circle": "Piirisi: tuntemiesi ihmisten verkosto",
+      "need": "Tarve osallistujan näkökulmasta",
+      "ask": "Tarpeesta ilmoittaminen",
+      "banner": "Kaupan banneri"
+    },
+    "download": "Lataa",
+    "contact": {
+      "title": "Yhteystiedot",
+      "lead": "Kirjoita tiimille Telegramissa tai avaa issue GitHubissa."
     }
   },
   "legal": {

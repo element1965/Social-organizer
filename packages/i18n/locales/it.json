@@ -688,11 +688,12 @@
       "language": "Lingua",
       "themeDark": "Passa al tema scuro",
       "themeLight": "Passa al tema chiaro",
-      "footerNote": "Codice aperto · Progetto non profit",
+      "footerNote": "Codice aperto · Gratis, senza commissioni",
       "privacy": "Privacy",
       "terms": "Termini",
       "deleteAccount": "Elimina account",
-      "groups": "Per i gruppi"
+      "groups": "Per i gruppi",
+      "press": "Per la stampa"
     },
     "start": {
       "play": "Google Play",
@@ -859,7 +860,9 @@
         "q3": "È una raccolta fondi?",
         "a3": "No. Un bisogno raggiunge solo persone legate all'autore tramite conoscenti, e la prossima volta potresti essere tu a chiedere.",
         "q4": "È uno schema piramidale?",
-        "a4": "No. Nessuno paga per entrare e nessuno guadagna dagli inviti."
+        "a4": "No. Nessuno paga per entrare e nessuno guadagna dagli inviti.",
+        "q6": "Quali dati conservate?",
+        "a6": "Conserviamo i dati dell’account e del profilo, come nome, e-mail, identificativi del servizio di accesso e dati che aggiungi, come foto, numero di telefono o posizione. Conserviamo anche le impostazioni, come lingua e tema, la cronologia di inviti e collegamenti, i bisogni comunicati, la partecipazione e gli importi indicati. Conserviamo i codici di accesso, i dati per l’invio e la cronologia delle notifiche, oltre alle segnalazioni e ai messaggi inviati all’assistenza. L’app non gestisce denaro e non chiede dati della carta o del conto bancario."
       },
       "start": {
         "label": "L'app",
@@ -879,7 +882,7 @@
         "tg": "Telegram"
       },
       "footer": {
-        "about": "Social Organizer · progetto non profit a codice aperto",
+        "about": "Social Organizer · progetto gratuito a codice aperto",
         "credits": "Illustrazioni generate con l'IA · Icone: {{icons}}",
         "links": "Link"
       }
@@ -1117,6 +1120,62 @@
     "cta": {
       "title": "Inizia con il tuo gruppo",
       "note": "Vuoi aiuto per spiegarlo con le parole del tuo gruppo? Scrivi al team."
+    }
+  },
+  "team": {
+    "title": "Chi c’è dietro",
+    "lubalin": {
+      "name": "Andrei Lubalin",
+      "role": "Autore della teoria e del progetto"
+    },
+    "tvardovskyi": {
+      "name": "Sviatoslav Tvardovskyi",
+      "role": "Ha dato un grande contributo al progetto"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "Per la stampa — Social Organizer",
+      "description": "Che cos’è Social Organizer, chi c’è dietro, i fatti principali, il logo e gli screenshot da scaricare, e come contattare il team."
+    },
+    "hero": {
+      "title": "Per la stampa",
+      "lead": "In Social Organizer le persone formano una rete di chi si conosce di persona: aggiungi qualcuno che conosci, e tutti e due confermate di conoscervi. Quando una persona della rete è in difficoltà, comunica un bisogno. Se mancano {{need}}, lo vengono a sapere fino a {{reach}} persone, a partire dai contatti più vicini nella rete. Vedi attraverso chi sei in contatto con chi ha comunicato il bisogno e decidi se partecipare. Chi vuole indica un importo da {{min}} in su: è un’intenzione, non un pagamento. Le persone si accordano nella propria chat e si passano il denaro direttamente; l’app non lo tocca mai."
+    },
+    "facts": {
+      "title": "Fatti",
+      "price": "Prezzo",
+      "priceValue": "Gratis, senza commissioni",
+      "money": "Denaro",
+      "moneyValue": "L’app non tocca mai il denaro. Le persone se lo passano direttamente.",
+      "code": "Codice",
+      "codeValue": "A codice aperto con licenza AGPL-3.0-or-later, su <code>GitHub</code>",
+      "platforms": "Piattaforme",
+      "platformsValue": "<web>Web</web>, <play>Android</play>, <ios>iOS</ios> e <tg>Telegram</tg>",
+      "languages": "Lingue",
+      "network": "Rete",
+      "theory": "Teoria",
+      "theoryValue": "Rapporto di Andrei Lubalin <report>From Human Behaviour to Social Coordination</report>"
+    },
+    "brand": {
+      "title": "Logo",
+      "note": "La licenza del codice, l’AGPL, non copre il nome «Social Organizer» né il logo. Per usarli per scopi diversi dallo scrivere del progetto, chiedi prima al team.",
+      "icon": "Icona dell’app",
+      "small": "Icona piccola dell’app",
+      "wide": "Logo con il nome"
+    },
+    "shots": {
+      "title": "Screenshot",
+      "lead": "Schermate dell’app in inglese. Persone e importi sono un esempio.",
+      "circle": "Il tuo cerchio: la rete delle persone che conosci",
+      "need": "Un bisogno, visto da chi partecipa",
+      "ask": "Comunicare un bisogno",
+      "banner": "Banner per lo store"
+    },
+    "download": "Scarica",
+    "contact": {
+      "title": "Contatti",
+      "lead": "Scrivi al team su Telegram o apri una issue su GitHub."
     }
   },
   "legal": {

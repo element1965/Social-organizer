@@ -688,11 +688,12 @@
       "language": "Langue",
       "themeDark": "Passer au thème sombre",
       "themeLight": "Passer au thème clair",
-      "footerNote": "Open source · Projet à but non lucratif",
+      "footerNote": "Open source · Gratuit, sans commission",
       "privacy": "Confidentialité",
       "terms": "Conditions",
       "deleteAccount": "Supprimer le compte",
-      "groups": "Pour les groupes"
+      "groups": "Pour les groupes",
+      "press": "Presse"
     },
     "start": {
       "play": "Google Play",
@@ -859,7 +860,9 @@
         "q3": "Est-ce une collecte de dons ?",
         "a3": "Non. Un besoin n’atteint que des personnes reliées à son auteur par des connaissances, et la prochaine fois, c’est peut-être vous qui demanderez de l’aide.",
         "q4": "Est-ce un système pyramidal ?",
-        "a4": "Non. Personne ne paie pour entrer et personne ne gagne d’argent grâce aux invitations."
+        "a4": "Non. Personne ne paie pour entrer et personne ne gagne d’argent grâce aux invitations.",
+        "q6": "Quelles données conservez-vous ?",
+        "a6": "Nous conservons les données de compte et de profil, dont le nom, l’adresse e-mail, les identifiants du service de connexion et les informations ajoutées comme la photo, le numéro de téléphone ou la localisation. Nous conservons aussi les réglages (langue, thème), l’historique des invitations et des liens, les besoins signalés, la participation et les montants indiqués. Nous gardons également les codes de connexion, les données d’envoi et l’historique des notifications, ainsi que les signalements et messages envoyés à l’assistance. L’application ne manipule pas d’argent et ne demande aucune coordonnée bancaire ni donnée de carte."
       },
       "start": {
         "label": "L’application",
@@ -879,7 +882,7 @@
         "tg": "Telegram"
       },
       "footer": {
-        "about": "Social Organizer · un projet à but non lucratif et open source",
+        "about": "Social Organizer · un projet gratuit et open source",
         "credits": "Illustrations générées par IA · Icônes : {{icons}}",
         "links": "Liens"
       }
@@ -1117,6 +1120,62 @@
     "cta": {
       "title": "Commencez avec votre groupe",
       "note": "Besoin d’aide pour l’expliquer avec les mots de votre groupe ? Écrivez à l’équipe."
+    }
+  },
+  "team": {
+    "title": "Qui fait ce projet",
+    "lubalin": {
+      "name": "Andrei Lubalin",
+      "role": "Auteur de la théorie et du projet"
+    },
+    "tvardovskyi": {
+      "name": "Sviatoslav Tvardovskyi",
+      "role": "A beaucoup contribué au projet"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "Presse — Social Organizer",
+      "description": "Ce qu’est Social Organizer, qui le fait, les faits essentiels, le logo et des captures d’écran à télécharger, et comment joindre l’équipe."
+    },
+    "hero": {
+      "title": "Espace presse",
+      "lead": "Dans Social Organizer, les gens forment un réseau de personnes qui se connaissent personnellement : vous ajoutez quelqu’un que vous connaissez, et la confirmation se fait des deux côtés. En cas de difficulté, chaque personne du réseau peut annoncer un besoin. Pour un manque de {{need}}, jusqu’à {{reach}} personnes apprennent la nouvelle, en commençant par les contacts les plus proches dans le réseau. Vous voyez par qui passe le lien avec la personne qui a annoncé le besoin, et vous décidez de participer ou non. Qui le souhaite indique un montant à partir de {{min}} : c’est une intention, pas un paiement. Les gens s’entendent dans leur propre chat et se remettent directement l’argent ; l’application n’y touche jamais."
+    },
+    "facts": {
+      "title": "Faits",
+      "price": "Prix",
+      "priceValue": "Gratuit, sans commission",
+      "money": "Argent",
+      "moneyValue": "L’application ne touche jamais à l’argent. Les gens se le remettent eux-mêmes.",
+      "code": "Code",
+      "codeValue": "Open source sous licence AGPL-3.0-or-later, sur <code>GitHub</code>",
+      "platforms": "Plateformes",
+      "platformsValue": "<web>Web</web>, <play>Android</play>, <ios>iOS</ios> et <tg>Telegram</tg>",
+      "languages": "Langues",
+      "network": "Réseau",
+      "theory": "Théorie",
+      "theoryValue": "Rapport d’Andrei Lubalin <report>From Human Behaviour to Social Coordination</report>"
+    },
+    "brand": {
+      "title": "Logo",
+      "note": "La licence du code, l’AGPL, ne couvre ni le nom « Social Organizer » ni le logo. Pour les utiliser à d’autres fins que pour parler du projet, demandez d’abord à l’équipe.",
+      "icon": "Icône de l’application",
+      "small": "Petite icône de l’application",
+      "wide": "Logo avec le nom"
+    },
+    "shots": {
+      "title": "Captures d’écran",
+      "lead": "Écrans de l’application en anglais. Les personnes et les montants sont un exemple.",
+      "circle": "Votre cercle : le réseau des personnes que vous connaissez",
+      "need": "Un besoin, vu par une personne qui participe",
+      "ask": "Annoncer un besoin",
+      "banner": "Bannière pour la boutique"
+    },
+    "download": "Télécharger",
+    "contact": {
+      "title": "Contacts",
+      "lead": "Écrivez-lui sur Telegram ou ouvrez une issue sur GitHub."
     }
   },
   "legal": {

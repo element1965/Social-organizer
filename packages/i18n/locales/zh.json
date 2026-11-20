@@ -680,11 +680,12 @@
       "language": "语言",
       "themeDark": "切换到深色主题",
       "themeLight": "切换到浅色主题",
-      "footerNote": "开源 · 非营利项目",
+      "footerNote": "开源 · 免费，无手续费",
       "privacy": "隐私",
       "terms": "条款",
       "deleteAccount": "删除账号",
-      "groups": "面向群体"
+      "groups": "面向群体",
+      "press": "媒体"
     },
     "start": {
       "play": "Google Play",
@@ -843,7 +844,9 @@
         "q3": "这是募捐吗？",
         "a3": "不是。需求只会触及通过熟人与发起人相连的人，下一次，提出请求的也可能是你。",
         "q4": "这是传销吗？",
-        "a4": "不是。加入不用花钱，也没有人靠邀请赚钱。"
+        "a4": "不是。加入不用花钱，也没有人靠邀请赚钱。",
+        "q6": "你们保存哪些数据？",
+        "a6": "我们会保存账户和个人资料，包括姓名、电子邮件地址、登录服务的账号标识，以及你添加的照片、电话号码或位置等信息。我们还会保存语言和主题等设置、邀请和连接记录、已告知的需求、参与记录和填写的金额。登录验证码、推送所需的数据和通知记录，以及你提交的投诉或客服消息也会保存。应用从不经手钱款，也不会索要银行卡或银行账户资料。"
       },
       "start": {
         "label": "应用",
@@ -863,7 +866,7 @@
         "tg": "Telegram"
       },
       "footer": {
-        "about": "Social Organizer · 非营利开源项目",
+        "about": "Social Organizer · 免费开源项目",
         "credits": "插图由 AI 生成 · 图标：{{icons}}",
         "links": "链接"
       }
@@ -1101,6 +1104,62 @@
     "cta": {
       "title": "和你的群体一起开始",
       "note": "需要帮忙用你们群体自己的话来解释吗？请联系团队。"
+    }
+  },
+  "team": {
+    "title": "谁在做这个项目",
+    "lubalin": {
+      "name": "安德烈·卢巴林",
+      "role": "理论和项目的作者"
+    },
+    "tvardovskyi": {
+      "name": "斯维亚托斯拉夫·特瓦尔多夫斯基",
+      "role": "为项目做出重大贡献"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "媒体 — Social Organizer",
+      "description": "Social Organizer 是什么、谁在做、主要事实、可下载的标志和截图，以及如何联系团队。"
+    },
+    "hero": {
+      "title": "媒体资料",
+      "lead": "在 Social Organizer 里，人们用当面认识的人组成网络：你添加一个认识的人，你们双方确认彼此认识。网络中有人遇到困难时，这个人会告知需求。如果还差{{need}}，消息会从网络中联系最近的人开始传递，最多 {{reach}} 人会知道。你能看到自己通过谁和告知需求的人相连，并自己决定是否参与。愿意参与的人填上金额，最低{{min}}：这是意向，不是付款。大家在自己的聊天里商量，钱由彼此直接交给对方；应用从不经手钱款。"
+    },
+    "facts": {
+      "title": "事实",
+      "price": "价格",
+      "priceValue": "免费，无手续费",
+      "money": "钱",
+      "moneyValue": "应用从不经手钱款。钱由大家直接交给对方。",
+      "code": "代码",
+      "codeValue": "开源，采用 AGPL-3.0-or-later 许可，发布在 <code>GitHub</code> 上",
+      "platforms": "平台",
+      "platformsValue": "<web>网页</web>、<play>Android</play>、<ios>iOS</ios> 和 <tg>Telegram</tg>",
+      "languages": "语言",
+      "network": "网络",
+      "theory": "理论",
+      "theoryValue": "安德烈·卢巴林的报告 <report>From Human Behaviour to Social Coordination</report>"
+    },
+    "brand": {
+      "title": "标志",
+      "note": "代码的许可证 AGPL 不涵盖“Social Organizer”这个名称和标志。如果不是用于报道本项目，而是另作他用，请先询问团队。",
+      "icon": "应用图标",
+      "small": "小号应用图标",
+      "wide": "带名称的标志"
+    },
+    "shots": {
+      "title": "截图",
+      "lead": "英文版应用的界面。其中的人和金额只是示例。",
+      "circle": "你的圈子：你认识的人组成的网络",
+      "need": "参与者眼中的一个需求",
+      "ask": "告知需求",
+      "banner": "应用商店横幅"
+    },
+    "download": "下载",
+    "contact": {
+      "title": "联系方式",
+      "lead": "请在 Telegram 上联系团队，或在 GitHub 上提交 issue。"
     }
   },
   "legal": {

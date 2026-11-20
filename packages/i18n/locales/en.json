@@ -684,11 +684,12 @@
       "language": "Language",
       "themeDark": "Switch to dark theme",
       "themeLight": "Switch to light theme",
-      "footerNote": "Open source · Non-profit project",
+      "footerNote": "Open source · Free, no fees",
       "privacy": "Privacy",
       "terms": "Terms",
       "deleteAccount": "Delete account",
-      "groups": "For groups"
+      "groups": "For groups",
+      "press": "For press"
     },
     "start": {
       "play": "Google Play",
@@ -851,7 +852,9 @@
         "q3": "Is this a donation drive?",
         "a3": "No. A Need reaches only people linked to its author through acquaintances, and next time you may be the one who asks.",
         "q4": "Is this a pyramid scheme?",
-        "a4": "No. Nobody pays to join and nobody earns from invites."
+        "a4": "No. Nobody pays to join and nobody earns from invites.",
+        "q6": "What data do you keep?",
+        "a6": "We keep account and profile details, including your name, email, sign-in account identifiers and anything you add, such as a photo, phone number or location. We keep your settings (such as language and theme), invitation and connection history, reported Needs, Participation and the amounts you name. We also keep sign-in codes, push tokens and notification history, and any complaints or support messages you send. The app never touches money and asks for no card or bank details."
       },
       "start": {
         "label": "The app",
@@ -871,7 +874,7 @@
         "tg": "Telegram"
       },
       "footer": {
-        "about": "Social Organizer · a non-profit, open-source project",
+        "about": "Social Organizer · A free, open-source project",
         "credits": "Illustrations are AI-generated · Icons: {{icons}}",
         "links": "Links"
       }
@@ -1109,6 +1112,62 @@
     "cta": {
       "title": "Start with your group",
       "note": "Want help explaining it in your group's own words? Write to the team."
+    }
+  },
+  "team": {
+    "title": "Who makes this",
+    "lubalin": {
+      "name": "Andrei Lubalin",
+      "role": "Author of the theory and of the project"
+    },
+    "tvardovskyi": {
+      "name": "Sviatoslav Tvardovskyi",
+      "role": "Major contributor to the project"
+    }
+  },
+  "press": {
+    "meta": {
+      "title": "Press kit — Social Organizer",
+      "description": "What Social Organizer is, who makes it, the main facts, the logo and screenshots to download, and how to reach the team."
+    },
+    "hero": {
+      "title": "Press kit",
+      "lead": "In Social Organizer people build a network of those they know in person: you add someone you know, and you both confirm it. When one of you is in trouble, that person reports a Need. For a shortfall of {{need}}, up to {{reach}} people hear about the Need, starting with the closest connections in the network. Each person sees who links them to the author and decides whether to take part. Anyone willing names an amount from {{min}}. It's an intention, not a payment. People agree in their own chat and hand over any money themselves; the app never touches it."
+    },
+    "facts": {
+      "title": "Facts",
+      "price": "Price",
+      "priceValue": "Free, no fees",
+      "money": "Money",
+      "moneyValue": "The app never touches money. People hand it over to each other themselves.",
+      "code": "Code",
+      "codeValue": "Open source under AGPL-3.0-or-later, on <code>GitHub</code>",
+      "platforms": "Platforms",
+      "platformsValue": "<web>Web</web>, <play>Android</play>, <ios>iOS</ios> and <tg>Telegram</tg>",
+      "languages": "Languages",
+      "network": "Network",
+      "theory": "Theory",
+      "theoryValue": "Andrei Lubalin's report <report>From Human Behaviour to Social Coordination</report>"
+    },
+    "brand": {
+      "title": "Logo",
+      "note": "The code's licence, the AGPL, doesn't cover the name “Social Organizer” or the logo. To use them for anything other than writing about the project, ask the team first.",
+      "icon": "App icon",
+      "small": "Small app icon",
+      "wide": "Logo with the name"
+    },
+    "shots": {
+      "title": "Screenshots",
+      "lead": "Screens of the app in English. The people and amounts on them are an example.",
+      "circle": "Your circle: the network of people you know",
+      "need": "A Need, as someone taking part sees it",
+      "ask": "Reporting a Need",
+      "banner": "Store banner"
+    },
+    "download": "Download",
+    "contact": {
+      "title": "Contacts",
+      "lead": "Write to the team in Telegram, or open an issue on GitHub."
     }
   },
   "legal": {
