@@ -4,12 +4,8 @@ import { TRPCError } from '@trpc/server';
 import { translateFaqItem } from '../services/translate.service.js';
 import { ADMIN_IDS } from '../admin.js';
 import { readFaq } from '../services/faq.service.js';
-
-const SUPPORTED_LANGUAGES = [
-  'en', 'ru', 'es', 'fr', 'de', 'pt', 'it', 'zh', 'ja', 'ko',
-  'ar', 'hi', 'tr', 'pl', 'uk', 'nl', 'sv', 'da', 'fi', 'no',
-  'cs', 'ro', 'th', 'vi', 'id', 'sr', 'he',
-];
+// FAQ translation targets every language the app ships (Belarusian was missing from a local copy of the list).
+import { SUPPORTED_LANGUAGES } from '@so/i18n';
 
 function assertAdmin(userId: string) {
   if (!ADMIN_IDS.includes(userId)) {
