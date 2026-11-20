@@ -34,15 +34,10 @@ export async function deleteUserAccount(
     select: { inviterId: true },
   });
 
-  let mode: 'hard' | 'soft' = 'hard';
-  let refused = false;
-  await db.$transaction(async (tx) => {
+  const mode = await db.$transaction(async (tx): Promise<'hard' | 'soft' | null> => {
     if (opts.guard) {
       await tx.$executeRaw`SELECT 1 FROM "users" WHERE "id" = ${userId} FOR UPDATE`;
-      if (!(await opts.guard(tx))) {
-        refused = true;
-        return;
-      }
+      if (!(await opts.guard(tx))) return null;
     }
     // Connections are counted before they are removed below.
     // Pending requests and unused invite links don't count as connections.
@@ -110,8 +105,8 @@ export async function deleteUserAccount(
       }
       // Hard delete user (cascade removes all related records)
       await tx.user.delete({ where: { id: userId } });
+      return 'hard';
     } else {
-      mode = 'soft';
       // Had connections or invitees — soft delete (mute) so their invite chain stays intact
       // but user is removed from the active network
       await tx.user.update({
@@ -130,10 +125,15 @@ export async function deleteUserAccount(
       await tx.userContact.deleteMany({ where: { userId } });
       await tx.userSkill.deleteMany({ where: { userId } });
       await tx.userNeed.deleteMany({ where: { userId } });
+      return 'soft';
     }
   });
 
-  if (refused) return null;
+  if (!mode) return null;
+  if (mode === 'soft') {
+    await db.userSignupCampaign.deleteMany({ where: { userId } })
+      .catch((error) => console.warn('[UserDelete] Could not remove campaign attribution:', error));
+  }
 
   // Notify inviter that user from their first circle has been deleted
   if (inviteLink?.inviterId && deletingUser.name) {

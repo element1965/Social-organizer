@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { useAuth } from './hooks/useAuth';
 import { App } from './App';
 import { BrandMark } from './components/ui2/BrandMark';
 import { captureBootPhase } from './components/ui2/AppLoader';
@@ -8,7 +9,10 @@ import i18n, { i18nReady } from './lib/i18n';
 import { registerServiceWorkerOnLoad } from './lib/serviceWorker';
 import { isOffline } from './lib/connectivity';
 import { sweepSavedCopy } from './lib/savedCopy';
+import { rememberCampaign } from './lib/campaign';
 import './index.css';
+
+if (!useAuth.getState().isAuthenticated) rememberCampaign(window.location.search);
 
 /** One automatic reload after a stale lazy chunk. The timestamp blocks a loop. */
 const PRELOAD_RELOAD_KEY = 'so.preloadReloadAt';

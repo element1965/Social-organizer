@@ -6,8 +6,8 @@
  * Reading a preview never creates a request — it is a plain read.
  */
 import type { PrismaClient } from '@so/db';
-import { resources, SUPPORTED_LANGUAGES } from '@so/i18n';
-import { firstName, safeAddressee } from '@so/shared';
+import { linkLanguage, resources, RTL_LANGUAGES, SUPPORTED_LANGUAGES } from '@so/i18n';
+import { firstName, PUBLIC_PAGE_METADATA, publicPageUrl, safeAddressee, type PublicPagePath } from '@so/shared';
 
 export { safeAddressee };
 
@@ -43,15 +43,15 @@ export function escapeHtml(s: string): string {
 }
 
 /** The first supported language of `?lang=`, then Accept-Language, then the inviter's own language. */
-export function pickLanguage(queryLang: string | undefined, acceptLanguage: string | undefined, fallback: string): string {
-  const supported = new Set<string>(SUPPORTED_LANGUAGES as readonly string[]);
-  const norm = (v: string) => v.trim().toLowerCase().split(/[-_;]/)[0] ?? '';
-  if (queryLang && supported.has(norm(queryLang))) return norm(queryLang);
-  for (const part of (acceptLanguage ?? '').split(',')) {
-    const code = norm(part);
-    if (code && supported.has(code)) return code;
-  }
-  return supported.has(fallback) ? fallback : 'en';
+export function pickLanguage(queryLang: unknown, acceptLanguage: string | undefined, fallback: string): string {
+  const explicit = linkLanguage(queryLang);
+  if (explicit) return explicit;
+  const preferences = (acceptLanguage ?? '').split(',').map((part) => {
+    const [tag, weight] = part.trim().split(/;\s*q=/i);
+    return { lang: linkLanguage(tag?.split(/[-_]/)[0]), quality: weight === undefined ? 1 : Number(weight) };
+  }).sort((a, b) => b.quality - a.quality);
+  return preferences.find(({ lang, quality }) => lang && quality > 0 && quality <= 1)?.lang
+    ?? linkLanguage(fallback) ?? 'en';
 }
 
 /** Who stands behind a token: a single-use invite, a permanent link (user id) or a referral slug. */
@@ -156,6 +156,11 @@ export function renderSosPreview(
   });
 }
 
+export function renderHtmlLanguage(html: string, lang: string): string {
+  return html.replace(/<html lang="[^"]*"(?: dir="[^"]*")?/i, () =>
+    '<html lang="' + escapeHtml(lang) + '" dir="' + (RTL_LANGUAGES.includes(lang) ? 'rtl' : 'ltr') + '"');
+}
+
 /** Writes one link card (title, description, picture) into the built index.html. */
 function applyCard(
   html: string,
@@ -163,7 +168,6 @@ function applyCard(
 ): string {
   const { image } = card;
   const name = card.imageAlt;
-  const opts = { lang: card.lang };
   const t = escapeHtml(card.title);
   const d = escapeHtml(card.description);
   const u = escapeHtml(card.url);
@@ -180,13 +184,13 @@ function applyCard(
     out = out.replace(re, '');
   };
 
-  out = out.replace(/<html lang="[^"]*"/i, () => `<html lang="${escapeHtml(opts.lang)}"`);
+  out = renderHtmlLanguage(out, card.lang);
   out = out.replace(/<title>[^<]*<\/title>/i, () => `<title>${t}</title>`);
   setMeta('name', 'description', d);
   setMeta('property', 'og:title', t);
   setMeta('property', 'og:description', d);
   setMeta('property', 'og:url', u);
-  setMeta('property', 'og:locale', escapeHtml(opts.lang));
+  setMeta('property', 'og:locale', escapeHtml(card.lang));
   setMeta('name', 'twitter:title', t);
   setMeta('name', 'twitter:description', d);
   if (image) {
@@ -200,4 +204,34 @@ function applyCard(
     dropMeta('property', 'og:image:height');
   }
   return out;
+}
+
+export function renderPublicPage(
+  html: string,
+  path: PublicPagePath,
+  origin: string,
+  lang: string,
+  explicitLang?: string,
+): string {
+  const meta = PUBLIC_PAGE_METADATA[path];
+  const title = translate(lang, meta.title, {});
+  const url = publicPageUrl(origin, path, explicitLang);
+  const card = applyCard(html, {
+    title: 'appendBrand' in meta ? title + ' — ' + translate(lang, 'common.appName', {}) : title,
+    description: translate(lang, meta.description, {}),
+    image: null, imageAlt: '', lang, url,
+  });
+  const links = SUPPORTED_LANGUAGES.map((code) =>
+    '<link rel="alternate" hreflang="' + code + '" href="' + escapeHtml(publicPageUrl(origin, path, code)) + '" />');
+  links.push('<link rel="alternate" hreflang="x-default" href="' + escapeHtml(publicPageUrl(origin, path)) + '" />');
+  links.push('<link rel="canonical" href="' + escapeHtml(url) + '" />');
+  return card.replace('</head>', () => '    ' + links.join('\n    ') + '\n  </head>');
+}
+
+export function renderMissingPage(html: string, lang: string, origin: string): string {
+  return applyCard(html, {
+    title: translate(lang, 'errors.pageGoneTitle', {}) + ' — ' + translate(lang, 'common.appName', {}),
+    description: translate(lang, 'errors.pageGoneBody', {}),
+    image: null, imageAlt: '', lang, url: origin,
+  });
 }

@@ -39,3 +39,10 @@ export const SUPPORTED_LANGUAGES = Object.keys(languageNames) as SupportedLangua
 
 /** Right-to-left languages, for `dir` on <html>. */
 export const RTL_LANGUAGES: readonly string[] = ['ar', 'he', 'fa', 'ur'];
+
+// Explicit links use locale codes from the same list in the browser and on the server.
+export function linkLanguage(value: unknown): SupportedLanguage | undefined {
+  if (typeof value !== 'string') return undefined;
+  const code = value.trim().toLowerCase();
+  return Object.hasOwn(languageNames, code) ? code as SupportedLanguage : undefined;
+}

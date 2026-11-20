@@ -1,3 +1,4 @@
+import { WEB_ROUTES, DEV_WEB_ROUTES, SOS_PREVIEW_PATH } from '@so/shared';
 import { NATIVE_AUTH_SCHEME, WEB_APP_HOSTS } from './lib/deployment';
 import { lazy, Suspense, useEffect, useRef, useState, type ComponentType } from 'react';
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -11,7 +12,6 @@ import { TelegramBootstrap } from './components/TelegramBootstrap';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { ShakeProvider } from './components/shake/ShakeProvider';
 import { NativePushBootstrap } from './components/NativePushBootstrap';
-import { AppShell } from './components/ui2/AppShell';
 import { AppLoader } from './components/ui2/AppLoader';
 import { ProfileRedirect } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
@@ -22,7 +22,8 @@ import { HomeGate, OfflineRouteBoundary, PeopleGate, PersonGate } from './compon
 import { onRecovery } from './lib/connectivity';
 import { currentNavigation, errorCode, isAborted, raiseActionError, wantsNotice } from './lib/errors';
 import { ActionErrorHost } from './components/errors/ActionErrorHost';
-import { NotFoundPage } from './pages/NotFoundPage';
+import { applyLinkLanguage } from './lib/i18n';
+import { rememberCampaign } from './lib/campaign';
 
 /** Named-export pages, each its own chunk. The guest landing stays in the entry chunk. */
 function lazyPage<M, K extends keyof M>(load: () => Promise<M>, name: K) {
@@ -84,6 +85,8 @@ function PrefetchCircle() {
 }
 
 const loadCircle = () => import('./pages/CirclePage');
+const AppShell = lazyPage(() => import('./components/ui2/AppShell'), 'AppShell');
+const NotFoundPage = lazyPage(() => import('./pages/NotFoundPage'), 'NotFoundPage');
 const CirclePage = lazyPage(loadCircle, 'CirclePage');
 const LoginPage = lazyPage(() => import('./pages/LoginPage'), 'LoginPage');
 const AskPage = lazyPage(() => import('./pages/AskPage'), 'AskPage');
@@ -214,6 +217,15 @@ function GoogleAuthDeepLinkHandler() {
 }
 
 /** Guest home is the landing page. A signed-in home is the circle, inside the shell. */
+function CampaignAndLanguage() {
+  const { search } = useLocation();
+  useEffect(() => {
+    if (!useAuth.getState().isAuthenticated) rememberCampaign(search);
+    applyLinkLanguage(search);
+  }, [search]);
+  return null;
+}
+
 function HomeIndex() {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const [params] = useSearchParams();
@@ -292,7 +304,7 @@ function ShellGate() {
 
   return (
     <ProtectedRoute>
-      <AppShell />
+      <Suspense fallback={<RouteFallback full />}><AppShell /></Suspense>
     </ProtectedRoute>
   );
 }
@@ -383,44 +395,46 @@ export function App() {
           <TelegramBootstrap>
           <NativePushBootstrap />
           <GoogleAuthDeepLinkHandler />
+          <CampaignAndLanguage />
           <PrefetchCircle />
           <ShakeProvider />
           <Routes>
-            <Route path="/welcome" element={<RedirectHome />} />
-            <Route path="/arvut" element={<RedirectHome />} />
-            <Route path="/get" element={<GetRedirect />} />
-            <Route path="/dashboard" element={<Navigate to="/" replace />} />
-            <Route path="/network" element={<Navigate to="/" replace />} />
-            <Route path="/notifications" element={<Navigate to="/" replace />} />
-            <Route path="/create" element={<Navigate to="/ask" replace />} />
-            <Route path="/settings" element={<Navigate to="/me" replace />} />
-            <Route path="/faq" element={<Navigate to="/me/help" replace />} />
-            <Route path="/onboarding" element={<Navigate to="/intro" replace />} />
-            <Route path="/matches/*" element={<Navigate to="/" replace />} />
-            <Route path="/skills/*" element={<Navigate to="/" replace />} />
-            <Route path="/needs/*" element={<Navigate to="/" replace />} />
-            <Route path="/profile/:userId" element={<ProfileRedirect />} />
+            <Route path={WEB_ROUTES.WELCOME} element={<RedirectHome />} />
+            <Route path={WEB_ROUTES.ARVUT} element={<RedirectHome />} />
+            <Route path={WEB_ROUTES.GET} element={<GetRedirect />} />
+            <Route path={WEB_ROUTES.DASHBOARD} element={<Navigate to="/" replace />} />
+            <Route path={WEB_ROUTES.NETWORK} element={<Navigate to="/" replace />} />
+            <Route path={WEB_ROUTES.NOTIFICATIONS} element={<Navigate to="/" replace />} />
+            <Route path={WEB_ROUTES.CREATE} element={<Navigate to="/ask" replace />} />
+            <Route path={WEB_ROUTES.SETTINGS} element={<Navigate to="/me" replace />} />
+            <Route path={WEB_ROUTES.FAQ} element={<Navigate to="/me/help" replace />} />
+            <Route path={WEB_ROUTES.ONBOARDING} element={<Navigate to="/intro" replace />} />
+            <Route path={WEB_ROUTES.MATCHES} element={<Navigate to="/" replace />} />
+            <Route path={WEB_ROUTES.SKILLS} element={<Navigate to="/" replace />} />
+            <Route path={WEB_ROUTES.NEEDS} element={<Navigate to="/" replace />} />
+            <Route path={WEB_ROUTES.PROFILE_REDIRECT} element={<ProfileRedirect />} />
             {/* Short personal link orginizer.com/i/<slug> */}
-            <Route path="/i/:slug" element={<SlugRedirect />} />
+            <Route path={WEB_ROUTES.INVITE_SLUG} element={<SlugRedirect />} />
 
             <Route element={<PublicRoutes />}>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
-              <Route path="/auth/apple/done" element={<AppleCallbackPage />} />
-              <Route path="/privacy" element={<PrivacyPage />} />
-              <Route path="/terms" element={<TermsPage />} />
-              <Route path="/delete-account" element={<DeleteAccountPage />} />
-              <Route path="/invite/:token" element={<InvitePage />} />
-              <Route path="/sos/:collectionId" element={<SosLandingPage />} />
-              <Route path="/how" element={<HowPage />} />
-              <Route path="/groups" element={<GroupsPage />} />
-              <Route path="/intro" element={<ProtectedRoute><IntroPage /></ProtectedRoute>} />
-              <Route path="/seed" element={<ProtectedRoute><SeedPage /></ProtectedRoute>} />
+              <Route path={WEB_ROUTES.LOGIN} element={<LoginPage />} />
+              <Route path={WEB_ROUTES.GOOGLE_CALLBACK} element={<GoogleCallbackPage />} />
+              <Route path={WEB_ROUTES.APPLE_DONE} element={<AppleCallbackPage />} />
+              <Route path={WEB_ROUTES.PRIVACY} element={<PrivacyPage />} />
+              <Route path={WEB_ROUTES.TERMS} element={<TermsPage />} />
+              <Route path={WEB_ROUTES.DELETE_ACCOUNT} element={<DeleteAccountPage />} />
+              <Route path={WEB_ROUTES.INVITE} element={<InvitePage />} />
+              <Route path={WEB_ROUTES.SOS} element={<SosLandingPage />} />
+              {!import.meta.env.DEV && <Route path={SOS_PREVIEW_PATH} element={<NotFoundPage />} />}
+              <Route path={WEB_ROUTES.HOW} element={<HowPage />} />
+              <Route path={WEB_ROUTES.GROUPS} element={<GroupsPage />} />
+              <Route path={WEB_ROUTES.INTRO} element={<ProtectedRoute><IntroPage /></ProtectedRoute>} />
+              <Route path={WEB_ROUTES.SEED} element={<ProtectedRoute><SeedPage /></ProtectedRoute>} />
             </Route>
 
             {DevUI ? (
               <Route
-                path="/dev/ui"
+                path={DEV_WEB_ROUTES.DEV_UI}
                 element={
                   <Suspense fallback={<RouteFallback full />}>
                     <DevUI />
@@ -430,7 +444,7 @@ export function App() {
             ) : null}
             {ModerationPreview ? (
               <Route
-                path="/dev/moderation"
+                path={DEV_WEB_ROUTES.DEV_MODERATION}
                 element={
                   <Suspense fallback={<RouteFallback full />}>
                     <ModerationPreview />
@@ -441,31 +455,31 @@ export function App() {
 
             <Route element={<ShellGate />}>
               <Route element={<ShellRoutes />}>
-                <Route path="/" element={<HomeIndex />} />
-                <Route path="/ask" element={<AskPage />} />
-                <Route path="/add" element={<AddPage />} />
-                <Route path="/add/qr" element={<QrPage />} />
-                <Route path="/add/scan" element={<ScanPage />} />
-                <Route path="/me" element={<ProfilePage />} />
-                <Route path="/me/account" element={<AccountPage />} />
-                <Route path="/me/stake" element={<StakePage />} />
-                <Route path="/me/history" element={<HistoryPage />} />
-                <Route path="/me/help" element={<HelpPage />} />
-                <Route path="/me/help/faq" element={<FaqScreen />} />
-                <Route path="/me/help/assistant" element={<AssistantPage />} />
-                <Route path="/me/broadcast" element={<BroadcastScreen />} />
-                <Route path="/me/stats" element={<AdminStatsPage />} />
-                <Route path="/me/settings" element={<Navigate to="/me" replace />} />
-                <Route path="/people" element={<PeopleGate><PeoplePage /></PeopleGate>} />
-                <Route path="/people/:ring" element={<PeopleGate><PeoplePage /></PeopleGate>} />
-                <Route path="/person/:id" element={<PersonGate><PersonPage /></PersonGate>} />
-                <Route path="/collection/:id" element={<CollectionPage />} />
-                <Route path="/support" element={<SupportChatPage />} />
+                <Route path={WEB_ROUTES.HOME} element={<HomeIndex />} />
+                <Route path={WEB_ROUTES.ASK} element={<AskPage />} />
+                <Route path={WEB_ROUTES.ADD} element={<AddPage />} />
+                <Route path={WEB_ROUTES.ADD_QR} element={<QrPage />} />
+                <Route path={WEB_ROUTES.ADD_SCAN} element={<ScanPage />} />
+                <Route path={WEB_ROUTES.ME} element={<ProfilePage />} />
+                <Route path={WEB_ROUTES.ME_ACCOUNT} element={<AccountPage />} />
+                <Route path={WEB_ROUTES.ME_STAKE} element={<StakePage />} />
+                <Route path={WEB_ROUTES.ME_HISTORY} element={<HistoryPage />} />
+                <Route path={WEB_ROUTES.ME_HELP} element={<HelpPage />} />
+                <Route path={WEB_ROUTES.ME_FAQ} element={<FaqScreen />} />
+                <Route path={WEB_ROUTES.ME_ASSISTANT} element={<AssistantPage />} />
+                <Route path={WEB_ROUTES.ME_BROADCAST} element={<BroadcastScreen />} />
+                <Route path={WEB_ROUTES.ME_STATS} element={<AdminStatsPage />} />
+                <Route path={WEB_ROUTES.ME_SETTINGS} element={<Navigate to="/me" replace />} />
+                <Route path={WEB_ROUTES.PEOPLE} element={<PeopleGate><PeoplePage /></PeopleGate>} />
+                <Route path={WEB_ROUTES.PEOPLE_RING} element={<PeopleGate><PeoplePage /></PeopleGate>} />
+                <Route path={WEB_ROUTES.PERSON} element={<PersonGate><PersonPage /></PersonGate>} />
+                <Route path={WEB_ROUTES.COLLECTION} element={<CollectionPage />} />
+                <Route path={WEB_ROUTES.SUPPORT} element={<SupportChatPage />} />
               </Route>
             </Route>
 
             {/* An address the app does not know: say so (in the shell when signed in) instead of a silent redirect */}
-            <Route path="*" element={<NotFoundPage />} />
+            <Route path="*" element={<Suspense fallback={<RouteFallback full />}><NotFoundPage /></Suspense>} />
           </Routes>
           <ActionErrorHost />
           </TelegramBootstrap>

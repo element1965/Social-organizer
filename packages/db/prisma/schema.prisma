@@ -125,6 +125,7 @@ model User {
   inactivityStage     Int       @default(0)
   inactivityWarnedAt  DateTime?
 
+  signupCampaign           UserSignupCampaign?
   platformAccounts         PlatformAccount[]
   connectionsFrom          Connection[]             @relation("connectionFromUser")
   connectionsTo            Connection[]             @relation("connectionToUser")
@@ -582,6 +583,29 @@ model InviteOpenDay {
 
   @@id([day, source])
   @@map("invite_open_days")
+}
+
+/// Daily landing actions grouped by campaign labels and referrer hostname.
+model LandingActionDay {
+  day          DateTime @db.Date
+  action       String
+  utmSource    String   @map("utm_source")
+  utmMedium    String   @map("utm_medium")
+  utmCampaign  String   @map("utm_campaign")
+  referrerHost String   @map("referrer_host")
+  count        Int      @default(0)
+
+  @@id([day, action, utmSource, utmMedium, utmCampaign, referrerHost])
+  @@map("landing_action_days")
+}
+
+/// Optional first-touch campaign saved when an account is created.
+model UserSignupCampaign {
+  userId   String @id @map("user_id")
+  campaign Json
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_signup_campaigns")
 }
 
 enum ScheduledPostStatus {

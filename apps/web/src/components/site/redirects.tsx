@@ -1,3 +1,4 @@
+import { firstTouchCampaign } from '../../lib/campaign';
 import { useEffect } from 'react';
 import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { detectDevice, getTarget } from '../../lib/device';
@@ -28,7 +29,7 @@ export function RedirectHome() {
 export function GetRedirect() {
   const { search } = useLocation();
   const invite = new URLSearchParams(search).get('invite');
-  const target = getTarget(detectDevice(), invite);
+  const target = getTarget(detectDevice(), invite, firstTouchCampaign());
   const external = /^https?:/.test(target);
 
   useEffect(() => {

@@ -1,3 +1,4 @@
+import type { Campaign } from '@so/shared';
 import { createUserWithReferralSlug } from './referral-slug.service.js';
 import crypto from 'node:crypto';
 import type { PrismaClient } from '@so/db';
@@ -105,7 +106,7 @@ export async function requestEmailCode(db: PrismaClient, rawEmail: string, lang 
 }
 
 /** Checks the code and returns the user (existing or new) for this proven address. */
-export async function verifyEmailCode(db: PrismaClient, rawEmail: string, code: string): Promise<{ userId: string; isNew: boolean }> {
+export async function verifyEmailCode(db: PrismaClient, rawEmail: string, code: string, campaign?: Campaign): Promise<{ userId: string; isNew: boolean }> {
   const email = normalizeEmail(rawEmail);
   const latest = await db.emailLoginCode.findFirst({ where: { email }, orderBy: { createdAt: 'desc' } });
   if (!latest || latest.consumedAt) throw new EmailCodeError('INVALID_CODE');
@@ -125,10 +126,10 @@ export async function verifyEmailCode(db: PrismaClient, rawEmail: string, code: 
   const used = await db.emailLoginCode.updateMany({ where: { id: latest.id, consumedAt: null }, data: { consumedAt: new Date() } });
   if (used.count === 0) throw new EmailCodeError('INVALID_CODE');
 
-  return findOrCreateEmailUser(db, email);
+  return findOrCreateEmailUser(db, email, campaign);
 }
 
-async function findOrCreateEmailUser(db: PrismaClient, email: string): Promise<{ userId: string; isNew: boolean }> {
+async function findOrCreateEmailUser(db: PrismaClient, email: string, campaign?: Campaign): Promise<{ userId: string; isNew: boolean }> {
   const existing = await db.user.findUnique({ where: { email } });
   if (existing) {
     // An account the Telegram bot muted comes back when its owner signs in again
@@ -147,7 +148,7 @@ async function findOrCreateEmailUser(db: PrismaClient, email: string): Promise<{
       monthlyBudget: DEFAULT_INTENTION_AMOUNT,
       remainingBudget: DEFAULT_INTENTION_AMOUNT,
       onboardingCompleted: true,
-    });
+    }, campaign);
     return { userId: user.id, isNew: true };
   } catch (err) {
     if (!isUniqueViolation(err)) throw err;

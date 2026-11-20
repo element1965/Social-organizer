@@ -1,3 +1,4 @@
+import { SOS_PREVIEW_ID } from '@so/shared';
 import { TELEGRAM_MINI_APP_BOT } from '../lib/deployment';
 import { useEffect } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -21,7 +22,7 @@ import { trpc } from '../lib/trpc';
 // /sos/preview: a sample Need for working on this page, in development builds only. In production the
 // address is an ordinary (unknown) id and gets the "not here" state; the sample is not even in the bundle.
 const DEMO_COLLECTION = import.meta.env.DEV ? {
-  id: 'preview',
+  id: SOS_PREVIEW_ID,
   type: 'EMERGENCY' as const,
   status: 'ACTIVE' as const,
   amount: 2000,
@@ -47,7 +48,7 @@ export function SosLandingPage() {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
-  const isPreview = DEMO_COLLECTION != null && collectionId === 'preview';
+  const isPreview = DEMO_COLLECTION != null && collectionId === SOS_PREVIEW_ID;
   const language = i18n.language;
 
   const fetched = trpc.collection.getPublic.useQuery(

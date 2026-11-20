@@ -1,3 +1,4 @@
+import { PUBLIC_PAGE_METADATA, WEB_ROUTES, type PublicPagePath } from '@so/shared';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -5,10 +6,10 @@ import { SitePage } from './SitePage';
 
 export type LegalDoc = 'privacy' | 'terms' | 'delete';
 
-const DOCS: { id: LegalDoc; to: string; key: string }[] = [
-  { id: 'privacy', to: '/privacy', key: 'legal.privacy' },
-  { id: 'terms', to: '/terms', key: 'legal.terms' },
-  { id: 'delete', to: '/delete-account', key: 'legal.deleteAccount' },
+const DOCS: { id: LegalDoc; to: PublicPagePath; key: string }[] = [
+  { id: 'privacy', to: WEB_ROUTES.PRIVACY, key: 'legal.privacy' },
+  { id: 'terms', to: WEB_ROUTES.TERMS, key: 'legal.terms' },
+  { id: 'delete', to: WEB_ROUTES.DELETE_ACCOUNT, key: 'legal.deleteAccount' },
 ];
 
 export interface ProseSection {
@@ -38,8 +39,9 @@ export function Prose({
   sections: ProseSection[];
 }) {
   const { t } = useTranslation();
+  const page = DOCS.find((item) => item.id === doc)!;
   return (
-    <SitePage title={`${title} — ${t('common.appName')}`} active="legal">
+    <SitePage title={`${title} — ${t('common.appName')}`} description={t(PUBLIC_PAGE_METADATA[page.to].description)} active="legal">
       <div className="site-legal">
         <nav className="site-toc" aria-label={t('legal.toc')}>
           {DOCS.map((d) => (

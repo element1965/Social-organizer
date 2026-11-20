@@ -2,7 +2,6 @@ import { TELEGRAM_BOT_URL } from '../lib/deployment';
 import { Trans, useTranslation } from 'react-i18next';
 import { Prose, type ProseSection } from '../components/site/Prose';
 
-// The policy text is kept word for word from the previous page; the owner writes the final version.
 const GITHUB = 'https://github.com/element1965/Social-organizer';
 const BOT = TELEGRAM_BOT_URL;
 
@@ -27,6 +26,7 @@ export function PrivacyPage() {
           <li><Trans i18nKey="legal.policy.s2b" components={b} /></li>
           <li><Trans i18nKey="legal.policy.s2c" components={b} /></li>
           <li><Trans i18nKey="legal.policy.s2d" components={b} /></li>
+          <li>{t('legal.policy.campaigns')}</li>
         </ul>
       ),
     },

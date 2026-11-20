@@ -1,3 +1,6 @@
+import { registerLandingEndpoints } from './services/landing.service.js';
+import { linkLanguage, SUPPORTED_LANGUAGES } from '@so/i18n';
+import { campaignFrom, isProductionWebRoute, type Campaign, publicPagePath, renderPublicSitemap, WEB_ROUTES } from '@so/shared';
 import { WEB_APP_URL, WEB_APP_ALT_URL, ANDROID_APP_PACKAGE, APPLE_TEAM_ID, APPLE_BUNDLE_ID, NATIVE_AUTH_SCHEME } from './deployment.js';
 import { userIdFromAuthHeader } from './services/auth.service.js';
 import { hit, clientIp, MINUTE } from './services/rate-limit.service.js';
@@ -28,7 +31,7 @@ import { isAdmin } from './admin.js';
 import { startInactiveCleanupTimer, logInactiveCleanupConfig } from './services/inactive-cleanup.service.js';
 import { readAvatar, backfillAvatars } from './services/avatar.service.js';
 import { countRequest, startRuntimeMetrics } from './services/runtime-metrics.service.js';
-import { findInvitePreview, findSosPreview, pickLanguage, renderInvitePreview, renderSosPreview } from './services/invite-preview.service.js';
+import { findInvitePreview, findSosPreview, pickLanguage, renderInvitePreview, renderSosPreview, renderHtmlLanguage, renderPublicPage, renderMissingPage } from './services/invite-preview.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -201,6 +204,8 @@ async function start() {
         },
       } satisfies FastifyTRPCPluginOptions<AppRouter>['trpcOptions'],
     });
+
+    registerLandingEndpoints(app);
 
     // Health check
     app.get('/health', async () => {
@@ -414,11 +419,13 @@ async function start() {
       let platform = 'web';
       let linkCode: string | undefined;
       let invite: string | undefined;
+      let campaign: Campaign | undefined;
       try {
         const s = JSON.parse(body.state || '{}');
         platform = s.p || 'web';
         linkCode = s.lc || undefined;
         invite = s.inv || undefined;
+        campaign = campaignFrom(s.campaign);
       } catch { /* no/invalid state → treat as web */ }
 
       // Apple sends the user's name only on the FIRST authorization, as a JSON string.
@@ -445,7 +452,7 @@ async function start() {
       if (!apple) return sendBack(null);
 
       try {
-        const result = await findOrCreateAppleUser(getDb(), apple, displayName, linkCode, [`ip:${clientIp(req.raw)}`]);
+        const result = await findOrCreateAppleUser(getDb(), apple, displayName, linkCode, [`ip:${clientIp(req.raw)}`], campaign);
         return sendBack(result);
       } catch (err) {
         if (err instanceof AccountExistsError) return sendBack(null, 'account_exists', err.maskedEmail);
@@ -463,10 +470,15 @@ async function start() {
           reply.header('X-Robots-Tag', 'noindex');
         }
       });
+      const sitemap = renderPublicSitemap(WEB_APP_URL, SUPPORTED_LANGUAGES);
+      app.get('/sitemap.xml', (_req, reply) =>
+        reply.header('Cache-Control', 'public, max-age=600').type('application/xml; charset=utf-8').send(sitemap));
       await app.register(fastifyStatic, {
         root: WEB_DIST,
         prefix: '/',
         wildcard: false,
+        globIgnore: ['sitemap.xml'],
+        index: false,
         setHeaders(reply, filePath) {
           if (filePath.endsWith('.html')) {
             reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
@@ -483,51 +495,73 @@ async function start() {
       // messengers build the link card without running JavaScript. Reading a preview creates nothing.
       const indexHtmlPath = resolve(WEB_DIST, 'index.html');
       let indexHtml: string | null = null;
+      const readIndex = async () => indexHtml ??= await readFile(indexHtmlPath, 'utf8');
+      const version = (req: FastifyRequest, fallback = 'en') => {
+        const query = new URLSearchParams(req.url.split('?')[1]);
+        return { lang: pickLanguage(query.get('lang'), req.headers['accept-language'], fallback), explicit: linkLanguage(query.get('lang')) };
+      };
+      const localizedShell = async (req: FastifyRequest) => renderHtmlLanguage(await readIndex(), version(req).lang);
+      const sendSpa = (reply: FastifyReply, html: string, status = 200) =>
+        reply.header('Cache-Control', 'no-cache, no-store, must-revalidate')
+          .type('text/html; charset=utf-8').code(status).send(html);
+
       const serveInvite = async (req: FastifyRequest, reply: FastifyReply, token: string) => {
         reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
         reply.header('X-Robots-Tag', 'noindex');
         try {
-          indexHtml ??= await readFile(indexHtmlPath, 'utf8');
           const preview = await findInvitePreview(getDb(), token);
-          if (!preview) return reply.type('text/html; charset=utf-8').send(indexHtml);
-          const q = req.query as { lang?: string; to?: string };
-          const lang = pickLanguage(q.lang, req.headers['accept-language'], preview.language);
-          const url = `${WEB_APP_URL}${req.url.split('?')[0]}`;
-          const html = renderInvitePreview(indexHtml, preview, { lang, url, origin: WEB_APP_URL, to: q.to });
-          return reply.type('text/html; charset=utf-8').send(html);
+          if (preview) {
+            const { lang, explicit } = version(req, preview.language);
+            const q = new URLSearchParams(req.url.split('?')[1]);
+            const url = new URL(req.url.split('?')[0]!, WEB_APP_URL);
+            if (explicit) url.searchParams.set('lang', explicit);
+            return sendSpa(reply, renderInvitePreview(await readIndex(), preview, {
+              lang, url: url.href, origin: WEB_APP_URL, to: q.get('to'),
+            }));
+          }
         } catch (err) {
           req.log.warn({ err }, '[invite-preview] failed, serving the plain page');
-          return reply.sendFile('index.html', WEB_DIST);
         }
+        return sendSpa(reply, await localizedShell(req));
       };
-      app.get('/invite/:token', (req, reply) => serveInvite(req, reply, (req.params as { token: string }).token));
-      app.get('/i/:slug', (req, reply) => serveInvite(req, reply, (req.params as { slug: string }).slug));
 
-      // The public Need page gets its own link card: the author's name and photo, never amounts.
-      app.get('/sos/:id', async (req, reply) => {
-        reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+      app.get(WEB_ROUTES.INVITE, (req, reply) => serveInvite(req, reply, (req.params as { token: string }).token));
+      app.get(WEB_ROUTES.INVITE_SLUG, (req, reply) => serveInvite(req, reply, (req.params as { slug: string }).slug));
+
+      // Public Need cards include only the author's name and photo.
+      app.get(WEB_ROUTES.SOS, async (req, reply) => {
         reply.header('X-Robots-Tag', 'noindex');
+        const path = req.url.split('?')[0]!;
+        if (!isProductionWebRoute(path)) return sendSpa(reply, renderMissingPage(await readIndex(), version(req).lang, WEB_APP_URL), 404);
         try {
-          indexHtml ??= await readFile(indexHtmlPath, 'utf8');
-          const preview = await findSosPreview(getDb(), (req.params as { id: string }).id);
-          if (!preview) return reply.type('text/html; charset=utf-8').send(indexHtml);
-          const q = req.query as { lang?: string };
-          const lang = pickLanguage(q.lang, req.headers['accept-language'], preview.language);
-          const url = `${WEB_APP_URL}${req.url.split('?')[0]}`;
-          return reply.type('text/html; charset=utf-8').send(renderSosPreview(indexHtml, preview, { lang, url, origin: WEB_APP_URL }));
+          const preview = await findSosPreview(getDb(), (req.params as { collectionId: string }).collectionId);
+          if (preview) {
+            const { lang, explicit } = version(req, preview.language);
+            const url = new URL(path, WEB_APP_URL);
+            if (explicit) url.searchParams.set('lang', explicit);
+            return sendSpa(reply, renderSosPreview(await readIndex(), preview, { lang, url: url.href, origin: WEB_APP_URL }));
+          }
         } catch (err) {
           req.log.warn({ err }, '[sos-preview] failed, serving the plain page');
-          return reply.sendFile('index.html', WEB_DIST);
         }
+        return sendSpa(reply, await localizedShell(req));
       });
 
-      // A missing site asset should have a 404, not a successful HTML response.
-      app.setNotFoundHandler((req, reply) => {
-        if (SITE_FILES.has(req.url.split('?')[0]!)) {
+      app.setNotFoundHandler(async (req, reply) => {
+        const path = req.url.split('?')[0]!;
+        if ((req.method !== 'GET' && req.method !== 'HEAD') || SITE_FILES.has(path) ||
+          /^\/(?:api|trpc|\.well-known|assets|landing|fonts|videos|gun)(?:\/|$)/i.test(path)) {
           return reply.code(404).send({ error: 'Not found' });
         }
-        reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
-        return reply.sendFile('index.html', WEB_DIST);
+        const publicPath = publicPagePath(path);
+        if (publicPath) {
+          const { lang, explicit } = version(req);
+          reply.header('Vary', 'Accept-Language');
+          return sendSpa(reply, renderPublicPage(await readIndex(), publicPath, WEB_APP_URL, lang, explicit));
+        }
+        if (isProductionWebRoute(path)) return sendSpa(reply, await localizedShell(req));
+        reply.header('X-Robots-Tag', 'noindex');
+        return sendSpa(reply, renderMissingPage(await readIndex(), version(req).lang, WEB_APP_URL), 404);
       });
 
       console.log(`Serving web frontend from ${WEB_DIST}`);

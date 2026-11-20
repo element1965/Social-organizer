@@ -1,13 +1,14 @@
 import { TELEGRAM_BOT_USERNAME, TELEGRAM_BOT_URL } from '../lib/deployment';
 import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { recordLandingEvent, firstTouchCampaign } from '../lib/campaign';
 import { Trans, useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
 import { RTL_LANGUAGES } from '@so/i18n/languages';
 import { GITHUB_URL, LanguageSelect, useLoginHref } from '../components/site/SiteHeader';
-import { usePendingInvite, useStoreLinks } from '../components/site/DeviceEntry';
-import { useDocumentTitle } from '../components/site/hooks';
-import { SITE_ORIGIN } from '../lib/device';
+import { usePendingInvite } from '../components/site/DeviceEntry';
+import { useDocumentTitle, useSitePhone } from '../components/site/hooks';
+import { SITE_ORIGIN, storeLinks, useDevice } from '../lib/device';
 import { IconGlobe } from '../components/site/icons';
 import { initGlide } from '../components/landing/glide';
 import { initGrow, type GrowHandle, type GrowOptions } from '../components/landing/grow';
@@ -33,6 +34,23 @@ const TEAM_URL = `${BOT_URL}?start=team`;
 const ICON_CREDITS = 'Gil Barbara logos (CC0)';
 /** People with connections in the network on the date in `join.now`. */
 const NETWORK_NOW = 287;
+const STORES = ['play', 'appstore', 'web', 'telegram'] as const;
+
+function LandingPhoto({ name, hero = false }: { name: 'sky' | 'starlings' | 'wave'; hero?: boolean }) {
+  const size = (width: number) => '/landing/' + name + '-' + width + '.webp';
+  return <img
+    className={hero ? 'poster' : 'bg'}
+    src={size(1440)}
+    width={1440}
+    height={name === 'sky' ? 960 : 810}
+    srcSet={[480, 960, 1440, 1920].map((width) => size(width) + ' ' + width + 'w').join(', ')}
+    sizes="100vw"
+    alt=""
+    loading={hero ? 'eager' : 'lazy'}
+    decoding="async"
+    fetchPriority={hero ? 'high' : undefined}
+  />;
+}
 
 /**
  * The story's beats on the page. `key` names the words (landing.v2.story.b<key>); `phases` is how many of the
@@ -81,7 +99,28 @@ export function LandingPage() {
   const rtl = RTL_LANGUAGES.includes(lang);
   const loginHref = useLoginHref();
   const invite = usePendingInvite();
-  const links = useStoreLinks(invite);
+  const phone = useSitePhone();
+  const device = useDevice();
+  const primary = phone ? ({ android: 'play', ios: 'appstore', desktop: 'web' } as const)[device] : null;
+  const links = storeLinks(invite, firstTouchCampaign());
+  const { search } = useLocation();
+  const viewed = useRef<string | undefined>(undefined);
+  const [liveCount, setLiveCount] = useState<number>();
+  useEffect(() => {
+    if (viewed.current === search) return;
+    viewed.current = search;
+    recordLandingEvent('view', search);
+  }, [search]);
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetch('/api/landing/people', { credentials: 'omit', signal: controller.signal })
+      .then((response) => response.ok ? response.json() : undefined)
+      .then((count: unknown) => {
+        if (typeof count === 'number' && Number.isSafeInteger(count) && count >= 0) setLiveCount(count);
+      })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, []);
   const qrValue = `${SITE_ORIGIN}/get${invite ? `?invite=${encodeURIComponent(invite)}` : ''}`;
   useDocumentTitle(t('landing.v2.meta.title'), t('landing.v2.meta.description'));
 
@@ -177,63 +216,71 @@ export function LandingPage() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // the sky photograph replaces its flat colour once it has loaded
+  // Show the photograph and story copy while the dynamic scene is loading. Observe the story copy
+  // beyond the opening screen so fast jumps and links into later chapters also initialize the scene.
   useEffect(() => {
-    const img = new Image();
-    img.onload = () => {
-      if (skyRef.current) skyRef.current.style.backgroundImage = 'url(/landing/sky.jpg)';
-    };
-    img.src = '/landing/sky.jpg';
-    return () => {
-      img.onload = null;
-    };
-  }, []);
-
-  // the 3D story: Three.js arrives in its own chunk; without WebGL the words are shown whole
-  useEffect(() => {
+    const root = rootRef.current;
     let cancelled = false;
     const showAllWords = () => lateRefs.current.forEach((el) => el?.classList.add('on'));
-    import('../components/landing/scene')
-      .then(({ initScene }) => {
-        if (cancelled) return;
-        const root = rootRef.current;
-        const canvas = sceneRef.current;
-        const tags = tagRefs.current;
-        if (!root || !canvas || !skyRef.current || !nightRef.current || !graphBgRef.current || !storyRef.current || !hudRef.current) return;
-        if (!hudReachedRef.current || !hudReportedRef.current || !hudPeopleRef.current || !railRef.current) return;
-        if (!tags.you || !tags.oleg || !tags.maria || !tags.lena) return;
-        try {
-          sceneHandle.current = initScene(
-            {
-              root,
-              canvas,
-              sky: skyRef.current,
-              night: nightRef.current,
-              graphBg: graphBgRef.current,
-              story: storyRef.current,
-              beats: beatRefs.current.filter((b): b is HTMLElement => !!b),
-              phases: [1, ...BEATS.map((b) => b.phases)],
-              lates: lateRefs.current,
-              tags: { you: tags.you, oleg: tags.oleg, maria: tags.maria, lena: tags.lena },
-              hud: hudRef.current,
-              hudReached: hudReachedRef.current,
-              hudReported: hudReportedRef.current,
-              hudPeople: hudPeopleRef.current,
-              rail: railRef.current,
-              railLinks: railLinkRefs.current.filter((a): a is HTMLAnchorElement => !!a),
-            },
-            optionsRef.current.scene,
-          );
-        } catch {
-          showAllWords();
-        }
-      })
-      .catch(() => {
-        if (!cancelled) showAllWords();
+    const loadScene = () => {
+      void import('../components/landing/scene')
+        .then(({ initScene }) => {
+          if (cancelled) return;
+          const canvas = sceneRef.current;
+          const tags = tagRefs.current;
+          if (!root || !canvas || !skyRef.current || !nightRef.current || !graphBgRef.current || !storyRef.current || !hudRef.current) return;
+          if (!hudReachedRef.current || !hudReportedRef.current || !hudPeopleRef.current || !railRef.current) return;
+          if (!tags.you || !tags.oleg || !tags.maria || !tags.lena) return;
+          try {
+            sceneHandle.current = initScene(
+              {
+                root,
+                canvas,
+                sky: skyRef.current,
+                night: nightRef.current,
+                graphBg: graphBgRef.current,
+                story: storyRef.current,
+                beats: beatRefs.current.filter((b): b is HTMLElement => !!b),
+                phases: [1, ...BEATS.map((b) => b.phases)],
+                lates: lateRefs.current,
+                tags: { you: tags.you, oleg: tags.oleg, maria: tags.maria, lena: tags.lena },
+                hud: hudRef.current,
+                hudReached: hudReachedRef.current,
+                hudReported: hudReportedRef.current,
+                hudPeople: hudPeopleRef.current,
+                rail: railRef.current,
+                railLinks: railLinkRefs.current.filter((a): a is HTMLAnchorElement => !!a),
+              },
+              optionsRef.current.scene,
+            );
+            root.classList.add('scene-ready');
+          } catch {
+            showAllWords();
+          }
+        })
+        .catch(() => {
+          if (!cancelled) showAllWords();
+        });
+    };
+    const visiblePart = 0.05;
+    const observer = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.intersectionRatio >= visiblePart)) return;
+      observer?.disconnect();
+      loadScene();
+    }, { threshold: visiblePart });
+    if (observer) {
+      beatRefs.current.slice(1).forEach((beat) => {
+        const copy = beat?.querySelector('.copy');
+        if (copy) observer.observe(copy);
       });
+    } else {
+      loadScene();
+    }
     return () => {
       cancelled = true;
+      observer?.disconnect();
       sceneHandle.current?.destroy();
+      root?.classList.remove('scene-ready');
       sceneHandle.current = null;
     };
   }, []);
@@ -292,6 +339,7 @@ export function LandingPage() {
   const sharedTimer = useRef(0);
   useEffect(() => () => window.clearTimeout(sharedTimer.current), []);
   const share = () => {
+    recordLandingEvent('share', search);
     const url = `${window.location.origin}${window.location.pathname}`;
     if (navigator.share) {
       navigator.share({ title: document.title, url }).catch(() => {});
@@ -327,17 +375,17 @@ export function LandingPage() {
           </nav>
           <div className="tools">
             <LanguageSelect />
-            <Link className="signin" to={loginHref}>
+            <Link className="signin" to={loginHref} onClick={() => recordLandingEvent('header_signin', search)}>
               {t('landing.v2.nav.signin')}
             </Link>
-            <a className="btn care" href="#start">
+            <a className="btn care" href="#start" onClick={() => recordLandingEvent('header_start', search)}>
               {t('landing.v2.hero.cta')}
             </a>
           </div>
         </div>
       </header>
 
-      <div className="sky" ref={skyRef} aria-hidden="true" />
+      <div className="sky" ref={skyRef} aria-hidden="true"><LandingPhoto name="sky" hero /></div>
       <div className="night" ref={nightRef} aria-hidden="true" />
       <div className="graphbg" ref={graphBgRef} aria-hidden="true" />
       <canvas className="scene" ref={sceneRef} aria-hidden="true" />
@@ -382,17 +430,27 @@ export function LandingPage() {
       </nav>
 
       <main ref={mainRef}>
-        <div className="story" ref={storyRef} role="region" aria-label={t('landing.v2.story.sceneAria')}>
+        <div
+          className="story"
+          ref={storyRef}
+          role="region"
+          aria-label={t('landing.v2.story.sceneAria')}
+          onClick={(event) => {
+            if (event.target instanceof Element && event.target.closest('.beat:not(.hero) a[href="#start"]')) {
+              recordLandingEvent('story_start', search);
+            }
+          }}
+        >
           <section className="beat hero" id="top" ref={(el) => void (beatRefs.current[0] = el)}>
             <div className="wrap">
               <div className="copy" data-enter="">
                 <h1>{t('landing.v2.hero.title')}</h1>
                 <p className="lead">{t('landing.v2.hero.lead')}</p>
                 <div className="actions">
-                  <a className="btn care" href="#start">
+                  <a className="btn care" href="#start" onClick={() => recordLandingEvent('hero_start', search)}>
                     {t('landing.v2.hero.cta')}
                   </a>
-                  <a className="btn ghost" href="#how">
+                  <a className="btn ghost" href="#how" onClick={() => recordLandingEvent('hero_how', search)}>
                     {t('landing.v2.hero.how')}
                   </a>
                 </div>
@@ -535,18 +593,20 @@ export function LandingPage() {
         </section>
 
         <section className="sec join screen" id="join" aria-labelledby="lv-join-title">
-          <img className="bg" src="/landing/starlings.jpg" alt="" loading="lazy" decoding="async" />
+          <LandingPhoto name="starlings" />
           <div className="wrap grid">
             <div className="copy">
               <span className="mono">{t('landing.v2.join.label')}</span>
               <h2 id="lv-join-title">{t('landing.v2.join.title')}</h2>
               <p className="lead">{t('landing.v2.join.text')}</p>
               <p className="now">
-                <b>{nf.format(NETWORK_NOW)}</b>
-                <span>{t('landing.v2.join.now')}</span>
+                <b>{nf.format(liveCount ?? NETWORK_NOW)}</b>
+                <span>{liveCount === undefined
+                  ? t('landing.v2.join.now')
+                  : t('landing.v2.join.nowDate', { date: new Intl.DateTimeFormat(lang, { dateStyle: 'long' }).format(new Date()) })}</span>
               </p>
               <div className="actions">
-                <a className="btn care" href={TEAM_URL} {...ext}>
+                <a className="btn care" href={TEAM_URL} {...ext} onClick={() => recordLandingEvent('team', search)}>
                   {t('landing.v2.join.cta')}
                 </a>
                 <button className="btn ghost" type="button" onClick={share}>
@@ -596,7 +656,7 @@ export function LandingPage() {
         </section>
 
         <section className="sec final screen" id="start" aria-labelledby="lv-start-title">
-          <img className="bg" src="/landing/wave.jpg" alt="" loading="lazy" decoding="async" />
+          <LandingPhoto name="wave" />
           <div className="wrap grid">
             <div className="copy">
               <span className="mono">{t('landing.v2.start.label')}</span>
@@ -608,34 +668,28 @@ export function LandingPage() {
                 <li>{t('landing.v2.start.s3')}</li>
               </ol>
               <div className="stores">
-                <a className="badge" href={links.play} {...ext}>
-                  <img src="/landing/icons/google-play-icon.svg" alt="" width={22} height={24} />
-                  <span>
-                    <small>{t('landing.v2.start.playTop')}</small>
-                    {t('landing.v2.start.play')}
-                  </span>
-                </a>
-                <a className="badge" href={links.appstore} {...ext}>
-                  <img className="inv" src="/landing/icons/apple.svg" alt="" width={20} height={24} />
-                  <span>
-                    <small>{t('landing.v2.start.iosTop')}</small>
-                    {t('landing.v2.start.ios')}
-                  </span>
-                </a>
-                <Link className="badge" to={loginHref}>
-                  <IconGlobe />
-                  <span>
-                    <small>{t('landing.v2.start.webTop')}</small>
-                    {t('landing.v2.start.web')}
-                  </span>
-                </Link>
-                <a className="badge" href={links.telegram} {...ext}>
-                  <img src="/landing/icons/telegram.svg" alt="" width={24} height={24} />
-                  <span>
-                    <small>{t('landing.v2.start.tgTop')}</small>
-                    {t('landing.v2.start.tg')}
-                  </span>
-                </a>
+                {(primary ? [primary, ...STORES.filter((id) => id !== primary)] : STORES).map((id) => {
+                  const [eyebrow, label] = {
+                    play: [t('landing.v2.start.playTop'), t('landing.v2.start.play')],
+                    appstore: [t('landing.v2.start.iosTop'), t('landing.v2.start.ios')],
+                    web: [t('landing.v2.start.webTop'), t('landing.v2.start.web')],
+                    telegram: [t('landing.v2.start.tgTop'), t('landing.v2.start.tg')],
+                  }[id];
+                  const icon = {
+                    play: <img src="/landing/icons/google-play-icon.svg" alt="" width={22} height={24} />,
+                    appstore: <img className="inv" src="/landing/icons/apple.svg" alt="" width={20} height={24} />,
+                    web: <IconGlobe />,
+                    telegram: <img src="/landing/icons/telegram.svg" alt="" width={24} height={24} />,
+                  }[id];
+                  const content = <>{icon}<span><small>{eyebrow}</small>{label}</span></>;
+                  const props = {
+                    className: id === primary ? 'badge primary' : 'badge',
+                    onClick: () => recordLandingEvent(id, search),
+                  };
+                  return id === 'web'
+                    ? <Link key={id} to={loginHref} {...props}>{content}</Link>
+                    : <a key={id} href={links[id]} {...ext} {...props}>{content}</a>;
+                })}
               </div>
             </div>
             <div className="qrcard" aria-hidden="true">
@@ -659,7 +713,7 @@ export function LandingPage() {
             <a href={BOT_URL} {...ext}>
               Telegram
             </a>
-            <Link to={loginHref}>{t('landing.v2.nav.signin')}</Link>
+            <Link to={loginHref} onClick={() => recordLandingEvent('footer_signin', search)}>{t('landing.v2.nav.signin')}</Link>
           </nav>
           <p className="credits">{t('landing.v2.footer.credits', { icons: ICON_CREDITS })}</p>
         </div>

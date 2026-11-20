@@ -1,3 +1,4 @@
+import type { Campaign } from '@so/shared';
 import { APPLE_BUNDLE_ID } from '../deployment.js';
 import { findLinkingCode } from './link-code.service.js';
 import { resolveExternalIdentity } from './identity.service.js';
@@ -135,6 +136,7 @@ export async function findOrCreateAppleUser(
   displayName: string | null,
   linkCode?: string,
   callerKeys: string[] = [],
+  campaign?: Campaign,
 ): Promise<{ accessToken: string; refreshToken: string; userId: string; isNew: boolean }> {
   const name = displayName || (apple.email ? apple.email.split('@')[0] : '') || `User_${apple.sub.slice(0, 8)}`;
 
@@ -158,6 +160,7 @@ export async function findOrCreateAppleUser(
   // AccountExistsError propagates: the caller tells the person to sign in the old way.
   const { userId, isNew } = await resolveExternalIdentity(db, {
     platform: 'APPLE',
+    campaign,
     platformId: apple.sub,
     verifiedEmail: apple.email_verified && apple.email ? apple.email : null,
     name,

@@ -1,3 +1,4 @@
+import { firstTouchCampaign } from '../lib/campaign';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -46,7 +47,7 @@ export function useTelegramInit() {
     console.log('[TG Auth] initData present:', !!initData, 'length:', initData?.length ?? 0);
     if (initData) {
       loginMutation
-        .mutateAsync({ initData })
+        .mutateAsync({ initData, campaign: firstTouchCampaign() })
         .then((result) => {
           if (!result?.accessToken) {
             console.error('[TG Auth] login returned null/empty result');

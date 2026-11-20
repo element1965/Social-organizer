@@ -19,7 +19,7 @@ import { verifyGoogleIdToken } from '../services/google.service.js';
 import { resolveExternalIdentity, AccountExistsError } from '../services/identity.service.js';
 import { requestEmailCode, verifyEmailCode, EmailCodeError } from '../services/email-code.service.js';
 import { isMailConfigured, MailUnavailableError } from '../services/mail.service.js';
-import { DEFAULT_INTENTION_AMOUNT, LINKING_CODE_TTL_MINUTES } from '@so/shared';
+import { campaignFrom, type Campaign, DEFAULT_INTENTION_AMOUNT, LINKING_CODE_TTL_MINUTES } from '@so/shared';
 import { touchUser } from '../services/activity.service.js';
 import { restoreMutedAccount } from '../services/account-restore.service.js';
 import { invalidateGraph } from '../services/graph-cache.service.js';
@@ -51,6 +51,7 @@ async function signInTelegramUser(
   db: Context['db'],
   tgUser: TelegramUserData,
   platformToken: string,
+  campaign?: Campaign,
 ): Promise<{ userId: string; isNew: boolean }> {
   const platformId = String(tgUser.id);
   let platformAccount = await db.platformAccount.findUnique({
@@ -110,7 +111,7 @@ async function signInTelegramUser(
           accessToken: platformToken,
         },
       },
-    });
+    }, campaign);
     userId = user.id;
     isNew = true;
   }
@@ -150,6 +151,7 @@ export const authRouter = router({
       email: z.string().email(),
       password: z.string().min(6),
       name: z.string().min(1).optional(),
+      campaign: z.unknown().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       const existingUser = await ctx.db.user.findUnique({
@@ -168,7 +170,7 @@ export const authRouter = router({
         monthlyBudget: DEFAULT_INTENTION_AMOUNT,
         remainingBudget: DEFAULT_INTENTION_AMOUNT,
         onboardingCompleted: true,
-      });
+      }, campaignFrom(input.campaign));
 
       const accessToken = signedInToken(ctx.db, user.id);
       const refreshToken = createRefreshToken(user.id);
@@ -205,6 +207,7 @@ export const authRouter = router({
   loginWithTelegram: publicProcedure
     .input(z.object({
       initData: z.string().min(1),
+      campaign: z.unknown().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       const tgUser = validateTelegramInitData(input.initData);
@@ -222,7 +225,7 @@ export const authRouter = router({
         linkResult = await linkTelegramByCode(ctx.db, startParam.slice('link_'.length), platformId, input.initData, [`ip:${ctx.ip}`, `tg:${platformId}`]);
       }
 
-      const { userId, isNew } = await signInTelegramUser(ctx.db, tgUser, input.initData);
+      const { userId, isNew } = await signInTelegramUser(ctx.db, tgUser, input.initData, campaignFrom(input.campaign));
 
       const accessToken = signedInToken(ctx.db, userId);
       const refreshToken = createRefreshToken(userId);
@@ -233,6 +236,7 @@ export const authRouter = router({
   loginWithGoogle: publicProcedure
     .input(z.object({
       idToken: z.string().min(1),
+      campaign: z.unknown().optional(),
       linkCode: z.string().length(6).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
@@ -281,6 +285,7 @@ export const authRouter = router({
         ({ userId, isNew } = await resolveExternalIdentity(ctx.db, {
           platform: 'GOOGLE',
           platformId: googleUser.sub,
+          campaign: campaignFrom(input.campaign),
           verifiedEmail: googleUser.email_verified ? googleUser.email : null,
           name: googleUser.name,
           photoUrl: googleUser.picture || null,
@@ -322,10 +327,10 @@ export const authRouter = router({
 
   /** Checks the code: the proven address signs in to its account or creates one. */
   verifyEmailCode: publicProcedure
-    .input(z.object({ email: z.string().trim().email().max(254), code: z.string().regex(/^\d{6}$/) }))
+    .input(z.object({ email: z.string().trim().email().max(254), code: z.string().regex(/^\d{6}$/), campaign: z.unknown().optional() }))
     .mutation(async ({ ctx, input }) => {
       try {
-        const { userId, isNew } = await verifyEmailCode(ctx.db, input.email, input.code);
+        const { userId, isNew } = await verifyEmailCode(ctx.db, input.email, input.code, campaignFrom(input.campaign));
         return { accessToken: signedInToken(ctx.db, userId), refreshToken: createRefreshToken(userId), userId, isNew };
       } catch (err) {
         throw toEmailCodeTrpcError(err);
@@ -342,12 +347,14 @@ export const authRouter = router({
       photo_url: z.string().url().max(1024).optional(),
       auth_date: z.number().int(),
       hash: z.string().regex(/^[a-f0-9]{64}$/),
+      campaign: z.unknown().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       if (!isTelegramWidgetEnabled()) throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'TELEGRAM_WIDGET_DISABLED' });
-      const tgUser = validateTelegramWidget(input);
+      const { campaign, ...signedData } = input;
+      const tgUser = validateTelegramWidget(signedData);
       if (!tgUser) throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid Telegram login data' });
-      const { userId, isNew } = await signInTelegramUser(ctx.db, tgUser, `widget:${input.auth_date}`);
+      const { userId, isNew } = await signInTelegramUser(ctx.db, tgUser, `widget:${input.auth_date}`, campaignFrom(campaign));
       return { accessToken: signedInToken(ctx.db, userId), refreshToken: createRefreshToken(userId), userId, isNew };
     }),
 
