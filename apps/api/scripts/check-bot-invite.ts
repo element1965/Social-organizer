@@ -50,7 +50,7 @@ if (!inviter) {
 }
 const reach = await networkReach(db, inviter.id);
 const people = groupDigits(reach.people);
-const usd = `${groupDigits(reach.canHelp)} $`;
+const usd = `${groupDigits(reach.canHelp)}\u00a0$`;
 console.log(`Profile of ${inviter.name}: ${people} people, declared participation ${usd}`);
 
 for (const lang of ['en', 'ru', 'de', 'ja']) {

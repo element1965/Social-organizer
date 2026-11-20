@@ -19,7 +19,7 @@ import { verifyGoogleIdToken } from '../services/google.service.js';
 import { resolveExternalIdentity, AccountExistsError } from '../services/identity.service.js';
 import { requestEmailCode, verifyEmailCode, EmailCodeError } from '../services/email-code.service.js';
 import { isMailConfigured, MailUnavailableError } from '../services/mail.service.js';
-import { LINKING_CODE_TTL_MINUTES } from '@so/shared';
+import { DEFAULT_INTENTION_AMOUNT, LINKING_CODE_TTL_MINUTES } from '@so/shared';
 import { touchUser } from '../services/activity.service.js';
 import { restoreMutedAccount } from '../services/account-restore.service.js';
 import { invalidateGraph } from '../services/graph-cache.service.js';
@@ -100,8 +100,8 @@ async function signInTelegramUser(
       name,
       photoUrl: tgUser.photo_url || null,
       language: lang,
-      monthlyBudget: 1,
-      remainingBudget: 1,
+      monthlyBudget: DEFAULT_INTENTION_AMOUNT,
+      remainingBudget: DEFAULT_INTENTION_AMOUNT,
       onboardingCompleted: true,
       platformAccounts: {
         create: {
@@ -165,8 +165,8 @@ export const authRouter = router({
         email: input.email.toLowerCase(),
         passwordHash,
         name: input.name || input.email.split('@')[0] || 'User',
-        monthlyBudget: 1,
-        remainingBudget: 1,
+        monthlyBudget: DEFAULT_INTENTION_AMOUNT,
+        remainingBudget: DEFAULT_INTENTION_AMOUNT,
         onboardingCompleted: true,
       });
 

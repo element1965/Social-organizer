@@ -95,7 +95,7 @@ existing users.
 
 **Dev server over Wi-Fi.** Vite listens on all interfaces (`server.host: true`), so with the phone on the same
    network open `http://<pc-ip>:3060` (find the IP with `ipconfig`; the Vite banner prints it as "Network"). The API is
-   reached through the Vite proxy, which rewrites the browser's Origin to `localhost:3000` for the CORS allowlist.
+   reached through the Vite proxy, which rewrites the browser's Origin to `http://localhost:3060`, the API's local `WEB_APP_URL`.
    Sign in with the e-mail code from `apps/api/so-dev-mail.log`; Google/Apple/Telegram sign-in do not work on a LAN
    address. Plain http also means no PWA install and no camera (the QR scanner needs a secure context).
 

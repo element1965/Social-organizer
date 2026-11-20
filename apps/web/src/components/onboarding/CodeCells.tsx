@@ -53,7 +53,7 @@ export function CodeCells({
                 digit && !busy && 'shadow-[inset_0_0_0_2px_rgb(var(--so-care))]',
                 busy && 'text-ink-muted',
                 invalid && !off && 'shadow-[inset_0_0_0_2px_rgb(var(--so-sos))]',
-                off && 'bg-canvas text-ink-subtle shadow-[inset_0_0_0_1px_rgb(var(--so-line)/0.08)]',
+                off && 'border border-dashed border-line/25 bg-canvas text-ink-subtle shadow-none',
               )}
             >
               {digit ?? (current ? <i className="block motion-safe:animate-pulse h-[26px] w-0.5 rounded-[1px] bg-care" /> : null)}

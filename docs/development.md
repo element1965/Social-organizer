@@ -1,6 +1,7 @@
 # Local development
 
 Start with the [quick start](../README.md#quick-start). The example starts the web app on port 3060 and the API on 3061.
+The ports come from `DEV_WEB_PORT` in `apps/web/.env` (3060 in the example; without it Vite uses 3000) and `PORT` in `apps/api/.env`. Keep the API's `WEB_APP_URL` on the same web port, because the API builds links and OAuth return addresses from it.
 
 Try `big@test.local` for a larger Circle or `new@test.local` for onboarding.
 

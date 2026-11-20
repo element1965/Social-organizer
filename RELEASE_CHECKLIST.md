@@ -7,6 +7,8 @@
 
 App: **Social Orginizer** · Apple ID `6768132198` · Bundle `com.socialorganizer.app`
 
+Use Node.js 22.18 or later on the release machine. The Android release scripts import TypeScript files directly.
+
 ---
 
 ## ШАГ 1 — Sign in with Apple: Apple Developer

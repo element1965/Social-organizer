@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatUnbrokenNumber } from '@so/shared';
 import type { ChainFigureLabels, HuiFigureLabels, JoinFigureLabels, NetFigureLabels, OrbitFigureLabels } from '../figures';
 
 /** Money as the site writes it: "15 $" in Russian, "$15" in English (Intl decides). */
@@ -7,7 +8,7 @@ export function useMoney() {
   const { i18n } = useTranslation();
   return useMemo(() => {
     const fmt = new Intl.NumberFormat(i18n.language || 'en', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-    return (n: number) => fmt.format(n);
+    return (n: number) => formatUnbrokenNumber(fmt, n);
   }, [i18n.language]);
 }
 

@@ -1,5 +1,6 @@
 import { createUserWithReferralSlug } from './referral-slug.service.js';
 import { Prisma, type PrismaClient } from '@so/db';
+import { DEFAULT_INTENTION_AMOUNT } from '@so/shared';
 import { restoreMutedAccount } from './account-restore.service.js';
 
 /**
@@ -92,8 +93,8 @@ async function resolveOnce(db: PrismaClient, id: ExternalIdentity): Promise<{ us
     email,
     emailVerifiedAt: email ? new Date() : null,
     photoUrl: id.photoUrl || null,
-    monthlyBudget: 1,
-    remainingBudget: 1,
+    monthlyBudget: DEFAULT_INTENTION_AMOUNT,
+    remainingBudget: DEFAULT_INTENTION_AMOUNT,
     onboardingCompleted: true,
     platformAccounts: {
       create: { platform: id.platform, platformId: id.platformId, accessToken: id.accessToken ?? null },

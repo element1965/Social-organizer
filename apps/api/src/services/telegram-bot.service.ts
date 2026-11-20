@@ -2,6 +2,7 @@ import { WEB_APP_URL, SUPPORT_CHAT_ID } from '../deployment.js';
 import { createHash } from 'node:crypto';
 import { tgEscape } from './tg-html.js';
 import { getDb } from '@so/db';
+import { groupNumber } from '@so/shared';
 import { translateWithCache } from './translate.service.js';
 import { isRetiredChainMessage } from './mvp-scope.js';
 import { touchTelegramUser } from './activity.service.js';
@@ -591,7 +592,7 @@ export async function sendCollectionNotificationTg(
   const emoji = type === 'EMERGENCY' ? '🚨' : '📢';
   const typeLabel = type === 'EMERGENCY' ? 'one time' : 'every 28 days';
 
-  const amountStr = amount != null ? `${amount} ${currency}` : 'open';
+  const amountStr = amount != null ? `${groupNumber(amount)}\u00a0${currency}` : 'open';
   const text = `${emoji} <b>New Need · ${typeLabel}</b>\n\nFrom: <b>${creatorName}</b>\nAmount: ${amountStr}\n\nSomeone in your network has reported a Need.`;
 
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
@@ -630,7 +631,7 @@ function makeBotLocale(
   return {
     invite: (name, inviterName, stats) => {
       const line = stats
-        ? fill(text.invite, { inv: inviterName, p: groupDigits(stats.people), usd: `${groupDigits(stats.declaredUsd)} $` })
+        ? fill(text.invite, { inv: inviterName, p: groupDigits(stats.people), usd: `${groupDigits(stats.declaredUsd)}\u00a0$` })
         : fill(text.inviteNoStats, { inv: inviterName });
       return `${hello(name)}\n\n${line}\n\n${more}`;
     },
@@ -669,7 +670,7 @@ async function inviterNetworkStats(userId: string): Promise<InviteStats | null> 
 
 /** 10052 → "10 052" (thin space), the grouping the app uses */
 export function groupDigits(n: number): string {
-  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u2009');
+  return groupNumber(Math.round(n));
 }
 
 const BOT_STRINGS: Record<string, BotLocale> = {
@@ -1156,7 +1157,7 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
       }).catch(() => null);
 
       const creatorName = collection?.creator?.name || 'Someone';
-      const amountStr = collection?.amount ? ` ($${collection.amount})` : '';
+      const amountStr = collection?.amount ? ` ($${groupNumber(collection.amount)})` : '';
 
       const SOS_BTN: Record<string, string> = {
         en: '🤝 Join & Help',

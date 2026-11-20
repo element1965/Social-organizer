@@ -39,8 +39,8 @@ function packageName(id: string): string | null {
   return parts[0] || null;
 }
 
-// Dev proxy to the API. A phone on the same Wi-Fi opens http://<pc-ip>:3000, so the browser sends
-// Origin http://<pc-ip>:3000; it is rewritten to localhost:3000, which the API's CORS allowlist accepts.
+// Dev proxy to the API. A phone on the same Wi-Fi sends its LAN origin (http://<pc-ip>:<port>); it is rewritten
+// to http://localhost:3000, which the API's CORS allowlist always accepts locally, whatever DEV_WEB_PORT is.
 // Production serves web and API from one domain and never goes through this proxy.
 const apiProxy = (target: string, extra: Record<string, unknown> = {}) => ({
   target,
@@ -87,6 +87,7 @@ export default defineConfig(({ mode }) => {
       // (see docs/redesign/README.md, "Testing on a phone").
       host: true,
       proxy: {
+        '/health': apiProxy(apiTarget),
         '/trpc': apiProxy(apiTarget),
         '/api': apiProxy(apiTarget),
         '/gun': apiProxy(apiTarget, { ws: true }),

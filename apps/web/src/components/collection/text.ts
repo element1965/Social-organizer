@@ -1,4 +1,4 @@
-import { MAX_CHAT_LINK_LENGTH } from '@so/shared';
+import { formatUnbrokenNumber, MAX_CHAT_LINK_LENGTH } from '@so/shared';
 
 /** Whole dollars only. Empty and partial input is not a number. */
 export function parseWhole(raw: string): number | null {
@@ -45,7 +45,7 @@ export function shortUrl(raw: string): string {
 export { firstName } from '@so/shared';
 
 export function formatCount(value: number, language: string): string {
-  return new Intl.NumberFormat(language).format(value);
+  return formatUnbrokenNumber(new Intl.NumberFormat(language), value);
 }
 
 export function asDate(value: string | Date | null | undefined): Date | null {

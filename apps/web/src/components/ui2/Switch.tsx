@@ -26,9 +26,11 @@ export function Switch({ checked, onCheckedChange, label, disabled }: SwitchProp
     >
       <span
         className={cn(
-          'absolute top-[0.1875rem] h-6 w-6 rounded-full bg-surface shadow-float transition-[inset-inline-start,width] duration-base ease-so motion-reduce:transition-none',
+          'absolute start-[0.1875rem] top-[0.1875rem] h-6 w-6 rounded-full bg-surface shadow-float transition-transform duration-base ease-so group-active:scale-x-[1.166667] motion-reduce:transition-none',
           // On press, the knob stretches in the direction it will move.
-          checked ? 'start-[1.3125rem] group-active:w-7 group-active:start-[1.0625rem]' : 'start-[0.1875rem] group-active:w-7',
+          checked
+            ? 'origin-right translate-x-[1.125rem] rtl:origin-left rtl:-translate-x-[1.125rem]'
+            : 'origin-left rtl:origin-right',
         )}
       />
     </button>

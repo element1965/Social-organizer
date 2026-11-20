@@ -1,20 +1,27 @@
 import { useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../lib/trpc';
 import { useOffline } from '../lib/connectivity';
+import { actionErrorKey, errorKind } from '../lib/errors';
+import { ErrorState } from './errors/ErrorState';
 import { safePath } from './onboarding/flow';
+import { AlertGlyph } from './onboarding/states';
 import { AppLoader } from './ui2/AppLoader';
+import { Button } from './ui2/Button';
+import { Screen } from './ui2/Screen';
 
 const isNativeApp = Capacitor.isNativePlatform();
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { t } = useTranslation();
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const logout = useAuth((s) => s.logout);
   const location = useLocation();
   const offline = useOffline();
-  const { isLoading, error } = trpc.user.me.useQuery(undefined, {
+  const { data, isLoading, isFetching, error, refetch } = trpc.user.me.useQuery(undefined, {
     enabled: isAuthenticated,
     retry: 1,
   });
@@ -61,6 +68,26 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   // Offline there is nothing to wait for: the saved copy screens take over
   if (isLoading && !offline) {
     return <AppLoader />;
+  }
+
+  if (!offline && !data && error) {
+    const kind = errorKind(error);
+    if (kind !== 'aborted') {
+      return (
+        <Screen width="column">
+          <ErrorState
+            glyph={<AlertGlyph />}
+            title={t('errors.loadFailed')}
+            body={t(actionErrorKey(kind))}
+            action={
+              <Button className="w-full" loading={isFetching} onClick={() => void refetch()}>
+                {t('common.retry')}
+              </Button>
+            }
+          />
+        </Screen>
+      );
+    }
   }
 
   return <>{children}</>;

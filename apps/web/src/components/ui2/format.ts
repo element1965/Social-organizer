@@ -1,7 +1,6 @@
-/** "1 240 $" — thin space as the thousands separator, currency sign after the number. */
+import { groupNumber } from '@so/shared';
+
+/** "1 240 $" with non-breaking spaces and a trailing currency sign. */
 export function formatMoney(amount: number): string {
-  const rounded = Math.round(amount);
-  const sign = rounded < 0 ? '-' : '';
-  const body = Math.abs(rounded).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u2009');
-  return `${sign}${body} $`;
+  return `${groupNumber(Math.round(amount))}\u00a0$`;
 }

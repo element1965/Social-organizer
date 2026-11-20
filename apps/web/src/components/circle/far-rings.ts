@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { formatUnbrokenNumber } from '@so/shared';
 
 /** A rounded count from the server: under 5 people it is only "a few". */
 export type FarCount = { count: number; approx: boolean; few: boolean };
@@ -14,7 +15,7 @@ export function useFarRings(far: FarCount | null | undefined): { dots: number[] 
   if (!far) return { dots: undefined, label: undefined };
   const label =
     far.count > 0
-      ? t('circle.rings.farther', { value: new Intl.NumberFormat(i18n.language).format(far.count) })
+      ? t('circle.rings.farther', { value: formatUnbrokenNumber(new Intl.NumberFormat(i18n.language), far.count) })
       : far.few
         ? t('circle.rings.fartherFew')
         : undefined;

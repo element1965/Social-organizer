@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Capacitor, SystemBars, SystemBarsStyle } from '@capacitor/core';
+import { StatusBar } from '@capacitor/status-bar';
 import { isTelegramWebApp, getTGColorScheme } from '@so/tg-adapter';
 
 type ThemeMode = 'light' | 'dark' | 'system';
@@ -27,9 +28,18 @@ function watchColorScheme(onChange: () => void): () => void {
 }
 
 function paint(isDark: boolean) {
-  document.documentElement.classList.toggle('dark', isDark);
-  if (Capacitor.isNativePlatform()) {
+  const root = document.documentElement;
+  root.classList.toggle('dark', isDark);
+  if (Capacitor.isNativePlatform() && !isTelegramWebApp()) {
     SystemBars.setStyle({ style: isDark ? SystemBarsStyle.Dark : SystemBarsStyle.Light }).catch(() => {});
+    if (Capacitor.isPluginAvailable('StatusBar')) {
+      // Edge-to-edge Android uses the CSS canvas behind the bar instead.
+      const canvas = getComputedStyle(root).getPropertyValue('--so-canvas').trim();
+      if (canvas) {
+        const hex = canvas.split(/\s+/).map((channel) => Number(channel).toString(16).padStart(2, '0')).join('');
+        StatusBar.setBackgroundColor({ color: `#${hex}` }).catch(() => {});
+      }
+    }
   }
 }
 

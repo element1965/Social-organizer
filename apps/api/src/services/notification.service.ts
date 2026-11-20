@@ -2,7 +2,7 @@ import { WEB_APP_URL } from '../deployment.js';
 import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
 import type { PrismaClient } from '@so/db';
-import { NOTIFICATION_TTL_HOURS, REGULAR_CYCLE_DAYS } from '@so/shared';
+import { groupNumber, NOTIFICATION_TTL_HOURS, REGULAR_CYCLE_DAYS } from '@so/shared';
 import { findRecipientsViaBfs, walkRings, type BfsRecipient } from './bfs.service.js';
 import { planWave, recordSent } from './notify-routing.service.js';
 import { timedWalk } from './runtime-metrics.service.js';
@@ -140,7 +140,7 @@ export async function sendCollectionClosedTg(
   const collection = await db.collection.findUnique({ where: { id: collectionId }, select: { amount: true } });
   if (!creator || !collection) return;
 
-  const amountStr = collection.amount != null ? `${collection.amount} USD` : ''; // 1 unit = 1 $ (SO-40)
+  const amountStr = collection.amount != null ? `${groupNumber(collection.amount)}\u00a0USD` : ''; // 1 unit = 1 $ (SO-40)
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
   await deliverMany(db, recipientUserIds, () => ({
@@ -169,7 +169,7 @@ export async function sendGoalReachedToCreator(
   });
   if (!collection) return;
 
-  const amountStr = collection.amount != null ? `${collection.amount} USD` : '';
+  const amountStr = collection.amount != null ? `${groupNumber(collection.amount)}\u00a0USD` : '';
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
   const stamp = collection.blockedAt ? collection.blockedAt.getTime() : `c${collection.cycleNumber}`;
 
@@ -363,7 +363,7 @@ async function getUserContributions(
   const sums = new Map<string, number>();
   for (const o of obligations) sums.set(o.userId, (sums.get(o.userId) ?? 0) + o.amount);
   const result = new Map<string, string>();
-  for (const [userId, sum] of sums) result.set(userId, `${Math.round(sum * 100) / 100} USD`);
+  for (const [userId, sum] of sums) result.set(userId, `${groupNumber(Math.round(sum * 100) / 100)}\u00a0USD`);
   return result;
 }
 
@@ -472,7 +472,7 @@ async function dispatchNewCollection(
   if (!collection || !creator) return;
 
   const isEmergency = collection.type === 'EMERGENCY';
-  const amountStr = collection.amount != null ? `${collection.amount} USD` : '';
+  const amountStr = collection.amount != null ? `${groupNumber(collection.amount)}\u00a0USD` : '';
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
   const push = type === 'RE_NOTIFY'
     ? { title: 'Reminder', body: 'A Need in your network is still open.', url: webAppLink }

@@ -31,9 +31,11 @@ export function StakePage() {
   const utils = trpc.useUtils();
   const me = trpc.user.me.useQuery();
   const { figure } = useNetworkFigure();
+  const [saveCount, setSaveCount] = useState(0);
   const save = trpc.user.setMonthlyBudget.useMutation({
     meta: { notifyOnError: false },
     onSuccess: () => {
+      setSaveCount((count) => count + 1);
       void utils.user.me.invalidate();
       void utils.stats.networkFigure.invalidate();
       void utils.collection.askAccess.invalidate();
@@ -71,7 +73,7 @@ export function StakePage() {
               error={showError ? t('profile.stakeMin') : undefined}
               hint={save.isSuccess && unchanged ? t('profile.stakeSaved') : parsed === 0 ? t('profile.stakeNone') : t('profile.stakeHint')}
             />
-            <LiveNotice>{save.isSuccess && unchanged ? t('profile.stakeSaved') : null}</LiveNotice>
+            <LiveNotice key={saveCount}>{save.isSuccess ? t('profile.stakeSaved') : null}</LiveNotice>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {STAKE_PRESETS.map((preset) => (

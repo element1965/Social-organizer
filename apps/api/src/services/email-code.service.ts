@@ -1,6 +1,7 @@
 import { createUserWithReferralSlug } from './referral-slug.service.js';
 import crypto from 'node:crypto';
 import type { PrismaClient } from '@so/db';
+import { DEFAULT_INTENTION_AMOUNT } from '@so/shared';
 import { sendMail } from './mail.service.js';
 import { isUniqueViolation } from './identity.service.js';
 import { restoreMutedAccount } from './account-restore.service.js';
@@ -143,8 +144,8 @@ async function findOrCreateEmailUser(db: PrismaClient, email: string): Promise<{
       email,
       emailVerifiedAt: new Date(),
       name: email.split('@')[0] || 'User',
-      monthlyBudget: 1,
-      remainingBudget: 1,
+      monthlyBudget: DEFAULT_INTENTION_AMOUNT,
+      remainingBudget: DEFAULT_INTENTION_AMOUNT,
       onboardingCompleted: true,
     });
     return { userId: user.id, isNew: true };
