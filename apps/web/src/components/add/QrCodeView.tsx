@@ -12,6 +12,7 @@ type QrCodeViewProps = {
   /** "0:45" when a code is displayed. */
   timeLabel: string | null;
   failed?: boolean;
+  retrying?: boolean;
   onRetry?: () => void;
 };
 
@@ -19,7 +20,7 @@ type QrCodeViewProps = {
  * The live QR as the person sees it: the code with the countdown ring, the time left and the hint. LiveQr feeds it
  * fresh codes; the landing's "In the app" chapter shows it still.
  */
-export function QrCodeView({ url, fraction, timeLabel, failed, onRetry }: QrCodeViewProps) {
+export function QrCodeView({ url, fraction, timeLabel, failed, retrying, onRetry }: QrCodeViewProps) {
   const { t } = useTranslation();
   return (
     <>
@@ -63,7 +64,13 @@ export function QrCodeView({ url, fraction, timeLabel, failed, onRetry }: QrCode
       </p>
       <p className="mt-1.5 max-w-[30ch] text-caption font-semibold text-ink-muted">{t('add.qrHint')}</p>
       {failed ? (
-        <button type="button" className="so-focus relative mt-3 min-h-7 text-label font-bold text-sos before:absolute before:-inset-2" onClick={onRetry}>
+        <button
+          type="button"
+          className="so-focus relative mt-3 min-h-7 text-label font-bold text-sos before:absolute before:-inset-2 disabled:opacity-50"
+          disabled={retrying}
+          aria-busy={retrying || undefined}
+          onClick={onRetry}
+        >
           {t('add.qrError')}
         </button>
       ) : null}

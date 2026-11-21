@@ -43,7 +43,7 @@ export function LiveQr({ claimedIds, onIssued, onScan, onDone, children }: {
   const [pass, setPass] = useState<Pass | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const [failed, setFailed] = useState(false);
-  const [retry, setRetry] = useState(0);
+  const retryRef = useRef<(() => void) | null>(null);
   const refreshRef = useRef<((ids: ReadonlySet<string>) => void) | null>(null);
 
   useEffect(() => {
@@ -153,6 +153,7 @@ export function LiveQr({ claimedIds, onIssued, onScan, onDone, children }: {
       else void issue();
     };
 
+    retryRef.current = () => void issue();
     refreshRef.current = (ids) => {
       if (!current || !ids.has(current.id)) return;
       current = null;
@@ -169,10 +170,11 @@ export function LiveQr({ claimedIds, onIssued, onScan, onDone, children }: {
       epoch += 1;
       clearWait();
       clearTick();
+      retryRef.current = null;
       refreshRef.current = null;
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [retry]);
+  }, []);
 
   useEffect(() => {
     refreshRef.current?.(claimedIds);
@@ -189,7 +191,8 @@ export function LiveQr({ claimedIds, onIssued, onScan, onDone, children }: {
         fraction={fraction}
         timeLabel={pass ? formatLeft(remaining) : null}
         failed={failed}
-        onRetry={() => setRetry((value) => value + 1)}
+        retrying={generate.isPending}
+        onRetry={() => retryRef.current?.()}
       />
       <p className="mt-2 text-label font-bold tabular-nums text-ink-muted" role="status">
         {t('add.connectedHere', { connections: new Intl.NumberFormat(i18n.language).format(claimedIds.size) })}
