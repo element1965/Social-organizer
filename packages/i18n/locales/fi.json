@@ -716,7 +716,7 @@
         "signin": "Kirjaudu"
       },
       "hero": {
-        "title": "Piirisi on suurempi kuin luulet.",
+        "title": "Maailma on pienempi kuin luulet.",
         "lead": "Social Organizer kokoaa yhteen ihmiset, jotka tuntevat toisensa henkilökohtaisesti. Kun joku on pulassa, siitä kuulevat ensin hänen tuttunsa ja sitten heidän tuttunsa.",
         "cta": "Rakenna verkostosi",
         "how": "Näin se toimii",
@@ -779,10 +779,7 @@
           "9": "Sovellus"
         },
         "tags": {
-          "you": "Sinä",
-          "oleg": "Mikko",
-          "maria": "Laura · {{shortfall}}",
-          "lena": "Tiina"
+          "you": "Sinä"
         },
         "hud": {
           "reached_one": "on kuullut tarpeesta",
@@ -790,6 +787,16 @@
           "reported": "/ {{shortfall}} ilmoitettu",
           "people_one": "osallistuja",
           "people_other": "osallistujaa"
+        },
+        "cast": {
+          "asker": "Laura",
+          "mediator": "Mikko",
+          "supporter": "Tiina",
+          "newcomer": "Sari",
+          "friend1": "Emma",
+          "friend2": "Antti",
+          "friend3": "Anna",
+          "friend4": "Jukka"
         }
       },
       "app": {
@@ -811,7 +818,7 @@
         "statWaves_one": "kutsuaalto",
         "statWaves_other": "kutsuaaltoa",
         "dies": "Kasvu pysähtyi",
-        "grows": "Verkosto kasvaa itsestään",
+        "grows": "Tässä mallissa verkosto jatkaa kasvuaan.",
         "full": "Mallista loppuivat uudet ihmiset",
         "restart": "Aloita alusta",
         "hint": "Napauta mallia, niin verkosto alkaa toisesta ihmisestä",
@@ -835,7 +842,6 @@
         "title": "Lähde mukaan kokeiluun",
         "text": "Sovellus ja teoria ovat jo olemassa. Nyt ne pitää testata käytännössä, ja siihen tarvitaan ihmisiä.",
         "now": "ihmistä, joilla on yhteyksiä verkostossa, tilanne 13.11.2026",
-        "nowDate": "ihmistä, joilla on yhteyksiä verkostossa, tilanne {{date}}",
         "cta": "Kirjoita tiimille",
         "share": "Jaa",
         "shared": "Linkki kopioitu",
@@ -845,7 +851,10 @@
         "w2Title": "Kerro hankkeesta muille",
         "w2": "Lähetä tämä sivu ihmisille, joille se voi olla tärkeä, tai kirjoita itse Social Organizerista.",
         "w3Title": "Auta tutkimuksessa tai koodissa",
-        "w3": "Teoria on kuvattu <report>Andrei Lubalinin raportissa</report>, ja koodi on avoimesti saatavilla <code>GitHub</code>issa. Auta testaamaan teoriaa tai kehittämään sovellusta."
+        "w3": "Teoria on kuvattu <report>tutkimusraportissa</report>, ja koodi on avoimesti saatavilla <code>GitHub</code>issa. Auta testaamaan teoriaa tai kehittämään sovellusta.",
+        "selectLink": "Kopioi linkki alla olevasta kentästä.",
+        "nowLive_one": "ihminen, jolla on yhteyksiä verkostossa",
+        "nowLive_other": "ihmistä, joilla on yhteyksiä verkostossa"
       },
       "faq": {
         "title": "Kysymykset",
@@ -858,7 +867,12 @@
         "q4": "Onko tämä pyramidipeli?",
         "a4": "Ei. Kukaan ei maksa liittymisestä eikä kukaan ansaitse kutsuilla.",
         "q6": "Mitä tietoja säilytätte?",
-        "a6": "Säilytämme tili- ja profiilitietoja, kuten nimen, sähköpostin ja kirjautumispalvelun tunnisteet, sekä lisäämäsi tiedot, kuten kuvan, puhelinnumeron tai sijainnin. Säilytämme myös asetukset, kuten kielen ja teeman, kutsu- ja yhteyshistorian, ilmoitetut tarpeet, osallistumisen sekä ilmoitetut summat. Lisäksi tallennamme kirjautumiskoodit, ilmoituksiin tarvittavat tiedot ja ilmoitushistorian sekä lähettämäsi valitukset ja tukiviestit. Sovellus ei käsittele rahaa eikä pyydä kortti- tai pankkitietoja."
+        "data": {
+          "account": "Säilytämme tili- ja profiilitietoja, kuten nimen, sähköpostin ja kirjautumispalvelun tunnisteet, sekä lisäämäsi tiedot, kuten kuvan, puhelinnumeron tai sijainnin.",
+          "activity": "Säilytämme myös asetukset, kuten kielen ja teeman, kutsu- ja yhteyshistorian, ilmoitetut tarpeet, osallistumisen sekä ilmoitetut summat.",
+          "notifications": "Lisäksi tallennamme kirjautumiskoodit, ilmoituksiin tarvittavat tiedot ja ilmoitushistorian sekä lähettämäsi valitukset ja tukiviestit.",
+          "money": "Sovellus ei käsittele rahaa eikä pyydä kortti- tai pankkitietoja."
+        }
       },
       "start": {
         "label": "Sovellus",
@@ -866,7 +880,7 @@
         "text": "Huonona päivänä siihen ei ole aikaa eikä voimia.",
         "s1": "Avaa tutulta saamasi linkki tai kirjaudu itse Googlella, Applella, Telegramilla tai sähköpostiin tulevalla koodilla. Salasanaa ei tarvita.",
         "s2": "Lisää ihmiset, jotka tunnet henkilökohtaisesti: linkillä, QR-koodilla tai ravistamalla puhelimia vierekkäin.",
-        "s3": "Aseta aikomuksesi: summa, jonka olet yleensä valmis antamaan, kun joku verkostossa on pulassa.",
+        "s3": "Valitse summa, jonka voisit yleensä ilmoittaa, kun joku verkostossa joutuu pulaan.",
         "qr": "Osoita puhelimen kameralla tähän, niin oikea kauppa avautuu.",
         "playTop": "Saatavilla",
         "play": "Google Playssa",
@@ -913,17 +927,17 @@
       "title": "Polku tuttavien kautta",
       "lead": "Tarve tavoittaa yhtä monta ihmistä kuin siinä on dollareita, kädenpuristuksilta lähimmät ensin. Näet vain ne tarpeet, joihin on polku tuttavien kautta. Napauta henkilöä.",
       "says": [
-        "<b>Maria Koval</b> ilmoittaa tarpeesta. Et tunne häntä.",
-        "<b>Oleg</b>, veljesi, tuntee Marian. Siksi hän saa tämän viestin.",
-        "<b>Sinä</b> saat viestin, koska tunnet Olegin. Sinä päätät, osallistutko."
+        "<b>Laura</b> ilmoittaa tarpeesta. Et tunne häntä.",
+        "<b>Mikko</b>, veljesi, tuntee Lauran. Siksi hän saa tämän viestin.",
+        "<b>Sinä</b> saat viestin, koska tunnet Mikon. Sinä päätät, osallistutko."
       ]
     },
     "join": {
       "title": "Se alkaa ihmisestä, jonka tunnet",
       "lead": "Verkosto kasvaa vain toisensa tuntevien ihmisten kautta: joku liittyy linkkisi kautta, ja sinä vahvistat tuttavuuden.",
       "says": [
-        "Katya avaa linkkisi ja kirjautuu. <b>Tämä ei ole vielä yhteys:</b> saat ilmoituksen.",
-        "Vahvistat: kyllä, tunnemme toisemme. <b>Nyt Katya on 1. kädenpuristuksesi.</b>"
+        "Sari avaa linkkisi ja kirjautuu. <b>Tämä ei ole vielä yhteys:</b> saat ilmoituksen.",
+        "Vahvistat: kyllä, tunnemme toisemme. <b>Nyt Sari on 1. kädenpuristuksesi.</b>"
       ]
     },
     "cta": {
@@ -933,29 +947,11 @@
     },
     "figures": {
       "net": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Sinä",
-        "asker": "Maria",
         "chatTitle": "Osallistujien keskustelu",
-        "chatMembers": "Maria · Oleg · Lena",
         "aria": "Piirisi"
       },
       "orbit": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Sinä",
         "pills": [
           "1. · 6",
@@ -965,16 +961,13 @@
         "aria": "Kädenpuristuksen kehät"
       },
       "chain": {
-        "asker": "Maria",
         "askerSub": "tarvitsee {{amount}}",
-        "mediator": "Oleg",
         "mediatorSub": "veljesi",
         "you": "Sinä",
         "youSub": "sinä päätät",
         "aria": "Viestin polku"
       },
       "join": {
-        "newcomer": "Katya",
         "newcomerSub": [
           "tuli linkillä",
           "1. kädenpuristus"
@@ -1341,7 +1334,7 @@
     "fullLine": "Tarvittava summa on ilmoitettu.",
     "takePart": "Osallistu",
     "nextTitle": "Jos osallistut",
-    "next1": "Kerrot summan, jonka olet valmis antamaan. Voit aloittaa summalla {{amount}}.",
+    "next1": "Kerro, millä summalla olet valmis osallistumaan. Voit aloittaa summasta {{amount}}.",
     "next2": "Jos tarpeeseen on lisätty keskustelulinkki, voit avata sen osallistuttuasi.",
     "next3": "Jos kyse on rahasta, annat sen itse suoraan tarpeen julkaisijalle. Täällä et maksa mitään: Social Organizer ei vastaanota eikä siirrä rahaa.",
     "signInTitle": "Kirjaudu sisään osallistuaksesi tähän tarpeeseen"
@@ -1463,19 +1456,9 @@
       "text": "Joka päättää osallistua, nimeää oman summansa ja liittyy keskusteluun. <b>Kaikki muu tapahtuu ihmisten kesken, Social Organizerin ulkopuolella.</b>"
     },
     "figure": {
-      "names": [
-        "Kira",
-        "Oleg",
-        "Ira",
-        "Dima",
-        "Lena",
-        "Max"
-      ],
       "you": "Sinä",
-      "asker": "Maria",
       "amount": "300 $",
       "chatTitle": "Osallistujien keskustelu",
-      "chatMembers": "Maria · Oleg · Lena",
       "aria": "Piirin kaavio"
     },
     "seed": {

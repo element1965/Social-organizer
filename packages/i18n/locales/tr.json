@@ -716,7 +716,7 @@
         "signin": "Giriş yap"
       },
       "hero": {
-        "title": "Çevreniz sandığınızdan büyük.",
+        "title": "Dünya sandığınızdan daha küçük.",
         "lead": "Social Organizer birbirini yüz yüze tanıyan insanları bir araya getirir. Biri zor durumda kaldığında önce onun tanıdıkları duyar, sonra onların tanıdıkları.",
         "cta": "Ağınızı kurun",
         "how": "Nasıl çalışır",
@@ -779,10 +779,7 @@
           "9": "Uygulama"
         },
         "tags": {
-          "you": "Siz",
-          "oleg": "Murat",
-          "maria": "Ayşe · {{shortfall}}",
-          "lena": "Elif"
+          "you": "Siz"
         },
         "hud": {
           "reached_one": "kişi ihtiyaçtan haberdar oldu",
@@ -790,6 +787,16 @@
           "reported": "belirtildi, hedef {{shortfall}}",
           "people_one": "katılımcı",
           "people_other": "katılımcı"
+        },
+        "cast": {
+          "asker": "Ayşe",
+          "mediator": "Murat",
+          "supporter": "Elif",
+          "newcomer": "Deniz",
+          "friend1": "Zeynep",
+          "friend2": "Emre",
+          "friend3": "Ece",
+          "friend4": "Can"
         }
       },
       "app": {
@@ -811,7 +818,7 @@
         "statWaves_one": "davet dalgası",
         "statWaves_other": "davet dalgası",
         "dies": "Büyüme durdu",
-        "grows": "Ağ kendi kendine büyüyor",
+        "grows": "Bu modelde ağ büyümeye devam ediyor.",
         "full": "Modelde yeni insan kalmadı",
         "restart": "Baştan başla",
         "hint": "Başka birinden başlamak için modele dokunun",
@@ -835,7 +842,6 @@
         "title": "Deneye katılın",
         "text": "Uygulama da teori de var. Şimdi bunları gerçek hayatta sınamak gerekiyor ve bunun için insanlar lazım.",
         "now": "kişi 13 Kasım 2026 itibarıyla ağda bağlantılı",
-        "nowDate": "kişi {{date}} itibarıyla ağda bağlantılı",
         "cta": "Ekibe yazın",
         "share": "Paylaş",
         "shared": "Bağlantı kopyalandı",
@@ -845,7 +851,10 @@
         "w2Title": "Projeyi başkalarına anlatın",
         "w2": "Bu sayfayı ilgilenebilecek kişilere gönderin ya da Social Organizer hakkında kendiniz yazın.",
         "w3Title": "Araştırmaya ya da koda yardım edin",
-        "w3": "Teori <report>Andrei Lubalin'in raporunda</report> anlatılıyor, kod ise <code>GitHub</code>'da açık. Teoriyi sınamaya ya da uygulama üzerinde çalışmaya yardım edin."
+        "w3": "Teori <report>araştırma raporunda</report> anlatılıyor, kod ise <code>GitHub</code>'da açık. Teoriyi sınamaya ya da uygulama üzerinde çalışmaya yardım edin.",
+        "selectLink": "Aşağıdaki alandan bağlantıyı kopyalayın.",
+        "nowLive_one": "kişi ağda bağlantılı",
+        "nowLive_other": "kişi ağda bağlantılı"
       },
       "faq": {
         "title": "Sorular",
@@ -858,7 +867,12 @@
         "q4": "Bu bir saadet zinciri mi?",
         "a4": "Hayır. Kimse katılmak için para ödemez, kimse davetlerden kazanç sağlamaz.",
         "q6": "Hangi verileri saklıyorsunuz?",
-        "a6": "Ad, e-posta, giriş yaptığınız hizmetteki hesap kimlikleri ve eklediğiniz fotoğraf, telefon numarası veya konum gibi hesap ve profil bilgilerini saklarız. Dil ve tema gibi ayarları, davet ve bağlantı geçmişini, bildirilen ihtiyaçları, katılımı ve belirtilen tutarları da saklarız. Giriş kodlarını, bildirim gönderme verilerini ve bildirim geçmişini, ayrıca gönderdiğiniz şikâyet ve destek mesajlarını saklarız. Uygulama paraya dokunmaz, kart veya banka bilgisi istemez."
+        "data": {
+          "account": "Ad, e-posta, giriş yaptığınız hizmetteki hesap kimlikleri ve eklediğiniz fotoğraf, telefon numarası veya konum gibi hesap ve profil bilgilerini saklarız.",
+          "activity": "Dil ve tema gibi ayarları, davet ve bağlantı geçmişini, bildirilen ihtiyaçları, katılımı ve belirtilen tutarları da saklarız.",
+          "notifications": "Giriş kodlarını, bildirim gönderme verilerini ve bildirim geçmişini, ayrıca gönderdiğiniz şikâyet ve destek mesajlarını saklarız.",
+          "money": "Uygulama paraya dokunmaz, kart veya banka bilgisi istemez."
+        }
       },
       "start": {
         "label": "Uygulama",
@@ -866,7 +880,7 @@
         "text": "Zor bir günde buna ne zaman ne de güç kalır.",
         "s1": "Tanıdığınız birinden gelen bağlantıyı açın ya da kendiniz Google, Apple, Telegram veya e-postayla gelen bir kodla giriş yapın. Şifre gerekmez.",
         "s2": "Yüz yüze tanıdığınız kişileri ekleyin: bir bağlantıyla, QR kodla ya da telefonlarınızı yan yana sallayarak.",
-        "s3": "Niyetinizi belirleyin: ağınızdan biri zor durumda kaldığında genelde vermeye hazır olduğunuz tutar.",
+        "s3": "Niyetinizi belirleyin: ağdaki biri zor durumda kaldığında genellikle belirtmeye hazır olduğunuz tutar.",
         "qr": "Telefonunuzun kamerasını buraya tutun, doğru mağaza açılır.",
         "playTop": "Şimdi edinin",
         "play": "Google Play'den",
@@ -913,17 +927,17 @@
       "title": "Tanıdıklar üzerinden bir yol",
       "lead": "İhtiyaç, belirttiği dolar kadar kişiye ulaşır, önce tokalaşma olarak en yakınlara. Yalnızca tanıdığınız insanlar üzerinden size yolu olan ihtiyaçları görürsünüz. Bir kişiye dokunun.",
       "says": [
-        "<b>Maria Koval</b> ihtiyaç bildiriyor. Onu tanımıyorsunuz.",
-        "Kardeşiniz <b>Oleg</b>, Maria'yı tanıyor. Bu yüzden onun bildirimini o alıyor.",
-        "<b>Siz</b> bildirimi alıyorsunuz çünkü Oleg'i tanıyorsunuz. Katılıp katılmamak size kalmış."
+        "<b>Ayşe</b> ihtiyaç bildiriyor. Onu tanımıyorsunuz.",
+        "Kardeşiniz <b>Murat</b>, Ayşe'yi tanıyor. Bu yüzden onun bildirimini o alıyor.",
+        "<b>Siz</b> bildirimi alıyorsunuz çünkü Murat'ı tanıyorsunuz. Katılıp katılmamak size kalmış."
       ]
     },
     "join": {
       "title": "Tanıdığınız bir kişiyle başlar",
       "lead": "Ağ yalnızca birbirini tanıyan insanlar üzerinden büyür: biri bağlantınızla katılır ve siz tanışıklığı onaylarsınız.",
       "says": [
-        "Katya bağlantınızı açıp giriş yapar. <b>Bu henüz bir bağlantı değil:</b> size bir bildirim gelir.",
-        "Onaylarsınız: evet, birbirimizi tanıyoruz. <b>Katya artık 1. tokalaşmanız.</b>"
+        "Deniz bağlantınızı açıp giriş yapar. <b>Bu henüz bir bağlantı değil:</b> size bir bildirim gelir.",
+        "Onaylarsınız: evet, birbirimizi tanıyoruz. <b>Deniz artık 1. tokalaşmanız.</b>"
       ]
     },
     "cta": {
@@ -933,29 +947,11 @@
     },
     "figures": {
       "net": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Siz",
-        "asker": "Maria",
         "chatTitle": "Katılımcı sohbeti",
-        "chatMembers": "Maria · Oleg · Lena",
         "aria": "Çevreniz"
       },
       "orbit": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Siz",
         "pills": [
           "1. · 6",
@@ -965,16 +961,13 @@
         "aria": "Tokalaşma halkaları"
       },
       "chain": {
-        "asker": "Maria",
         "askerSub": "{{amount}} gerekiyor",
-        "mediator": "Oleg",
         "mediatorSub": "kardeşiniz",
         "you": "Siz",
         "youSub": "siz karar verirsiniz",
         "aria": "Bildirimin yolu"
       },
       "join": {
-        "newcomer": "Katya",
         "newcomerSub": [
           "bağlantıyla geldi",
           "1. tokalaşma"
@@ -1341,7 +1334,7 @@
     "fullLine": "Gereken tutar belirtildi.",
     "takePart": "Katıl",
     "nextTitle": "Katılmaya karar verirseniz",
-    "next1": "Vermeye hazır olduğunuz tutarı söylersiniz. {{amount}} ile başlayabilirsiniz.",
+    "next1": "Hangi tutarla katılmak istediğinizi söylersiniz. {{amount}} ile başlayabilirsiniz.",
     "next2": "Sohbet bağlantısı eklendiyse katıldıktan sonra açabilirsiniz.",
     "next3": "İş paraya gelirse parayı ihtiyacı oluşturan kişiye bizzat verirsiniz. Burada hiçbir şey ödemezsiniz: Social Organizer para almaz ve aktarmaz.",
     "signInTitle": "Bu ihtiyaca katılmak için giriş yapın"
@@ -1463,19 +1456,9 @@
       "text": "Katılmaya karar veren kişi kendi tutarını belirtir ve sohbete girer. <b>Gerisi insanlar arasındadır, Social Organizer dışında.</b>"
     },
     "figure": {
-      "names": [
-        "Kira",
-        "Oleg",
-        "Ira",
-        "Dima",
-        "Lena",
-        "Max"
-      ],
       "you": "Siz",
-      "asker": "Maria",
       "amount": "300 $",
       "chatTitle": "Katılımcı sohbeti",
-      "chatMembers": "Maria · Oleg · Lena",
       "aria": "Çevre şeması"
     },
     "seed": {

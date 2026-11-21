@@ -716,7 +716,7 @@
         "signin": "Anmelden"
       },
       "hero": {
-        "title": "Ihr Kreis ist größer, als Sie denken.",
+        "title": "Die Welt ist kleiner, als Sie denken.",
         "lead": "In Social Organizer finden Menschen zusammen, die sich persönlich kennen. Steckt jemand in Schwierigkeiten, erfahren es zuerst die eigenen Bekannten, dann deren Bekannte.",
         "cta": "Netzwerk aufbauen",
         "how": "So funktioniert es",
@@ -779,10 +779,7 @@
           "9": "App"
         },
         "tags": {
-          "you": "Sie",
-          "oleg": "Markus",
-          "maria": "Julia · {{shortfall}}",
-          "lena": "Steffi"
+          "you": "Sie"
         },
         "hud": {
           "reached_one": "Person hat vom Bedarf erfahren",
@@ -790,6 +787,16 @@
           "reported": "von {{shortfall}} angegeben",
           "people_one": "beteiligte Person",
           "people_other": "Beteiligte"
+        },
+        "cast": {
+          "asker": "Julia",
+          "mediator": "Markus",
+          "supporter": "Steffi",
+          "newcomer": "Lena",
+          "friend1": "Anna",
+          "friend2": "Thomas",
+          "friend3": "Laura",
+          "friend4": "Daniel"
         }
       },
       "app": {
@@ -811,7 +818,7 @@
         "statWaves_one": "Einladungswelle",
         "statWaves_other": "Einladungswellen",
         "dies": "Das Wachstum hat aufgehört",
-        "grows": "Das Netzwerk wächst von selbst",
+        "grows": "In diesem Modell wächst das Netzwerk weiter.",
         "full": "Im Modell gibt es keine neuen Menschen mehr",
         "restart": "Neu starten",
         "hint": "Tippen Sie auf das Modell, um bei einer anderen Person zu beginnen",
@@ -835,7 +842,6 @@
         "title": "Machen Sie beim Experiment mit",
         "text": "Die App und die Theorie gibt es schon. Jetzt müssen sie sich in der Praxis bewähren, und dafür braucht es Menschen.",
         "now": "Menschen mit Verbindungen im Netzwerk, Stand 13. November 2026",
-        "nowDate": "Menschen mit Verbindungen im Netzwerk, Stand {{date}}",
         "cta": "Dem Team schreiben",
         "share": "Teilen",
         "shared": "Link kopiert",
@@ -845,7 +851,10 @@
         "w2Title": "Erzählen Sie anderen vom Projekt",
         "w2": "Schicken Sie diese Seite an Menschen, denen sie etwas bedeuten könnte, oder schreiben Sie selbst über Social Organizer.",
         "w3Title": "Helfen Sie bei Forschung oder Entwicklung",
-        "w3": "Die Theorie steht im <report>Bericht von Andrei Lubalin</report>, der Code liegt offen auf <code>GitHub</code>. Helfen Sie, die Theorie zu prüfen, oder arbeiten Sie an der App mit."
+        "w3": "Die Theorie steht im <report>Forschungsbericht</report>, der Code liegt offen auf <code>GitHub</code>. Helfen Sie, die Theorie zu prüfen, oder arbeiten Sie an der App mit.",
+        "selectLink": "Kopieren Sie den Link aus dem Feld unten.",
+        "nowLive_one": "Person mit Verbindungen im Netzwerk",
+        "nowLive_other": "Menschen mit Verbindungen im Netzwerk"
       },
       "faq": {
         "title": "Fragen",
@@ -858,7 +867,12 @@
         "q4": "Ist das ein Schneeballsystem?",
         "a4": "Nein. Niemand zahlt für den Einstieg, und niemand verdient an Einladungen.",
         "q6": "Welche Daten speichern Sie?",
-        "a6": "Wir speichern Konto- und Profildaten wie Name, E-Mail-Adresse und Kennungen des Anmeldedienstes sowie Angaben, die Sie hinzufügen, etwa Foto, Telefonnummer und Standort. Wir speichern Einstellungen wie Sprache und Design, Einladungen und Verbindungen sowie gemeldete Bedarfe, Beteiligungen und genannte Beträge. Hinzu kommen Anmeldecodes, Daten für Benachrichtigungen und deren Verlauf sowie eingereichte Beschwerden und Nachrichten an den Support. Die App verwaltet kein Geld und fragt keine Karten- oder Bankdaten ab."
+        "data": {
+          "account": "Wir speichern Konto- und Profildaten wie Name, E-Mail-Adresse und Kennungen des Anmeldedienstes sowie Angaben, die Sie hinzufügen, etwa Foto, Telefonnummer und Standort.",
+          "activity": "Wir speichern Einstellungen wie Sprache und Design, Einladungen und Verbindungen sowie gemeldete Bedarfe, Beteiligungen und genannte Beträge.",
+          "notifications": "Hinzu kommen Anmeldecodes, Daten für Benachrichtigungen und deren Verlauf sowie eingereichte Beschwerden und Nachrichten an den Support.",
+          "money": "Die App verwaltet kein Geld und fragt keine Karten- oder Bankdaten ab."
+        }
       },
       "start": {
         "label": "Die App",
@@ -866,7 +880,7 @@
         "text": "An einem schlechten Tag fehlen dafür Zeit und Kraft.",
         "s1": "Öffnen Sie einen Link von jemandem, den Sie kennen, oder melden Sie sich selbst an: mit Google, Apple, Telegram oder einem Code per E-Mail. Ein Passwort brauchen Sie nicht.",
         "s2": "Fügen Sie Menschen hinzu, die Sie persönlich kennen: per Link, per QR-Code oder indem Sie die Handys nebeneinander schütteln.",
-        "s3": "Legen Sie Ihre Absicht fest: den Betrag, den Sie üblicherweise zu geben bereit sind, wenn jemand im Netzwerk in Schwierigkeiten steckt.",
+        "s3": "Legen Sie fest, welchen Betrag Sie normalerweise nennen würden, wenn jemand im Netzwerk in Schwierigkeiten gerät.",
         "qr": "Halten Sie die Kamera Ihres Telefons auf den Code, dann öffnet sich der passende Store.",
         "playTop": "Jetzt bei",
         "play": "Google Play",
@@ -913,17 +927,17 @@
       "title": "Ein Weg über Bekannte",
       "lead": "Ein Bedarf erreicht so viele Menschen, wie er Dollar nennt, die Nächsten nach Handschlägen zuerst. Sie sehen nur Bedarfe, zu denen ein Weg über Menschen führt, die Sie kennen. Tippen Sie auf eine Person.",
       "says": [
-        "<b>Maria Koval</b> meldet einen Bedarf. Sie kennen sie nicht.",
-        "<b>Oleg</b>, Ihr Bruder, kennt Maria. Darum erhält er ihre Meldung.",
-        "<b>Sie</b> erhalten die Meldung, weil Sie Oleg kennen. Sie entscheiden, ob Sie sich beteiligen."
+        "<b>Julia</b> meldet einen Bedarf. Sie kennen sie nicht.",
+        "<b>Markus</b>, Ihr Bruder, kennt Julia. Darum erhält er ihre Meldung.",
+        "<b>Sie</b> erhalten die Meldung, weil Sie Markus kennen. Sie entscheiden, ob Sie sich beteiligen."
       ]
     },
     "join": {
       "title": "Es beginnt mit einer Person, die Sie kennen",
       "lead": "Das Netzwerk wächst nur über Menschen, die sich kennen: Jemand kommt über Ihren Link, und Sie bestätigen die Bekanntschaft.",
       "says": [
-        "Katya öffnet Ihren Link und meldet sich an. <b>Das ist noch keine Verbindung:</b> Sie bekommen eine Push-Nachricht.",
-        "Sie bestätigen: Ja, wir kennen uns. <b>Jetzt ist Katya Ihr 1. Handschlag.</b>"
+        "Lena öffnet Ihren Link und meldet sich an. <b>Das ist noch keine Verbindung:</b> Sie bekommen eine Push-Nachricht.",
+        "Sie bestätigen: Ja, wir kennen uns. <b>Jetzt ist Lena Ihr 1. Handschlag.</b>"
       ]
     },
     "cta": {
@@ -933,29 +947,11 @@
     },
     "figures": {
       "net": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Sie",
-        "asker": "Maria",
         "chatTitle": "Chat der Beteiligten",
-        "chatMembers": "Maria · Oleg · Lena",
         "aria": "Ihr Kreis"
       },
       "orbit": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Sie",
         "pills": [
           "1. · 6",
@@ -965,16 +961,13 @@
         "aria": "Ringe der Handschläge"
       },
       "chain": {
-        "asker": "Maria",
         "askerSub": "braucht {{amount}}",
-        "mediator": "Oleg",
         "mediatorSub": "Ihr Bruder",
         "you": "Sie",
         "youSub": "Sie entscheiden",
         "aria": "Weg einer Meldung"
       },
       "join": {
-        "newcomer": "Katya",
         "newcomerSub": [
           "kam über den Link",
           "1. Handschlag"
@@ -1341,7 +1334,7 @@
     "fullLine": "Der benötigte Betrag ist angegeben.",
     "takePart": "Mitmachen",
     "nextTitle": "Wenn Sie mitmachen",
-    "next1": "Sie nennen den Betrag, den Sie geben möchten. Sie können mit {{amount}} anfangen.",
+    "next1": "Sie nennen den Betrag, mit dem Sie sich beteiligen möchten. Sie können mit {{amount}} anfangen.",
     "next2": "Wenn zum Bedarf ein Chatlink hinzugefügt wurde, können Sie ihn nach der Teilnahme öffnen.",
     "next3": "Wenn es um Geld geht, geben Sie es der Person, die den Bedarf gemeldet hat, selbst. Hier zahlen Sie nichts: Social Organizer nimmt kein Geld an und überweist keins.",
     "signInTitle": "Melden Sie sich an, um bei diesem Bedarf mitzumachen"
@@ -1463,19 +1456,9 @@
       "text": "Wer sich beteiligen möchte, nennt den eigenen Betrag und tritt dem Chat bei. <b>Alles Weitere liegt zwischen den Menschen, außerhalb von Social Organizer.</b>"
     },
     "figure": {
-      "names": [
-        "Kira",
-        "Oleg",
-        "Ira",
-        "Dima",
-        "Lena",
-        "Max"
-      ],
       "you": "Sie",
-      "asker": "Maria",
       "amount": "300 $",
       "chatTitle": "Chat der Beteiligten",
-      "chatMembers": "Maria · Oleg · Lena",
       "aria": "Schema des Kreises"
     },
     "seed": {

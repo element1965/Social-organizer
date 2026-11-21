@@ -51,7 +51,6 @@ export function PressPage() {
   const lang = i18n.resolvedLanguage || i18n.language || 'en';
   const nf = useMemo(() => new Intl.NumberFormat(lang), [lang]);
   const people = useLivePeopleCount();
-  const date = useMemo(() => new Intl.DateTimeFormat(lang, { dateStyle: 'long' }).format(new Date()), [lang]);
   const download = t('press.download');
 
   const link = (href: string) => <a href={href} {...ext} />;
@@ -71,7 +70,7 @@ export function PressPage() {
     { id: 'languages', value: nf.format(SUPPORTED_LANGUAGES.length) },
     ...(people === undefined
       ? []
-      : [{ id: 'network', value: <><b>{nf.format(people)}</b> {t('landing.v2.join.nowDate', { date })}</> }]),
+      : [{ id: 'network', value: <><b>{nf.format(people)}</b> {t('landing.v2.join.nowLive', { count: people })}</> }]),
     { id: 'theory', value: <Trans i18nKey="press.facts.theoryValue" components={{ report: link(REPORT_URL) }} /> },
   ];
 

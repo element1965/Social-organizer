@@ -62,20 +62,20 @@ export const TABLET_SCENE_BOX = { width: TABLET.width, height: TABLET.height - P
  */
 const CAPTIONS: Record<Lang, Record<Shot, { title: string; sub?: string }> & { feature: string }> = {
   en: {
-    circle: { title: 'Your circle is bigger than you think' },
+    circle: { title: "It's a smaller world than you think." },
     need: { title: 'Sarah lost her job.\nYou hear about it through Tom' },
     join: { title: 'You decide whether to take part, and how much', sub: 'Nothing is paid in the app. You agree in your own chat.' },
     ask: { title: 'Tomorrow it could be you.\nPeople you know hear first' },
     add: { title: 'It starts with people you know in person' },
-    feature: 'Your circle is bigger than you think',
+    feature: "It's a smaller world than you think.",
   },
   ru: {
-    circle: { title: 'Ваш круг больше, чем кажется' },
+    circle: { title: 'Мир теснее, чем кажется.' },
     need: { title: 'Мария потеряла работу.\nВы узнаёте об этом через Олега' },
     join: { title: 'Участвовать ли и с какой суммой, решаете вы', sub: 'Через приложение деньги не идут. Договариваетесь в своём чате.' },
     ask: { title: 'Завтра на её месте можете оказаться вы.\nПервыми узнают ваши знакомые' },
     add: { title: 'Всё начинается с тех, кого вы знаете лично' },
-    feature: 'Ваш круг больше, чем кажется',
+    feature: 'Мир теснее, чем кажется.',
   },
 };
 

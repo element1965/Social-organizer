@@ -114,7 +114,14 @@
   --dur-fast: 0.15s;
   --dur-base: 0.26s;
   --dur-screen: 0.42s;
-  --font: Manrope, "Segoe UI", system-ui, sans-serif;
+  --font: Manrope, "Noto Sans Arabic", "Noto Sans Hebrew", "Segoe UI", system-ui, sans-serif;
+  --site-display-size: clamp(52px, 7.4vw, 116px);
+  --site-headline-size: clamp(38px, 4.6vw, 70px);
+  --site-display-leading: .95;
+  --site-headline-leading: 1;
+  --site-display-tracking: -.045em;
+  --site-headline-tracking: -.035em;
+  --site-heading-weight: 400;
 
   color-scheme: light;
 }

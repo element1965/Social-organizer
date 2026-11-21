@@ -8,6 +8,7 @@ import { RTL_LANGUAGES } from '@so/i18n/languages';
 import { GITHUB_URL, LanguageSelect, useLoginHref } from '../components/site/SiteHeader';
 import { usePendingInvite } from '../components/site/DeviceEntry';
 import { useDocumentTitle, useLivePeopleCount, useSitePhone } from '../components/site/hooks';
+import { copyText } from '../lib/share';
 import { REPORT_URL, TEAM_URL } from '../components/site/team';
 import { SITE_ORIGIN, storeLinks, useDevice } from '../lib/device';
 import { IconGlobe } from '../components/site/icons';
@@ -129,12 +130,6 @@ export function LandingPage() {
   };
   /** A story line with the sums filled in. */
   const tm = (key: string) => t(key, sums);
-  // Maria's tag is "name · sum"; the graph's labels show the name alone, as the app does
-  const mariaTag = tm('landing.v2.story.tags.maria');
-  const mariaDot = mariaTag.indexOf('·');
-  const mariaName = mariaDot > 0 ? mariaTag.slice(0, mariaDot).trim() : mariaTag;
-  const mariaSum = mariaDot > 0 ? mariaTag.slice(mariaDot) : '';
-
   const rootRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const skyRef = useRef<HTMLDivElement>(null);
@@ -203,11 +198,18 @@ export function LandingPage() {
   useEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
-    const onScroll = () => nav.classList.toggle('solid', window.scrollY > window.innerHeight * 0.6);
+    const onScroll = () => {
+      const threshold = phone ? beatRefs.current[0]?.offsetHeight ?? window.innerHeight : window.innerHeight * 0.6;
+      nav.classList.toggle('solid', window.scrollY >= threshold);
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [phone]);
 
   // Show the photograph and story copy while the dynamic scene is loading. The scene loads once the opening
   // photograph is in and the browser is idle, so the flock can fly in on the opening screen; the story copy
@@ -368,23 +370,34 @@ export function LandingPage() {
   };
 
   const [shared, setShared] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
+  const shareFieldRef = useRef<HTMLInputElement>(null);
   const sharedTimer = useRef(0);
   useEffect(() => () => window.clearTimeout(sharedTimer.current), []);
-  const share = () => {
+  useEffect(() => {
+    if (shareUrl) shareFieldRef.current?.focus();
+  }, [shareUrl]);
+  const share = async () => {
     recordLandingEvent('share', search);
     const url = `${window.location.origin}${window.location.pathname}`;
+    window.clearTimeout(sharedTimer.current);
+    setShared(false);
+    setShareUrl('');
     if (navigator.share) {
-      navigator.share({ title: document.title, url }).catch(() => {});
-      return;
+      try {
+        await navigator.share({ title: document.title, url });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') return;
+      }
     }
-    const copy = navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject(new Error('no clipboard'));
-    copy
-      .then(() => {
-        setShared(true);
-        window.clearTimeout(sharedTimer.current);
-        sharedTimer.current = window.setTimeout(() => setShared(false), 2400);
-      })
-      .catch(() => window.prompt('', url));
+    try {
+      await copyText(url);
+      setShared(true);
+      sharedTimer.current = window.setTimeout(() => setShared(false), 2400);
+    } catch {
+      setShareUrl(url);
+    }
   };
 
   const linkStudy = <a href={STUDY_URL} {...ext} />;
@@ -402,8 +415,8 @@ export function LandingPage() {
           <nav aria-label={t('landing.v2.nav.label')}>
             <a href="#how">{t('landing.v2.nav.how')}</a>
             <a href="#grow">{t('landing.v2.nav.grow')}</a>
-            <a href="#join">{t('landing.v2.nav.join')}</a>
             <a href="#faq">{t('landing.v2.nav.faq')}</a>
+            <a href="#join">{t('landing.v2.nav.join')}</a>
           </nav>
           <div className="tools">
             <LanguageSelect />
@@ -427,14 +440,14 @@ export function LandingPage() {
           {t('landing.v2.story.tags.you')}
         </span>
         <span className="tag t-oleg" ref={(el) => void (tagRefs.current.oleg = el)}>
-          {t('landing.v2.story.tags.oleg')}
+          {t('landing.v2.story.cast.mediator')}
         </span>
         <span className="tag t-maria sos right" ref={(el) => void (tagRefs.current.maria = el)}>
-          {mariaName}
-          {mariaSum ? <span className="sum"> {mariaSum}</span> : null}
+          {t('landing.v2.story.cast.asker')}
+          <span className="sum"> · {sums.shortfall}</span>
         </span>
         <span className="tag t-lena care below" ref={(el) => void (tagRefs.current.lena = el)}>
-          {t('landing.v2.story.tags.lena')}
+          {t('landing.v2.story.cast.supporter')}
         </span>
       </div>
       <div className="hud" ref={hudRef} aria-hidden="true">
@@ -624,53 +637,6 @@ export function LandingPage() {
           </div>
         </section>
 
-        <section className="sec join screen" id="join" aria-labelledby="lv-join-title">
-          <LandingPhoto name="starlings" />
-          <div className="wrap grid">
-            <div className="copy">
-              <span className="mono">{t('landing.v2.join.label')}</span>
-              <h2 id="lv-join-title">{t('landing.v2.join.title')}</h2>
-              <p className="lead">{t('landing.v2.join.text')}</p>
-              <p className="now">
-                <b>{nf.format(liveCount ?? NETWORK_NOW)}</b>
-                <span>{liveCount === undefined
-                  ? t('landing.v2.join.now')
-                  : t('landing.v2.join.nowDate', { date: new Intl.DateTimeFormat(lang, { dateStyle: 'long' }).format(new Date()) })}</span>
-              </p>
-              <div className="actions">
-                <a className="btn care" href={TEAM_URL} {...ext} onClick={() => recordLandingEvent('team', search)}>
-                  {t('landing.v2.join.cta')}
-                </a>
-                <button className="btn ghost" type="button" onClick={share}>
-                  {t('landing.v2.join.share')}
-                </button>
-              </div>
-              <p className="shared" aria-live="polite">
-                {shared ? t('landing.v2.join.shared') : ''}
-              </p>
-              <p className="safe">{t('landing.v2.join.safe', { bot: '@' + TELEGRAM_BOT_USERNAME })}</p>
-            </div>
-            <ol className="ways">
-              <li>
-                <b>
-                  <Link to="/groups">{t('landing.v2.join.w1Title')}</Link>
-                </b>
-                <span>{t('landing.v2.join.w1')}</span>
-              </li>
-              <li>
-                <b>{t('landing.v2.join.w2Title')}</b>
-                <span>{t('landing.v2.join.w2')}</span>
-              </li>
-              <li>
-                <b>{t('landing.v2.join.w3Title')}</b>
-                <span>
-                  <Trans i18nKey="landing.v2.join.w3" components={{ report: linkReport, code: linkCode }} />
-                </span>
-              </li>
-            </ol>
-          </div>
-        </section>
-
         <section className="sec faq screen" id="faq" aria-labelledby="lv-faq-title">
           <div className="wrap grid">
             <h2 id="lv-faq-title">{t('landing.v2.faq.title')}</h2>
@@ -679,8 +645,17 @@ export function LandingPage() {
                 <details key={n} ref={n === 1 ? firstFaqRef : undefined}>
                   <summary onClick={toggleFaq}><span>{t(`landing.v2.faq.q${n}`)}</span></summary>
                   <div className="a">
-                    <p>{t(`landing.v2.faq.a${n}`, { bot: '@' + TELEGRAM_BOT_USERNAME })}</p>
-                    {n === 6 && <p>{t('legal.policy.campaigns')}</p>}
+                    {n === 6 ? (
+                      <>
+                        <ul>
+                          {(['account', 'activity', 'notifications'] as const).map((key) => (
+                            <li key={key}>{t(`landing.v2.faq.data.${key}`)}</li>
+                          ))}
+                        </ul>
+                        <p>{t('landing.v2.faq.data.money')}</p>
+                        <p>{t('legal.policy.campaigns')}</p>
+                      </>
+                    ) : <p>{t(`landing.v2.faq.a${n}`, { bot: '@' + TELEGRAM_BOT_USERNAME })}</p>}
                   </div>
                 </details>
               ))}
@@ -729,6 +704,57 @@ export function LandingPage() {
               <QRCodeSVG value={qrValue} level="M" marginSize={0} />
               <p>{t('landing.v2.start.qr')}</p>
             </div>
+          </div>
+        </section>
+
+        <section className="sec join screen" id="join" aria-labelledby="lv-join-title">
+          <LandingPhoto name="starlings" />
+          <div className="wrap grid">
+            <div className="copy">
+              <span className="mono">{t('landing.v2.join.label')}</span>
+              <h2 id="lv-join-title">{t('landing.v2.join.title')}</h2>
+              <p className="lead">{t('landing.v2.join.text')}</p>
+              <p className="now">
+                <b>{nf.format(liveCount ?? NETWORK_NOW)}</b>
+                <span>{liveCount === undefined ? t('landing.v2.join.now') : t('landing.v2.join.nowLive', { count: liveCount })}</span>
+              </p>
+              <div className="actions">
+                <a className="btn ghost" href={TEAM_URL} {...ext} onClick={() => recordLandingEvent('team', search)}>
+                  {t('landing.v2.join.cta')}
+                </a>
+                <button className="btn ghost" type="button" onClick={share}>
+                  {t('landing.v2.join.share')}
+                </button>
+              </div>
+              <p className="shared" aria-live="polite">
+                {shared ? t('landing.v2.join.shared') : ''}
+              </p>
+              {shareUrl && (
+                <label className="share-field">
+                  {t('landing.v2.join.selectLink')}
+                  <input type="url" dir="ltr" value={shareUrl} readOnly ref={shareFieldRef} onFocus={(event) => event.target.select()} />
+                </label>
+              )}
+              <p className="safe">{t('landing.v2.join.safe', { bot: '@' + TELEGRAM_BOT_USERNAME })}</p>
+            </div>
+            <ol className="ways">
+              <li>
+                <b>
+                  <Link to="/groups">{t('landing.v2.join.w1Title')}</Link>
+                </b>
+                <span>{t('landing.v2.join.w1')}</span>
+              </li>
+              <li>
+                <b>{t('landing.v2.join.w2Title')}</b>
+                <span>{t('landing.v2.join.w2')}</span>
+              </li>
+              <li>
+                <b>{t('landing.v2.join.w3Title')}</b>
+                <span>
+                  <Trans i18nKey="landing.v2.join.w3" components={{ report: linkReport, code: linkCode }} />
+                </span>
+              </li>
+            </ol>
           </div>
         </section>
       </main>

@@ -712,7 +712,7 @@
         "signin": "Masuk"
       },
       "hero": {
-        "title": "Lingkaran Anda lebih besar dari yang Anda kira.",
+        "title": "Dunia ini lebih kecil dari yang Anda kira.",
         "lead": "Social Organizer mempertemukan orang yang saling kenal secara langsung. Saat salah satu dari mereka kesulitan, orang yang ia kenal tahu lebih dulu, lalu orang yang dikenal orang-orang itu.",
         "cta": "Bangun jaringan Anda",
         "how": "Lihat cara kerjanya",
@@ -775,15 +775,22 @@
           "9": "Aplikasi"
         },
         "tags": {
-          "you": "Anda",
-          "oleg": "Agus",
-          "maria": "Siti · {{shortfall}}",
-          "lena": "Rina"
+          "you": "Anda"
         },
         "hud": {
           "reached_other": "orang sudah tahu tentang kebutuhan ini",
           "reported": "dari {{shortfall}} dinyatakan",
           "people_other": "peserta"
+        },
+        "cast": {
+          "asker": "Siti",
+          "mediator": "Agus",
+          "supporter": "Rina",
+          "newcomer": "Putri",
+          "friend1": "Dewi",
+          "friend2": "Budi",
+          "friend3": "Ayu",
+          "friend4": "Rizky"
         }
       },
       "app": {
@@ -803,7 +810,7 @@
         "statPeople_other": "orang di jaringan",
         "statWaves_other": "gelombang undangan",
         "dies": "Pertumbuhan berhenti",
-        "grows": "Jaringan tumbuh sendiri",
+        "grows": "Dalam model ini, jaringan terus berkembang.",
         "full": "Model kehabisan orang baru",
         "restart": "Mulai lagi",
         "hint": "Ketuk modelnya untuk mulai dari orang lain",
@@ -827,7 +834,6 @@
         "title": "Ikuti eksperimen ini",
         "text": "Aplikasi dan teorinya sudah ada. Sekarang keduanya perlu diuji dalam praktik, dan untuk itu dibutuhkan orang.",
         "now": "orang punya koneksi di jaringan per 13 November 2026",
-        "nowDate": "orang punya koneksi di jaringan per {{date}}",
         "cta": "Tulis ke tim",
         "share": "Bagikan",
         "shared": "Tautan disalin",
@@ -837,7 +843,9 @@
         "w2Title": "Ceritakan proyek ini",
         "w2": "Kirim halaman ini kepada orang yang mungkin peduli, atau tulis sendiri tentang Social Organizer.",
         "w3Title": "Bantu riset atau kode",
-        "w3": "Teorinya dijelaskan dalam <report>laporan Andrei Lubalin</report>, dan kodenya terbuka di <code>GitHub</code>. Bantu uji teorinya atau kembangkan aplikasinya."
+        "w3": "Teorinya dijelaskan dalam <report>laporan penelitian</report>, dan kodenya terbuka di <code>GitHub</code>. Bantu uji teorinya atau kembangkan aplikasinya.",
+        "selectLink": "Salin tautan dari kolom di bawah ini.",
+        "nowLive_other": "orang punya koneksi di jaringan"
       },
       "faq": {
         "title": "Pertanyaan",
@@ -850,7 +858,12 @@
         "q4": "Apakah ini skema piramida?",
         "a4": "Bukan. Tidak ada yang membayar untuk bergabung dan tidak ada yang mendapat uang dari undangan.",
         "q6": "Data apa yang kalian simpan?",
-        "a6": "Kami menyimpan data akun dan profil, seperti nama, email, pengenal layanan masuk, serta data yang Anda tambahkan, seperti foto, nomor telepon, atau lokasi. Kami juga menyimpan pengaturan seperti bahasa dan tema, riwayat undangan dan hubungan, kebutuhan yang dilaporkan, partisipasi, serta jumlah yang disebutkan. Kami menyimpan kode masuk, data untuk mengirim notifikasi dan riwayatnya, serta keluhan dan pesan dukungan yang Anda kirim. Aplikasi tidak menangani uang dan tidak meminta data kartu atau rekening bank."
+        "data": {
+          "account": "Kami menyimpan data akun dan profil, seperti nama, email, pengenal layanan masuk, serta data yang Anda tambahkan, seperti foto, nomor telepon, atau lokasi.",
+          "activity": "Kami juga menyimpan pengaturan seperti bahasa dan tema, riwayat undangan dan hubungan, kebutuhan yang dilaporkan, partisipasi, serta jumlah yang disebutkan.",
+          "notifications": "Kami menyimpan kode masuk, data untuk mengirim notifikasi dan riwayatnya, serta keluhan dan pesan dukungan yang Anda kirim.",
+          "money": "Aplikasi tidak menangani uang dan tidak meminta data kartu atau rekening bank."
+        }
       },
       "start": {
         "label": "Aplikasi",
@@ -858,7 +871,7 @@
         "text": "Di hari yang berat, tidak ada waktu dan tenaga untuk itu.",
         "s1": "Buka tautan dari orang yang Anda kenal, atau masuk sendiri dengan Google, Apple, Telegram, atau kode yang dikirim lewat email. Tanpa kata sandi.",
         "s2": "Tambahkan orang yang Anda kenal secara langsung: lewat tautan, kode QR, atau dengan menggoyangkan ponsel berdampingan.",
-        "s3": "Tetapkan niat Anda: jumlah yang biasanya siap Anda berikan saat seseorang di jaringan sedang kesulitan.",
+        "s3": "Tetapkan niat Anda: jumlah yang biasanya akan Anda sebutkan saat seseorang di jaringan sedang kesulitan.",
         "qr": "Arahkan kamera ponsel ke sini, toko yang sesuai akan terbuka.",
         "playTop": "Tersedia di",
         "play": "Google Play",
@@ -905,17 +918,17 @@
       "title": "Jalur lewat orang yang Anda kenal",
       "lead": "Kebutuhan menjangkau sebanyak dolar yang disebutkannya, dimulai dari yang terdekat lewat jabat tangan. Anda hanya melihat kebutuhan yang punya jalur ke Anda lewat orang yang Anda kenal. Ketuk seseorang.",
       "says": [
-        "<b>Maria Koval</b> menyampaikan kebutuhan. Anda tidak mengenalnya.",
-        "<b>Oleg</b>, saudara Anda, mengenal Maria. Itu sebabnya ia menerima pesannya.",
-        "<b>Anda</b> menerima pesan karena Anda mengenal Oleg. Anda yang memutuskan ikut atau tidak."
+        "<b>Siti</b> menyampaikan kebutuhan. Anda tidak mengenalnya.",
+        "<b>Agus</b>, saudara Anda, mengenal Siti. Itu sebabnya ia menerima pesannya.",
+        "<b>Anda</b> menerima pesan karena Anda mengenal Agus. Anda yang memutuskan ikut atau tidak."
       ]
     },
     "join": {
       "title": "Dimulai dari orang yang Anda kenal",
       "lead": "Jaringan tumbuh hanya lewat orang yang saling kenal: seseorang bergabung lewat tautan Anda, dan Anda mengonfirmasi perkenalan itu.",
       "says": [
-        "Katya membuka tautan Anda dan masuk. <b>Ini belum sebuah koneksi:</b> Anda mendapat push.",
-        "Anda mengonfirmasi: ya, kami saling mengenal. <b>Sekarang Katya adalah jabat tangan ke-1 Anda.</b>"
+        "Putri membuka tautan Anda dan masuk. <b>Anda mendapat notifikasi untuk mengonfirmasi bahwa Anda mengenalnya.</b>",
+        "Anda mengonfirmasi bahwa kalian saling kenal. <b>Putri kini masuk ke lingkar jabat tangan pertama Anda.</b>"
       ]
     },
     "cta": {
@@ -925,29 +938,11 @@
     },
     "figures": {
       "net": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Anda",
-        "asker": "Maria",
         "chatTitle": "Chat peserta",
-        "chatMembers": "Maria · Oleg · Lena",
         "aria": "Lingkaran Anda"
       },
       "orbit": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Anda",
         "pills": [
           "jabat tangan ke-1 · 6",
@@ -957,16 +952,13 @@
         "aria": "Cincin jabat tangan"
       },
       "chain": {
-        "asker": "Maria",
         "askerSub": "butuh {{amount}}",
-        "mediator": "Oleg",
         "mediatorSub": "saudara Anda",
         "you": "Anda",
         "youSub": "Anda yang memutuskan",
         "aria": "Jalur pesan"
       },
       "join": {
-        "newcomer": "Katya",
         "newcomerSub": [
           "datang lewat tautan",
           "jabat tangan ke-1"
@@ -1333,7 +1325,7 @@
     "fullLine": "Jumlah yang dibutuhkan sudah dinyatakan.",
     "takePart": "Ikut serta",
     "nextTitle": "Jika Anda ikut serta",
-    "next1": "Anda menyebutkan jumlah yang siap Anda berikan. Bisa mulai dari {{amount}}.",
+    "next1": "Sebutkan jumlah yang Anda inginkan untuk ikut berpartisipasi. Anda bisa mulai dari {{amount}}.",
     "next2": "Jika ada tautan chat yang ditambahkan, Anda bisa membukanya setelah ikut berpartisipasi.",
     "next3": "Jika sampai ke soal uang, Anda sendiri yang menyerahkannya langsung kepada pembuat kebutuhan. Di sini Anda tidak membayar apa pun: Social Organizer tidak menerima atau mentransfer uang.",
     "signInTitle": "Masuk untuk ikut serta dalam kebutuhan ini"
@@ -1452,19 +1444,9 @@
       "text": "Siapa yang memutuskan ikut serta menyebut jumlahnya sendiri dan bergabung ke chat. <b>Segala hal lain terjadi antarorang, di luar Social Organizer.</b>"
     },
     "figure": {
-      "names": [
-        "Kira",
-        "Oleg",
-        "Ira",
-        "Dima",
-        "Lena",
-        "Max"
-      ],
       "you": "Anda",
-      "asker": "Maria",
       "amount": "300 $",
       "chatTitle": "Chat peserta",
-      "chatMembers": "Maria · Oleg · Lena",
       "aria": "Diagram lingkaran"
     },
     "seed": {

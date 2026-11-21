@@ -139,7 +139,7 @@ export default {
         banner: 'var(--shadow-banner)',
       },
       fontFamily: {
-        sans: ['Manrope', '"Segoe UI"', 'system-ui', 'sans-serif'],
+        sans: 'var(--font)',
       },
       fontSize: {
         display: ['3.25rem', { lineHeight: '1', letterSpacing: '-0.05em' }],

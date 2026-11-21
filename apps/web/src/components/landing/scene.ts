@@ -785,7 +785,12 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const PO = new THREE.Vector3();
   const X = new THREE.Vector3(1, 0, 0);
   const D = new THREE.Vector3();
-  const syncBirds = (morph: number) => {
+  const syncBirds = (morph: number, closeBirdCap: number) => {
+    // Cap the 1.4-unit wingspan at 44 CSS px at the bird's camera depth. Keep the close passes legible in
+    // the narrow frame without changing distant birds, desktop shots, or the transition to the graph.
+    const unitsPerPixel = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) / innerHeight;
+    const scalePerDepth = (44 * unitsPerPixel) / 1.4;
+    const view = camera.matrixWorldInverse.elements;
     for (let i = 0; i < N; i++) {
       const ix = i * 3;
       const s = clamp(morph * 1.4 - 0.2 * (1 - U[i]!));
@@ -802,9 +807,13 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       D.set(DIR[ix], DIR[ix + 1]!, DIR[ix + 2]!).normalize();
       QT.setFromUnitVectors(X, D);
       // a bird shrinks into its dot as it reaches the graph
-      const sc = 0.58 * scl[i]! * lerp(1.45, 1, s) * (1 - clamp(GI[i]! * 1.25));
-      SC.set(sc, sc, sc);
       PO.set(P[ix]!, P[ix + 1]!, P[ix + 2]!);
+      let sc = 0.58 * scl[i]! * lerp(1.45, 1, s) * (1 - clamp(GI[i]! * 1.25));
+      if (closeBirdCap > 0) {
+        const depth = -(view[2]! * PO.x + view[6]! * PO.y + view[10]! * PO.z + view[14]!);
+        sc = lerp(sc, Math.min(sc, Math.max(0, depth) * scalePerDepth), closeBirdCap);
+      }
+      SC.setScalar(sc);
       M4.compose(PO, QT, SC);
       birds.setMatrixAt(i, M4);
     }
@@ -1370,9 +1379,11 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       PREV.set(P);
       primed = true;
     }
+    frameCamera(tS, clock, dt);
     if (!allDots) {
       if (birds.instanceColor) birds.instanceColor.needsUpdate = true;
-      syncBirds(morph);
+      const closeBirdCap = innerWidth <= 600 ? 1 - ease(remap(tS, 3.5, 4)) : 0;
+      syncBirds(morph, closeBirdCap);
     } else PREV.set(P);
     dots.visible = gS > 0;
     links.visible = gS > 0.4;
@@ -1381,7 +1392,6 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       syncLinks();
       linkMat.opacity = 0.14 * ease(remap(gS, 0.4, 1));
     }
-    frameCamera(tS, clock, dt);
     rail(tD);
     const k = Math.floor(tS);
     setLines(thin, st.thin, P);

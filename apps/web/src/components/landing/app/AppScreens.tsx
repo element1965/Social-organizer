@@ -45,15 +45,15 @@ export type Cast = { you: string; tom: string; sarah: string; emma: string };
 const noop = () => {};
 const PHONE_VARS = { '--sa-top': '14px', '--sa-bottom': '0px' } as CSSProperties;
 
-/** The story's names in the page language: the landing's tags (Sarah's carries the sum after a dot). */
+/** The story's names in the page language. */
 export function useCast(): Cast {
   const { t } = useTranslation();
-  const name = (tag: string) => {
-    const text = t(`landing.v2.story.tags.${tag}`, { shortfall: '' });
-    const dot = text.indexOf('·');
-    return (dot > 0 ? text.slice(0, dot) : text).trim();
+  return {
+    you: t('landing.v2.story.tags.you'),
+    tom: t('landing.v2.story.cast.mediator'),
+    sarah: t('landing.v2.story.cast.asker'),
+    emma: t('landing.v2.story.cast.supporter'),
   };
-  return { you: name('you'), tom: name('oleg'), sarah: name('maria'), emma: name('lena') };
 }
 
 /**

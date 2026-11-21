@@ -716,7 +716,7 @@
         "signin": "Inloggen"
       },
       "hero": {
-        "title": "Je kring is groter dan je denkt.",
+        "title": "De wereld is kleiner dan je denkt.",
         "lead": "In Social Organizer komen mensen samen die elkaar persoonlijk kennen. Zit iemand in de problemen, dan horen de eigen kennissen het eerst, daarna hun kennissen.",
         "cta": "Bouw je netwerk",
         "how": "Hoe het werkt",
@@ -779,10 +779,7 @@
           "9": "App"
         },
         "tags": {
-          "you": "Jij",
-          "oleg": "Jeroen",
-          "maria": "Sanne · {{shortfall}}",
-          "lena": "Lotte"
+          "you": "Jij"
         },
         "hud": {
           "reached_one": "persoon heeft van de behoefte gehoord",
@@ -790,6 +787,16 @@
           "reported": "van {{shortfall}} genoemd",
           "people_one": "deelnemer",
           "people_other": "deelnemers"
+        },
+        "cast": {
+          "asker": "Sanne",
+          "mediator": "Jeroen",
+          "supporter": "Lotte",
+          "newcomer": "Noor",
+          "friend1": "Eva",
+          "friend2": "Daan",
+          "friend3": "Nina",
+          "friend4": "Bram"
         }
       },
       "app": {
@@ -811,7 +818,7 @@
         "statWaves_one": "golf van uitnodigingen",
         "statWaves_other": "golven van uitnodigingen",
         "dies": "De groei is gestopt",
-        "grows": "Het netwerk groeit vanzelf",
+        "grows": "In dit model blijft het netwerk groeien.",
         "full": "Het model heeft geen nieuwe mensen meer",
         "restart": "Opnieuw beginnen",
         "hint": "Tik op het model om bij iemand anders te beginnen",
@@ -835,7 +842,6 @@
         "title": "Doe mee aan het experiment",
         "text": "De app en de theorie zijn er al. Nu moeten ze in de praktijk worden getest, en daar zijn mensen voor nodig.",
         "now": "mensen met connecties in het netwerk op 13 november 2026",
-        "nowDate": "mensen met connecties in het netwerk op {{date}}",
         "cta": "Schrijf naar het team",
         "share": "Delen",
         "shared": "Link gekopieerd",
@@ -845,7 +851,10 @@
         "w2Title": "Vertel anderen over het project",
         "w2": "Stuur deze pagina naar mensen voor wie het iets kan betekenen, of schrijf zelf over Social Organizer.",
         "w3Title": "Help mee met het onderzoek of de code",
-        "w3": "De theorie staat in <report>het rapport van Andrei Lubalin</report>, en de code is openbaar op <code>GitHub</code>. Help de theorie te testen of werk mee aan de app."
+        "w3": "De theorie staat in <report>het onderzoeksrapport</report>, en de code is openbaar op <code>GitHub</code>. Help de theorie te testen of werk mee aan de app.",
+        "selectLink": "Kopieer de link uit het veld hieronder.",
+        "nowLive_one": "persoon met connecties in het netwerk",
+        "nowLive_other": "mensen met connecties in het netwerk"
       },
       "faq": {
         "title": "Vragen",
@@ -858,7 +867,12 @@
         "q4": "Is dit een piramidespel?",
         "a4": "Nee. Niemand betaalt om mee te doen en niemand verdient aan uitnodigingen.",
         "q6": "Welke gegevens bewaren jullie?",
-        "a6": "We bewaren account- en profielgegevens zoals je naam, e-mailadres, gegevens die je account bij de inlogdienst identificeren en wat je zelf toevoegt, zoals een foto, telefoonnummer of locatie. We bewaren ook je instellingen (zoals taal en thema), je uitnodigingen en verbindingen, gemelde behoeften, deelname en genoemde bedragen. Ook bewaren we inlogcodes, gegevens voor meldingen en je meldingsgeschiedenis, en klachten of supportberichten die je stuurt. De app verwerkt geen geld en vraagt geen kaart- of bankgegevens."
+        "data": {
+          "account": "We bewaren account- en profielgegevens zoals je naam, e-mailadres, gegevens die je account bij de inlogdienst identificeren en wat je zelf toevoegt, zoals een foto, telefoonnummer of locatie.",
+          "activity": "We bewaren ook je instellingen (zoals taal en thema), je uitnodigingen en verbindingen, gemelde behoeften, deelname en genoemde bedragen.",
+          "notifications": "Ook bewaren we inlogcodes, gegevens voor meldingen en je meldingsgeschiedenis, en klachten of supportberichten die je stuurt.",
+          "money": "De app verwerkt geen geld en vraagt geen kaart- of bankgegevens."
+        }
       },
       "start": {
         "label": "De app",
@@ -866,7 +880,7 @@
         "text": "Op een slechte dag heb je daar geen tijd of energie voor.",
         "s1": "Open een link van iemand die je kent, of log zelf in met Google, Apple, Telegram of een code per e-mail. Een wachtwoord is niet nodig.",
         "s2": "Voeg mensen toe die je persoonlijk kent: met een link, een QR-code of door jullie telefoons naast elkaar te schudden.",
-        "s3": "Stel je intentie in: het bedrag dat je meestal wilt geven als iemand in het netwerk in de problemen zit.",
+        "s3": "Stel je intentie in: het bedrag dat je normaal zou noemen als iemand in het netwerk in de problemen zit.",
         "qr": "Richt de camera van je telefoon hierop, dan gaat de juiste winkel open.",
         "playTop": "Ontdek het op",
         "play": "Google Play",
@@ -913,17 +927,17 @@
       "title": "Een pad via mensen die je kent",
       "lead": "Een behoefte bereikt zoveel mensen als het bedrag in dollars, de dichtstbijzijnde handdrukken eerst. Je ziet alleen behoeften die via mensen die je kent een pad naar jou hebben. Tik op een persoon.",
       "says": [
-        "<b>Maria Koval</b> meldt een behoefte. Jij kent haar niet.",
-        "<b>Oleg</b>, je broer, kent Maria. Daarom ontvangt hij haar bericht.",
-        "<b>Jij</b> ontvangt het bericht omdat je Oleg kent. Of je deelneemt, bepaal je zelf."
+        "<b>Sanne</b> meldt een behoefte. Jij kent haar niet.",
+        "<b>Jeroen</b>, je broer, kent Sanne. Daarom ontvangt hij haar bericht.",
+        "<b>Jij</b> ontvangt het bericht omdat je Jeroen kent. Of je deelneemt, bepaal je zelf."
       ]
     },
     "join": {
       "title": "Het begint bij iemand die je kent",
       "lead": "Het netwerk groeit alleen via mensen die elkaar kennen: iemand sluit zich aan via jouw link, en jij bevestigt de kennismaking.",
       "says": [
-        "Katya opent je link en logt in. <b>Dit is nog geen verbinding:</b> jij krijgt een push.",
-        "Je bevestigt: ja, we kennen elkaar. <b>Nu is Katya je 1e handdruk.</b>"
+        "Noor opent je link en logt in. <b>Dit is nog geen verbinding:</b> jij krijgt een push.",
+        "Je bevestigt: ja, we kennen elkaar. <b>Nu is Noor je 1e handdruk.</b>"
       ]
     },
     "cta": {
@@ -933,29 +947,11 @@
     },
     "figures": {
       "net": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Jij",
-        "asker": "Maria",
         "chatTitle": "Chat van de deelnemers",
-        "chatMembers": "Maria · Oleg · Lena",
         "aria": "Je kring"
       },
       "orbit": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Jij",
         "pills": [
           "1e · 6",
@@ -965,16 +961,13 @@
         "aria": "Ringen van handdrukken"
       },
       "chain": {
-        "asker": "Maria",
         "askerSub": "heeft {{amount}} nodig",
-        "mediator": "Oleg",
         "mediatorSub": "je broer",
         "you": "Jij",
         "youSub": "jij beslist",
         "aria": "Pad van een bericht"
       },
       "join": {
-        "newcomer": "Katya",
         "newcomerSub": [
           "kwam via de link",
           "1e handdruk"
@@ -1341,7 +1334,7 @@
     "fullLine": "Het benodigde bedrag is genoemd.",
     "takePart": "Doe mee",
     "nextTitle": "Als je meedoet",
-    "next1": "Je noemt het bedrag dat je wilt geven. Je kunt beginnen met {{amount}}.",
+    "next1": "Je noemt het bedrag waarmee je wilt meedoen. Je kunt beginnen met {{amount}}.",
     "next2": "Als er een chatlink is toegevoegd, kun je die openen nadat je hebt meegedaan.",
     "next3": "Als het om geld gaat, geef je het zelf rechtstreeks aan de persoon die de behoefte heeft geplaatst. Hier betaal je niets: Social Organizer ontvangt en verstuurt geen geld.",
     "signInTitle": "Log in om mee te doen aan deze behoefte"
@@ -1463,19 +1456,9 @@
       "text": "Wie besluit deel te nemen, noemt een eigen bedrag en komt in de chat. <b>Al het andere is tussen mensen, buiten Social Organizer.</b>"
     },
     "figure": {
-      "names": [
-        "Kira",
-        "Oleg",
-        "Ira",
-        "Dima",
-        "Lena",
-        "Max"
-      ],
       "you": "Jij",
-      "asker": "Maria",
       "amount": "300 $",
       "chatTitle": "Chat van de deelnemers",
-      "chatMembers": "Maria · Oleg · Lena",
       "aria": "Schema van de kring"
     },
     "seed": {

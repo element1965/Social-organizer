@@ -716,7 +716,7 @@
         "signin": "Sign in"
       },
       "hero": {
-        "title": "Your circle is bigger than you think.",
+        "title": "It's a smaller world than you think.",
         "lead": "Social Organizer brings together people who know each other in person. When someone is in trouble, their acquaintances hear about it first, then the people those acquaintances know.",
         "cta": "Build your network",
         "how": "How it works",
@@ -779,10 +779,7 @@
           "9": "App"
         },
         "tags": {
-          "you": "You",
-          "oleg": "Tom",
-          "maria": "Sarah · {{shortfall}}",
-          "lena": "Emma"
+          "you": "You"
         },
         "hud": {
           "reached_one": "heard about the Need",
@@ -790,6 +787,16 @@
           "reported": "of {{shortfall}} reported",
           "people_one": "participant",
           "people_other": "participants"
+        },
+        "cast": {
+          "asker": "Sarah",
+          "mediator": "Tom",
+          "supporter": "Emma",
+          "newcomer": "Ruth",
+          "friend1": "Grace",
+          "friend2": "Joseph",
+          "friend3": "Amina",
+          "friend4": "Daniel"
         }
       },
       "app": {
@@ -811,7 +818,7 @@
         "statWaves_one": "wave of invitations",
         "statWaves_other": "waves of invitations",
         "dies": "Growth has stopped",
-        "grows": "The network grows on its own",
+        "grows": "In this model, the network keeps growing.",
         "full": "The model has run out of new people",
         "restart": "Start over",
         "hint": "Tap the model to start from someone else",
@@ -835,7 +842,6 @@
         "title": "Join the experiment",
         "text": "The app and the theory exist. Now they need testing in practice, and that takes people.",
         "now": "people connected in the network as of 13 November 2026",
-        "nowDate": "people connected in the network as of {{date}}",
         "cta": "Write to the team",
         "share": "Share",
         "shared": "Link copied",
@@ -845,7 +851,10 @@
         "w2Title": "Tell others about the project",
         "w2": "Send this page to people who might care, or write about Social Organizer yourself.",
         "w3Title": "Help with the research or the code",
-        "w3": "The theory is set out in <report>Andrei Lubalin's report</report>, and the code is open on <code>GitHub</code>. Help test the theory or work on the app."
+        "w3": "The theory is set out in <report>the research report</report>, and the code is open on <code>GitHub</code>. Help test the theory or work on the app.",
+        "selectLink": "Copy the link from the field below.",
+        "nowLive_one": "person connected in the network",
+        "nowLive_other": "people connected in the network"
       },
       "faq": {
         "title": "Questions",
@@ -858,7 +867,12 @@
         "q4": "Is this a pyramid scheme?",
         "a4": "No. Nobody pays to join and nobody earns from invites.",
         "q6": "What data do you keep?",
-        "a6": "We keep account and profile details, including your name, email, sign-in account identifiers and anything you add, such as a photo, phone number or location. We keep your settings (such as language and theme), invitation and connection history, reported Needs, Participation and the amounts you name. We also keep sign-in codes, push tokens and notification history, and any complaints or support messages you send. The app never touches money and asks for no card or bank details."
+        "data": {
+          "account": "We keep account and profile details, including your name, email, sign-in account identifiers and anything you add, such as a photo, phone number or location.",
+          "activity": "We keep your settings (such as language and theme), invitation and connection history, reported Needs, Participation and the amounts you name.",
+          "notifications": "We also keep sign-in codes, push tokens and notification history, and any complaints or support messages you send.",
+          "money": "The app never touches money and asks for no card or bank details."
+        }
       },
       "start": {
         "label": "The app",
@@ -866,7 +880,7 @@
         "text": "On a bad day there's no time or energy for it.",
         "s1": "Open a link from someone you know, or sign in yourself with Google, Apple, Telegram or a code sent by e-mail. No password needed.",
         "s2": "Add people you know in person: with a link, a QR code or by shaking your phones side by side.",
-        "s3": "Set your intention: the amount you're usually ready to give when someone in the network is in trouble.",
+        "s3": "Set your intention: the amount you’d usually be ready to name when someone in the network is in trouble.",
         "qr": "Point your phone's camera here and the right store will open.",
         "playTop": "Get it on",
         "play": "Google Play",
@@ -913,17 +927,17 @@
       "title": "A path through people you know",
       "lead": "A Need reaches as many people as it names dollars, the nearest by handshakes first. You only see Needs that have a path to you through people you know. Tap a person.",
       "says": [
-        "<b>Maria Koval</b> reports a Need. You do not know her.",
-        "<b>Oleg</b>, your brother, knows Maria. That is why he receives her message.",
-        "<b>You</b> receive the message because you know Oleg. You decide whether to take part."
+        "<b>Sarah</b> reports a Need. You’ve never met her.",
+        "<b>Tom</b>, your brother, knows Sarah. That’s how he hears about her Need.",
+        "<b>You</b> hear about the Need through Tom. You decide whether to take part."
       ]
     },
     "join": {
       "title": "It starts with a person you know",
       "lead": "The network grows only through people who know each other: someone joins by your link, and you confirm the acquaintance.",
       "says": [
-        "Katya opens your link and signs in. <b>This is not a connection yet:</b> you get a push.",
-        "You confirm: yes, we know each other. <b>Now Katya is your 1st handshake.</b>"
+        "Ruth opens your link and signs in. <b>You get a notification to confirm that you know her.</b>",
+        "You confirm that you know each other. <b>Ruth is now in your 1st handshake.</b>"
       ]
     },
     "cta": {
@@ -933,29 +947,11 @@
     },
     "figures": {
       "net": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "You",
-        "asker": "Maria",
         "chatTitle": "Participants’ chat",
-        "chatMembers": "Maria · Oleg · Lena",
         "aria": "Your circle"
       },
       "orbit": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "You",
         "pills": [
           "1st · 6",
@@ -965,16 +961,13 @@
         "aria": "Handshake rings"
       },
       "chain": {
-        "asker": "Maria",
         "askerSub": "needs {{amount}}",
-        "mediator": "Oleg",
         "mediatorSub": "your brother",
         "you": "You",
         "youSub": "you decide",
         "aria": "Path of a message"
       },
       "join": {
-        "newcomer": "Katya",
         "newcomerSub": [
           "came by link",
           "1st handshake"
@@ -1341,7 +1334,7 @@
     "fullLine": "The amount needed is reported.",
     "takePart": "Take part",
     "nextTitle": "If you take part",
-    "next1": "You name the amount you are ready to give. You can start with {{amount}}.",
+    "next1": "You name an amount for your Participation. You can start at {{amount}}.",
     "next2": "If the author added a chat link, you can open it after taking part.",
     "next3": "If it comes to money, you hand it to the author yourself. You pay nothing here: Social Organizer does not accept or transfer money.",
     "signInTitle": "Sign in to take part in this Need"
@@ -1463,19 +1456,9 @@
       "text": "Whoever decides to take part names their amount and joins the chat. <b>Everything else is between people, outside Social Organizer.</b>"
     },
     "figure": {
-      "names": [
-        "Kira",
-        "Oleg",
-        "Ira",
-        "Dima",
-        "Lena",
-        "Max"
-      ],
       "you": "You",
-      "asker": "Maria",
       "amount": "300 $",
       "chatTitle": "Participants’ chat",
-      "chatMembers": "Maria · Oleg · Lena",
       "aria": "Circle diagram"
     },
     "seed": {

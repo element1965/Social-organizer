@@ -712,7 +712,7 @@
         "signin": "Đăng nhập"
       },
       "hero": {
-        "title": "Vòng tròn của bạn lớn hơn bạn nghĩ.",
+        "title": "Thế giới nhỏ hơn bạn nghĩ.",
         "lead": "Social Organizer kết nối những người quen nhau ngoài đời. Khi một người gặp khó khăn, người quen của họ biết trước, rồi đến người quen của những người đó.",
         "cta": "Xây mạng lưới của bạn",
         "how": "Xem cách hoạt động",
@@ -775,15 +775,22 @@
           "9": "Ứng dụng"
         },
         "tags": {
-          "you": "Bạn",
-          "oleg": "Tuấn",
-          "maria": "Linh · {{shortfall}}",
-          "lena": "Thảo"
+          "you": "Bạn"
         },
         "hud": {
           "reached_other": "người đã biết về nhu cầu",
           "reported": "trên {{shortfall}} đã được nêu",
           "people_other": "người tham gia"
+        },
+        "cast": {
+          "asker": "Linh",
+          "mediator": "Tuấn",
+          "supporter": "Thảo",
+          "newcomer": "Ngọc",
+          "friend1": "Mai",
+          "friend2": "Minh",
+          "friend3": "Hương",
+          "friend4": "Nam"
         }
       },
       "app": {
@@ -803,7 +810,7 @@
         "statPeople_other": "người trong mạng lưới",
         "statWaves_other": "đợt mời",
         "dies": "Mạng lưới ngừng phát triển",
-        "grows": "Mạng lưới tự phát triển",
+        "grows": "Trong mô hình này, mạng lưới tiếp tục mở rộng.",
         "full": "Mô hình đã hết người mới",
         "restart": "Bắt đầu lại",
         "hint": "Chạm vào mô hình để bắt đầu từ một người khác",
@@ -827,7 +834,6 @@
         "title": "Hãy cùng thử nghiệm",
         "text": "Ứng dụng và lý thuyết đã có. Giờ cần người cùng kiểm chứng chúng trong thực tế.",
         "now": "người có kết nối trong mạng lưới tính đến ngày 13 tháng 11 năm 2026",
-        "nowDate": "người có kết nối trong mạng lưới tính đến ngày {{date}}",
         "cta": "Nhắn cho nhóm",
         "share": "Chia sẻ",
         "shared": "Đã chép liên kết",
@@ -837,7 +843,9 @@
         "w2Title": "Kể về dự án",
         "w2": "Gửi trang này cho những người có thể quan tâm, hoặc tự viết về Social Organizer.",
         "w3Title": "Giúp nghiên cứu hoặc viết mã",
-        "w3": "Lý thuyết được trình bày trong <report>báo cáo của Andrei Lubalin</report>, còn mã nguồn được công khai trên <code>GitHub</code>. Hãy giúp kiểm chứng lý thuyết hoặc phát triển ứng dụng."
+        "w3": "Lý thuyết được trình bày trong <report>báo cáo nghiên cứu</report>, còn mã nguồn được công khai trên <code>GitHub</code>. Hãy giúp kiểm chứng lý thuyết hoặc phát triển ứng dụng.",
+        "selectLink": "Sao chép liên kết trong ô bên dưới.",
+        "nowLive_other": "người có kết nối trong mạng lưới"
       },
       "faq": {
         "title": "Câu hỏi",
@@ -850,7 +858,12 @@
         "q4": "Đây có phải mô hình kim tự tháp không?",
         "a4": "Không. Không ai phải trả tiền để vào, và không ai kiếm tiền từ lời mời.",
         "q6": "Các bạn lưu những dữ liệu nào?",
-        "a6": "Chúng tôi lưu thông tin tài khoản và hồ sơ, như tên, email, mã định danh của dịch vụ đăng nhập và thông tin bạn thêm như ảnh, số điện thoại hoặc vị trí. Chúng tôi lưu các cài đặt như ngôn ngữ và giao diện, lịch sử lời mời và kết nối, nhu cầu đã thông báo, việc tham gia và số tiền đã nêu. Chúng tôi cũng lưu mã đăng nhập, dữ liệu gửi thông báo và lịch sử thông báo, cùng các báo cáo vi phạm hoặc tin nhắn bạn gửi cho bộ phận hỗ trợ. Ứng dụng không đụng tới tiền và không hỏi thông tin thẻ hay tài khoản ngân hàng."
+        "data": {
+          "account": "Chúng tôi lưu thông tin tài khoản và hồ sơ, như tên, email, mã định danh của dịch vụ đăng nhập và thông tin bạn thêm như ảnh, số điện thoại hoặc vị trí.",
+          "activity": "Chúng tôi lưu các cài đặt như ngôn ngữ và giao diện, lịch sử lời mời và kết nối, nhu cầu đã thông báo, việc tham gia và số tiền đã nêu.",
+          "notifications": "Chúng tôi cũng lưu mã đăng nhập, dữ liệu gửi thông báo và lịch sử thông báo, cùng các báo cáo vi phạm hoặc tin nhắn bạn gửi cho bộ phận hỗ trợ.",
+          "money": "Ứng dụng không đụng tới tiền và không hỏi thông tin thẻ hay tài khoản ngân hàng."
+        }
       },
       "start": {
         "label": "Ứng dụng",
@@ -858,7 +871,7 @@
         "text": "Vào ngày khó khăn, bạn sẽ không còn thời gian hay sức lực cho việc này.",
         "s1": "Mở liên kết từ người bạn quen, hoặc tự đăng nhập bằng Google, Apple, Telegram hay mã gửi qua email. Không cần mật khẩu.",
         "s2": "Thêm những người bạn quen ngoài đời: bằng liên kết, mã QR hoặc lắc hai điện thoại cạnh nhau.",
-        "s3": "Đặt dự định của bạn: số tiền bạn thường sẵn sàng đưa khi ai đó trong mạng lưới gặp khó khăn.",
+        "s3": "Đặt dự định của bạn: số tiền bạn thường sẵn sàng nêu ra khi có người trong mạng lưới gặp khó khăn.",
         "qr": "Hướng camera điện thoại vào đây, cửa hàng phù hợp sẽ mở ra.",
         "playTop": "Tải nội dung trên",
         "play": "Google Play",
@@ -905,17 +918,17 @@
       "title": "Đường đi qua những người quen",
       "lead": "Một nhu cầu tới số người bằng số đô la nó nêu, người gần nhất theo số cái bắt tay trước. Bạn chỉ thấy những nhu cầu có đường tới bạn qua người bạn quen. Chạm vào một người.",
       "says": [
-        "<b>Maria Koval</b> thông báo một nhu cầu. Bạn không quen cô ấy.",
-        "<b>Oleg</b>, anh trai bạn, quen Maria. Vì thế anh ấy nhận được thông báo của cô.",
-        "<b>Bạn</b> nhận được thông báo vì bạn quen Oleg. Có tham gia hay không là do bạn quyết định."
+        "<b>Linh</b> thông báo một nhu cầu. Bạn không quen cô ấy.",
+        "<b>Tuấn</b>, anh trai bạn, quen Linh. Vì thế anh ấy nhận được thông báo của cô.",
+        "<b>Bạn</b> nhận được thông báo vì bạn quen Tuấn. Có tham gia hay không là do bạn quyết định."
       ]
     },
     "join": {
       "title": "Bắt đầu từ một người bạn quen",
       "lead": "Mạng lưới chỉ lớn lên qua những người quen nhau: ai đó vào bằng liên kết của bạn, và bạn xác nhận mối quen.",
       "says": [
-        "Katya mở liên kết của bạn và đăng nhập. <b>Đây chưa phải kết nối:</b> bạn nhận một thông báo đẩy.",
-        "Bạn xác nhận: đúng, chúng tôi quen nhau. <b>Giờ Katya là cái bắt tay thứ 1 của bạn.</b>"
+        "Ngọc mở liên kết của bạn và đăng nhập. <b>Đây chưa phải kết nối:</b> bạn nhận một thông báo đẩy.",
+        "Bạn xác nhận: đúng, chúng tôi quen nhau. <b>Giờ Ngọc là cái bắt tay thứ 1 của bạn.</b>"
       ]
     },
     "cta": {
@@ -925,29 +938,11 @@
     },
     "figures": {
       "net": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Bạn",
-        "asker": "Maria",
         "chatTitle": "Chat của người tham gia",
-        "chatMembers": "Maria · Oleg · Lena",
         "aria": "Vòng tròn của bạn"
       },
       "orbit": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Bạn",
         "pills": [
           "Cái bắt tay thứ 1 · 6",
@@ -957,16 +952,13 @@
         "aria": "Vành cái bắt tay"
       },
       "chain": {
-        "asker": "Maria",
         "askerSub": "cần {{amount}}",
-        "mediator": "Oleg",
         "mediatorSub": "anh trai bạn",
         "you": "Bạn",
         "youSub": "bạn quyết định",
         "aria": "Đường đi của thông báo"
       },
       "join": {
-        "newcomer": "Katya",
         "newcomerSub": [
           "vào bằng liên kết",
           "Cái bắt tay thứ 1"
@@ -1333,7 +1325,7 @@
     "fullLine": "Số tiền cần đã được nêu đủ.",
     "takePart": "Tham gia",
     "nextTitle": "Nếu bạn tham gia",
-    "next1": "Bạn nêu số tiền mình sẵn sàng góp. Có thể bắt đầu từ {{amount}}.",
+    "next1": "Bạn nêu mức tiền mình muốn tham gia. Có thể bắt đầu từ {{amount}}.",
     "next2": "Nếu có đường dẫn vào chat, bạn có thể mở sau khi tham gia.",
     "next3": "Nếu đến chuyện tiền, bạn tự tay đưa tiền cho người báo nhu cầu. Ở đây bạn không trả gì: Social Organizer không nhận và không chuyển tiền.",
     "signInTitle": "Đăng nhập để tham gia nhu cầu này"
@@ -1452,19 +1444,9 @@
       "text": "Ai quyết định tham gia thì nêu số tiền của mình và vào chat. <b>Mọi thứ còn lại là giữa mọi người với nhau, bên ngoài Social Organizer.</b>"
     },
     "figure": {
-      "names": [
-        "Kira",
-        "Oleg",
-        "Ira",
-        "Dima",
-        "Lena",
-        "Max"
-      ],
       "you": "Bạn",
-      "asker": "Maria",
       "amount": "300 $",
       "chatTitle": "Chat của người tham gia",
-      "chatMembers": "Maria · Oleg · Lena",
       "aria": "Sơ đồ vòng tròn"
     },
     "seed": {
