@@ -22,7 +22,7 @@ export function SiteBrand({ small }: { small?: boolean } = {}) {
   return (
     <Link to="/" className="site-brand">
       <BrandMark size={small ? 24 : 30} />
-      {t('landing.site.brand')}
+      <span className="site-brand-name">{t('landing.site.brand')}</span>
     </Link>
   );
 }
@@ -64,7 +64,7 @@ export function useLoginHref(): string {
   return redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : '/login';
 }
 
-/** Site header: 72 px; on phones (container under 600 px) only the brand, theme and sign-in. */
+/** Public site header. The read pages keep the language picker on phones. */
 export function SiteHeader({ active }: { active?: SiteSection }) {
   const { t } = useTranslation();
   const loginHref = useLoginHref();

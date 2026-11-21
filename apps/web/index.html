@@ -3,6 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <script>
+      (function () {
+        // Match src/lib/i18n.ts: link, saved preference, then the first supported browser language.
+        var supported = '%SUPPORTED_LANGUAGES%'.split(' ');
+        var lang = (new URLSearchParams(location.search).get('lang') || '').trim().toLowerCase();
+        if (!supported.includes(lang)) {
+          try { lang = localStorage.getItem('language'); } catch (e) {}
+          if (!supported.includes(lang)) {
+            var candidates = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+            lang = candidates.map(function (tag) { return (tag || '').slice(0, 2).toLowerCase(); })
+              .find(function (code) { return supported.includes(code); });
+          }
+        }
+        if (lang !== 'ar' && lang !== 'he') return;
+        var font = document.createElement('link');
+        font.rel = 'preload';
+        font.as = 'font';
+        font.type = 'font/woff2';
+        font.crossOrigin = 'anonymous';
+        font.href = lang === 'ar' ? '/fonts/noto-sans-arabic.woff2' : '/fonts/noto-sans-hebrew.woff2';
+        document.head.appendChild(font);
+      })();
+    </script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />

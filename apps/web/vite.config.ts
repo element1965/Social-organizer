@@ -57,7 +57,9 @@ const apiProxy = (target: string, extra: Record<string, unknown> = {}) => ({
 });
 
 function siteMetadata(siteUrl: string): Plugin {
-  const render = (template: string) => template.replaceAll('%WEB_APP_URL%', () => siteUrl);
+  const render = (template: string) => template
+    .replaceAll('%WEB_APP_URL%', () => siteUrl)
+    .replaceAll('%SUPPORTED_LANGUAGES%', SUPPORTED_LANGUAGES.join(' '));
   const files = ['robots.txt', 'sitemap.xml'];
   const content = (name: string) => name === 'sitemap.xml'
     ? renderPublicSitemap(siteUrl, SUPPORTED_LANGUAGES)

@@ -40,6 +40,7 @@
 /* ---------- header ---------- */
 .site-top { height: 72px; display: flex; align-items: center; gap: 28px; padding: 0 48px; }
 .site-brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; letter-spacing: -.02em; color: var(--ink); }
+.site-top .site-brand { min-width: 44px; min-height: 44px; }
 .site-top nav { display: flex; gap: 24px; font-weight: 700; font-size: 15px; }
 .site-top nav a { color: var(--muted); }
 .site-top nav a:hover, .site-top nav a[aria-current="page"] { color: var(--ink); }
@@ -81,6 +82,23 @@
 .site-hero1 .lead b { color: var(--ink); }
 .site-how .site-sec { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
 .site-how .site-say { min-height: 2.9em; max-width: none; }
+.site-press .site-hero1 { max-width: 70ch; }
+:is(.site-how, .site-press) .site-hero1 h1 {
+  inline-size: calc(min(100cqw, 1280px) - 96px);
+  font-size: var(--site-display-size);
+  line-height: var(--site-display-leading);
+  letter-spacing: var(--site-display-tracking);
+  font-weight: var(--site-heading-weight);
+}
+:is(.site-how, .site-press) :is(.site-sec, .site-endcta) h2 {
+  font-size: var(--site-headline-size);
+  line-height: var(--site-headline-leading);
+  letter-spacing: var(--site-headline-tracking);
+  font-weight: var(--site-heading-weight);
+  text-wrap: balance;
+  hyphens: auto;
+}
+:is(.site-how, .site-press) :is(h1, h2) { overflow-wrap: anywhere; }
 /* How: the comparison with China's online mutual aid platforms */
 .site-how .site-compare-sec { align-items: start; }
 .site-compare { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--paper); border-radius: var(--r-xl); box-shadow: var(--shadow-card); overflow: hidden; font-size: 15px; line-height: 1.4; }
@@ -147,7 +165,6 @@
 .site-groups .gr-honest li { font-size: 17px; line-height: 1.5; color: var(--ink); max-width: 62ch; }
 
 /* ---------- press kit (/press) ---------- */
-.site-press .site-hero1 { max-width: 70ch; }
 .site-press .pr-people { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 24px; max-width: 860px; }
 .site-press .pr-people li { display: flex; align-items: center; gap: 16px; background: var(--paper); border-radius: var(--r-xl); box-shadow: var(--shadow-card); padding: 18px 20px; }
 .site-press .pr-people div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
@@ -210,8 +227,16 @@
 /* the site at phone width: same markup, one column */
 @container (max-width: 600px) {
   .site-top { padding: 0 16px; height: 64px; gap: 12px; }
-  .site-top nav, .site-top .site-lang { display: none; }
+  .site-top nav, .site:not(.site-how, .site-press) .site-top .site-lang { display: none; }
+  :is(.site-how, .site-press) .site-top { padding-inline: 12px; gap: 8px; }
+  :is(.site-how, .site-press) .site-top .site-brand { gap: 6px; font-size: 14px; white-space: nowrap; }
+  :is(.site-how, .site-press) .site-top .site-brand-name { overflow: hidden; text-overflow: ellipsis; }
+  :is(.site-how, .site-press) .site-top .right { flex: none; gap: 6px; }
+  :is(.site-how, .site-press) .site-top .site-lang { height: 44px; padding-inline: 8px; }
+  :is(.site-how, .site-press) .site-top .site-ibtn { width: 44px; height: 44px; }
+  :is(.site-how, .site-press) .site-top .site-btn { padding-inline: 10px; }
   .site-hero1 h1 { font-size: 36px; }
+  :is(.site-how, .site-press) .site-hero1 h1 { inline-size: 100%; }
   .site-hero1 .lead { font-size: 17px; }
   .site-sec { padding: 40px 16px; }
   .site-sec h2 { font-size: 30px; }
@@ -250,4 +275,15 @@
   .site-press .pr-files.shots p { font-size: 13px; }
   .site-press .pr-files.shots li.wide .pr-thumb { aspect-ratio: 1024 / 500; flex: none; }
   .site-press .pr-files.shots li.wide .pr-thumb img { inset: 0; width: 100%; height: 100%; }
+}
+
+@container (max-width: 400px) {
+  :is(.site-how, .site-press) .site-top .site-brand { justify-content: center; }
+  :is(.site-how, .site-press) .site-top .site-brand-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
 }

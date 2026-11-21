@@ -102,3 +102,26 @@ it('caches failed people counts for 30 seconds and retries after expiry', async 
   expect(recovered.headers['cache-control']).toBe('public, max-age=600');
   expect(countPeople).toHaveBeenCalledTimes(2);
 });
+
+it('keeps the count numeric and dates each cached observation when the database responds', async () => {
+  countPeople.mockImplementationOnce(async () => {
+    vi.setSystemTime(new Date('2026-11-21T00:00:01Z'));
+    return 42;
+  }).mockResolvedValueOnce(43);
+  const people = () => app.inject('/api/landing/people');
+
+  const first = await people();
+  expect(first.json()).toBe(42);
+  expect(first.headers['x-observed-at']).toBe('2026-11-21T00:00:01.000Z');
+
+  vi.setSystemTime(new Date('2026-11-21T00:10:00Z'));
+  const cached = await people();
+  expect(cached.json()).toBe(42);
+  expect(cached.headers['x-observed-at']).toBe(first.headers['x-observed-at']);
+
+  vi.setSystemTime(new Date('2026-11-21T00:10:01Z'));
+  const refreshed = await people();
+  expect(refreshed.json()).toBe(43);
+  expect(refreshed.headers['x-observed-at']).toBe('2026-11-21T00:10:01.000Z');
+  expect(countPeople).toHaveBeenCalledTimes(2);
+});

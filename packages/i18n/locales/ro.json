@@ -720,8 +720,8 @@
         "signin": "Conectează-te"
       },
       "hero": {
-        "title": "Cercul tău e mai mare decât crezi.",
-        "lead": "Social Organizer adună oameni care se cunosc personal. Când unuia dintre ei îi e greu, află mai întâi cunoscuții lui, apoi cunoscuții acestora.",
+        "title": "Lumea e mai mică decât crezi.",
+        "lead": "În Social Organizer îți construiești o rețea cu oameni pe care îi cunoști personal. Când unuia dintre ei îi e greu, află mai întâi cunoscuții lui, apoi cunoscuții acestora.",
         "cta": "Construiește-ți rețeaua",
         "how": "Cum funcționează",
         "facts": "Gratuit · fără comisioane · <code>cod deschis</code>"
@@ -783,10 +783,7 @@
           "9": "Aplicație"
         },
         "tags": {
-          "you": "Tu",
-          "oleg": "Mihai",
-          "maria": "Ioana · {{shortfall}}",
-          "lena": "Alina"
+          "you": "Tu"
         },
         "hud": {
           "reached_one": "a aflat despre nevoie",
@@ -796,12 +793,23 @@
           "people_one": "participant",
           "people_few": "participanți",
           "people_other": "de participanți"
+        },
+        "cast": {
+          "asker": "Ioana",
+          "mediator": "Mihai",
+          "supporter": "Alina",
+          "newcomer": "Irina",
+          "friend1": "Elena",
+          "friend2": "Andrei",
+          "friend3": "Ana",
+          "friend4": "Vlad"
         }
       },
       "app": {
         "title": "Aplicația în sine",
         "example": "Exemplu",
         "circle": "Cercul tău: oamenii pe care îi cunoști și oamenii pe care îi cunosc ei. Nevoia Ioanei ajunge la tine prin Mihai.",
+        "circleSubtitle": "Nevoie · prin Mihai",
         "need": "Nevoia Ioanei: îți anunți partea, iar participanții se înțeleg în propriul lor chat.",
         "add": "Totul începe aici: trimite linkul tău sau arată QR-ul tău oamenilor pe care îi cunoști personal."
       },
@@ -819,7 +827,7 @@
         "statWaves_few": "valuri de invitații",
         "statWaves_other": "de valuri de invitații",
         "dies": "Creșterea s-a oprit",
-        "grows": "Rețeaua crește singură",
+        "grows": "În acest model, rețeaua continuă să crească.",
         "full": "În model nu mai sunt oameni noi",
         "restart": "Ia-o de la capăt",
         "hint": "Atinge modelul ca să începi de la altcineva",
@@ -843,7 +851,6 @@
         "title": "Alătură-te experimentului",
         "text": "Aplicația și teoria există deja. Acum trebuie verificate în practică, iar pentru asta ne trebuie oameni.",
         "now": "de oameni cu legături în rețea la 13 noiembrie 2026",
-        "nowDate": "de oameni cu legături în rețea la {{date}}",
         "cta": "Scrie echipei",
         "share": "Distribuie",
         "shared": "Link copiat",
@@ -853,7 +860,11 @@
         "w2Title": "Povestește despre proiect",
         "w2": "Trimite pagina asta celor care ar putea fi interesați sau scrie tu despre Social Organizer.",
         "w3Title": "Ajută la cercetare sau la dezvoltare",
-        "w3": "Teoria e descrisă în <report>raportul lui Andrei Lubalin</report>, iar codul e public pe <code>GitHub</code>. Ajută la verificarea teoriei sau la dezvoltarea aplicației."
+        "w3": "Teoria e descrisă în <report>raportul de cercetare</report>, iar codul e public pe <code>GitHub</code>. Ajută la verificarea teoriei sau la dezvoltarea aplicației.",
+        "selectLink": "Copiază linkul din câmpul de mai jos.",
+        "nowLive_one": "om cu legături în rețea",
+        "nowLive_few": "oameni cu legături în rețea",
+        "nowLive_other": "de oameni cu legături în rețea"
       },
       "faq": {
         "title": "Întrebări",
@@ -866,7 +877,12 @@
         "q4": "Este o schemă piramidală?",
         "a4": "Nu. Nimeni nu plătește ca să intre și nimeni nu câștigă din invitații.",
         "q6": "Ce date păstrați?",
-        "a6": "Păstrăm datele contului și ale profilului, cum ar fi numele, adresa de e-mail, identificatorii serviciului de autentificare și informațiile adăugate, cum ar fi fotografia, numărul de telefon sau locația. Păstrăm și setările, precum limba și tema, istoricul invitațiilor și al legăturilor, nevoile anunțate, participarea și sumele indicate. Mai păstrăm codurile de autentificare, datele pentru trimiterea notificărilor și istoricul lor, precum și sesizările și mesajele trimise echipei de asistență. Aplicația nu gestionează bani și nu solicită datele cardului sau ale contului bancar."
+        "data": {
+          "account": "Păstrăm datele contului și ale profilului, cum ar fi numele, adresa de e-mail, identificatorii serviciului de autentificare și informațiile adăugate, cum ar fi fotografia, numărul de telefon sau locația.",
+          "activity": "Păstrăm și setările, precum limba și tema, istoricul invitațiilor și al legăturilor, nevoile anunțate, participarea și sumele indicate.",
+          "notifications": "Mai păstrăm codurile de autentificare, datele pentru trimiterea notificărilor și istoricul lor, precum și sesizările și mesajele trimise echipei de asistență.",
+          "money": "Aplicația nu gestionează bani și nu solicită datele cardului sau ale contului bancar."
+        }
       },
       "start": {
         "label": "Aplicația",
@@ -874,7 +890,7 @@
         "text": "Într-o zi grea nu ai nici timp, nici putere pentru asta.",
         "s1": "Deschide linkul primit de la un cunoscut sau conectează-te direct cu Google, Apple, Telegram ori cu un cod primit pe e-mail. Nu-ți trebuie parolă.",
         "s2": "Adaugă oamenii pe care îi cunoști personal: cu un link, cu un cod QR sau scuturând telefoanele unul lângă altul.",
-        "s3": "Stabilește-ți intenția: suma pe care de obicei ești gata s-o dai când cuiva din rețea îi e greu.",
+        "s3": "Alege suma pe care ai fi dispus să o indici dacă cineva din rețea ar trece printr-o perioadă grea.",
         "qr": "Îndreaptă aici camera telefonului și se va deschide magazinul potrivit.",
         "playTop": "Disponibil pe",
         "play": "Google Play",
@@ -894,7 +910,7 @@
   },
   "how": {
     "meta": {
-      "title": "Cum funcționează — Social Organizer",
+      "title": "Cum funcționează · Social Organizer",
       "description": "Construiești o rețea de oameni pe care îi cunoști. O nevoie ajunge la atâția oameni din ea câți dolari are suma, iar participanții se coordonează direct. Pagina compară și Social Organizer cu platformele chineze online de ajutor reciproc."
     },
     "hero": {
@@ -921,17 +937,17 @@
       "title": "Un drum prin cunoscuți",
       "lead": "O nevoie ajunge la atâția oameni câți dolari are suma, începând cu cei mai apropiați prin strângeri de mână. Vezi doar nevoile care au un drum până la tine prin oameni pe care îi cunoști. Atinge o persoană.",
       "says": [
-        "<b>Maria Koval</b> anunță o nevoie. Nu o cunoști.",
-        "<b>Oleg</b>, fratele tău, o cunoaște pe Maria. De aceea mesajul ei ajunge la el.",
-        "<b>Tu</b> primești mesajul pentru că îl cunoști pe Oleg. Dacă participi sau nu, decizi tu."
+        "<b>Ioana</b> anunță o nevoie. Nu o cunoști.",
+        "<b>Mihai</b>, fratele tău, o cunoaște pe Ioana. De aceea mesajul ei ajunge la el.",
+        "<b>Tu</b> primești mesajul pentru că îl cunoști pe Mihai. Dacă participi sau nu, decizi tu."
       ]
     },
     "join": {
       "title": "Începe cu o persoană pe care o cunoști",
       "lead": "Rețeaua crește doar prin oameni care se cunosc: cineva se alătură prin linkul tău, iar tu confirmi cunoștința.",
       "says": [
-        "Katya îți deschide linkul și se conectează. <b>Încă nu e o legătură:</b> primești un push.",
-        "Confirmi: da, ne cunoaștem. <b>Acum Katya e prima ta strângere de mână.</b>"
+        "Irina îți deschide linkul și se conectează. <b>Încă nu e o legătură:</b> primești o notificare prin care ți se cere să confirmi că o cunoști.",
+        "Confirmi: da, ne cunoaștem. <b>Irina face acum parte din cercul tău de cunoscuți direcți.</b>"
       ]
     },
     "cta": {
@@ -941,29 +957,11 @@
     },
     "figures": {
       "net": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Tu",
-        "asker": "Maria",
         "chatTitle": "Chatul participanților",
-        "chatMembers": "Maria · Oleg · Lena",
         "aria": "Cercul tău"
       },
       "orbit": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Tu",
         "pills": [
           "prima · 6",
@@ -973,16 +971,13 @@
         "aria": "Inelele strângerilor de mână"
       },
       "chain": {
-        "asker": "Maria",
         "askerSub": "are nevoie de {{amount}}",
-        "mediator": "Oleg",
         "mediatorSub": "fratele tău",
         "you": "Tu",
         "youSub": "decizi tu",
         "aria": "Drumul unui mesaj"
       },
       "join": {
-        "newcomer": "Katya",
         "newcomerSub": [
           "a venit prin link",
           "prima strângere de mână"
@@ -1141,7 +1136,7 @@
   },
   "press": {
     "meta": {
-      "title": "Presă — Social Organizer",
+      "title": "Presă · Social Organizer",
       "description": "Ce este Social Organizer, cine îl face, faptele principale, logoul și capturi de ecran de descărcat și cum contactezi echipa."
     },
     "hero": {
@@ -1349,7 +1344,7 @@
     "fullLine": "Suma necesară este declarată.",
     "takePart": "Participă",
     "nextTitle": "Dacă alegi să participi",
-    "next1": "Spui suma pe care ești gata să o dai. Poți începe cu {{amount}}.",
+    "next1": "Spui cu ce sumă ai vrea să participi. Poți începe cu {{amount}}.",
     "next2": "Dacă a fost adăugat un link de chat, îl poți deschide după ce participi.",
     "next3": "Dacă e vorba de bani, îi dai chiar tu persoanei care a publicat nevoia. Aici nu plătești nimic: Social Organizer nu primește și nu transferă bani.",
     "signInTitle": "Conectează-te ca să participi la această nevoie"
@@ -1474,19 +1469,9 @@
       "text": "Cine hotărăște să participe își indică suma și intră în chat. <b>Tot restul e între oameni, în afara Social Organizer.</b>"
     },
     "figure": {
-      "names": [
-        "Kira",
-        "Oleg",
-        "Ira",
-        "Dima",
-        "Lena",
-        "Max"
-      ],
       "you": "Tu",
-      "asker": "Maria",
       "amount": "300 $",
       "chatTitle": "Chatul participanților",
-      "chatMembers": "Maria · Oleg · Lena",
       "aria": "Schema cercului"
     },
     "seed": {

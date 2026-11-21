@@ -10,6 +10,7 @@ The AGPL grant does not cover the project's name, "Social Organizer", or its log
 
 Third-party material keeps its own licence. Distributed copies must include the notices each asset's licence requires:
 
+- Noto Sans Arabic and Noto Sans Hebrew are under the SIL Open Font License 1.1 ([Arabic notice](../apps/web/public/fonts/OFL-noto-sans-arabic.txt), [Hebrew notice](../apps/web/public/fonts/OFL-noto-sans-hebrew.txt)).
 - The Manrope font is under the SIL Open Font License 1.1 ([`apps/web/public/fonts/OFL.txt`](../apps/web/public/fonts/OFL.txt)).
 - The Apple, Google Play and Telegram logo files in `apps/web/public/landing/icons/` come from Gil Barbara's logos collection (CC0).
 - The Telegram, X, LinkedIn, TikTok and Messenger icons in `apps/web/src/components/ui/social-icons.tsx` come from Simple Icons (CC0).

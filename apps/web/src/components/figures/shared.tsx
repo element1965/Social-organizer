@@ -27,8 +27,6 @@ export const C = {
 /** Token-based keyboard focus ring for selectable SVG items. */
 const FOCUS_RING = 'outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgb(var(--so-care))]';
 
-export const FIG_FONT = 'Manrope, "Segoe UI", system-ui, sans-serif';
-
 /** Person silhouette: head and shoulders. */
 export function Glyph({ x, y, r, color }: { x: number; y: number; r: number; color: string }) {
   return (
@@ -57,7 +55,7 @@ export function FigText({
   children: ReactNode;
 }) {
   return (
-    <text x={x} y={y} textAnchor={anchor} fontFamily={FIG_FONT} fontSize={size} fontWeight={weight} fill={color}>
+    <text x={x} y={y} textAnchor={anchor} fontFamily="var(--font)" fontSize={size} fontWeight={weight} fill={color}>
       {children}
     </text>
   );

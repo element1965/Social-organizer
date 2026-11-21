@@ -716,7 +716,7 @@
         "signin": "Log ind"
       },
       "hero": {
-        "title": "Din kreds er større, end du tror.",
+        "title": "Verden er mindre, end du tror.",
         "lead": "I Social Organizer samles mennesker, der kender hinanden personligt. Når nogen er i knibe, hører deres bekendte det først og derefter de mennesker, de kender.",
         "cta": "Byg dit netværk",
         "how": "Sådan fungerer det",
@@ -779,10 +779,7 @@
           "9": "Appen"
         },
         "tags": {
-          "you": "Dig",
-          "oleg": "Jens",
-          "maria": "Anne · {{shortfall}}",
-          "lena": "Rikke"
+          "you": "Dig"
         },
         "hud": {
           "reached_one": "har hørt om behovet",
@@ -790,12 +787,23 @@
           "reported": "af {{shortfall}} angivet",
           "people_one": "deltager",
           "people_other": "deltagere"
+        },
+        "cast": {
+          "asker": "Anne",
+          "mediator": "Jens",
+          "supporter": "Rikke",
+          "newcomer": "Ida",
+          "friend1": "Mette",
+          "friend2": "Peter",
+          "friend3": "Sofie",
+          "friend4": "Mads"
         }
       },
       "app": {
         "title": "Selve appen",
         "example": "Eksempel",
         "circle": "Din Kreds: de mennesker, du kender, og dem, de kender. Annes Behov når frem til dig gennem Jens.",
+        "circleSubtitle": "Behov · via Jens",
         "need": "Annes Behov: du melder din andel, og deltagerne aftaler resten i deres egen chat.",
         "add": "Det begynder her: send dit link, eller vis din QR til folk, du kender personligt."
       },
@@ -811,7 +819,7 @@
         "statWaves_one": "bølge af invitationer",
         "statWaves_other": "bølger af invitationer",
         "dies": "Væksten er gået i stå",
-        "grows": "Netværket vokser af sig selv",
+        "grows": "I denne model bliver netværket ved med at vokse.",
         "full": "Der er ikke flere nye mennesker i modellen",
         "restart": "Start forfra",
         "hint": "Tryk på modellen for at starte fra en anden",
@@ -835,7 +843,6 @@
         "title": "Vær med i eksperimentet",
         "text": "Appen og teorien findes allerede. Nu skal de afprøves i praksis, og det kræver mennesker.",
         "now": "mennesker med forbindelser i netværket pr. 13. november 2026",
-        "nowDate": "mennesker med forbindelser i netværket pr. {{date}}",
         "cta": "Skriv til teamet",
         "share": "Del",
         "shared": "Linket er kopieret",
@@ -845,7 +852,10 @@
         "w2Title": "Fortæl andre om projektet",
         "w2": "Send siden til folk, den kan betyde noget for, eller skriv selv om Social Organizer.",
         "w3Title": "Hjælp med forskningen eller koden",
-        "w3": "Teorien er beskrevet i <report>Andrei Lubalins rapport</report>, og koden er åben på <code>GitHub</code>. Hjælp med at teste teorien eller med at udvikle appen."
+        "w3": "Teorien er beskrevet i <report>forskningsrapporten</report>, og koden er åben på <code>GitHub</code>. Hjælp med at teste teorien eller med at udvikle appen.",
+        "selectLink": "Kopiér linket i feltet nedenfor.",
+        "nowLive_one": "person med forbindelser i netværket",
+        "nowLive_other": "personer med forbindelser i netværket"
       },
       "faq": {
         "title": "Spørgsmål",
@@ -858,7 +868,12 @@
         "q4": "Er det et pyramidespil?",
         "a4": "Nej. Ingen betaler for at være med, og ingen tjener på invitationer.",
         "q6": "Hvilke data gemmer I?",
-        "a6": "Vi gemmer konto- og profiloplysninger som navn, e-mail og id fra den tjeneste, du logger ind med, samt det, du tilføjer, for eksempel foto, telefonnummer og placering. Vi gemmer også indstillinger som sprog og tema, invitationer og forbindelser samt anmeldte behov, deltagelse og angivne beløb. Vi gemmer loginkoder, data til notifikationer og deres historik samt de klager og beskeder, du sender til support. Appen håndterer ikke penge og beder ikke om kort- eller bankoplysninger."
+        "data": {
+          "account": "Vi gemmer konto- og profiloplysninger som navn, e-mail og id fra den tjeneste, du logger ind med, samt det, du tilføjer, for eksempel foto, telefonnummer og placering.",
+          "activity": "Vi gemmer også indstillinger som sprog og tema, invitationer og forbindelser samt anmeldte behov, deltagelse og angivne beløb.",
+          "notifications": "Vi gemmer loginkoder, data til notifikationer og deres historik samt de klager og beskeder, du sender til support.",
+          "money": "Appen håndterer ikke penge og beder ikke om kort- eller bankoplysninger."
+        }
       },
       "start": {
         "label": "Appen",
@@ -866,7 +881,7 @@
         "text": "På en dårlig dag er der hverken tid eller kræfter til det.",
         "s1": "Åbn et link fra en, du kender, eller log selv ind med Google, Apple, Telegram eller en kode på e-mail. Du behøver ingen adgangskode.",
         "s2": "Tilføj mennesker, du kender personligt: med et link, en QR-kode eller ved at ryste telefonerne ved siden af hinanden.",
-        "s3": "Angiv din hensigt: det beløb, du normalt er klar til at give, når nogen i netværket er i knibe.",
+        "s3": "Vælg det beløb, du normalt vil angive, hvis nogen i netværket har det svært.",
         "qr": "Ret telefonens kamera hertil, så åbner den rigtige butik.",
         "playTop": "Hent den i",
         "play": "Google Play",
@@ -886,7 +901,7 @@
   },
   "how": {
     "meta": {
-      "title": "Sådan fungerer det — Social Organizer",
+      "title": "Sådan fungerer det · Social Organizer",
       "description": "Du bygger et netværk af mennesker, du kender. Et behov når lige så mange mennesker i det, som det nævner dollar, og deltagerne koordinerer direkte. Siden sammenligner også Social Organizer med Kinas onlineplatforme til gensidig hjælp."
     },
     "hero": {
@@ -913,17 +928,17 @@
       "title": "En vej gennem personer, du kender",
       "lead": "Et behov når lige så mange mennesker, som det nævner dollar, de nærmeste via håndtryk først. Du ser kun behov, der har en vej til dig gennem personer, du kender. Tryk på en person.",
       "says": [
-        "<b>Maria Koval</b> melder et behov. Du kender hende ikke.",
-        "<b>Oleg</b>, din bror, kender Maria. Derfor får han hendes besked.",
-        "<b>Du</b> får beskeden, fordi du kender Oleg. Du bestemmer, om du vil deltage."
+        "<b>Anne</b> melder et behov. Du kender hende ikke.",
+        "<b>Jens</b>, din bror, kender Anne. Derfor får han hendes besked.",
+        "<b>Du</b> får beskeden, fordi du kender Jens. Du bestemmer, om du vil deltage."
       ]
     },
     "join": {
       "title": "Det begynder med en, du kender",
       "lead": "Netværket vokser kun gennem mennesker, der kender hinanden: nogen kommer ind via dit link, og du bekræfter bekendtskabet.",
       "says": [
-        "Katya åbner dit link og logger ind. <b>Det er endnu ikke en forbindelse:</b> du får en push.",
-        "Du bekræfter: ja, vi kender hinanden. <b>Nu er Katya dit 1. håndtryk.</b>"
+        "Ida åbner dit link og logger ind. <b>Det er endnu ikke en forbindelse:</b> du får en besked om at bekræfte, at I kender hinanden.",
+        "Du bekræfter: ja, vi kender hinanden. <b>Nu er der ét håndtryk mellem dig og Ida.</b>"
       ]
     },
     "cta": {
@@ -933,29 +948,11 @@
     },
     "figures": {
       "net": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Dig",
-        "asker": "Maria",
         "chatTitle": "Deltagernes chat",
-        "chatMembers": "Maria · Oleg · Lena",
         "aria": "Din kreds"
       },
       "orbit": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Dig",
         "pills": [
           "1. · 6",
@@ -965,16 +962,13 @@
         "aria": "Håndtryksringe"
       },
       "chain": {
-        "asker": "Maria",
         "askerSub": "har brug for {{amount}}",
-        "mediator": "Oleg",
         "mediatorSub": "din bror",
         "you": "Dig",
         "youSub": "du bestemmer",
         "aria": "En beskeds vej"
       },
       "join": {
-        "newcomer": "Katya",
         "newcomerSub": [
           "kom via link",
           "1. håndtryk"
@@ -1133,7 +1127,7 @@
   },
   "press": {
     "meta": {
-      "title": "Presse — Social Organizer",
+      "title": "Presse · Social Organizer",
       "description": "Hvad Social Organizer er, hvem der står bag, de vigtigste fakta, logo og skærmbilleder til download, og hvordan du kontakter teamet."
     },
     "hero": {
@@ -1341,7 +1335,7 @@
     "fullLine": "Det nødvendige beløb er angivet.",
     "takePart": "Deltag",
     "nextTitle": "Hvis du deltager",
-    "next1": "Du nævner det beløb, du er klar til at give. Du kan starte med {{amount}}.",
+    "next1": "Du angiver det beløb, du vil deltage med. Du kan starte med {{amount}}.",
     "next2": "Hvis der er tilføjet et chatlink, kan du åbne det, når du har deltaget.",
     "next3": "Hvis det kommer til penge, giver du dem selv direkte til den, der har oprettet behovet. Her betaler du ingenting: Social Organizer modtager og overfører ikke penge.",
     "signInTitle": "Log ind for at deltage i dette behov"
@@ -1463,19 +1457,9 @@
       "text": "Den, der beslutter at deltage, angiver sit beløb og går ind i chatten. <b>Alt andet er mellem personerne, uden for Social Organizer.</b>"
     },
     "figure": {
-      "names": [
-        "Kira",
-        "Oleg",
-        "Ira",
-        "Dima",
-        "Lena",
-        "Max"
-      ],
       "you": "Dig",
-      "asker": "Maria",
       "amount": "300 $",
       "chatTitle": "Deltagernes chat",
-      "chatMembers": "Maria · Oleg · Lena",
       "aria": "Diagram over kredsen"
     },
     "seed": {

@@ -724,7 +724,7 @@
         "signin": "Přihlásit se"
       },
       "hero": {
-        "title": "Váš kruh je větší, než se zdá.",
+        "title": "Svět je menší, než se zdá.",
         "lead": "V Social Organizer se scházejí lidé, kteří se znají osobně. Když je někomu těžko, dozvědí se to nejdřív jeho známí, pak jejich známí.",
         "cta": "Vybudujte svou síť",
         "how": "Jak to funguje",
@@ -787,10 +787,7 @@
           "9": "Aplikace"
         },
         "tags": {
-          "you": "Vy",
-          "oleg": "Tomáš",
-          "maria": "Jana · {{shortfall}}",
-          "lena": "Katka"
+          "you": "Vy"
         },
         "hud": {
           "reached_one": "ví o potřebě",
@@ -802,12 +799,23 @@
           "people_few": "účastníci",
           "people_many": "účastníka",
           "people_other": "účastníků"
+        },
+        "cast": {
+          "asker": "Jana",
+          "mediator": "Tomáš",
+          "supporter": "Katka",
+          "newcomer": "Lucie",
+          "friend1": "Eva",
+          "friend2": "Petr",
+          "friend3": "Lenka",
+          "friend4": "Martin"
         }
       },
       "app": {
         "title": "Samotná aplikace",
         "example": "Příklad",
         "circle": "Váš Kruh: lidé, které znáte, a lidé, které znají oni. Potřeba Jany se k vám dostane přes Tomáše.",
+        "circleSubtitle": "Potřeba · přes Tomáše",
         "need": "Potřeba Jany: oznámíte svůj podíl a účastníci se domluví ve vlastním chatu.",
         "add": "Začíná to tady: pošlete svůj odkaz nebo ukažte svůj QR lidem, které osobně znáte."
       },
@@ -827,7 +835,7 @@
         "statWaves_many": "vlny pozvánek",
         "statWaves_other": "vln pozvánek",
         "dies": "Růst se zastavil",
-        "grows": "Síť roste sama",
+        "grows": "V tomto modelu síť dál roste.",
         "full": "V modelu už nejsou noví lidé",
         "restart": "Začít znovu",
         "hint": "Klepnutím na model začnete od někoho jiného",
@@ -851,7 +859,6 @@
         "title": "Zapojte se do experimentu",
         "text": "Aplikace i teorie už existují. Teď je musíme ověřit v praxi a na to potřebujeme lidi.",
         "now": "lidí má v síti známé (k 13. listopadu 2026)",
-        "nowDate": "lidí má v síti známé (k {{date}})",
         "cta": "Napsat týmu",
         "share": "Sdílet",
         "shared": "Odkaz zkopírován",
@@ -861,7 +868,12 @@
         "w2Title": "Řekněte o projektu dalším",
         "w2": "Pošlete tuto stránku lidem, kterým by mohla být blízká, nebo o Social Organizer napište sami.",
         "w3Title": "Pomozte s výzkumem nebo kódem",
-        "w3": "Teorii popsal Andrei Lubalin ve <report>své zprávě</report>, kód je otevřený na <code>GitHub</code>u. Pomozte ověřit teorii nebo se zapojte do práce na aplikaci."
+        "w3": "Teorii najdete ve <report>výzkumné zprávě</report>, kód je otevřený na <code>GitHub</code>u. Pomozte ověřit teorii nebo se zapojte do práce na aplikaci.",
+        "selectLink": "Zkopírujte odkaz z pole níže.",
+        "nowLive_one": "člověk má v síti známé",
+        "nowLive_few": "lidé mají v síti známé",
+        "nowLive_many": "lidí má v síti známé",
+        "nowLive_other": "lidí má v síti známé"
       },
       "faq": {
         "title": "Otázky",
@@ -874,7 +886,12 @@
         "q4": "Je to pyramidová hra?",
         "a4": "Ne. Nikdo neplatí za vstup a nikdo nevydělává na pozvánkách.",
         "q6": "Jaká data uchováváte?",
-        "a6": "Uchováváme údaje o účtu a profilu, například jméno, e-mail, identifikátory přihlašovací služby a údaje, které přidáte, třeba fotku, telefon či polohu. Dále uchováváme nastavení, jako je jazyk a motiv, historii pozvánek a spojení, nahlášené potřeby, účast i uvedené částky. Ukládáme také přihlašovací kódy, údaje pro oznámení a jejich historii i stížnosti a zprávy, které pošlete podpoře. Aplikace s penězi nenakládá a nežádá údaje o kartě ani bankovním účtu."
+        "data": {
+          "account": "Uchováváme údaje o účtu a profilu, například jméno, e-mail, identifikátory přihlašovací služby a údaje, které přidáte, třeba fotku, telefon či polohu.",
+          "activity": "Dále uchováváme nastavení, jako je jazyk a motiv, historii pozvánek a spojení, nahlášené potřeby, účast i uvedené částky.",
+          "notifications": "Ukládáme také přihlašovací kódy, údaje pro oznámení a jejich historii i stížnosti a zprávy, které pošlete podpoře.",
+          "money": "Aplikace s penězi nenakládá a nežádá údaje o kartě ani bankovním účtu."
+        }
       },
       "start": {
         "label": "Aplikace",
@@ -882,7 +899,7 @@
         "text": "V těžký den na to není čas ani síla.",
         "s1": "Otevřete odkaz od známého, nebo se přihlaste sami: přes Google, Apple, Telegram nebo kódem z e-mailu. Heslo nepotřebujete.",
         "s2": "Přidejte lidi, které znáte osobně: odkazem, QR kódem nebo protřepáním telefonů vedle sebe.",
-        "s3": "Nastavte svůj záměr: částku, kterou obvykle chcete dát, když je někomu v síti těžko.",
+        "s3": "Uveďte částku, kterou byste obvykle byli ochotni nabídnout jako svou účast, kdyby se někdo v síti ocitl v nesnázích.",
         "qr": "Namiřte sem fotoaparát telefonu a otevře se ten správný obchod.",
         "playTop": "Nyní na",
         "play": "Google Play",
@@ -902,7 +919,7 @@
   },
   "how": {
     "meta": {
-      "title": "Jak to funguje — Social Organizer",
+      "title": "Jak to funguje · Social Organizer",
       "description": "Budujete síť lidí, které znáte. Potřeba se dostane k tolika lidem v ní, kolik dolarů uvádí, a účastníci se domlouvají přímo. Stránka také porovnává Social Organizer s čínskými online platformami vzájemné pomoci."
     },
     "hero": {
@@ -929,17 +946,17 @@
       "title": "Cesta přes známé",
       "lead": "Potřeba se dostane k tolika lidem, kolik dolarů uvádí, nejdřív k nejbližším podle podání ruky. Vidíte jen potřeby, ke kterým vede cesta přes lidi, které znáte. Klepněte na člověka.",
       "says": [
-        "<b>Maria Koval</b> oznamuje potřebu. Vy ji neznáte.",
-        "<b>Oleg</b>, váš bratr, zná Marii. Proto její oznámení dostane on.",
-        "<b>Vy</b> oznámení dostanete, protože znáte Olega. O zapojení rozhodujete vy."
+        "<b>Jana</b> oznamuje potřebu. Vy ji neznáte.",
+        "<b>Tomáš</b>, váš bratr, zná Janu. Proto její oznámení dostane on.",
+        "<b>Vy</b> oznámení dostanete, protože znáte Tomáše. O zapojení rozhodujete vy."
       ]
     },
     "join": {
       "title": "Začíná to člověkem, kterého znáte",
       "lead": "Síť roste jen přes lidi, kteří se znají: někdo se připojí přes váš odkaz a vy známost potvrdíte.",
       "says": [
-        "Katya otevře váš odkaz a přihlásí se. <b>To ještě není spojení:</b> přijde vám push.",
-        "Potvrdíte: ano, známe se. <b>Teď je Katya vaše 1. podání ruky.</b>"
+        "Lucie otevře váš odkaz a přihlásí se. <b>To ještě není spojení:</b> přijde vám oznámení s žádostí o potvrzení, že se znáte.",
+        "Potvrdíte: ano, známe se. <b>Lucie teď patří mezi vaše přímé známé v síti.</b>"
       ]
     },
     "cta": {
@@ -949,29 +966,11 @@
     },
     "figures": {
       "net": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Vy",
-        "asker": "Maria",
         "chatTitle": "Chat účastníků",
-        "chatMembers": "Maria · Oleg · Lena",
         "aria": "Váš kruh"
       },
       "orbit": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Vy",
         "pills": [
           "1. · 6",
@@ -981,16 +980,13 @@
         "aria": "Okruhy podání ruky"
       },
       "chain": {
-        "asker": "Maria",
         "askerSub": "potřeba {{amount}}",
-        "mediator": "Oleg",
         "mediatorSub": "váš bratr",
         "you": "Vy",
         "youSub": "rozhodujete vy",
         "aria": "Cesta oznámení"
       },
       "join": {
-        "newcomer": "Katya",
         "newcomerSub": [
           "přišla přes odkaz",
           "1. podání ruky"
@@ -1149,7 +1145,7 @@
   },
   "press": {
     "meta": {
-      "title": "Pro média — Social Organizer",
+      "title": "Pro média · Social Organizer",
       "description": "Co je Social Organizer, kdo za ním stojí, hlavní fakta, logo a snímky obrazovky ke stažení a jak kontaktovat tým."
     },
     "hero": {
@@ -1357,7 +1353,7 @@
     "fullLine": "Potřebná částka je uvedena.",
     "takePart": "Zúčastnit se",
     "nextTitle": "Když se rozhodnete zúčastnit",
-    "next1": "Uvedete částku, kterou jste ochotni dát. Můžete začít od {{amount}}.",
+    "next1": "Uvedete částku, se kterou se chcete zapojit. Začít můžete od {{amount}}.",
     "next2": "Pokud je připojený odkaz na chat, můžete ho po zapojení otevřít.",
     "next3": "Pokud dojde na peníze, předáte je přímo autorovi potřeby. Tady nic neplatíte: Social Organizer peníze nepřijímá ani nepřevádí.",
     "signInTitle": "Přihlaste se a zúčastněte se této potřeby"
@@ -1485,19 +1481,9 @@
       "text": "Kdo se rozhodne zapojit, uvede svou částku a vstoupí do chatu. <b>Vše ostatní je mezi lidmi, mimo Social Organizer.</b>"
     },
     "figure": {
-      "names": [
-        "Kira",
-        "Oleg",
-        "Ira",
-        "Dima",
-        "Lena",
-        "Max"
-      ],
       "you": "Vy",
-      "asker": "Maria",
       "amount": "300 $",
       "chatTitle": "Chat účastníků",
-      "chatMembers": "Maria · Oleg · Lena",
       "aria": "Schéma kruhu"
     },
     "seed": {

@@ -720,8 +720,8 @@
         "signin": "Se connecter"
       },
       "hero": {
-        "title": "Votre cercle est plus grand que vous ne le pensez.",
-        "lead": "Social Organizer réunit des personnes qui se connaissent personnellement. Quand l’une d’elles est en difficulté, ses connaissances l’apprennent en premier, puis les leurs.",
+        "title": "Le monde est plus petit qu'on ne le pense.",
+        "lead": "Avec Social Organizer, vous créez un réseau avec des personnes que vous connaissez dans la vie. Quand l’une d’elles est en difficulté, ses connaissances l’apprennent en premier, puis les leurs.",
         "cta": "Créer mon réseau",
         "how": "Comment ça marche",
         "facts": "Gratuit · sans commission · <code>open source</code>"
@@ -783,10 +783,7 @@
           "9": "Application"
         },
         "tags": {
-          "you": "Vous",
-          "oleg": "Julien",
-          "maria": "Sophie · {{shortfall}}",
-          "lena": "Léa"
+          "you": "Vous"
         },
         "hud": {
           "reached_one": "est au courant du besoin",
@@ -796,12 +793,23 @@
           "people_one": "participant",
           "people_many": "de participants",
           "people_other": "participants"
+        },
+        "cast": {
+          "asker": "Sophie",
+          "mediator": "Julien",
+          "supporter": "Léa",
+          "newcomer": "Chloé",
+          "friend1": "Camille",
+          "friend2": "Thomas",
+          "friend3": "Julie",
+          "friend4": "Lucas"
         }
       },
       "app": {
         "title": "L’application elle-même",
         "example": "Exemple",
         "circle": "Votre Cercle : les personnes que vous connaissez et celles qu’elles connaissent. Le Besoin de Sophie vous parvient par Julien.",
+        "circleSubtitle": "Besoin · par Julien",
         "need": "Le Besoin de Sophie : vous indiquez votre part, et les participants s’organisent dans leur propre chat.",
         "add": "Tout commence ici : envoyez votre lien ou montrez votre QR aux personnes que vous connaissez en vrai."
       },
@@ -819,7 +827,7 @@
         "statWaves_many": "de vagues d’invitations",
         "statWaves_other": "vagues d’invitations",
         "dies": "La croissance s’est arrêtée",
-        "grows": "Le réseau grandit tout seul",
+        "grows": "Dans ce modèle, le réseau continue de grandir.",
         "full": "Le modèle est à court de nouvelles personnes",
         "restart": "Recommencer",
         "hint": "Touchez le modèle pour repartir d’une autre personne",
@@ -843,7 +851,6 @@
         "title": "Rejoignez l’expérience",
         "text": "L’application et la théorie existent. Reste à les mettre à l’épreuve dans la vraie vie, et pour cela il faut des gens.",
         "now": "personnes reliées entre elles dans le réseau au 13 novembre 2026",
-        "nowDate": "personnes reliées entre elles dans le réseau au {{date}}",
         "cta": "Écrire à l’équipe",
         "share": "Partager",
         "shared": "Lien copié",
@@ -853,7 +860,11 @@
         "w2Title": "Parlez du projet autour de vous",
         "w2": "Envoyez cette page à ceux que cela pourrait toucher, ou écrivez vous-même sur Social Organizer.",
         "w3Title": "Aidez à la recherche ou au code",
-        "w3": "La théorie est exposée dans le <report>rapport d’Andrei Lubalin</report>, et le code est ouvert sur <code>GitHub</code>. Aidez-nous à tester la théorie ou à développer l’application."
+        "w3": "La théorie est exposée dans le <report>rapport de recherche</report>, et le code est ouvert sur <code>GitHub</code>. Aidez-nous à tester la théorie ou à développer l’application.",
+        "selectLink": "Copiez le lien dans le champ ci-dessous.",
+        "nowLive_one": "personne reliée au réseau",
+        "nowLive_many": "personnes reliées au réseau",
+        "nowLive_other": "personnes reliées au réseau"
       },
       "faq": {
         "title": "Questions",
@@ -866,7 +877,12 @@
         "q4": "Est-ce un système pyramidal ?",
         "a4": "Non. Personne ne paie pour entrer et personne ne gagne d’argent grâce aux invitations.",
         "q6": "Quelles données conservez-vous ?",
-        "a6": "Nous conservons les données de compte et de profil, dont le nom, l’adresse e-mail, les identifiants du service de connexion et les informations ajoutées comme la photo, le numéro de téléphone ou la localisation. Nous conservons aussi les réglages (langue, thème), l’historique des invitations et des liens, les besoins signalés, la participation et les montants indiqués. Nous gardons également les codes de connexion, les données d’envoi et l’historique des notifications, ainsi que les signalements et messages envoyés à l’assistance. L’application ne manipule pas d’argent et ne demande aucune coordonnée bancaire ni donnée de carte."
+        "data": {
+          "account": "Nous conservons les données de compte et de profil, dont le nom, l’adresse e-mail, les identifiants du service de connexion et les informations ajoutées comme la photo, le numéro de téléphone ou la localisation.",
+          "activity": "Nous conservons aussi les réglages (langue, thème), l’historique des invitations et des liens, les besoins signalés, la participation et les montants indiqués.",
+          "notifications": "Nous gardons également les codes de connexion, les données d’envoi et l’historique des notifications, ainsi que les signalements et messages envoyés à l’assistance.",
+          "money": "L’application ne manipule pas d’argent et ne demande aucune coordonnée bancaire ni donnée de carte."
+        }
       },
       "start": {
         "label": "L’application",
@@ -874,7 +890,7 @@
         "text": "Un jour difficile, on n’a ni le temps ni l’énergie pour ça.",
         "s1": "Ouvrez le lien d’une personne que vous connaissez, ou connectez-vous vous-même avec Google, Apple, Telegram ou un code reçu par e-mail. Aucun mot de passe requis.",
         "s2": "Ajoutez les personnes que vous connaissez personnellement : avec un lien, un code QR ou en secouant vos téléphones côte à côte.",
-        "s3": "Indiquez votre intention : le montant que vous êtes en général prêt à donner quand quelqu’un du réseau est en difficulté.",
+        "s3": "Fixez votre intention : le montant que vous indiqueriez d’ordinaire si quelqu’un du réseau traversait une période difficile.",
         "qr": "Scannez ce code avec votre téléphone : la bonne boutique s’ouvrira.",
         "playTop": "Disponible sur",
         "play": "Google Play",
@@ -894,7 +910,7 @@
   },
   "how": {
     "meta": {
-      "title": "Fonctionnement — Social Organizer",
+      "title": "Fonctionnement · Social Organizer",
       "description": "Vous construisez un réseau de personnes que vous connaissez. Un besoin atteint autant de personnes de ce réseau que de dollars indiqués, et les participants se coordonnent directement. La page compare aussi Social Organizer avec les plateformes chinoises d’entraide en ligne."
     },
     "hero": {
@@ -921,17 +937,17 @@
       "title": "Un chemin de connaissances",
       "lead": "Un besoin atteint autant de personnes que de dollars indiqués, les plus proches par poignées de main d’abord. Vous ne voyez que les besoins qui ont un chemin jusqu’à vous par des personnes que vous connaissez. Touchez une personne.",
       "says": [
-        "<b>Maria Koval</b> annonce un besoin. Vous ne la connaissez pas.",
-        "<b>Oleg</b>, votre frère, connaît Maria. C’est pourquoi il reçoit son message.",
-        "<b>Vous</b> recevez le message parce que vous connaissez Oleg. C’est vous qui décidez de participer."
+        "<b>Sophie</b> annonce un besoin. Vous ne la connaissez pas.",
+        "<b>Julien</b>, votre frère, connaît Sophie. C’est pourquoi il reçoit son message.",
+        "<b>Vous</b> recevez le message parce que vous connaissez Julien. C’est vous qui décidez de participer."
       ]
     },
     "join": {
       "title": "Tout commence par une personne que vous connaissez",
       "lead": "Le réseau ne grandit que par des personnes qui se connaissent : quelqu’un le rejoint par votre lien, et vous confirmez la connaissance.",
       "says": [
-        "Katya ouvre votre lien et se connecte. <b>Ce n’est pas encore un lien :</b> vous recevez un push.",
-        "Vous confirmez : oui, nous nous connaissons. <b>Katya est maintenant votre 1re poignée de main.</b>"
+        "Chloé ouvre votre lien et se connecte. <b>Ce n’est pas encore un lien :</b> vous recevez une notification vous demandant de confirmer que vous la connaissez.",
+        "Vous confirmez : oui, nous nous connaissons. <b>Chloé fait désormais partie de vos contacts directs.</b>"
       ]
     },
     "cta": {
@@ -941,29 +957,11 @@
     },
     "figures": {
       "net": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Vous",
-        "asker": "Maria",
         "chatTitle": "Chat des participants",
-        "chatMembers": "Maria · Oleg · Lena",
         "aria": "Votre cercle"
       },
       "orbit": {
-        "names": [
-          "Kira",
-          "Oleg",
-          "Ira",
-          "Dima",
-          "Lena",
-          "Max"
-        ],
         "you": "Vous",
         "pills": [
           "1re · 6",
@@ -973,16 +971,13 @@
         "aria": "Anneaux de poignées de main"
       },
       "chain": {
-        "asker": "Maria",
         "askerSub": "a besoin de {{amount}}",
-        "mediator": "Oleg",
         "mediatorSub": "votre frère",
         "you": "Vous",
         "youSub": "vous décidez",
         "aria": "Chemin d’un message"
       },
       "join": {
-        "newcomer": "Katya",
         "newcomerSub": [
           "arrivée par le lien",
           "1re poignée de main"
@@ -1141,7 +1136,7 @@
   },
   "press": {
     "meta": {
-      "title": "Presse — Social Organizer",
+      "title": "Presse · Social Organizer",
       "description": "Ce qu’est Social Organizer, qui le fait, les faits essentiels, le logo et des captures d’écran à télécharger, et comment joindre l’équipe."
     },
     "hero": {
@@ -1349,7 +1344,7 @@
     "fullLine": "Le montant nécessaire est déclaré.",
     "takePart": "Participer",
     "nextTitle": "Si vous participez",
-    "next1": "Vous indiquez le montant que vous comptez donner. Vous pouvez commencer par {{amount}}.",
+    "next1": "Vous indiquez à quelle hauteur vous souhaitez participer. Vous pouvez commencer à {{amount}}.",
     "next2": "Si un lien de discussion a été ajouté, vous pourrez l’ouvrir après avoir participé.",
     "next3": "S’il est question d’argent, vous le remettez vous-même à la personne qui a publié le besoin. Ici, vous ne payez rien : Social Organizer ne reçoit ni ne transfère d’argent.",
     "signInTitle": "Connectez-vous pour participer à ce besoin"
@@ -1474,19 +1469,9 @@
       "text": "Celui qui décide de participer indique son montant et rejoint le chat. <b>Tout le reste se passe entre les personnes, en dehors de Social Organizer.</b>"
     },
     "figure": {
-      "names": [
-        "Kira",
-        "Oleg",
-        "Ira",
-        "Dima",
-        "Lena",
-        "Max"
-      ],
       "you": "Vous",
-      "asker": "Maria",
       "amount": "300 $",
       "chatTitle": "Chat des participants",
-      "chatMembers": "Maria · Oleg · Lena",
       "aria": "Schéma du cercle"
     },
     "seed": {
