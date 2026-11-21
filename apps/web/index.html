@@ -115,13 +115,6 @@
     </style>
   </head>
   <body>
-    <script>
-      // three.js reads GPUShaderStage.VERTEX without a fallback when WebGPU is missing
-      // (older Android WebView, iOS < 26) — the dashboard then crashes to a blank screen.
-      if (typeof self !== 'undefined' && !self.GPUShaderStage) {
-        self.GPUShaderStage = { VERTEX: 1, FRAGMENT: 2, COMPUTE: 4 };
-      }
-    </script>
     <div id="root">
       <div class="so-boot" role="status" aria-label="Social Organizer">
         <div class="so-boot-stage" aria-hidden="true">

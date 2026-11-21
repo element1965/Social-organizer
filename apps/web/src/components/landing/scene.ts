@@ -402,8 +402,12 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   }
 
   // ---- rendering ----
+  // Keep the authored antialiasing; actual frame cadence is a better signal than device specs.
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
+  const maxDpr = Math.min(devicePixelRatio || 1, 1.5);
+  const dprSteps = [maxDpr, ...[1.25, 1].filter((dpr) => dpr < maxDpr)];
+  let qualityStep = 0;
+  let sceneDirty = true;
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const fog = new THREE.Fog(0x6c7f86, 40, 200);
@@ -529,7 +533,10 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   };
   drawTile(null);
   const logo = new Image();
-  logo.onload = () => drawTile(logo);
+  logo.onload = () => {
+    drawTile(logo);
+    sceneDirty = true;
+  };
   logo.src = '/logo.png';
 
   const haloMat = new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false });
@@ -829,13 +836,29 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   };
 
   // ---- scroll → page time (beat index + progress) → scene time (phase index + progress) ----
+  let beatBounds: { top: number; height: number }[] = [];
+  let layoutDirty = true;
+  const invalidateLayout = () => {
+    layoutDirty = sceneDirty = true;
+  };
+  const layoutObserver = new ResizeObserver(invalidateLayout);
+  layoutObserver.observe(story);
+  for (const beat of beats) layoutObserver.observe(beat);
   const storyT = () => {
+    const y = scrollY;
+    if (layoutDirty) {
+      beatBounds = beats.map((el) => {
+        const { top, height } = el.getBoundingClientRect();
+        return { top: top + y, height };
+      });
+      layoutDirty = false;
+    }
     const mid = innerHeight * 0.5;
     let t = 0;
-    beats.forEach((el, k) => {
-      const r = el.getBoundingClientRect();
-      if (k === 0) t = clamp((mid - r.top) / (r.height * 0.5) - 1, 0, 1);
-      else if (r.top <= mid) t = k + clamp((mid - r.top) / r.height);
+    beatBounds.forEach(({ top, height }, k) => {
+      const dy = mid - (top - y);
+      if (k === 0) t = clamp(dy / (height * 0.5) - 1, 0, 1);
+      else if (dy >= 0) t = k + clamp(dy / height);
     });
     return t;
   };
@@ -1177,6 +1200,12 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const v3 = new THREE.Vector3();
   /** Where Oleg's label was put this frame: Maria's goes to the side away from it. */
   let olegX = -1;
+  let mariaWidth = els.tags.maria.offsetWidth;
+  const tagsObserver = new ResizeObserver(() => {
+    mariaWidth = els.tags.maria.offsetWidth;
+    sceneDirty = true;
+  });
+  tagsObserver.observe(els.tags.maria, { box: 'border-box' });
   const tagAt = (el: HTMLElement, i: number, on: boolean | undefined) => {
     if (el === els.tags.oleg) olegX = -1;
     if (!on) {
@@ -1195,37 +1224,44 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       // her label sits beside the dot: in the graph on the side away from Oleg's, and wherever it would leave
       // the screen, on the other side (the story's pill is on the right; the graph's label starts on the left in
       // a right-to-left page)
-      const w = el.offsetWidth + 20;
+      const w = mariaWidth + 20;
       const startLeft = opts.rtl && graphOn;
       let left = graphOn && olegX >= 0 ? x < olegX : startLeft;
       if (left && x - w < 8) left = false;
       else if (!left && x + w > innerWidth - 8) left = true;
       el.classList.toggle('flip', left !== startLeft);
     }
-    el.style.left = `${x}px`;
-    el.style.top = `${y}px`;
+    // Composes with the label's CSS transform, which supplies its side and alignment.
+    el.style.translate = `${x}px ${y}px 0px`;
     el.classList.add('on');
   };
-  const resize = () => {
-    renderer.setSize(innerWidth, innerHeight, false);
-    camera.aspect = innerWidth / innerHeight;
-    camera.updateProjectionMatrix();
-    thinMat.resolution.set(innerWidth, innerHeight);
-    thickMat.resolution.set(innerWidth, innerHeight);
+  const sizeBuffer = () => {
+    const pr = dprSteps[qualityStep]!;
+    renderer.setDrawingBufferSize(innerWidth, innerHeight, pr);
     // a dot of size s at distance z is s * uScale / z device pixels tall
-    const pr = renderer.getPixelRatio();
     dotMat.uniforms.uScale!.value = (innerHeight * pr * 0.5) / Math.tan((camera.fov * Math.PI) / 360);
     dotMat.uniforms.uMax!.value = 12 * pr;
     dotMat.uniforms.uMin!.value = 1.6 * pr;
   };
+  const resize = () => {
+    sizeBuffer();
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    thinMat.resolution.set(innerWidth, innerHeight);
+    thickMat.resolution.set(innerWidth, innerHeight);
+    invalidateLayout();
+  };
+  const onContextRestored = () => { sceneDirty = true; };
   resize();
   addEventListener('resize', resize);
+  canvas.addEventListener('webglcontextrestored', onContextRestored);
 
   let visible = true;
   const io = new IntersectionObserver((entries) => {
     const e = entries[0];
     if (!e) return;
     visible = e.isIntersecting;
+    if (visible) sceneDirty = true;
     els.root.classList.toggle('past', !e.isIntersecting && e.boundingClientRect.top < 0);
   });
   io.observe(story);
@@ -1408,13 +1444,62 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   };
 
   let raf = 0;
+  let frameAvg = 16.7;
+  let qualitySince = 0;
+  let qualityDirection = 0;
+  let wasRendering = false;
+  const resetFrameSampling = () => { wasRendering = false; };
+  document.addEventListener('visibilitychange', resetFrameSampling);
+  const adaptResolution = (now: number, elapsed: number) => {
+    // An isolated long frame cannot start a downgrade. Require sustained pressure,
+    // and give a lower tier a much longer run of smooth frames before recovering.
+    frameAvg += (Math.min(elapsed, 100) - frameAvg) * 0.05;
+    const direction = frameAvg > 24 && qualityStep < dprSteps.length - 1 ? 1
+      : frameAvg < 20 && qualityStep > 0 ? -1 : 0;
+    if (direction !== qualityDirection) {
+      qualityDirection = direction;
+      qualitySince = now;
+    }
+    if (direction && now - qualitySince >= (direction > 0 ? 1500 : 10000)) {
+      qualityStep += direction;
+      sizeBuffer();
+      frameAvg = 16.7;
+      qualityDirection = 0;
+    }
+  };
+  let stillTime = 0;
+  let stillFrames = 0;
   const frame = (now: number) => {
     raf = requestAnimationFrame(frame);
     // the first frame's timestamp can precede the end of the setup above: no negative step
-    const dt = clamp((now - last) / 1000, 0, 0.05);
+    const elapsed = now - last;
+    const dt = clamp(elapsed / 1000, 0, 0.05);
     last = now;
-    if (!visible || document.hidden) return;
-    tick(dt, storyT());
+    if (!visible || document.hidden) {
+      wasRendering = false;
+      return;
+    }
+    if (!reduce && introDone && dprSteps.length > 1) {
+      if (wasRendering) adaptResolution(now, elapsed);
+      else {
+        frameAvg = 16.7;
+        qualityDirection = 0;
+        wasRendering = true;
+      }
+    }
+    const target = storyT();
+    if (reduce) {
+      if (!introDone || sceneDirty || target !== tD) {
+        stillTime = stillFrames = 0;
+      } else {
+        // The camera damps by elapsed time, colours and sizes by frame count.
+        if (stillTime >= 4 && stillFrames >= 60) return;
+        stillTime += dt;
+        stillFrames++;
+      }
+    }
+    sceneDirty = false;
+    tick(dt, target);
   };
   raf = requestAnimationFrame(frame);
   // the late words take their state now, before the page marks the scene ready, not a frame later
@@ -1464,10 +1549,15 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       if (next.money.shortfall !== opts.money.shortfall || next.money.mine !== opts.money.mine) setMoney(next.money);
       opts = next;
       lastHud = '';
+      invalidateLayout();
     },
     destroy() {
       cancelAnimationFrame(raf);
       removeEventListener('resize', resize);
+      canvas.removeEventListener('webglcontextrestored', onContextRestored);
+      document.removeEventListener('visibilitychange', resetFrameSampling);
+      layoutObserver.disconnect();
+      tagsObserver.disconnect();
       io.disconnect();
       logo.onload = null;
       els.root.classList.remove('past', 'graph');

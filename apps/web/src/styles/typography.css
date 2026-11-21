@@ -68,7 +68,7 @@ body {
   to { transform: rotate(360deg); }
 }
 
-.so-event-in { animation: so-event-in 400ms cubic-bezier(0.22, 0.8, 0.24, 1) both; }
+.so-event-in { animation: so-event-in 400ms cubic-bezier(0.22, 0.8, 0.24, 1) backwards; }
 .so-banner-in { animation: so-banner-in 420ms cubic-bezier(0.22, 0.8, 0.24, 1) both; }
 .so-sheet-in { animation: so-sheet-in 320ms cubic-bezier(0.22, 0.8, 0.24, 1) both; }
 .so-spin { animation: so-spin 0.8s linear infinite; }
