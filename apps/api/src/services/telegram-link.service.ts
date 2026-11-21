@@ -168,7 +168,7 @@ export async function linkTelegramByCode(
       data: { userId: target.id, accessToken: initData },
     });
     await db.user.delete({ where: { id: duplicateId } }).catch(async () => {
-      await db.user.update({ where: { id: duplicateId }, data: { deletedAt: new Date() } }).catch(() => {});
+      await db.user.update({ where: { id: duplicateId }, data: { deletedAt: new Date(), budgetUpdatedAt: new Date() } }).catch(() => {});
     });
     invalidateGraph([duplicateId]);
     console.log('[telegram-link] merged empty duplicate', duplicateId, 'into', target.id);

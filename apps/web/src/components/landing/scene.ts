@@ -1177,6 +1177,24 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const v3 = new THREE.Vector3();
   /** Where Oleg's label was put this frame: Maria's goes to the side away from it. */
   let olegX = -1;
+  /**
+   * Maria's label width (offsetWidth + 20), read once and then only when the label's box changes: its text or
+   * the language, the graph's own type, a font that finished loading, a new viewport. Reading it in the frame
+   * would force a layout every frame. The observer runs right after layout, so a frame sees the width the
+   * previous frame laid out, as the in-frame read did for a class switched after the tags.
+   */
+  let mariaW = els.tags.maria.offsetWidth + 20;
+  const mariaRO = typeof ResizeObserver === 'undefined'
+    ? null
+    : new ResizeObserver(() => { mariaW = els.tags.maria.offsetWidth + 20; });
+  mariaRO?.observe(els.tags.maria);
+  /**
+   * Tags are placed with the `translate` property, which adds to the anchor each tag's class sets in
+   * `transform` (landing.css), so the placement is the same as with left/top, without a layout per frame.
+   * Older engines without it keep left/top. A tag that did not move is not written again.
+   */
+  const useTranslate = typeof CSS !== 'undefined' && CSS.supports('translate', '1px 1px');
+  const tagPos = new Map<HTMLElement, string>();
   const tagAt = (el: HTMLElement, i: number, on: boolean | undefined) => {
     if (el === els.tags.oleg) olegX = -1;
     if (!on) {
@@ -1195,15 +1213,22 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       // her label sits beside the dot: in the graph on the side away from Oleg's, and wherever it would leave
       // the screen, on the other side (the story's pill is on the right; the graph's label starts on the left in
       // a right-to-left page)
-      const w = el.offsetWidth + 20;
+      const w = mariaRO ? mariaW : el.offsetWidth + 20;
       const startLeft = opts.rtl && graphOn;
       let left = graphOn && olegX >= 0 ? x < olegX : startLeft;
       if (left && x - w < 8) left = false;
       else if (!left && x + w > innerWidth - 8) left = true;
       el.classList.toggle('flip', left !== startLeft);
     }
-    el.style.left = `${x}px`;
-    el.style.top = `${y}px`;
+    const pos = `${x}px ${y}px`;
+    if (tagPos.get(el) !== pos) {
+      tagPos.set(el, pos);
+      if (useTranslate) el.style.translate = pos;
+      else {
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+      }
+    }
     el.classList.add('on');
   };
   const resize = () => {
@@ -1219,7 +1244,12 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     dotMat.uniforms.uMin!.value = 1.6 * pr;
   };
   resize();
-  addEventListener('resize', resize);
+  /** A resize is applied once, at the start of the next frame, before that frame is drawn. */
+  let resizePending = false;
+  const onResize = () => {
+    resizePending = true;
+  };
+  addEventListener('resize', onResize);
 
   let visible = true;
   const io = new IntersectionObserver((entries) => {
@@ -1410,6 +1440,10 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   let raf = 0;
   const frame = (now: number) => {
     raf = requestAnimationFrame(frame);
+    if (resizePending) {
+      resizePending = false;
+      resize();
+    }
     // the first frame's timestamp can precede the end of the setup above: no negative step
     const dt = clamp((now - last) / 1000, 0, 0.05);
     last = now;
@@ -1467,8 +1501,9 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     },
     destroy() {
       cancelAnimationFrame(raf);
-      removeEventListener('resize', resize);
+      removeEventListener('resize', onResize);
       io.disconnect();
+      mariaRO?.disconnect();
       logo.onload = null;
       els.root.classList.remove('past', 'graph');
       canvas.style.opacity = '';

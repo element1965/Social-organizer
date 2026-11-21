@@ -64,8 +64,10 @@ export function publicFigure(reach: NetworkReach): {
  * Remaining budgets of everyone who set one. Read in full once, then kept up to date from the rows that
  * changed: a sum over a reach is a loop over an array indexed by the person's number in the graph, with
  * no query per walk and no list of ids sent to the database.
- * - every BUDGET_SYNC_MS: accounts whose row changed since the last look (a budget is always changed
- *   through an ordinary update, which moves `updatedAt`);
+ * - every BUDGET_SYNC_MS: accounts whose `budgetUpdatedAt` moved since the last look. Every write that
+ *   changes what a person can give sets it: a new account, setMonthlyBudget, a soft deletion (by the
+ *   person or by the bot), the restore of a muted account. `updatedAt` is not used: the activity
+ *   heartbeat moves it for everyone who was active in the last minute;
  * - at once: people named by a graph invalidation (a newcomer's budget counts in their inviter's number
  *   on the next request) and people who just changed their own budget (`noteBudgetChanged`);
  * - every BUDGET_FULL_MS: everything again, as a safety net.
@@ -129,10 +131,11 @@ async function syncBudgets(db: PrismaClient): Promise<void> {
     budgetDirty.clear();
     return;
   }
+  // Incremental sync assumes all writers stamp budgetUpdatedAt, backed by the 30-minute full reload.
   if (now - budgetSyncedAt >= BUDGET_SYNC_MS) {
     const since = new Date(budgetSyncedAt - BUDGET_OVERLAP_MS);
     const rows = await db.user.findMany({
-      where: { updatedAt: { gte: since } },
+      where: { budgetUpdatedAt: { gte: since } },
       select: { id: true, remainingBudget: true, deletedAt: true },
     });
     for (const r of rows) applyBudget(r.id, r.remainingBudget, r.deletedAt != null);

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { REGULAR_CYCLE_DAYS } from '@so/shared';
 import { trpc } from '../lib/trpc';
+import { CIRCLE_STALE_MS } from '../lib/circleLists';
 import { useAuth } from './useAuth';
 import { useAcceptedRecent } from './useAcceptedRecent';
 import { formatMoney } from '../components/ui2/format';
@@ -151,14 +152,16 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
   const myId = useAuth((s) => s.userId);
   const name = options.displayName ?? ((_id: string, fallback: string) => fallback);
 
-  // No timers here: the shell's pulse (hooks/usePulse.ts) re-reads each list when its part of the pulse changes
-  const unread = trpc.notification.unreadCount.useQuery();
-  const notifications = trpc.notification.list.useQuery({ limit: 100 });
-  const incoming = trpc.pending.incoming.useQuery();
-  const outgoing = trpc.pending.myPending.useQuery();
-  const participating = trpc.collection.myParticipating.useQuery();
-  const mine = trpc.collection.myActive.useQuery();
-  const milestones = trpc.milestone.list.useQuery();
+  // No timers here: the shell's pulse (hooks/usePulse.ts) re-reads each list when its part of the pulse changes.
+  // A return to the Circle within CIRCLE_STALE_MS shows them from memory (lib/circleLists.ts).
+  const fresh = { staleTime: CIRCLE_STALE_MS };
+  const unread = trpc.notification.unreadCount.useQuery(undefined, fresh);
+  const notifications = trpc.notification.list.useQuery({ limit: 100 }, fresh);
+  const incoming = trpc.pending.incoming.useQuery(undefined, fresh);
+  const outgoing = trpc.pending.myPending.useQuery(undefined, fresh);
+  const participating = trpc.collection.myParticipating.useQuery(undefined, fresh);
+  const mine = trpc.collection.myActive.useQuery(undefined, fresh);
+  const milestones = trpc.milestone.list.useQuery(undefined, fresh);
   const accepted = useAcceptedRecent();
 
   const dateFmt = useMemo(

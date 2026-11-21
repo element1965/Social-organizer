@@ -28,6 +28,8 @@ export async function restoreMutedAccount(
     where: { id: userId },
     data: {
       deletedAt: null,
+      // Their kept budget counts again; the network's budget sync reads this column
+      budgetUpdatedAt: new Date(),
       name,
       ...(profile.photoUrl && !user.photoUrl ? { photoUrl: profile.photoUrl } : {}),
     },

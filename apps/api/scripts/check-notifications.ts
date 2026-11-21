@@ -80,7 +80,7 @@ async function main() {
   // D: nothing linked. E: Telegram. G: newcomer with Telegram.
   const people = ['a', 'b', 'c', 'd', 'e', 'g'];
   await db.user.createMany({
-    data: people.map((p) => ({ id: id(p), name: `Person ${p.toUpperCase()}`, language: 'en', onboardingCompleted: true, monthlyBudget: 50, remainingBudget: 50 }) as any),
+    data: people.map((p) => ({ id: id(p), name: `Person ${p.toUpperCase()}`, language: 'en', onboardingCompleted: true, monthlyBudget: 50, remainingBudget: 50, budgetUpdatedAt: new Date() }) as any),
   });
   // A regular author with 10 confirmed connections (b, c, d, e + 6 more without any channel)
   await db.user.createMany({ data: Array.from({ length: 6 }, (_, i) => ({ id: id(`f${i}`), name: `Filler ${i}`, language: 'en' })) });

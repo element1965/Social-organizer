@@ -77,6 +77,7 @@ try {
       id: id(p),
       name: p === 'x7' ? 'RP Zelda Needle' : p === 'y2' ? 'RP needle_y' : p === 'z3' ? 'RP NEEDLE z' : nameOf(p, i),
       remainingBudget: i % 4 === 0 ? null : (i % 5) * 10,
+      budgetUpdatedAt: i % 4 === 0 ? null : new Date(),
       deletedAt: p.startsWith('gone') ? new Date() : null,
     })),
   });
