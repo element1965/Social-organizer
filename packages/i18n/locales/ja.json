@@ -1386,7 +1386,7 @@
     "chatHow": "チャットの作り方",
     "chatError": "チャットが必要です。参加を知らせた人がそこに集まります。",
     "chatInvalid": "リンクは https:// で始まる必要があります",
-    "reach_other": "あなたに近い人から順に、最大{{people}}人のスマートフォンに通知が届く場合があります。",
+    "reach_other": "投稿すると、あなたに近い人から順に、最大{{people}}人のスマートフォンにプッシュ通知またはTelegramの通知が届く場合があります。",
     "reachNetwork_other": "ネットワークの人数：{{people}}人",
     "submit": "ニーズを知らせる",
     "seeHowToUnlock": "利用条件を見る",

@@ -1386,7 +1386,7 @@
     "chatHow": "怎么创建聊天？",
     "chatError": "需要一个聊天：告知参与的人会聚在那里。",
     "chatInvalid": "链接必须以 https:// 开头",
-    "reach_other": "最多 {{people}} 人可能在手机上收到通知，与你关系最近的人优先。",
+    "reach_other": "发布时，最多有 {{people}} 人可能在手机上收到推送通知或 Telegram 消息，优先通知与你关系最近的人。",
     "reachNetwork_other": "你的关系网中有 {{people}} 人",
     "submit": "告知需求",
     "seeHowToUnlock": "查看如何解锁",

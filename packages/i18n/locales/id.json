@@ -1386,7 +1386,7 @@
     "chatHow": "Bagaimana cara membuat chat?",
     "chatError": "Chat wajib ada: orang yang menyampaikan partisipasi berkumpul di sana.",
     "chatInvalid": "Tautan harus diawali https://",
-    "reach_other": "Hingga {{people}} orang bisa menerima notifikasi di ponsel, dimulai dari orang-orang terdekat Anda.",
+    "reach_other": "Saat Anda memublikasikan kebutuhan, hingga {{people}} orang bisa menerima notifikasi push atau pesan Telegram di ponsel, dimulai dari orang-orang terdekat Anda.",
     "reachNetwork_other": "{{people}} orang di jaringan Anda",
     "submit": "Sampaikan kebutuhan",
     "seeHowToUnlock": "Lihat cara membuka akses",

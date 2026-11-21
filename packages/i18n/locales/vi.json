@@ -1386,7 +1386,7 @@
     "chatHow": "Làm sao tạo chat?",
     "chatError": "Cần một chat: những người thông báo tham gia sẽ tập trung ở đó.",
     "chatInvalid": "Liên kết phải bắt đầu bằng https://",
-    "reach_other": "Tối đa {{people}} người có thể nhận thông báo trên điện thoại, ưu tiên những người thân cận nhất với bạn.",
+    "reach_other": "Ngay khi bạn đăng, tối đa {{people}} người có thể nhận thông báo đẩy hoặc tin nhắn Telegram trên điện thoại, ưu tiên những người thân cận nhất với bạn.",
     "reachNetwork_other": "Mạng lưới của bạn có {{people}} người",
     "submit": "Thông báo nhu cầu",
     "seeHowToUnlock": "Xem cách mở quyền truy cập",
