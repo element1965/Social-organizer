@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { tgEscape } from './tg-html.js';
 import { getDb } from '@so/db';
 import { groupNumber } from '@so/shared';
+import { SUPPORTED_LANGUAGES, resources } from '@so/i18n';
 import { translateWithCache } from './translate.service.js';
 import { isRetiredChainMessage } from './mvp-scope.js';
 import { touchTelegramUser } from './activity.service.js';
@@ -606,11 +607,38 @@ export async function sendCollectionNotificationTg(
 
 // Bot /start message translations for all 27 supported languages
 const SITE = WEB_APP_URL.replace(/\/$/, '') + '/';
+/**
+ * The landing in the reader's language. The language in the address also gives Telegram a fresh link preview:
+ * it keeps the preview of an address for a long time, and the bare address still showed the old English card.
+ */
+function siteFor(lang: string): string {
+  return `${SITE}?lang=${(SUPPORTED_LANGUAGES as readonly string[]).includes(lang) ? lang : 'en'}`;
+}
 interface BotLocale {
-  invite: (name: string, inviterName: string, stats: InviteStats | null) => string;
+  invite: (name: string, inviterName: string, stats: InviteStats | null, lang: string) => string;
   acceptBtn: string;
-  welcome: (name: string) => string;
+  welcome: (name: string, lang: string) => string;
+  /** The inviter opened their own invite link: the app's "This is your link" words (invite.ownTitle/ownText). */
+  own: (name: string, lang: string) => string;
   openBtn: string;
+}
+
+type OwnLinkWords = { invite?: { ownTitle?: string; ownText?: string } };
+/** The app's own-link words in a language, English when missing, escaped for Telegram HTML. */
+function ownLinkWords(lang: string): { title: string; text: string } {
+  const en = (resources.en as OwnLinkWords).invite ?? {};
+  const loc = ((resources as Record<string, OwnLinkWords>)[lang] ?? {}).invite ?? {};
+  return { title: tgEscape(loc.ownTitle ?? en.ownTitle ?? ''), text: tgEscape(loc.ownText ?? en.ownText ?? '') };
+}
+
+/** The account a Telegram user signed in with, or null. */
+async function accountOfTelegramUser(telegramId: number | undefined): Promise<string | null> {
+  if (telegramId === undefined) return null;
+  const account = await getDb().platformAccount.findFirst({
+    where: { platform: 'TELEGRAM', platformId: String(telegramId) },
+    select: { userId: true },
+  });
+  return account?.userId ?? null;
 }
 
 /** Puts values into a template; a function replacer, so a "$" in a name is never read as a pattern */
@@ -627,16 +655,20 @@ function makeBotLocale(
 ): BotLocale {
   const hello = (name: string) =>
     `👋 ${name ? name + ', ' + welcomeWord : welcomeWord.charAt(0).toUpperCase() + welcomeWord.slice(1)} <b>Social Organizer</b>!`;
-  const more = `🌐 <a href="${SITE}">${learnMore}</a>`;
+  const more = (lang: string) => `🌐 <a href="${siteFor(lang)}">${learnMore}</a>`;
   return {
-    invite: (name, inviterName, stats) => {
+    invite: (name, inviterName, stats, lang) => {
       const line = stats
         ? fill(text.invite, { inv: inviterName, p: groupDigits(stats.people), usd: `${groupDigits(stats.declaredUsd)}\u00a0$` })
         : fill(text.inviteNoStats, { inv: inviterName });
-      return `${hello(name)}\n\n${line}\n\n${more}`;
+      return `${hello(name)}\n\n${line}\n\n${more(lang)}`;
     },
     acceptBtn: `🤝 ${acceptBtn}`,
-    welcome: (name) => `${hello(name)}\n\n${text.welcome}\n\n${more}`,
+    welcome: (name, lang) => `${hello(name)}\n\n${text.welcome}\n\n${more(lang)}`,
+    own: (name, lang) => {
+      const words = ownLinkWords(lang);
+      return `${hello(name)}\n\n<b>${words.title}</b>\n${words.text}\n\n${more(lang)}`;
+    },
     openBtn: `📱 ${openBtn}`,
   };
 }
@@ -1132,10 +1164,19 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
 
       // The inviter and their network, in the same numbers their Profile shows
       const inviter = await findInviter(inviteToken).catch(() => null);
+
+      // The inviter opened their own link (to see what people get): say whose link it is, never invite them to it
+      if (inviter && (await accountOfTelegramUser(msg.from?.id).catch(() => null)) === inviter.id) {
+        await sendTelegramMessage(chatId, loc.own(tgEscape(name), lang), {
+          inline_keyboard: [[{ text: loc.openBtn, web_app: { url: webAppUrl } }]],
+        });
+        return;
+      }
+
       const stats = inviter ? await inviterNetworkStats(inviter.id).catch(() => null) : null;
       const inviterName = inviter?.name || 'Someone';
 
-      await sendTelegramMessage(chatId, loc.invite(tgEscape(name), tgEscape(inviterName), stats), {
+      await sendTelegramMessage(chatId, loc.invite(tgEscape(name), tgEscape(inviterName), stats, lang), {
         inline_keyboard: [[{ text: loc.acceptBtn, web_app: { url: webAppUrl } }]],
       });
 
@@ -1222,7 +1263,7 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
     }
 
     // Plain /start — open the app + link to landing
-    await sendTelegramMessage(chatId, loc.welcome(tgEscape(name)), {
+    await sendTelegramMessage(chatId, loc.welcome(tgEscape(name), lang), {
       inline_keyboard: [[{ text: loc.openBtn, web_app: { url: WEB_APP_URL } }]],
     });
 

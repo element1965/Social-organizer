@@ -8,6 +8,8 @@ All notable changes to Social Organizer are documented here. The format follows 
 
 - The landing's starlings fly into the opening screen soon after it loads instead of popping in once the visitor scrolls; opened at a later section or with reduced motion, the scene fades in.
 - "Continue with Google" on a computer opens Google's account chooser on the first click. Before, the button was replaced by Google's own button, which had to be clicked again.
+- The Telegram bot no longer invites people to their own network when they open their own invite link; it says it is their link, as the app does.
+- "Learn more" in the bot's welcome and invite messages opens the landing in the reader's language, with a current link preview instead of an old English card.
 - Chrome on Android no longer offers to install the website as an app; the site's manifest points to the Social Organizer app on Google Play instead.
 
 ## [1.0.0] - 2026-11-20
