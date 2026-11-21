@@ -11,6 +11,14 @@ import * as THREE from 'three';
 import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
 import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
+import {
+  CADENCE_SAMPLES,
+  RESOLUTION_WINDOW_MS,
+  createResolutionState,
+  measureCadence,
+  resetResolution,
+  updateResolution,
+} from './adaptive-resolution';
 
 export interface SceneElements {
   /** The landing root; gets `past` once the story has scrolled away and `graph` while the graph is shown. */
@@ -56,6 +64,7 @@ export interface SceneIntro {
    * when the page was opened at a later section (it may still be scrolling there): then the scene only fades in.
    */
   flyIn?: boolean;
+  cadenceFrames?: readonly number[]; // rAF intervals measured before the scene draws
 }
 
 interface Shot {
@@ -406,7 +415,9 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   const maxDpr = Math.min(devicePixelRatio || 1, 1.5);
   const dprSteps = [maxDpr, ...[1.25, 1].filter((dpr) => dpr < maxDpr)];
-  let qualityStep = 0;
+  const adaptive = !reduce && dprSteps.length > 1;
+  const cadenceFrames = intro.cadenceFrames ?? [];
+  let quality = adaptive && cadenceFrames.length >= 5 ? createResolutionState(measureCadence(cadenceFrames)) : null;
   let sceneDirty = true;
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
@@ -1206,6 +1217,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     sceneDirty = true;
   });
   tagsObserver.observe(els.tags.maria, { box: 'border-box' });
+  const supportsTagTranslate = typeof CSS !== 'undefined' && CSS.supports?.('translate', '1px 1px');
   const tagAt = (el: HTMLElement, i: number, on: boolean | undefined) => {
     if (el === els.tags.oleg) olegX = -1;
     if (!on) {
@@ -1232,18 +1244,41 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       el.classList.toggle('flip', left !== startLeft);
     }
     // Composes with the label's CSS transform, which supplies its side and alignment.
-    el.style.translate = `${x}px ${y}px 0px`;
+    if (supportsTagTranslate) el.style.translate = `${x}px ${y}px 0px`;
+    else {
+      el.style.left = `${x}px`;
+      el.style.top = `${y}px`;
+    }
     el.classList.add('on');
   };
   const sizeBuffer = () => {
-    const pr = dprSteps[qualityStep]!;
+    const pr = dprSteps[quality?.tier ?? 0]!;
     renderer.setDrawingBufferSize(innerWidth, innerHeight, pr);
     // a dot of size s at distance z is s * uScale / z device pixels tall
     dotMat.uniforms.uScale!.value = (innerHeight * pr * 0.5) / Math.tan((camera.fov * Math.PI) / 360);
     dotMat.uniforms.uMax!.value = 12 * pr;
     dotMat.uniforms.uMin!.value = 1.6 * pr;
   };
+  const frameSamples: number[] = [];
+  let sampleMs = 0;
+  let wasRendering = false;
+  const clearFrameWindow = () => {
+    sampleMs = 0;
+    frameSamples.length = 0;
+  };
+  const resetFrameSampling = () => {
+    wasRendering = false;
+    clearFrameWindow();
+    if (quality) quality = resetResolution(quality);
+  };
+  const onVisibilityChange = () => {
+    if (document.hidden) return;
+    const previousTier = quality?.tier;
+    resetFrameSampling();
+    if (quality?.tier !== previousTier) sizeBuffer();
+  };
   const resize = () => {
+    resetFrameSampling();
     sizeBuffer();
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
@@ -1254,6 +1289,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const onContextRestored = () => { sceneDirty = true; };
   resize();
   addEventListener('resize', resize);
+  document.addEventListener('visibilitychange', onVisibilityChange);
   canvas.addEventListener('webglcontextrestored', onContextRestored);
 
   let visible = true;
@@ -1444,28 +1480,24 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   };
 
   let raf = 0;
-  let frameAvg = 16.7;
-  let qualitySince = 0;
-  let qualityDirection = 0;
-  let wasRendering = false;
-  const resetFrameSampling = () => { wasRendering = false; };
-  document.addEventListener('visibilitychange', resetFrameSampling);
   const adaptResolution = (now: number, elapsed: number) => {
-    // An isolated long frame cannot start a downgrade. Require sustained pressure,
-    // and give a lower tier a much longer run of smooth frames before recovering.
-    frameAvg += (Math.min(elapsed, 100) - frameAvg) * 0.05;
-    const direction = frameAvg > 24 && qualityStep < dprSteps.length - 1 ? 1
-      : frameAvg < 20 && qualityStep > 0 ? -1 : 0;
-    if (direction !== qualityDirection) {
-      qualityDirection = direction;
-      qualitySince = now;
+    if (!quality) {
+      // A warm cache can load the module before the unloaded sample finishes.
+      frameSamples.push(elapsed);
+      if (frameSamples.length === CADENCE_SAMPLES) {
+        quality = createResolutionState(measureCadence(frameSamples));
+        clearFrameWindow();
+      }
+      return;
     }
-    if (direction && now - qualitySince >= (direction > 0 ? 1500 : 10000)) {
-      qualityStep += direction;
-      sizeBuffer();
-      frameAvg = 16.7;
-      qualityDirection = 0;
-    }
+    if (!introDone) return;
+    frameSamples.push(elapsed);
+    sampleMs += elapsed;
+    if (sampleMs < RESOLUTION_WINDOW_MS || frameSamples.length < 12) return;
+    const previousTier = quality.tier;
+    quality = updateResolution(quality, frameSamples, now, dprSteps.length - 1);
+    if (quality.tier !== previousTier) sizeBuffer();
+    clearFrameWindow();
   };
   let stillTime = 0;
   let stillFrames = 0;
@@ -1476,16 +1508,13 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     const dt = clamp(elapsed / 1000, 0, 0.05);
     last = now;
     if (!visible || document.hidden) {
+      if (wasRendering) clearFrameWindow();
       wasRendering = false;
       return;
     }
-    if (!reduce && introDone && dprSteps.length > 1) {
-      if (wasRendering) adaptResolution(now, elapsed);
-      else {
-        frameAvg = 16.7;
-        qualityDirection = 0;
-        wasRendering = true;
-      }
+    if (adaptive) {
+      if (wasRendering && elapsed > 0) adaptResolution(now, elapsed);
+      wasRendering = true;
     }
     const target = storyT();
     if (reduce) {
@@ -1555,7 +1584,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       cancelAnimationFrame(raf);
       removeEventListener('resize', resize);
       canvas.removeEventListener('webglcontextrestored', onContextRestored);
-      document.removeEventListener('visibilitychange', resetFrameSampling);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       layoutObserver.disconnect();
       tagsObserver.disconnect();
       io.disconnect();

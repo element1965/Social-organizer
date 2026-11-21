@@ -213,6 +213,18 @@ export function LandingPage() {
     const root = rootRef.current;
     let cancelled = false;
     let started = false;
+    // Sample while the photograph and scene module load, before WebGL starts drawing.
+    let cadenceRaf = 0;
+    let previousFrame: number | undefined;
+    const cadenceFrames: number[] = [];
+    const sampleCadence = (now: number) => {
+      if (previousFrame !== undefined) cadenceFrames.push(now - previousFrame);
+      previousFrame = now;
+      if (cadenceFrames.length < 9) cadenceRaf = requestAnimationFrame(sampleCadence);
+    };
+    if (devicePixelRatio > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      cadenceRaf = requestAnimationFrame(sampleCadence);
+    }
     // opened at a later section: the browser may still be scrolling there, so the scene fades in, no fly-in
     const hash = window.location.hash.slice(1);
     const deepLink = !!hash && hash !== 'top';
@@ -224,6 +236,7 @@ export function LandingPage() {
       cancelIdle();
       void import('../components/landing/scene')
         .then(({ initScene }) => {
+          cancelAnimationFrame(cadenceRaf);
           if (cancelled) return;
           const canvas = sceneRef.current;
           const tags = tagRefs.current;
@@ -251,7 +264,7 @@ export function LandingPage() {
                 railLinks: railLinkRefs.current.filter((a): a is HTMLAnchorElement => !!a),
               },
               optionsRef.current.scene,
-              { flyIn: !deepLink },
+              { flyIn: !deepLink, cadenceFrames },
             );
             root.classList.add('scene-ready');
           } catch {
@@ -259,6 +272,7 @@ export function LandingPage() {
           }
         })
         .catch(() => {
+          cancelAnimationFrame(cadenceRaf);
           if (!cancelled) showAllWords();
         });
     };
@@ -306,6 +320,7 @@ export function LandingPage() {
     }
     return () => {
       cancelled = true;
+      cancelAnimationFrame(cadenceRaf);
       observer?.disconnect();
       cancelIdle();
       sceneHandle.current?.destroy();
