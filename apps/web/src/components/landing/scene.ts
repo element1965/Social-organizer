@@ -11,14 +11,6 @@ import * as THREE from 'three';
 import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
 import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
-import {
-  CADENCE_SAMPLES,
-  RESOLUTION_WINDOW_MS,
-  createResolutionState,
-  measureCadence,
-  resetResolution,
-  updateResolution,
-} from './adaptive-resolution';
 
 export interface SceneElements {
   /** The landing root; gets `past` once the story has scrolled away and `graph` while the graph is shown. */
@@ -64,7 +56,6 @@ export interface SceneIntro {
    * when the page was opened at a later section (it may still be scrolling there): then the scene only fades in.
    */
   flyIn?: boolean;
-  cadenceFrames?: readonly number[]; // rAF intervals measured before the scene draws
 }
 
 interface Shot {
@@ -411,13 +402,8 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   }
 
   // ---- rendering ----
-  // Keep the authored antialiasing; actual frame cadence is a better signal than device specs.
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  const maxDpr = Math.min(devicePixelRatio || 1, 1.5);
-  const dprSteps = [maxDpr, ...[1.25, 1].filter((dpr) => dpr < maxDpr)];
-  const adaptive = !reduce && dprSteps.length > 1;
-  const cadenceFrames = intro.cadenceFrames ?? [];
-  let quality = adaptive && cadenceFrames.length >= 5 ? createResolutionState(measureCadence(cadenceFrames)) : null;
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
   let sceneDirty = true;
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
@@ -849,12 +835,22 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   // ---- scroll → page time (beat index + progress) → scene time (phase index + progress) ----
   let beatBounds: { top: number; height: number }[] = [];
   let layoutDirty = true;
+  let mariaWidth = els.tags.maria.offsetWidth;
   const invalidateLayout = () => {
     layoutDirty = sceneDirty = true;
   };
-  const layoutObserver = new ResizeObserver(invalidateLayout);
-  layoutObserver.observe(story);
-  for (const beat of beats) layoutObserver.observe(beat);
+  const canObserveLayout = typeof ResizeObserver !== 'undefined';
+  const layoutObserver = canObserveLayout ? new ResizeObserver(invalidateLayout) : null;
+  if (layoutObserver) {
+    layoutObserver.observe(story);
+    for (const beat of beats) layoutObserver.observe(beat);
+  }
+  // Recheck edge placement when the tag's text, font, or graph styling changes its width.
+  const tagsObserver = canObserveLayout ? new ResizeObserver(() => {
+    mariaWidth = els.tags.maria.offsetWidth;
+    sceneDirty = true;
+  }) : null;
+  tagsObserver?.observe(els.tags.maria, { box: 'border-box' });
   const storyT = () => {
     const y = scrollY;
     if (layoutDirty) {
@@ -862,6 +858,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
         const { top, height } = el.getBoundingClientRect();
         return { top: top + y, height };
       });
+      if (!tagsObserver) mariaWidth = els.tags.maria.offsetWidth;
       layoutDirty = false;
     }
     const mid = innerHeight * 0.5;
@@ -1211,13 +1208,6 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const v3 = new THREE.Vector3();
   /** Where Oleg's label was put this frame: Maria's goes to the side away from it. */
   let olegX = -1;
-  // Recheck edge placement when the tag's text, font, or graph styling changes its width.
-  let mariaWidth = els.tags.maria.offsetWidth;
-  const tagsObserver = new ResizeObserver(() => {
-    mariaWidth = els.tags.maria.offsetWidth;
-    sceneDirty = true;
-  });
-  tagsObserver.observe(els.tags.maria, { box: 'border-box' });
   const supportsTagTranslate = typeof CSS !== 'undefined' && CSS.supports?.('translate', '1px 1px');
   const tagPos = new Map<HTMLElement, string>();
   const tagAt = (el: HTMLElement, i: number, on: boolean | undefined) => {
@@ -1257,39 +1247,17 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     }
     el.classList.add('on');
   };
-  const sizeBuffer = () => {
-    const pr = dprSteps[quality?.tier ?? 0]!;
-    renderer.setDrawingBufferSize(innerWidth, innerHeight, pr);
-    // a dot of size s at distance z is s * uScale / z device pixels tall
-    dotMat.uniforms.uScale!.value = (innerHeight * pr * 0.5) / Math.tan((camera.fov * Math.PI) / 360);
-    dotMat.uniforms.uMax!.value = 12 * pr;
-    dotMat.uniforms.uMin!.value = 1.6 * pr;
-  };
-  const frameSamples: number[] = [];
-  let sampleMs = 0;
-  let wasRendering = false;
-  const clearFrameWindow = () => {
-    sampleMs = 0;
-    frameSamples.length = 0;
-  };
-  const resetFrameSampling = () => {
-    wasRendering = false;
-    clearFrameWindow();
-    if (quality) quality = resetResolution(quality);
-  };
-  const onVisibilityChange = () => {
-    if (document.hidden) return;
-    const previousTier = quality?.tier;
-    resetFrameSampling();
-    if (quality?.tier !== previousTier) sizeBuffer();
-  };
   const resize = () => {
-    resetFrameSampling();
-    sizeBuffer();
+    renderer.setSize(innerWidth, innerHeight, false);
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
     thinMat.resolution.set(innerWidth, innerHeight);
     thickMat.resolution.set(innerWidth, innerHeight);
+    // a dot of size s at distance z is s * uScale / z device pixels tall
+    const pr = renderer.getPixelRatio();
+    dotMat.uniforms.uScale!.value = (innerHeight * pr * 0.5) / Math.tan((camera.fov * Math.PI) / 360);
+    dotMat.uniforms.uMax!.value = 12 * pr;
+    dotMat.uniforms.uMin!.value = 1.6 * pr;
     invalidateLayout();
   };
   const onContextRestored = () => { sceneDirty = true; };
@@ -1297,8 +1265,13 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   // Apply a burst of resize events once, just before drawing the next frame.
   let resizePending = false;
   const onResize = () => { resizePending = true; };
+  let layoutSettle = 0;
+  const onScroll = () => {
+    clearTimeout(layoutSettle);
+    layoutSettle = window.setTimeout(invalidateLayout, 150);
+  };
   addEventListener('resize', onResize);
-  document.addEventListener('visibilitychange', onVisibilityChange);
+  if (!layoutObserver) addEventListener('scroll', onScroll, { passive: true });
   canvas.addEventListener('webglcontextrestored', onContextRestored);
 
   let visible = true;
@@ -1457,6 +1430,8 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     if (nowGraph !== graphOn) {
       graphOn = nowGraph;
       els.root.classList.toggle('graph', graphOn);
+      // The graph changes the label styling. Refresh its width for the next placement.
+      if (!tagsObserver) mariaWidth = els.tags.maria.offsetWidth;
     }
     // the evening darkens as the story goes on; then the app's scene takes over, its wash centred on you
     const nt = clamp((tS - 2.6) / 5);
@@ -1489,25 +1464,6 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   };
 
   let raf = 0;
-  const adaptResolution = (now: number, elapsed: number) => {
-    if (!quality) {
-      // A warm cache can load the module before the unloaded sample finishes.
-      frameSamples.push(elapsed);
-      if (frameSamples.length === CADENCE_SAMPLES) {
-        quality = createResolutionState(measureCadence(frameSamples));
-        clearFrameWindow();
-      }
-      return;
-    }
-    if (!introDone) return;
-    frameSamples.push(elapsed);
-    sampleMs += elapsed;
-    if (sampleMs < RESOLUTION_WINDOW_MS || frameSamples.length < 12) return;
-    const previousTier = quality.tier;
-    quality = updateResolution(quality, frameSamples, now, dprSteps.length - 1);
-    if (quality.tier !== previousTier) sizeBuffer();
-    clearFrameWindow();
-  };
   let stillTime = 0;
   let stillFrames = 0;
   const frame = (now: number) => {
@@ -1517,18 +1473,9 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       resize();
     }
     // the first frame's timestamp can precede the end of the setup above: no negative step
-    const elapsed = now - last;
-    const dt = clamp(elapsed / 1000, 0, 0.05);
+    const dt = clamp((now - last) / 1000, 0, 0.05);
     last = now;
-    if (!visible || document.hidden) {
-      if (wasRendering) clearFrameWindow();
-      wasRendering = false;
-      return;
-    }
-    if (adaptive) {
-      if (wasRendering && elapsed > 0) adaptResolution(now, elapsed);
-      wasRendering = true;
-    }
+    if (!visible || document.hidden) return;
     const target = storyT();
     if (reduce) {
       if (!introDone || sceneDirty || target !== tD) {
@@ -1597,9 +1544,12 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       cancelAnimationFrame(raf);
       removeEventListener('resize', onResize);
       canvas.removeEventListener('webglcontextrestored', onContextRestored);
-      document.removeEventListener('visibilitychange', onVisibilityChange);
-      layoutObserver.disconnect();
-      tagsObserver.disconnect();
+      if (!layoutObserver) {
+        removeEventListener('scroll', onScroll);
+        clearTimeout(layoutSettle);
+      }
+      layoutObserver?.disconnect();
+      tagsObserver?.disconnect();
       io.disconnect();
       logo.onload = null;
       els.root.classList.remove('past', 'graph');
