@@ -142,6 +142,35 @@ html:not(.dark) .circle-header-scrim {
   --circle-header-hold: 0.9;
 }
 
+.circle-app-header {
+  --circle-header-fade: 2rem;
+  background-image: linear-gradient(
+    to bottom,
+    rgb(var(--so-scene) / var(--circle-header-start)),
+    rgb(var(--so-scene) / var(--circle-header-hold)) calc(100% - var(--circle-header-fade)),
+    rgb(var(--so-scene) / 0)
+  );
+}
+
+html:not(.dark) .circle-app-header {
+  --circle-header-start: 1;
+  --circle-header-hold: 1;
+}
+
+.circle-rings-scrim {
+  --circle-rings-hold: 0.7;
+  background-image: linear-gradient(
+    to top,
+    rgb(var(--so-scene) / 0.9),
+    rgb(var(--so-scene) / var(--circle-rings-hold)) calc(100% - 2rem),
+    rgb(var(--so-scene) / 0)
+  );
+}
+
+html:not(.dark) .circle-rings-scrim {
+  --circle-rings-hold: 0.96;
+}
+
 /*
  * The Circle scene follows the app theme. Scene tokens stay dark everywhere else (landing hero, QR camera,
  * figures); inside .scene-follows-theme in the light theme they become a pale scene with ink text.

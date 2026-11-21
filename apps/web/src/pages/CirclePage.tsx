@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { hideBackButton, isTelegramWebApp, showBackButton } from '@so/tg-adapter';
@@ -35,6 +35,7 @@ import { GetAppCard } from '../components/app/GetApp';
 import { useCircleNetwork } from '../components/circle/network';
 import { IconAim, IconFit, IconMinus, IconPlus, IconShrink, IconUp } from '../components/circle/icons';
 import { ASK_MIN_DIRECT } from '@so/shared';
+import type { GraphLabelExclusion } from '@so/graph-3d';
 
 type Layer = 'feed' | 'graph' | 'person';
 
@@ -44,27 +45,69 @@ const HINT_KEY = 'so.circle.gestureHint';
  * run on the shown rings, so a few more are passed: one entirely on a hidden ring must not take a slot.
  */
 const MAX_IMPULSES = 12;
-/** Bottom of the phone graph covered by the ring chips (76 px up + header line + chips): no names there. */
-const PHONE_CHIPS_INSET = 76 + 72;
 const SCENE_BG =
   'bg-scene bg-[radial-gradient(120%_90%_at_50%_38%,rgb(var(--so-scene-2))_0%,rgb(var(--so-scene))_60%)]';
 
 /** Feed sheet parts around the content: the 26px drag handle and the 16px bottom padding. */
 const SHEET_CHROME = 26 + 16;
+const GRAPH_CHIP_BOTTOM = 76;
+const LABEL_CLEARANCE = 8;
 
-function useBoxHeight<T extends HTMLElement>() {
+type RenderGraph = (insetTop: number, labelInsetBottom: number, exclusions?: readonly GraphLabelExclusion[]) => React.ReactNode;
+
+function useLabelExclusion(active: boolean, direction: string) {
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const [exclusions, setExclusions] = useState<GraphLabelExclusion[]>();
+  useLayoutEffect(() => {
+    const scene = sceneRef.current;
+    const overlay = overlayRef.current;
+    if (!active || !scene || !overlay) return;
+    const measure = () => {
+      const canvas = scene.getBoundingClientRect();
+      const box = overlay.getBoundingClientRect();
+      const x0 = box.left - canvas.left - LABEL_CLEARANCE;
+      const y0 = box.top - canvas.top - LABEL_CLEARANCE;
+      const x1 = box.right - canvas.left + LABEL_CLEARANCE;
+      const y1 = box.bottom - canvas.top + LABEL_CLEARANCE;
+      setExclusions((previous) => {
+        const old = previous?.[0];
+        return old?.x0 === x0 && old.y0 === y0 && old.x1 === x1 && old.y1 === y1
+          ? previous
+          : [{ x0, y0, x1, y1 }];
+      });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(scene);
+    observer.observe(overlay);
+    window.addEventListener('resize', measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, [active, direction]);
+  return [sceneRef, overlayRef, active ? exclusions : undefined] as const;
+}
+
+function useBoxMetrics<T extends HTMLElement>(mounted = true) {
   const ref = useRef<T>(null);
-  const [height, setHeight] = useState(0);
+  const [box, setBox] = useState({ height: 0, top: 0 });
   useEffect(() => {
+    if (!mounted) return;
     const el = ref.current;
     if (!el) return;
-    const measure = () => setHeight(Math.round(el.getBoundingClientRect().height));
+    const measure = () => {
+      const height = Math.round(el.getBoundingClientRect().height);
+      const top = el.offsetTop;
+      setBox((previous) => previous.height === height && previous.top === top ? previous : { height, top });
+    };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
-  return [ref, height] as const;
+  }, [mounted]);
+  return [ref, mounted ? box.height : 0, mounted ? box.top : 0] as const;
 }
 
 /** Circle: the network scene, numbers, ring chips and the event feed (screens.md §1, §16). */
@@ -380,7 +423,7 @@ export function CirclePage() {
 
   /* ----- pieces ----- */
 
-  const renderGraph = (insetTop = 0) => empty ? (
+  const renderGraph: RenderGraph = (insetTop, labelInsetBottom, exclusions) => empty ? (
     <EmptyScene name={me.data?.name ?? ''} waitingFor={waitingFor} />
   ) : (
     <CircleGraph
@@ -397,7 +440,8 @@ export function CirclePage() {
       focusLift={phone ? 0.16 : 0}
       farRings={farRings}
       insetTop={insetTop}
-      labelInsetBottom={phone ? PHONE_CHIPS_INSET : 0}
+      labelInsetBottom={labelInsetBottom}
+      labelExclusions={exclusions}
     />
   );
 
@@ -463,7 +507,7 @@ export function CirclePage() {
     return (
       <DesktopCircle
         sidebar={mode === 'sidebar'}
-        graph={renderGraph()}
+        renderGraph={renderGraph}
         graphRef={graphRef}
         empty={empty}
         counts={counts}
@@ -487,7 +531,7 @@ export function CirclePage() {
       counts={counts}
       farLabel={far.label}
       hiddenRings={hiddenRings}
-      stats={<NetStats variant="scene" people={peopleCount} canHelp={canHelp} />}
+      stats={<NetStats variant="header" people={peopleCount} canHelp={canHelp} />}
       feed={feedBody}
       hint={hint}
       person={cardPerson ? <PersonCard person={cardPerson} variant="floating" onClose={closeCard} step={step} /> : null}
@@ -510,7 +554,7 @@ export function CirclePage() {
 
 type PhoneProps = {
   layer: Layer;
-  renderGraph: (insetTop: number) => React.ReactNode;
+  renderGraph: RenderGraph;
   graphRef: React.RefObject<CircleGraphHandle | null>;
   empty: boolean;
   counts: Record<Ring, number>;
@@ -543,10 +587,12 @@ function PhoneCircle({
   onSceneTap,
   sheets,
 }: PhoneProps) {
-  const { t } = useTranslation();
-  const [headerRef, headerHeight] = useBoxHeight<HTMLDivElement>();
-  const [rootRef, height] = useBoxHeight<HTMLDivElement>();
-  const [feedRef, feedContentH] = useBoxHeight<HTMLDivElement>();
+  const { t, i18n } = useTranslation();
+  const [sceneRef, personRef, exclusions] = useLabelExclusion(layer === 'person' && !!person, i18n.dir());
+  const [headerRef, headerHeight] = useBoxMetrics<HTMLDivElement>();
+  const [chipsRef, chipsHeight] = useBoxMetrics<HTMLDivElement>(!empty);
+  const [rootRef, height, safeTop] = useBoxMetrics<HTMLDivElement>();
+  const [feedRef, feedContentH] = useBoxMetrics<HTMLDivElement>();
   // An empty circle has nothing to show in the graph, so the sheet grows to fit the start card and its
   // button (up to ~70% of the screen) instead of hiding the button under the tab bar.
   const baseSheetH = Math.max(280, Math.round(height * 0.42));
@@ -557,6 +603,10 @@ function PhoneCircle({
   // Expanded feed: the sheet covers the scene, for reading a long feed. Not kept in the URL.
   const fullH = Math.max(sheetH, height - 8);
   const feedLayer = layer === 'feed';
+  const sceneBottom = feedLayer ? sheetH - 24 : 0;
+  const chipsBottom = feedLayer ? sheetH + 12 : GRAPH_CHIP_BOTTOM;
+  const labelTop = feedLayer ? headerHeight : safeTop + (hint && layer === 'graph' ? 80 : 56);
+  const labelBottom = layer === 'person' ? 0 : chipsBottom - sceneBottom + safeTop + chipsHeight + LABEL_CLEARANCE;
   const [expanded, setExpanded] = useState(false);
   const [drag, setDrag] = useState<number | null>(null);
   const dragStart = useRef<number | null>(null);
@@ -702,8 +752,9 @@ function PhoneCircle({
           It grows by the status bar height at both ends (the bottom part is clipped), so the
           graph centre stays exactly where it is without the status bar strip. */}
       <div
+        ref={sceneRef}
         className={cn('absolute inset-x-0 top-0', ease)}
-        style={{ bottom: `calc(${feedLayer ? sheetH - 24 : 0}px - var(--sa-top))` }}
+        style={{ bottom: `calc(${sceneBottom}px - var(--sa-top))` }}
         onPointerDown={(event) => {
           down.current = { x: event.clientX, y: event.clientY };
         }}
@@ -714,14 +765,14 @@ function PhoneCircle({
           onSceneTap();
         }}
       >
-        {renderGraph(feedLayer ? headerHeight : 0)}
+        {renderGraph(labelTop, labelBottom, exclusions)}
       </div>
 
       {/* Header: brand and numbers; fades out when the graph opens. */}
       <div
         ref={headerRef}
         className={cn(
-          'pointer-events-none absolute inset-x-0 top-0 z-10 circle-header-scrim px-5 pb-8 pt-[calc(0.5rem+var(--sa-top))]',
+          'pointer-events-none absolute inset-x-0 top-0 z-10 circle-header-scrim circle-app-header px-5 pb-[var(--circle-header-fade)] pt-[calc(0.5rem+var(--sa-top))]',
           ease,
           feedLayer ? 'opacity-100' : '-translate-y-4 opacity-0',
         )}
@@ -758,21 +809,23 @@ function PhoneCircle({
         {t('circle.gestureHint')}
       </p>
 
-      {/* Soft scrim under the ring chips in the graph layer, so passing names and dots do not run into them. */}
+      {/* Keep the ring caption readable over both sizes of the scene. */}
       {empty ? null : (
         <div
           aria-hidden
           className={cn(
-            'pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[168px] bg-gradient-to-t from-scene/90 via-scene/60 to-transparent',
+            'pointer-events-none absolute inset-x-0 z-10 circle-rings-scrim',
             ease,
-            layer === 'graph' ? 'opacity-100' : 'opacity-0',
+            layer === 'person' || (feedLayer && expanded) ? 'opacity-0' : 'opacity-100',
           )}
+          style={{ bottom: sceneBottom, height: chipsBottom - sceneBottom + chipsHeight + 32 }}
         />
       )}
 
       {/* Ring chips: links to the People list of each ring, over the feed and on the expanded graph. */}
       {empty ? null : (
         <RingChips
+          ref={chipsRef}
           counts={counts}
           farLabel={farLabel}
           hiddenRings={hiddenRings}
@@ -782,7 +835,7 @@ function PhoneCircle({
             ease,
             (layer === 'person' || (feedLayer && expanded)) && 'pointer-events-none translate-y-16 opacity-0',
           )}
-          style={{ bottom: feedLayer ? sheetH + 12 : 76 }}
+          style={{ bottom: chipsBottom }}
         />
       )}
 
@@ -854,7 +907,7 @@ function PhoneCircle({
       </button>
 
       {/* Person card (person layer). */}
-      {layer === 'person' && person ? <div className="absolute inset-x-4 bottom-4 z-30">{person}</div> : null}
+      {layer === 'person' && person ? <div ref={personRef} className="absolute inset-x-4 bottom-4 z-30">{person}</div> : null}
 
       {sheets}
     </div>
@@ -893,7 +946,7 @@ function EmptyScene({ name, waitingFor }: { name: string; waitingFor: WaitingPer
 
 type DesktopProps = {
   sidebar: boolean;
-  graph: React.ReactNode;
+  renderGraph: RenderGraph;
   graphRef: React.RefObject<CircleGraphHandle | null>;
   empty: boolean;
   counts: Record<Ring, number>;
@@ -906,8 +959,10 @@ type DesktopProps = {
   sheets: React.ReactNode;
 };
 
-function DesktopCircle({ sidebar, graph, graphRef, empty, counts, farLabel, hiddenRings, stats, newCount, feed, person, sheets }: DesktopProps) {
-  const { t } = useTranslation();
+function DesktopCircle({ sidebar, renderGraph, graphRef, empty, counts, farLabel, hiddenRings, stats, newCount, feed, person, sheets }: DesktopProps) {
+  const { t, i18n } = useTranslation();
+  const [sceneRef, toolbarRef, exclusions] = useLabelExclusion(!empty, i18n.dir());
+  const [chipsRef, chipsHeight] = useBoxMetrics<HTMLDivElement>(!empty);
   const ctl =
     'so-focus grid h-10 w-10 place-items-center rounded-md border border-node-1/15 bg-scene-2/80 text-node-1 backdrop-blur-md hover:bg-scene-3';
   // Expanded: the scene takes the whole width and the feed column steps aside (the desktop "open the graph").
@@ -947,12 +1002,12 @@ function DesktopCircle({ sidebar, graph, graphRef, empty, counts, farLabel, hidd
         }
       />
       <div className={cn('flex min-h-0 flex-1 gap-4 pb-4', sidebar ? 'px-7' : 'px-4')}>
-        <div className={cn('relative min-w-0 flex-1 overflow-hidden rounded-xl', SCENE_BG)}>
-          {graph}
+        <div ref={sceneRef} className={cn('relative min-w-0 flex-1 overflow-hidden rounded-xl', SCENE_BG)}>
+          {renderGraph(chipsHeight + 16 + LABEL_CLEARANCE, 0, exclusions)}
           {empty ? null : (
             <>
-              <RingChips counts={counts} farLabel={farLabel} hiddenRings={hiddenRings} className="absolute start-4 top-4 z-10" />
-              <div className="absolute end-4 top-4 z-10 flex flex-col gap-2">
+              <RingChips ref={chipsRef} counts={counts} farLabel={farLabel} hiddenRings={hiddenRings} className="absolute start-4 top-4 z-10" />
+              <div ref={toolbarRef} className="absolute end-4 top-4 z-10 flex flex-col gap-2">
                 <button type="button" className={ctl} aria-label={t('circle.zoomIn')} onClick={() => graphRef.current?.zoomIn()}>
                   <IconPlus className="h-5 w-5" />
                 </button>
@@ -973,7 +1028,6 @@ function DesktopCircle({ sidebar, graph, graphRef, empty, counts, farLabel, hidd
                   {wide ? <IconShrink className="h-5 w-5" /> : <IconFit className="h-5 w-5" />}
                 </button>
               </div>
-              <Legend />
             </>
           )}
         </div>
@@ -994,29 +1048,6 @@ function DesktopCircle({ sidebar, graph, graphRef, empty, counts, farLabel, hidd
         </aside>
       </div>
       {sheets}
-    </div>
-  );
-}
-
-function Legend() {
-  const { t } = useTranslation();
-  const items: Array<{ label: string; dot: string }> = [
-    { label: t('common.you'), dot: 'bg-care-bright' },
-    { label: t('circle.rings.short1'), dot: 'bg-node-1' },
-    { label: t('circle.rings.short2'), dot: 'bg-node-2' },
-    { label: t('circle.rings.short3'), dot: 'bg-node-3' },
-  ];
-  return (
-    <div className="pointer-events-none absolute bottom-4 start-4 z-10 flex gap-2" aria-hidden>
-      {items.map((item) => (
-        <span
-          key={item.label}
-          className="inline-flex h-7 items-center gap-1.5 rounded-sm border border-node-1/15 bg-scene-2/80 px-2.5 text-micro font-bold text-node-2 backdrop-blur-md"
-        >
-          <i className={cn('h-2 w-2 rounded-full', item.dot)} />
-          {item.label}
-        </span>
-      ))}
     </div>
   );
 }

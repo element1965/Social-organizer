@@ -73,7 +73,7 @@ type MyParticipationCardProps = {
   onChange?: () => void;
   /** Opens the participants' chat; without it the button is not shown. */
   onOpenChat?: () => void;
-  /** Under the money note (the admin's "decline"). */
+  /** Secondary action under the money note. */
   footer?: ReactNode;
 };
 

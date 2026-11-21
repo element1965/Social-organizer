@@ -320,9 +320,13 @@ function CollectionScreen({ id }: { id: string | undefined }) {
     !person ? '…' : index === 0 ? t('common.you') : resolve(person.id, person.name)
   ));
   const showPath = !owner && pathNames.length > 1;
-  // Stage line (mockups v2): the amount, then the chat, then closed. Reached stages are lit.
-  const stages = [t('collection.stageAmount'), t('collection.stageChat'), t('collection.stageClosed')];
-  const stageDone = closed ? 3 : owner || myObl ? 2 : 1;
+  // The amount is named when the Need is reported. The meter above shows progress towards it.
+  const stages = [
+    ...(hasGoal ? [t('collection.stageAmountNamed')] : []),
+    t('collection.stageChat'),
+    t('collection.stageClosed'),
+  ];
+  const stageDone = Number(hasGoal) + (closed ? 2 : owner || myObl ? 1 : 0);
   const showCloseNote = !owner && !closed && !held && !needsConfirm && !goalMet && hasGoal;
 
   const back = originBack ?? (closed
@@ -339,7 +343,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
     return {
       id: row.id,
       userId: row.userId,
-      name: mine ? t('common.you') : resolve(row.userId, row.user.name),
+      name: resolve(row.userId, row.user.name),
       photoUrl: row.user.photoUrl,
       amount: row.amount,
       paid: row.confirmedAt != null,
@@ -474,8 +478,15 @@ function CollectionScreen({ id }: { id: string | undefined }) {
     <Button variant="text" onClick={() => { setReason(null); setAdminOpen(true); }}>
       {held ? t('collection.resume') : t('collection.suspend')}
     </Button>
-  ) : showDecline ? (
-    <Button variant="textDanger" onClick={() => setDeclineOpen(true)}>{t('collection.decline')}</Button>
+  ) : null;
+  const withdrawAction = showDecline ? (
+    <Button
+      variant="textDanger"
+      className="mt-2 min-h-11 max-w-full whitespace-normal text-caption"
+      onClick={() => setDeclineOpen(true)}
+    >
+      {t('collection.decline')}
+    </Button>
   ) : null;
 
   return (
@@ -623,6 +634,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
               {editError ? <p className="text-label font-semibold text-sos">{editError}</p> : null}
             </div>
           )}
+          {withdrawAction}
         </Card>
       ) : null}
       <ActionError error={actionErrorBesides(confirmCycle.error, 'pledge')} />
@@ -649,9 +661,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
           ) : undefined}
           onChange={() => { setEditAmount(String(myObl.amount)); setEditError(''); updateObligation.reset(); setEditing(true); }}
           onOpenChat={canOpenChat ? () => window.open(chatLink, '_blank', 'noopener,noreferrer') : undefined}
-          footer={showAdmin && showDecline ? (
-            <Button variant="textDanger" className="mt-2 w-full" onClick={() => setDeclineOpen(true)}>{t('collection.decline')}</Button>
-          ) : undefined}
+          footer={withdrawAction}
         />
       ) : null}
 

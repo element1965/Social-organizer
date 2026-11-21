@@ -23,9 +23,9 @@ export function ParticipationSummary({ given, received, facts }: Props) {
       <h2 id="participation-summary-title" className="px-4 pt-3 text-label font-bold text-ink-muted">
         {t('participationSummary.title')}
       </h2>
-      <div className="grid grid-cols-2 divide-x divide-line-soft py-3">
-        <Column amount={given.totalAmount} label={t('participationSummary.gave')} count={given.count} accent />
-        <Column amount={received.totalAmount} label={t('participationSummary.received')} count={received.count} />
+      <div className="grid grid-cols-2 divide-x divide-line-soft py-3 rtl:divide-x-reverse">
+        <Column amount={given.totalAmount} label={t('participationSummary.gave')} count={t('participationSummary.reportedCount', { n: given.count })} accent />
+        <Column amount={received.totalAmount} label={t('participationSummary.received')} count={t('participationSummary.receivedCount', { n: received.count })} />
       </div>
       {facts && facts.reported > 0 ? (
         <p className="border-t border-line-soft px-4 py-3 text-label font-semibold text-ink-muted">
@@ -36,13 +36,12 @@ export function ParticipationSummary({ given, received, facts }: Props) {
   );
 }
 
-function Column({ amount, label, count, accent = false }: { amount: number; label: string; count: number; accent?: boolean }) {
-  const { t } = useTranslation();
+function Column({ amount, label, count, accent = false }: { amount: number; label: string; count: string; accent?: boolean }) {
   return (
     <div className="min-w-0 px-4">
-      <p className={`text-h3 font-extrabold tabular-nums ${accent ? 'text-care' : 'text-ink'}`}>{formatMoney(amount)}</p>
+      <p className={`text-h3 font-extrabold tabular-nums ${accent ? 'text-care' : 'text-ink'}`}><bdi dir="ltr">{formatMoney(amount)}</bdi></p>
       <p className="mt-0.5 text-body-s font-bold text-ink">{label}</p>
-      <p className="mt-0.5 text-label font-semibold text-ink-muted">{t('participationSummary.count', { n: count })}</p>
+      <p className="mt-0.5 text-label font-semibold tabular-nums text-ink-muted">{count}</p>
     </div>
   );
 }

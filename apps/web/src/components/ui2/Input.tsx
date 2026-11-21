@@ -1,4 +1,5 @@
 import { useId, useRef, type InputHTMLAttributes, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 import { IconLock, IconSearch } from './icons';
 
@@ -15,6 +16,7 @@ type TextProps = Common &
 
 type MoneyProps = Common & {
   variant: 'money';
+  labelIncludesCurrency?: boolean;
   value?: string;
   onValueChange?: (value: string) => void;
   placeholder?: string;
@@ -48,7 +50,7 @@ function FieldChrome({
   const hintId = `${id}-hint`;
   return (
     <label className="block" htmlFor={id}>
-      {label ? <span className="mb-1.5 block text-label font-semibold text-ink-muted">{label}</span> : null}
+      {label ? <span id={`${id}-label`} className="mb-1.5 block text-label font-semibold text-ink-muted">{label}</span> : null}
       {children}
       {error ? (
         // A new error fades in (keyed by its text), so it reads as a reaction to what was typed
@@ -113,9 +115,13 @@ function LockedField({ label, hint, error, value, id, className }: TextProps) {
   );
 }
 
-function MoneyField({ label, hint, error, value, onValueChange, placeholder, id, name }: MoneyProps) {
+function MoneyField({ label, labelIncludesCurrency, hint, error, value, onValueChange, placeholder, id, name }: MoneyProps) {
+  const { t } = useTranslation();
   const autoId = useId();
   const fieldId = id ?? autoId;
+  const labelId = label ? `${fieldId}-label` : undefined;
+  const currencyId = labelIncludesCurrency ? undefined : `${fieldId}-currency`;
+  const labelledBy = [labelId, currencyId].filter(Boolean).join(' ') || undefined;
   return (
     <FieldChrome id={fieldId} label={label} hint={hint} error={error}>
       <span className={cn('flex h-[72px] items-baseline gap-2 border-b-2', error ? 'border-sos' : 'border-transparent')}>
@@ -125,12 +131,14 @@ function MoneyField({ label, hint, error, value, onValueChange, placeholder, id,
           inputMode="decimal"
           value={value}
           placeholder={placeholder ?? '0'}
+          aria-labelledby={labelledBy}
           aria-invalid={error ? true : undefined}
           aria-describedby={error || hint ? `${fieldId}-hint` : undefined}
           onChange={(event) => onValueChange?.(event.target.value.replace(/[^\d.,]/g, ''))}
           className="min-w-0 flex-1 bg-transparent text-display font-extrabold tabular-nums text-ink outline-none placeholder:text-ink-subtle"
         />
-        <span className="text-[24px] font-bold leading-none text-ink-muted">$</span>
+        <span aria-hidden="true" className="text-[24px] font-bold leading-none text-ink-muted">$</span>
+        {currencyId ? <span id={currencyId} className="sr-only">({t('common.usd')})</span> : null}
       </span>
     </FieldChrome>
   );

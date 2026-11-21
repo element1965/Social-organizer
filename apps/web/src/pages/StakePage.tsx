@@ -68,6 +68,7 @@ export function StakePage() {
             <Input
               variant="money"
               label={t('profile.stakeLabel')}
+              labelIncludesCurrency
               value={value}
               onValueChange={setRaw}
               error={showError ? t('profile.stakeMin') : undefined}
@@ -83,7 +84,7 @@ export function StakePage() {
                 active={parsed === preset}
                 onClick={() => setRaw(String(preset))}
               >
-                {formatMoney(preset)}
+                <bdi dir="ltr">{formatMoney(preset)}</bdi>
               </Chip>
             ))}
           </div>
@@ -97,9 +98,9 @@ export function StakePage() {
           </Button>
           <ActionError error={save.error} />
 
-          <Card className="mt-6" title={t('circle.stats.canHelp')} subtitle={t('circle.stats.explain')}>
+          <Card className="mt-6" title={t('circle.stats.canHelp')} subtitle={t('profile.stakeNetworkExplain')}>
             <p className="text-h2 font-extrabold tabular-nums text-ink">
-              {canHelp == null ? t('common.loading') : formatMoney(canHelp)}
+              {canHelp == null ? t('common.loading') : <bdi dir="ltr">{formatMoney(canHelp)}</bdi>}
             </p>
             {/* The same pair as on the Circle, the Profile and the Need screen: the sum and the people behind it */}
             {figure ? (
