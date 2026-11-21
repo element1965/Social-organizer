@@ -94,7 +94,7 @@ export function PersonCard({ person, variant, onClose, step }: Props) {
         ? t('person.collectionAmount', { amount: formatMoney(person.collection.amount) })
         : t('person.openCollection'),
       primary: true,
-      onClick: () => navigate(`/collection/${person.collection!.id}`),
+      onClick: () => navigate(`/collection/${person.collection!.id}`, { state: { needOrigin: 'circle' } }),
     });
   }
   actions.push({

@@ -29,6 +29,23 @@ export function isRenewal(c: Pick<ChatGate, 'type' | 'cycleNumber' | 'currentCyc
   return c.type === 'REGULAR' && c.cycleNumber > 1 && c.currentCycleStart != null;
 }
 
+export function cycleConfirmation(
+  c: Pick<ChatGate, 'type' | 'cycleNumber' | 'currentCycleStart'>,
+  participation: { createdAt: Date },
+  acknowledged: boolean,
+): boolean | null {
+  return isRenewal(c) ? participation.createdAt >= c.currentCycleStart! || acknowledged : null;
+}
+
+export function needsCycleConfirmation(
+  c: Omit<ChatGate, 'chatLink' | 'creatorId'>,
+  participation: { createdAt: Date } | undefined,
+  acknowledged: boolean,
+): boolean {
+  return c.status === 'ACTIVE' && !isHeld(c) && !!participation
+    && cycleConfirmation(c, participation, acknowledged) === false;
+}
+
 /** Paused by an admin or by the circle (CollectionPage `held`). */
 export function isHeld(c: Pick<ChatGate, 'status' | 'blockReason'>): boolean {
   return c.blockReason === 'COMMUNITY' || (c.status === 'BLOCKED' && c.blockReason != null && ADMIN_REASONS.has(c.blockReason));
@@ -51,9 +68,7 @@ export function chatLinkFor(
 ): string | null {
   if (c.creatorId === viewerId) return c.chatLink;
   if (!own || isClosed(c) || isHeld(c)) return null;
-  const cycleConfirmed = !isRenewal(c) || own.createdAt.getTime() >= c.currentCycleStart!.getTime() || confirmedCycle;
-  // Waiting for the person's confirmation of a renewed cycle: the page shows "confirm", not the chat
-  if (!cycleConfirmed && c.status === 'ACTIVE') return null;
+  if (needsCycleConfirmation(c, own, confirmedCycle)) return null;
   return c.chatLink;
 }
 

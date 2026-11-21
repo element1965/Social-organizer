@@ -188,6 +188,7 @@ function PersonScreen() {
   const accountName = deleted ? t('person.deleted') : person.name;
   const nickname = ring1 ? shown.trim() : '';
   const display = nickname || accountName;
+  const needOrigin = { needOrigin: 'person', personId: person.id, personName: display };
   const online = !!person.lastSeen && Date.now() - new Date(person.lastSeen).getTime() < ONLINE_MS;
   const viaNode = path.length > 2 ? path[path.length - 2] : undefined;
   // Beyond my visible rings the server does not say who it is
@@ -306,7 +307,11 @@ function PersonScreen() {
           title={ask.type === 'REGULAR' ? t('profile.every28') : t('profile.once')}
           subtitle={ask.amount ? formatIsolatedMoney(ask.amount) : t('profile.goalMissing')}
         >
-          <Button variant={index === 0 ? 'primary' : 'secondary'} size="md" onClick={() => navigate(`/collection/${ask.id}`)}>
+          <Button
+            variant={index === 0 ? 'primary' : 'secondary'}
+            size="md"
+            onClick={() => navigate(`/collection/${ask.id}`, { state: needOrigin })}
+          >
             {t('person.openNeed')}
           </Button>
           {ask.status === 'BLOCKED' ? <p className="mt-2 text-label font-semibold text-ink-muted">{t('profile.paused')}</p> : null}
@@ -434,6 +439,7 @@ function PersonScreen() {
               title={row.collection.type === 'REGULAR' ? t('profile.every28') : t('profile.once')}
               subtitle={formatMoney(row.amount)}
               to={`/collection/${row.collection.id}`}
+              state={needOrigin}
               variant="link"
             />
           ))}

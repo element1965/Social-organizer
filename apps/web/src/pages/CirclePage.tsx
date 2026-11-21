@@ -315,7 +315,10 @@ export function CirclePage() {
 
   const openEvent = useCallback(
     (event: FeedEvent) => {
-      for (const id of event.notificationIds ?? []) markRead.mutate({ id });
+      // The Need page marks all its request waves read in one update.
+      if (event.kind !== 'request' && event.kind !== 'participating') {
+        for (const id of event.notificationIds ?? []) markRead.mutate({ id });
+      }
       switch (event.kind) {
         case 'incoming':
           if (event.pendingId && event.personId) {
@@ -338,7 +341,7 @@ export function CirclePage() {
         case 'blocked':
           return;
         default:
-          if (event.collectionId) navigate(`/collection/${event.collectionId}`);
+          if (event.collectionId) navigate(`/collection/${event.collectionId}`, { state: { needOrigin: 'circle' } });
       }
     },
     [markRead, navigate, net.people, openLayer, phone, dismissAccepted],

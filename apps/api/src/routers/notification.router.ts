@@ -1,45 +1,12 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure, paginationInput } from '../trpc.js';
-import type { Prisma, PrismaClient } from '@so/db';
-import { dismissRequestEntries, recordOpenedById } from '../services/notify-routing.service.js';
+import { dismissNeedRequests, dismissRequestEntries, NEED_REQUEST_TYPES, recordOpened } from '../services/notify-routing.service.js';
 import { VISIBLE_RINGS } from '../services/network.service.js';
 import { getPulse } from '../services/pulse.service.js';
 import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
 import { chatLinkFor, confirmedRenewals } from '../services/collection-view.js';
-
-/** A Need waits once per collection until the person joins, dismisses it, or its last live notice expires.
- * Opening a Need only marks it read. Incoming connection requests are the other items awaiting a decision.
- */
-function waitingNeeds(userId: string, now: Date): Prisma.NotificationWhereInput {
-  return {
-    userId,
-    status: { in: ['UNREAD', 'READ'] },
-    type: { in: ['NEW_COLLECTION', 'RE_NOTIFY', 'SPECIAL_AUTHOR', 'SPECIAL_DEVELOPER'] },
-    expiresAt: { gt: now },
-    collection: {
-      status: 'ACTIVE',
-      creatorId: { not: userId },
-      obligations: { none: { userId, unsubscribedAt: null } },
-    },
-  };
-}
-
-/** Opening or dismissing a notice must not wipe a cycle acknowledgement (RESPONDED). */
-async function setNotificationStatus(
-  db: PrismaClient,
-  userId: string,
-  id: string,
-  status: 'READ' | 'DISMISSED',
-) {
-  await db.notification.updateMany({
-    where: { id, userId, status: { not: 'RESPONDED' } },
-    data: { status },
-  });
-  const row = await db.notification.findFirst({ where: { id, userId } });
-  if (!row) throw new TRPCError({ code: 'NOT_FOUND' });
-  return row;
-}
+import { waitingNeedRequests, waitingNeedRenewals } from '../services/need-attention.js';
 
 export const notificationRouter = router({
   list: protectedProcedure
@@ -70,19 +37,21 @@ export const notificationRouter = router({
         const next = notifications.pop();
         nextCursor = next?.id;
       }
-      if (input.includeWaiting && !input.cursor && nextCursor) {
-        // The Circle shows every undecided Need even when newer activity fills the first page.
-        const shown = notifications.map((n) => n.id);
-        const olderWaiting = await ctx.db.notification.findMany({
-          where: { ...waitingNeeds(ctx.userId, new Date()), id: { notIn: shown } },
-          include,
-          orderBy: { createdAt: 'desc' },
-        });
-        notifications.push(...olderWaiting);
-      }
-
-      // Get connection counts for all creators
-      const creatorIds = [...new Set(notifications.map((n) => n.collection?.creatorId).filter(Boolean))] as string[];
+      // One representative per undecided Need, independently of the activity page. The last expiry
+      // keeps the row visible for as long as any request wave still waits.
+      const [waiting, renewals] = input.includeWaiting && !input.cursor
+        ? await Promise.all([
+            ctx.db.notification.findMany({
+              where: waitingNeedRequests(ctx.userId, new Date()),
+              distinct: ['collectionId'],
+              include,
+              orderBy: [{ expiresAt: 'desc' }, { createdAt: 'desc' }, { id: 'desc' }],
+            }),
+            waitingNeedRenewals(ctx.db, ctx.userId),
+          ])
+        : [[], []];
+      const allNotices = [...notifications, ...waiting];
+      const creatorIds = [...new Set(allNotices.map((n) => n.collection.creatorId))];
       const countMap = await getDirectConnectionCounts(ctx.db, creatorIds);
 
       // A stored path runs from the author of the Need to me. People in it further than my visible rings
@@ -93,7 +62,7 @@ export const notificationRouter = router({
 
       // Resolve handshakePath user IDs to names
       const allPathIds = new Set<string>();
-      for (const n of notifications) {
+      for (const n of allNotices) {
         for (const id of visiblePath(n.handshakePath as string[] | null)) if (id) allPathIds.add(id);
       }
       const pathUsers = allPathIds.size > 0
@@ -103,10 +72,10 @@ export const notificationRouter = router({
           })
         : [];
       const nameMap = new Map(pathUsers.map((u) => [u.id, u.name]));
-      const needs = [...new Map(notifications.flatMap((n) => (n.collection ? [[n.collection.id, n.collection] as const] : []))).values()];
+      const needs = [...new Map(allNotices.flatMap((n) => (n.collection ? [[n.collection.id, n.collection] as const] : []))).values()];
       const confirmed = await confirmedRenewals(ctx.db, ctx.userId, needs);
 
-      const items = notifications.map((n) => {
+      const view = (n: (typeof allNotices)[number]) => {
         const path = visiblePath(n.handshakePath as string[] | null);
         return {
           ...n,
@@ -130,17 +99,33 @@ export const notificationRouter = router({
               }
             : null,
         };
-      });
+      };
 
-      return { items, nextCursor };
+      return {
+        items: notifications.map(view),
+        nextCursor,
+        waiting: waiting.map(view),
+        waitingRenewals: renewals,
+      };
     }),
 
   markRead: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      // Before the status flips: only the first open of a request counts (notify-routing)
-      await recordOpenedById(ctx.db, ctx.userId, input.id).catch((err) => console.error('[notify-stats] open', err));
-      return setNotificationStatus(ctx.db, ctx.userId, input.id, 'READ');
+      const { db, userId } = ctx;
+      const row = await db.notification.findFirst({ where: { id: input.id, userId } });
+      if (!row) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (NEED_REQUEST_TYPES.some((type) => type === row.type)) {
+        await recordOpened(db, userId, row.collectionId);
+      } else if (row.status === 'UNREAD') {
+        await db.notification.updateMany({
+          where: { id: row.id, userId, status: 'UNREAD' },
+          data: { status: 'READ' },
+        });
+      } else {
+        return row;
+      }
+      return db.notification.findFirstOrThrow({ where: { id: row.id, userId } });
     }),
 
   /**
@@ -172,19 +157,7 @@ export const notificationRouter = router({
   dismissNeed: protectedProcedure
     .input(z.object({ collectionId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const count = await ctx.db.$transaction(async (tx) => {
-        const counted = await dismissRequestEntries(tx, ctx.userId, { collectionId: input.collectionId });
-        const special = await tx.notification.updateMany({
-          where: {
-            userId: ctx.userId,
-            collectionId: input.collectionId,
-            type: { in: ['SPECIAL_AUTHOR', 'SPECIAL_DEVELOPER'] },
-            status: { in: ['UNREAD', 'READ'] },
-          },
-          data: { status: 'DISMISSED' },
-        });
-        return counted + special.count;
-      });
+      const count = await ctx.db.$transaction((tx) => dismissNeedRequests(tx, ctx.userId, input.collectionId));
       return { count };
     }),
 
@@ -199,17 +172,18 @@ export const notificationRouter = router({
 
   /** Same count for the Circle tab badge and the "Waiting for you" section. */
   attention: protectedProcedure.query(async ({ ctx }) => {
-    const [needRows, incoming] = await Promise.all([
+    const [needRows, renewals, incoming] = await Promise.all([
       // One per Need, however many waves reached the person; the same rule as "Waiting for you" in the Circle
       // feed: opened (READ) still waits for a decision, only joining or "Not now" ends it
       ctx.db.notification.findMany({
-        where: waitingNeeds(ctx.userId, new Date()),
+        where: waitingNeedRequests(ctx.userId, new Date()),
         distinct: ['collectionId'],
         select: { collectionId: true },
       }),
+      waitingNeedRenewals(ctx.db, ctx.userId),
       ctx.db.pendingConnection.count({ where: { toUserId: ctx.userId, status: 'PENDING' } }),
     ]);
-    return { needs: needRows.length, incoming };
+    return { needs: needRows.length + renewals.length, incoming };
   }),
 
   unreadCount: protectedProcedure.query(async ({ ctx }) => {

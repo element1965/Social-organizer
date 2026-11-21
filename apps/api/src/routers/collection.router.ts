@@ -6,6 +6,7 @@ import { sendCollectionNotifications, sendCollectionClosedTg } from '../services
 import { isAdmin } from '../admin.js';
 import { invalidateGraph } from '../services/graph-cache.service.js';
 import { recordOpened } from '../services/notify-routing.service.js';
+import { waitingNeedRequests } from '../services/need-attention.js';
 import { getAskAccess, assertAskAllowed, isSpecialAsker } from '../services/ask-access.service.js';
 import { accountScope, assertAccount } from '../services/account-scope.js';
 import { ADMIN_BLOCK_REASONS } from '../config/ask.js';
@@ -13,7 +14,7 @@ import { activeObligationTotals, syncCollectionGoal } from '../services/collecti
 import { settleOpenReviews } from '../services/moderation.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
 import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
-import { needAudience, chatLinkFor, confirmedRenewals } from '../services/collection-view.js';
+import { needAudience, chatLinkFor, confirmedRenewals, cycleConfirmation, isRenewal, needsCycleConfirmation } from '../services/collection-view.js';
 
 /** Chat links are shown as buttons: https only, never javascript: or http (SO-14). */
 const chatLinkSchema = z.string().max(MAX_CHAT_LINK_LENGTH).url().refine((u) => /^https:\/\//i.test(u), 'Link must start with https://');
@@ -204,11 +205,6 @@ export const collectionRouter = router({
       });
       if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
       const owner = collection.creatorId === ctx.userId;
-      // Opening a collection one was asked to help with, from any entry point (feed, Telegram, push)
-      if (!owner) {
-        recordOpened(ctx.db, ctx.userId, collection.id).catch((err) => console.error('[notify-stats] open', err));
-      }
-
       // The author has seen the responses: they won't come again in the grouped message (SO-45)
       if (owner) {
         // Raw SQL on purpose: an ORM update would also move "updatedAt", which other people's apps watch
@@ -225,7 +221,7 @@ export const collectionRouter = router({
       // Connection counts: the creator's for everyone, the participants' only for those who see the full list
       const userIds = [collection.creatorId, ...(audience.seesAmounts ? visible.map((o) => o.userId) : [])];
       const countMap = await getDirectConnectionCounts(ctx.db, userIds);
-      const renewal = collection.type === 'REGULAR' && collection.cycleNumber > 1 && collection.currentCycleStart != null;
+      const renewal = isRenewal(collection);
       const acked = new Set<string>();
       if (renewal) {
         const rows = await ctx.db.notification.findMany({
@@ -253,12 +249,24 @@ export const collectionRouter = router({
         }
       }
 
-      const cycleStart = collection.currentCycleStart?.getTime() ?? 0;
       const totals = await activeObligationTotals(ctx.db, collection.id);
       const currentAmount = totals.amount;
-      const ownConfirmed = renewal && acked.has(ctx.userId);
+      const ownConfirmed = acked.has(ctx.userId);
+      const needsConfirmation = !owner && needsCycleConfirmation(collection, audience.own, ownConfirmed);
+      if (!owner) {
+        await recordOpened(ctx.db, ctx.userId, collection.id, needsConfirmation ? collection.cycleNumber : undefined)
+          .catch((err) => console.error('[notify-stats] open', err));
+      }
+      const request = owner || audience.own ? null : await ctx.db.notification.findFirst({
+        where: { ...waitingNeedRequests(ctx.userId, new Date()), collectionId: collection.id },
+        orderBy: { expiresAt: 'desc' },
+        select: { expiresAt: true },
+      });
       return {
         ...collection,
+        waitingForMe: !!request || needsConfirmation,
+        waitingExpiresAt: request?.expiresAt ?? null,
+        needsCycleConfirmation: needsConfirmation,
         // The participants' chat: the author, and a participant while the page offers the chat
         chatLink: chatLinkFor(collection, ctx.userId, audience.own, ownConfirmed),
         currentAmount,
@@ -281,7 +289,7 @@ export const collectionRouter = router({
             connectionCount: audience.seesAmounts ? countMap.get(o.userId) || 0 : null,
           },
           /** null outside a renewal cycle; false until the person confirms the new cycle. */
-          cycleConfirmed: renewal ? o.createdAt.getTime() >= cycleStart || acked.has(o.userId) : null,
+          cycleConfirmed: cycleConfirmation(collection, o, acked.has(o.userId)),
           joinedViaLink: viaLink.has(o.userId),
         })),
       };

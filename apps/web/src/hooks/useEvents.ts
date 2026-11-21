@@ -5,7 +5,7 @@ import { trpc } from '../lib/trpc';
 import { CIRCLE_STALE_MS } from '../lib/circleLists';
 import { useAuth } from './useAuth';
 import { useAcceptedRecent } from './useAcceptedRecent';
-import { formatMoney } from '../components/ui2/format';
+import { formatIsolatedMoney, formatMoney } from '../components/ui2/format';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -45,6 +45,7 @@ export type FeedEvent = {
   amountValue?: number | null;
   /** Needs the viewer: shown with the care accent. */
   hot: boolean;
+  waitingForConfirmation?: boolean;
   personId?: string;
   /** The person on the row, for the avatars of a stacked card. */
   photoUrl?: string | null;
@@ -57,68 +58,18 @@ export type FeedEvent = {
 
 type Person = { id: string; name: string };
 
-// Loose shapes: notification.list returns Prisma rows plus resolved paths.
-export type NotificationItem = {
-  id: string;
-  type: string;
-  status: string;
-  wave?: number | null;
-  createdAt: string | Date;
-  expiresAt?: string | Date | null;
-  collectionId: string;
-  handshakePath?: unknown;
-  handshakePathResolved?: Person[];
-  collection: {
-    id: string;
-    type: string;
-    status: string;
-    description?: string | null;
-    amount: number | null;
-    cycleNumber: number | null;
-    currentCycleStart: string | Date | null;
-    creatorId: string;
-    creator: { id: string; name: string; photoUrl: string | null };
-    obligations?: Array<{ amount: number }>;
-  } | null;
-};
-
 const REQUEST_TYPES = new Set(['NEW_COLLECTION', 'RE_NOTIFY', 'SPECIAL_AUTHOR', 'SPECIAL_DEVELOPER']);
 
-/**
- * A request notice that still waits for my decision: the Need is ACTIVE (not closed, cancelled, paused or at its
- * goal), the notice has not expired and it is UNREAD or READ. READ counts: opening the Need marks the notice read
- * (the API does it in collection.getById), which says "seen", not "decided". Joining the Need (an active
- * Participation) and dismissing the notice are the decisions; both are checked by the caller / the dismissal.
- */
-export function isPendingRequest(n: NotificationItem, now: number): boolean {
-  if (!REQUEST_TYPES.has(n.type)) return false;
-  if (n.status !== 'UNREAD' && n.status !== 'READ') return false;
-  if (n.collection?.status !== 'ACTIVE') return false;
-  if (n.expiresAt != null && new Date(n.expiresAt).getTime() <= now) return false;
-  return true;
-}
-
-/**
- * Re-renders the caller when the nearest pending request notice expires (a timer to its `expiresAt`), so an
- * impulse or a "Not now" button does not outlive its notice while the screen stays open: the query data keeps
- * its identity, so nothing else would recompute. Optionally only the notices of one Need.
- */
-export function useExpiryTick(items: NotificationItem[] | undefined, collectionId?: string): number {
+/** Re-render when the next waiting request expires, even if the server data has not changed. */
+export function useExpiryTick(expiries: number[]): number {
   const [tick, setTick] = useState(0);
   useEffect(() => {
-    if (!items) return;
     const now = Date.now();
-    let next = Infinity;
-    for (const n of items) {
-      if (collectionId && n.collectionId !== collectionId) continue;
-      if (n.expiresAt == null || !isPendingRequest(n, now)) continue;
-      next = Math.min(next, new Date(n.expiresAt).getTime());
-    }
+    const next = expiries.reduce((nearest, expiry) => expiry > now ? Math.min(nearest, expiry) : nearest, Infinity);
     if (!Number.isFinite(next)) return;
-    // setTimeout caps at about 24.8 days; the notice TTL is a day, but stay safe
-    const timer = window.setTimeout(() => setTick((x) => x + 1), Math.min(Math.max(next - now, 0) + 50, 2_000_000_000));
+    const timer = window.setTimeout(() => setTick((x) => x + 1), Math.min(next - now + 50, 2_000_000_000));
     return () => window.clearTimeout(timer);
-  }, [items, collectionId, tick]);
+  }, [expiries, tick]);
   return tick;
 }
 
@@ -133,11 +84,14 @@ export type ImpulseNeed = {
 };
 
 /** Last day of the cycle a regular-cycle notification refers to. */
-function cycleEnd(n: NotificationItem): Date | null {
-  const c = n.collection;
-  if (!c?.currentCycleStart || c.cycleNumber == null) return null;
+function cycleEnd(
+  c: { currentCycleStart: string | Date | null; cycleNumber: number },
+  type: string,
+  wave?: number | null,
+): Date | null {
+  if (!c.currentCycleStart) return null;
   const current = new Date(c.currentCycleStart).getTime();
-  const target = n.type === 'CYCLE_RENEWAL_REMINDER' ? (n.wave ?? c.cycleNumber) + 1 : (n.wave ?? c.cycleNumber);
+  const target = type === 'CYCLE_RENEWAL_REMINDER' ? (wave ?? c.cycleNumber) + 1 : (wave ?? c.cycleNumber);
   const start = current + (target - c.cycleNumber) * REGULAR_CYCLE_DAYS * DAY_MS;
   return new Date(start + (REGULAR_CYCLE_DAYS - 1) * DAY_MS);
 }
@@ -163,15 +117,16 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
   const milestones = trpc.milestone.list.useQuery(undefined, fresh);
   const accepted = useAcceptedRecent();
   const utils = trpc.useUtils();
-  const noticeItems = notifications.data?.items as NotificationItem[] | undefined;
-  const expiryTick = useExpiryTick(noticeItems);
+  const waiting = notifications.data?.waiting;
+  const expiries = useMemo(() => (waiting ?? []).map((row) => new Date(row.expiresAt).getTime()), [waiting]);
+  const expiryTick = useExpiryTick(expiries);
   const lastExpiryTick = useRef(expiryTick);
   useEffect(() => {
     if (lastExpiryTick.current === expiryTick) return;
     lastExpiryTick.current = expiryTick;
     void utils.notification.attention.invalidate();
   }, [expiryTick, utils]);
-  const now = useMemo(() => Date.now(), [noticeItems, expiryTick]);
+  const now = useMemo(() => Date.now(), [waiting, expiryTick]);
 
   const dateFmt = useMemo(
     () => new Intl.DateTimeFormat(i18n.language, { day: 'numeric', month: 'long' }),
@@ -180,7 +135,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
 
   const events = useMemo<FeedEvent[]>(() => {
     const out: FeedEvent[] = [];
-    const items = (notifications.data?.items ?? []) as unknown as NotificationItem[];
+    const items = notifications.data?.items ?? [];
 
     // Collections I already joined: their requests are handled, they show as "Discussion" rows.
     const joined = new Map<string, { amount: number; at: number; creator: Person; id: string; ids: string[] }>();
@@ -197,24 +152,69 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
       });
     }
 
-    // One row per collection and kind. Opening or dismissing the row updates the notices it represents.
-    // Items arrive newest first.
-    const rows = new Map<string, FeedEvent>();
     const covered = new Set<string>();
-    for (const n of items) {
-      if (!n.collection) continue;
+    for (const n of waiting ?? []) {
       const c = n.collection;
-      const isRequest = REQUEST_TYPES.has(n.type);
-      const isCycle = n.type === 'CYCLE_RENEWED' || n.type === 'CYCLE_RENEWAL_REMINDER';
+      if (!c || new Date(n.expiresAt).getTime() <= now) continue;
+      const path = n.handshakePathResolved;
+      // Path runs from the author to me: the person next to me is the one I know.
+      const near = path.length > 2 ? path[path.length - 2] : undefined;
+      const kind = c.type === 'REGULAR' ? t('circle.feed.every') : t('circle.feed.once');
+      covered.add(c.id);
+      out.push({
+        id: `n:request:${c.id}`,
+        at: new Date(n.createdAt).getTime(),
+        notificationIds: [n.id],
+        collectionId: c.id,
+        personId: c.creator.id,
+        kind: 'request',
+        title: name(c.creator.id, c.creator.name),
+        subtitle: near
+          ? t('circle.feed.requestVia', { name: name(near.id, near.name), kind })
+          : t('circle.feed.request', { kind }),
+        amount: c.amount != null ? formatMoney(c.amount) : undefined,
+        amountValue: c.amount,
+        hot: true,
+      });
+    }
 
-      if (isRequest && (joined.has(c.id) || c.obligations?.length)) {
-        if (n.status === 'UNREAD') joined.get(c.id)?.ids.push(n.id);
+    const cycleSubtitle = (end: Date | null, total: number) => {
+      const date = end ? dateFmt.format(end) : '';
+      return total > 0
+        ? t('circle.feed.cycleWithAmount', { amount: formatIsolatedMoney(total), date })
+        : t('circle.feed.cycle', { date });
+    };
+
+    const renewalIds = new Set<string>();
+    for (const { collection: c, amount } of notifications.data?.waitingRenewals ?? []) {
+      renewalIds.add(c.id);
+      covered.add(c.id);
+      out.push({
+        id: `n:cycle:${c.id}`,
+        at: c.currentCycleStart ? new Date(c.currentCycleStart).getTime() : 0,
+        collectionId: c.id,
+        personId: c.creator.id,
+        kind: 'cycle',
+        title: name(c.creator.id, c.creator.name),
+        subtitle: cycleSubtitle(cycleEnd(c, 'CYCLE_RENEWED'), amount),
+        hot: true,
+        waitingForConfirmation: true,
+      });
+    }
+
+    // The paginated activity still groups notices of the same kind for each Need.
+    const rows = new Map<string, FeedEvent>();
+    for (const n of items) {
+      if (!n.collection || n.status !== 'UNREAD') continue;
+      const c = n.collection;
+      if (REQUEST_TYPES.has(n.type)) {
+        joined.get(c.id)?.ids.push(n.id);
         continue;
       }
-      if (isRequest ? c.creatorId === myId || !isPendingRequest(n, now) : n.status !== 'UNREAD') continue;
+      const isCycle = n.type === 'CYCLE_RENEWED' || n.type === 'CYCLE_RENEWAL_REMINDER';
+      if (isCycle && renewalIds.has(c.id)) continue;
 
-      const group = isRequest ? 'request' : isCycle ? 'cycle' : n.type;
-      const key = `${group}:${c.id}`;
+      const key = `${isCycle ? 'cycle' : n.type}:${c.id}`;
       const existing = rows.get(key);
       if (existing) {
         existing.notificationIds!.push(n.id);
@@ -230,34 +230,14 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
         personId: c.creator.id,
       };
 
-      if (isRequest) {
-        const path = n.handshakePathResolved ?? [];
-        // Path runs from the author to me: the person next to me is the one I know.
-        const near = path.length > 2 ? path[path.length - 2] : undefined;
-        const kind = c.type === 'REGULAR' ? t('circle.feed.every') : t('circle.feed.once');
-        rows.set(key, {
-          ...base,
-          kind: 'request',
-          title: creator,
-          subtitle: near
-            ? t('circle.feed.requestVia', { name: name(near.id, near.name), kind })
-            : t('circle.feed.request', { kind }),
-          amount: c.amount != null ? formatMoney(c.amount) : undefined,
-          amountValue: c.amount,
-          hot: true,
-        });
-      } else if (isCycle) {
-        const end = cycleEnd(n);
+      if (isCycle) {
+        const end = cycleEnd(c, n.type, n.wave);
         const total = (c.obligations ?? []).reduce((sum, o) => sum + o.amount, 0);
-        const date = end ? dateFmt.format(end) : '';
         rows.set(key, {
           ...base,
           kind: 'cycle',
           title: creator,
-          subtitle:
-            total > 0
-              ? t('circle.feed.cycleWithAmount', { amount: formatMoney(total), date })
-              : t('circle.feed.cycle', { date }),
+          subtitle: cycleSubtitle(end, total),
           hot: n.type === 'CYCLE_RENEWED',
         });
       } else if (n.type === 'COLLECTION_CLOSED') {
@@ -310,8 +290,8 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
         title: t('circle.feed.mineTitle'),
         subtitle:
           col.amount != null
-            ? t('circle.feed.mineProgress', { collected: formatMoney(col.currentAmount), goal: formatMoney(col.amount) })
-            : t('circle.feed.mineCollected', { collected: formatMoney(col.currentAmount) }),
+            ? t('circle.feed.mineProgress', { collected: formatIsolatedMoney(col.currentAmount), goal: formatIsolatedMoney(col.amount) })
+            : t('circle.feed.mineCollected', { collected: formatIsolatedMoney(col.currentAmount) }),
         hot: false,
         collectionId: col.id,
       });
@@ -325,7 +305,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
         kind: 'participating',
         at: row.at,
         title: name(row.creator.id, row.creator.name),
-        subtitle: t('circle.feed.participating', { amount: formatMoney(row.amount) }),
+        subtitle: t('circle.feed.participating', { amount: formatIsolatedMoney(row.amount) }),
         amountValue: row.amount,
         hot: false,
         collectionId: row.id,
@@ -369,27 +349,20 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
     }
 
     return out.sort((a, b) => b.at - a.at);
-  }, [notifications.data, incoming.data, outgoing.data, mine.data, participating.data, milestones.data, accepted.items, myId, t, name, dateFmt, now]);
+  }, [notifications.data, waiting, incoming.data, outgoing.data, mine.data, participating.data, milestones.data, accepted.items, myId, t, name, dateFmt, now]);
 
   // The same undecided Needs send an impulse through the graph, even after being opened.
-  const impulses = useMemo<ImpulseNeed[]>(() => {
-    // Until my Participations are known a Need I joined could flash up
-    if (!notifications.data || !participating.data) return [];
-    const joined = new Set<string>();
-    for (const o of participating.data) {
-      if (!o.unsubscribedAt && o.collection?.status === 'ACTIVE') joined.add(o.collection.id);
-    }
-    const byNeed = new Map<string, ImpulseNeed>();
-    for (const n of notifications.data.items as unknown as NotificationItem[]) {
-      const c = n.collection;
-      if (!c || c.creatorId === myId || joined.has(c.id) || c.obligations?.length || !isPendingRequest(n, now)) continue;
-      const at = new Date(n.createdAt).getTime();
-      const prev = byNeed.get(c.id);
-      if (prev && prev.at >= at) continue;
-      byNeed.set(c.id, { id: c.id, personId: c.creator.id, at, path: (n.handshakePathResolved ?? []).map((p) => p.id) });
-    }
-    return [...byNeed.values()].sort((a, b) => b.at - a.at);
-  }, [notifications.data, participating.data, myId, now]);
+  const impulses = useMemo<ImpulseNeed[]>(() => (
+    (waiting ?? []).flatMap((n) => {
+      if (!n.collection || new Date(n.expiresAt).getTime() <= now) return [];
+      return [{
+        id: n.collection.id,
+        personId: n.collection.creator.id,
+        at: new Date(n.createdAt).getTime(),
+        path: n.handshakePathResolved.map((person) => person.id),
+      }];
+    }).sort((a, b) => b.at - a.at)
+  ), [waiting, now]);
 
   const loading =
     notifications.isLoading ||
@@ -424,6 +397,7 @@ export function useDeclineNeed() {
       void utils.notification.list.invalidate(undefined, { refetchType: 'all' });
       void utils.notification.unreadCount.invalidate(undefined, { refetchType: 'all' });
       void utils.notification.attention.invalidate(undefined, { refetchType: 'all' });
+      if (!failure) void utils.collection.getById.invalidate({ id: collectionId });
       return failure;
     },
     [utils, send],
@@ -439,6 +413,7 @@ export const FEED_GROUPS: readonly FeedGroup[] = ['needs', 'mine', 'helping', 'p
  * when I am the author, under "You are in" otherwise.
  */
 export function feedGroup(event: FeedEvent, myId: string | null | undefined): FeedGroup {
+  if (event.waitingForConfirmation) return 'needs';
   switch (event.kind) {
     case 'request':
     case 'incoming':

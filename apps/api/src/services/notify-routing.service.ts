@@ -75,27 +75,32 @@ async function bump(db: Db, userId: string, column: 'opened' | 'responded' | 'di
   `;
 }
 
-const REQUEST_TYPES = ['NEW_COLLECTION', 'RE_NOTIFY'] as const;
+const ROUTED_REQUEST_TYPES = ['NEW_COLLECTION', 'RE_NOTIFY'] as const;
+export const NEED_REQUEST_TYPES = [...ROUTED_REQUEST_TYPES, 'SPECIAL_AUTHOR', 'SPECIAL_DEVELOPER'] as const;
 
-/**
- * The person opened a collection they were asked to help with. Counted once per collection:
- * the unread request entries flip to read, and only that flip counts.
- */
-export async function recordOpened(db: PrismaClient, userId: string, collectionId: string): Promise<void> {
-  const res = await db.notification.updateMany({
-    where: { userId, collectionId, type: { in: [...REQUEST_TYPES] }, status: 'UNREAD' },
+/** Opening a Need marks its unread waves read together. Only a routed wave counts towards routing statistics. */
+export async function recordOpened(
+  db: PrismaClient,
+  userId: string,
+  collectionId: string,
+  renewalWave?: number,
+): Promise<void> {
+  const read = await db.notification.updateManyAndReturn({
+    where: {
+      userId,
+      collectionId,
+      status: 'UNREAD',
+      OR: [
+        { type: { in: [...NEED_REQUEST_TYPES] } },
+        ...(renewalWave == null ? [] : [{ type: 'CYCLE_RENEWED' as const, wave: renewalWave }]),
+      ],
+    },
     data: { status: 'READ' },
+    select: { type: true },
   });
-  if (res.count > 0) await bump(db, userId, 'opened', null);
-}
-
-/** Opening the entry in the feed: the same signal, found by the notification id. */
-export async function recordOpenedById(db: PrismaClient, userId: string, notificationId: string): Promise<void> {
-  const row = await db.notification.findFirst({
-    where: { id: notificationId, userId, type: { in: [...REQUEST_TYPES] } },
-    select: { collectionId: true },
-  });
-  if (row) await recordOpened(db, userId, row.collectionId);
+  if (read.some(({ type }) => ROUTED_REQUEST_TYPES.some((routed) => routed === type))) {
+    await bump(db, userId, 'opened', null);
+  }
 }
 
 /**
@@ -111,11 +116,26 @@ export async function dismissRequestEntries(
   where: { id?: string; collectionId?: string },
 ): Promise<number> {
   const moved = await db.notification.updateMany({
-    where: { ...where, userId, type: { in: [...REQUEST_TYPES] }, status: { in: ['UNREAD', 'READ'] } },
+    where: { ...where, userId, type: { in: [...ROUTED_REQUEST_TYPES] }, status: { in: ['UNREAD', 'READ'] } },
     data: { status: 'DISMISSED' },
   });
   if (moved.count > 0) await bump(db, userId, 'dismissed', null, moved.count);
   return moved.count;
+}
+
+/** Dismiss every open request wave in the transaction that records the viewer's decision. */
+export async function dismissNeedRequests(db: Db, userId: string, collectionId: string): Promise<number> {
+  const routed = await dismissRequestEntries(db, userId, { collectionId });
+  const special = await db.notification.updateMany({
+    where: {
+      userId,
+      collectionId,
+      type: { in: ['SPECIAL_AUTHOR', 'SPECIAL_DEVELOPER'] },
+      status: { in: ['UNREAD', 'READ'] },
+    },
+    data: { status: 'DISMISSED' },
+  });
+  return routed + special.count;
 }
 
 /**
@@ -125,7 +145,7 @@ export async function dismissRequestEntries(
 export async function recordResponded(db: PrismaClient, userId: string, collectionId: string): Promise<void> {
   const [first, pledges] = await Promise.all([
     db.notification.findFirst({
-      where: { userId, collectionId, type: { in: [...REQUEST_TYPES] } },
+      where: { userId, collectionId, type: { in: [...ROUTED_REQUEST_TYPES] } },
       orderBy: { createdAt: 'asc' },
       select: { createdAt: true },
     }),

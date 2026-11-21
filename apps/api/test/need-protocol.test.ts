@@ -863,34 +863,108 @@ describe('Need participant visibility', () => {
     expect(await view.accept({ token: qr.token, viaLink: true })).toMatchObject({ pending: true });
   });
 
-  it('keeps a read undecided Need in Circle after newer notices, and counts it once', async () => {
+  it('opens and declines an undecided Need behind 100 newer notices', async () => {
     const author = 'attention-author';
     const viewer = 'attention-viewer';
     await db.user.createMany({ data: [author, viewer].map((id) => ({ id, name: id })) });
-    const need = await db.collection.create({
-      data: { creatorId: author, type: 'EMERGENCY', amount: 100, chatLink: 'https://example.test/chat' },
-    });
+    const [need, activity] = await Promise.all([100, 200].map((amount) => db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount, chatLink: 'https://example.test/chat' },
+    })));
     const expiresAt = new Date(Date.now() + hour);
-    const notice = { userId: viewer, collectionId: need.id };
+    const lastExpiry = new Date(Date.now() + 2 * hour);
+    const notice = { userId: viewer, collectionId: need!.id };
     await db.notification.createMany({ data: [
-      { ...notice, type: 'NEW_COLLECTION', status: 'READ', createdAt: new Date(1000), expiresAt },
-      { ...notice, type: 'RE_NOTIFY', status: 'READ', createdAt: new Date(2000), expiresAt },
-      { ...notice, type: 'COLLECTION_CLOSED', status: 'UNREAD', createdAt: new Date(3000), expiresAt },
+      { ...notice, type: 'NEW_COLLECTION', status: 'UNREAD', createdAt: new Date(1000), expiresAt: lastExpiry },
+      { ...notice, type: 'RE_NOTIFY', status: 'UNREAD', createdAt: new Date(2000), expiresAt },
+      { ...notice, type: 'SPECIAL_AUTHOR', status: 'UNREAD', createdAt: new Date(3000), expiresAt },
+      { ...notice, type: 'SPECIAL_DEVELOPER', status: 'DISMISSED', expiresAt },
+      { ...notice, type: 'RE_NOTIFY', wave: 2, status: 'RESPONDED', expiresAt },
+      { ...notice, userId: author, type: 'NEW_COLLECTION', status: 'UNREAD', expiresAt },
+      ...Array.from({ length: 101 }, (_, i) => ({
+        userId: viewer, collectionId: activity!.id, type: 'COLLECTION_CLOSED' as const,
+        wave: i + 1, createdAt: new Date(4000 + i), expiresAt,
+      })),
     ] });
     await db.pendingConnection.create({ data: { fromUserId: author, toUserId: viewer } });
 
-    const notifications = caller(viewer).notification;
-    expect(await notifications.attention()).toEqual({ needs: 1, incoming: 1 });
-    expect((await notifications.list({ limit: 1 })).items.map((n) => n.type)).toEqual(['COLLECTION_CLOSED']);
-    expect((await notifications.list({ limit: 1, includeWaiting: true })).items.map((n) => n.type))
-      .toEqual(['COLLECTION_CLOSED', 'RE_NOTIFY', 'NEW_COLLECTION']);
+    const { collection, notification } = caller(viewer);
+    const feed = await notification.list({ limit: 100, includeWaiting: true });
+    expect(feed.items).toHaveLength(100);
+    expect(feed.items.every((n) => n.collectionId === activity!.id)).toBe(true);
+    expect(feed.nextCursor).toBeDefined();
+    const nextPage = await notification.list({ limit: 100, cursor: feed.nextCursor, includeWaiting: true });
+    expect(nextPage.items[0]?.collectionId).toBe(activity!.id);
+    expect(nextPage.waiting).toEqual([]);
+    expect(feed.waiting).toEqual([expect.objectContaining({ collectionId: need!.id, expiresAt: lastExpiry })]);
+    expect(await notification.attention()).toEqual({ needs: 1, incoming: 1 });
 
-    await db.notification.updateMany({
-      where: { ...notice, type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] } },
-      data: { expiresAt: new Date(Date.now() - hour) },
-    });
-    expect(await notifications.attention()).toEqual({ needs: 0, incoming: 1 });
-    expect((await notifications.list({ limit: 1, includeWaiting: true })).items.map((n) => n.type)).toEqual(['COLLECTION_CLOSED']);
+    const detail = () => collection.getById({ id: need!.id });
+    expect(await detail()).toMatchObject({ waitingForMe: true, waitingExpiresAt: lastExpiry });
+    expect(await detail()).toMatchObject({ waitingForMe: true });
+    expect(await caller(author).collection.getById({ id: need!.id }))
+      .toMatchObject({ waitingForMe: false, waitingExpiresAt: null });
+    const dismissed = await db.notification.findFirstOrThrow({ where: { ...notice, status: 'DISMISSED' } });
+    expect(await notification.markRead({ id: dismissed.id })).toMatchObject({ status: 'DISMISSED' });
+    const statuses = await db.notification.findMany({ where: { collectionId: need!.id }, select: { status: true, userId: true } });
+    expect(statuses.filter((n) => n.userId === viewer).map((n) => n.status).sort())
+      .toEqual(['DISMISSED', 'READ', 'READ', 'READ', 'RESPONDED']);
+    expect(statuses.find((n) => n.userId === author)?.status).toBe('UNREAD');
+    expect(await db.notifyStats.findUnique({ where: { userId: viewer } })).toMatchObject({ opened: 1 });
+    expect(await notification.attention()).toEqual({ needs: 1, incoming: 1 });
+
+    expect(await notification.dismissNeed({ collectionId: need!.id })).toEqual({ count: 3 });
+    await db.notification.create({ data: {
+      ...notice, type: 'RE_NOTIFY', wave: 3, status: 'READ', expiresAt: new Date(Date.now() - hour),
+    } });
+    expect(await detail()).toMatchObject({ waitingForMe: false, waitingExpiresAt: null });
+    expect((await notification.list({ limit: 100, includeWaiting: true })).waiting).toEqual([]);
+    expect(await notification.attention()).toEqual({ needs: 0, incoming: 1 });
+  });
+
+  it('counts one current-cycle confirmation until the participant confirms or withdraws', async () => {
+    const author = 'renewal-attention-author';
+    const viewer = 'renewal-attention-viewer';
+    const newJoiner = 'renewal-attention-new';
+    await db.user.createMany({ data: [author, viewer, newJoiner].map((id) => ({ id, name: id })) });
+    const currentCycleStart = new Date(Date.now() - hour);
+    const [confirm, withdraw] = await Promise.all([100, 200].map((amount) => db.collection.create({
+      data: {
+        creatorId: author, type: 'REGULAR', amount, chatLink: 'https://example.test/chat',
+        cycleNumber: 3, currentCycleStart,
+      },
+    })));
+    await db.obligation.createMany({ data: [
+      ...[confirm!, withdraw!].map(({ id }) => ({
+        userId: viewer, collectionId: id, amount: 2, isSubscription: true, createdAt: new Date(1000),
+      })),
+      { userId: newJoiner, collectionId: confirm!.id, amount: 2, createdAt: currentCycleStart },
+    ] });
+    const expiresAt = new Date(Date.now() + hour);
+    await db.notification.createMany({ data: [
+      { userId: viewer, collectionId: confirm!.id, type: 'CYCLE_RENEWED', wave: 2, status: 'RESPONDED', expiresAt },
+      { userId: viewer, collectionId: confirm!.id, type: 'CYCLE_RENEWED', wave: 3, status: 'READ', expiresAt },
+      { userId: viewer, collectionId: confirm!.id, type: 'RE_NOTIFY', expiresAt },
+      { userId: viewer, collectionId: withdraw!.id, type: 'NEW_COLLECTION', status: 'READ', expiresAt },
+    ] });
+
+    const { notification, obligation, collection } = caller(viewer);
+    const feed = await notification.list({ limit: 1, includeWaiting: true });
+    expect(feed.waiting).toEqual([]);
+    expect(feed.waitingRenewals.map((row) => row.collection.id).sort()).toEqual([confirm!.id, withdraw!.id].sort());
+    expect(await notification.attention()).toEqual({ needs: 2, incoming: 0 });
+    expect(await collection.getById({ id: confirm!.id }))
+      .toMatchObject({ waitingForMe: true, needsCycleConfirmation: true, waitingExpiresAt: null });
+    expect(await caller(newJoiner).notification.attention()).toEqual({ needs: 0, incoming: 0 });
+
+    await obligation.confirmCycle({ collectionId: confirm!.id, cycleNumber: 3 });
+    expect(await collection.getById({ id: confirm!.id }))
+      .toMatchObject({ waitingForMe: false, needsCycleConfirmation: false });
+    expect(await notification.attention()).toEqual({ needs: 1, incoming: 0 });
+    await obligation.unsubscribeFromCollection({ collectionId: withdraw!.id });
+    expect(await collection.getById({ id: withdraw!.id }))
+      .toMatchObject({ waitingForMe: false, needsCycleConfirmation: false });
+    expect((await notification.list({ limit: 1, includeWaiting: true })).waitingRenewals).toEqual([]);
+    expect(await notification.attention()).toEqual({ needs: 0, incoming: 0 });
   });
 
   it('limits amounts and chat to the author and active participants, and received marks to the author', async () => {

@@ -13,7 +13,7 @@ import { ComplainEntry } from '../components/moderation/ComplainEntry';
 import { amountIssue, asDate, chatLinkIssue, firstName, formatDay, isHttpsUrl, parseWhole, relativePast, shortUrl } from '../components/collection/text';
 import { Button } from '../components/ui2/Button';
 import { Card } from '../components/ui2/Card';
-import { formatMoney } from '../components/ui2/format';
+import { formatIsolatedMoney, formatMoney } from '../components/ui2/format';
 import { Input } from '../components/ui2/Input';
 import { Screen } from '../components/ui2/Screen';
 import { Sheet } from '../components/ui2/Sheet';
@@ -26,7 +26,8 @@ import { shareLink } from '../lib/share';
 import { refreshNetwork } from '../lib/refreshNetwork';
 import { trpc } from '../lib/trpc';
 import { useOffline } from '../lib/connectivity';
-import { isPendingRequest, useDeclineNeed, useExpiryTick, type NotificationItem } from '../hooks/useEvents';
+import { useDeclineNeed, useExpiryTick } from '../hooks/useEvents';
+import { useSmartBack } from '../components/profile/useSmartBack';
 import { OfflineHint } from '../components/offline/OfflineNotice';
 import { ActionError } from '../components/errors/ActionError';
 import { isDefinitiveLoadError, NeedLoadError } from '../components/errors/ErrorState';
@@ -81,7 +82,11 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   const utils = trpc.useUtils();
   const startedSos = useRef<string | null>(null);
   const { pathname, search, hash, state, key } = useLocation();
-  const needOrigin = (state as { needOrigin?: 'ask' | 'history' } | null)?.needOrigin;
+  const origin = state as (
+    | { needOrigin: 'ask' | 'history' | 'circle' }
+    | { needOrigin: 'person'; personId: string; personName: string }
+    | null
+  );
   const navigationType = useNavigationType();
   const [justCreated, setJustCreated] = useState(false);
   const createdShown = useRef(false);
@@ -106,19 +111,25 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   const circleBack = justCreated
     ? { label: t('nav.circle'), onClick: () => navigate(-1) }
     : { label: t('nav.circle'), to: '/' };
-  const originBack = needOrigin === 'ask'
-    ? { label: t('nav.ask'), to: '/ask' }
-    : needOrigin === 'history' ? { label: t('collection.pastCrumb') } : null;
+  const originLabel = origin?.needOrigin === 'person' ? origin.personName
+    : origin?.needOrigin === 'ask' ? t('nav.ask')
+    : origin?.needOrigin === 'history' ? t('collection.pastCrumb')
+    : t('nav.circle');
+  const originRoute = origin?.needOrigin === 'person' ? `/person/${encodeURIComponent(origin.personId)}`
+    : origin?.needOrigin === 'ask' ? '/ask'
+    : origin?.needOrigin === 'history' ? '/me/history'
+    : '/';
+  const smartBack = useSmartBack(originLabel, originRoute);
+  const originBack = origin?.needOrigin ? smartBack : null;
 
   const me = trpc.user.me.useQuery();
   const admin = trpc.faq.isAdmin.useQuery();
   const connections = trpc.connection.list.useQuery();
   const collection = trpc.collection.getById.useQuery({ id: id ?? '' }, { enabled: !!id, refetchInterval: 30_000 });
-  // The request notice of this Need: while it waits for my decision the graph on the Circle shows its impulse
-  const notices = trpc.notification.list.useQuery({ limit: 100 });
   const declineNeed = useDeclineNeed();
-  const noticeItems = notices.data?.items as unknown as NotificationItem[] | undefined;
-  useExpiryTick(noticeItems, id);
+  const expiresAt = collection.data?.waitingExpiresAt;
+  const requestExpiry = useMemo(() => expiresAt ? [new Date(expiresAt).getTime()] : [], [expiresAt]);
+  useExpiryTick(requestExpiry);
   const path = trpc.connection.findPath.useQuery(
     { targetUserId: collection.data?.creatorId ?? '' },
     { enabled: !!collection.data && collection.data.creatorId !== userId },
@@ -150,14 +161,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   const createObligation = trpc.obligation.create.useMutation({ ...local, onSuccess: refresh });
   const updateObligation = trpc.obligation.updateAmount.useMutation({ ...local, onSuccess: refresh });
   const confirmCycle = trpc.obligation.confirmCycle.useMutation({ ...local, onSuccess: refresh });
-  // Withdrawing a Participation is a decision too: the request notice must not bring the impulse back
-  const decline = trpc.obligation.unsubscribeFromCollection.useMutation({
-    ...local,
-    onSuccess: (_row, vars) => {
-      refresh();
-      void declineNeed(vars.collectionId);
-    },
-  });
+  const decline = trpc.obligation.unsubscribeFromCollection.useMutation({ ...local, onSuccess: refresh });
   const closeCollection = trpc.collection.close.useMutation({ ...local, onSuccess: refresh });
   const updateChat = trpc.collection.updateChatLink.useMutation({ ...local, onSuccess: refresh });
   const updateGoal = trpc.collection.updateAmount.useMutation({ ...local, onSuccess: refresh });
@@ -276,17 +280,13 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   const closed = data.status === 'CLOSED' || data.status === 'CANCELLED';
   const hasGoal = data.amount != null && data.amount > 0;
   const renewal = data.type === 'REGULAR' && data.cycleNumber > 1 && data.currentCycleStart != null;
-  const needsConfirm = !!myObl && renewal && myObl.cycleConfirmed === false && !held && !closed && data.status === 'ACTIVE';
+  const needsConfirm = !!myObl && data.needsCycleConfirmation;
   const showDecline = !owner && !!myObl && !closed && !held;
   const chatLink = data.chatLink ?? '';
   const canOpenChat = !owner && !!myObl && !needsConfirm && !closed && !held && !editing && isHttpsUrl(chatLink);
   const firstParticipation = createObligation.data;
   const firstHandshake = acceptSos.variables?.collectionId === data.id && acceptSos.data?.firstConnection === true;
-  // Asked to help, not yet in, and the notice is still open: "Not now" ends the impulse on the Circle
-  const pendingIds = (noticeItems ?? [])
-    .filter((n) => n.collectionId === data.id && isPendingRequest(n, Date.now()))
-    .map((n) => n.id);
-  const waitsForMe = !owner && !myObl && data.status === 'ACTIVE' && !held && pendingIds.length > 0;
+  const waitsForMe = data.waitingForMe && requestExpiry[0] != null && requestExpiry[0] > Date.now();
   const showAdmin = admin.data?.isAdmin === true && !closed && (data.status === 'ACTIVE' || held);
   const language = i18n.language;
   const creatorName = resolve(data.creatorId, data.creator.name);
@@ -575,7 +575,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
             </span>
             <p>
               <b className="font-extrabold">{t('collection.cycleUntil', { date: cycleUntil })}</b>{' '}
-              {t('collection.cycleElse', { amount: formatMoney(myObl.amount) })}
+              {t('collection.cycleElse', { amount: formatIsolatedMoney(myObl.amount) })}
             </p>
           </div>
           {otherOpen ? (
@@ -601,7 +601,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
                   confirm(amount).catch(() => undefined);
                 }}
               >
-                {t('collection.confirmAmount', { amount: formatMoney(parseWhole(editAmount) ?? myObl.amount) })}
+                {t('collection.confirmAmount', { amount: formatIsolatedMoney(parseWhole(editAmount) ?? myObl.amount) })}
               </Button>
             </div>
           ) : (
@@ -611,7 +611,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
                 loading={confirmCycle.isPending}
                 onClick={() => confirm(myObl.amount).catch(() => undefined)}
               >
-                {t('collection.confirmAmount', { amount: formatMoney(myObl.amount) })}
+                {t('collection.confirmAmount', { amount: formatIsolatedMoney(myObl.amount) })}
               </Button>
               <Button
                 variant="secondary"
