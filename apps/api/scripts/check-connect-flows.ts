@@ -75,7 +75,7 @@ async function main() {
   await cleanup();
   const people = ['anna', 'ben', 'cleo', 'dan', 'eva', 'fil', 'gil', 'hal', 'ivy', 'jon', 'kim', 'lea', 'max', 'del'];
   await db.user.createMany({
-    data: people.map((p) => ({ id: id(p), name: `E2E ${p}`, language: 'en', onboardingCompleted: true, monthlyBudget: 50, remainingBudget: 50 }) as any),
+    data: people.map((p) => ({ id: id(p), name: `E2E ${p}`, language: 'en', onboardingCompleted: true, monthlyBudget: 50, remainingBudget: 50, budgetUpdatedAt: new Date() }) as any),
   });
   await db.platformAccount.create({ data: { userId: id('anna'), platform: 'TELEGRAM', platformId: chat('anna') } });
   await db.user.update({ where: { id: id('anna') }, data: { referralSlug: 'e2e-anna' } });

@@ -110,7 +110,7 @@ async function main(db: Prisma.TransactionClient) {
         city: p.city,
         monthlyBudget: p.budget,
         remainingBudget: p.budget,
-        budgetUpdatedAt: p.budget ? ago(3) : undefined,
+        budgetUpdatedAt: p.budget != null ? new Date() : undefined,
         onboardingCompleted: p.key !== 'new',
         createdAt: ago(p.key === 'new' ? 0 : 60 - i),
         lastSeen: ago(i % 5),
@@ -231,7 +231,7 @@ async function seedBigNetwork(db: Prisma.TransactionClient) {
   const owner = await db.user.create({
     data: {
       name: 'Boris Grand', email: 'big@test.local', emailVerifiedAt: ago(200), language: 'ru', city: 'Taipei',
-      monthlyBudget: 100, remainingBudget: 100, budgetUpdatedAt: ago(2), onboardingCompleted: true,
+      monthlyBudget: 100, remainingBudget: 100, budgetUpdatedAt: new Date(), onboardingCompleted: true,
       createdAt: ago(200), lastSeen: ago(0), contacts: { create: [{ type: 'telegram', value: 'big_test' }] },
     },
   });
@@ -250,7 +250,7 @@ async function seedBigNetwork(db: Prisma.TransactionClient) {
         city: take(CITIES),
         monthlyBudget: budget || null,
         remainingBudget: budget || null,
-        budgetUpdatedAt: budget ? ago(1 + (i % 20)) : null,
+        budgetUpdatedAt: budget ? new Date() : null,
         onboardingCompleted: true,
         createdAt: ago(190 - (i % 180)),
         lastSeen: ago(i % 30),

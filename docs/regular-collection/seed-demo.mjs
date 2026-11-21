@@ -17,7 +17,7 @@ const first = cyrillic
   ? ['Ольга', 'Игорь', 'Марта', 'Денис', 'Света', 'Павел', 'Нина', 'Артём', 'Вера', 'Лев', 'Юлия', 'Олег']
   : ['Olga', 'Igor', 'Marta', 'Denis', 'Sara', 'Paul', 'Nina', 'Adam', 'Vera', 'Leo', 'Julia', 'Omar'];
 const initial = (i) => String.fromCharCode((cyrillic ? 1040 : 65) + i);
-const mk = (id, name, extra = {}) => db.user.create({ data: { id, name, language: lang, onboardingCompleted: true, skillsCompleted: true, preferredCurrency: 'USD', monthlyBudget: 50, remainingBudget: 50, lastSeen: new Date(), ...extra } });
+const mk = (id, name, extra = {}) => db.user.create({ data: { id, name, language: lang, onboardingCompleted: true, skillsCompleted: true, preferredCurrency: 'USD', monthlyBudget: 50, remainingBudget: 50, budgetUpdatedAt: new Date(), lastSeen: new Date(), ...extra } });
 
 await mk('u_author', cap.author, { monthlyBudget: 100, remainingBudget: 100 });
 await mk('u_scanner', cap.newcomer, { monthlyBudget: 0, remainingBudget: 0 });

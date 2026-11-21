@@ -33,8 +33,9 @@ try {
   );
 
   await run('people', `
-    INSERT INTO users (id, name, "updatedAt", "createdAt", "lastSeen", "monthlyBudget", "remainingBudget")
-    SELECT ${uid('i')}, 'Person ' || i, now(), now() - random() * interval '300 days', now() - random() * interval '30 days', b, b
+    INSERT INTO users (id, name, "updatedAt", "createdAt", "lastSeen", "monthlyBudget", "remainingBudget", "budgetUpdatedAt")
+    SELECT ${uid('i')}, 'Person ' || i, now(), now() - random() * interval '300 days', now() - random() * interval '30 days', b, b,
+      CASE WHEN b IS NOT NULL THEN now() AT TIME ZONE 'UTC' END
     FROM (SELECT i, CASE WHEN random() < 0.4 THEN 1 + floor(random() * 20) END AS b FROM generate_series(1, ${N}) i) s
   `);
 

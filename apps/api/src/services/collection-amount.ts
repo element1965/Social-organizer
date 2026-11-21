@@ -1,4 +1,4 @@
-import type { Prisma, PrismaClient } from '@so/db';
+import { Prisma, type PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { sendGoalReachedToCreator } from './notification.service.js';
 
@@ -51,36 +51,8 @@ export async function syncCollectionGoal(db: PrismaClient, collectionId: string)
       data: { status: 'EXPIRED' },
     });
 
-    const notifiedUsers = await db.notification.findMany({
-      where: { collectionId },
-      select: { userId: true },
-      distinct: ['userId'],
-    });
-    const pledgedUserIds = new Set(
-      (await db.obligation.findMany({
-        where: { collectionId },
-        select: { userId: true },
-      })).map((row) => row.userId),
-    );
     const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
-    for (const { userId } of notifiedUsers) {
-      if (userId === collection.creatorId) continue;
-      if (pledgedUserIds.has(userId)) continue;
-      try {
-        await db.notification.upsert({
-          where: {
-            userId_collectionId_type_wave: {
-              userId, collectionId, type: 'COLLECTION_BLOCKED', wave: 0,
-            },
-          },
-          create: {
-            userId, collectionId,
-            type: 'COLLECTION_BLOCKED', handshakePath: [], expiresAt, wave: 0,
-          },
-          update: { status: 'UNREAD', expiresAt },
-        });
-      } catch { /* skip */ }
-    }
+    await notifyGoalReached(db, collectionId, collection.creatorId, expiresAt);
 
     sendGoalReachedToCreator(db, collectionId, collection.creatorId).catch((err) =>
       console.error('[TG GoalReached] Failed:', err),
@@ -102,5 +74,78 @@ export async function syncCollectionGoal(db: PrismaClient, collectionId: string)
       },
       data: { status: 'EXPIRED' },
     });
+  }
+}
+
+/**
+ * Tells everyone who was notified about this Need that the goal is reached:
+ * one COLLECTION_BLOCKED row (wave 0) per distinct notified person, except the
+ * author and anyone with an obligation on it (declined pledges included).
+ * An existing row goes back to UNREAD with the new expiry.
+ *
+ * One set-based statement instead of a round trip per person. The recipient set
+ * is computed inside the statement, so there is no parameter list to chunk.
+ * If the statement fails (for example a person deleted mid-statement breaks the
+ * foreign key), it falls back to the per-row upsert, which skips a failing row
+ * and keeps the others, exactly as before.
+ */
+export async function notifyGoalReached(
+  db: PrismaClient,
+  collectionId: string,
+  creatorId: string,
+  expiresAt: Date,
+): Promise<void> {
+  // Prisma stores DateTime as UTC wall time in timestamp(3) columns; convert
+  // explicitly so the session time zone cannot shift these values.
+  const expires = Prisma.sql`${expiresAt.toISOString()}::timestamptz AT TIME ZONE 'UTC'`;
+  const now = Prisma.sql`${new Date().toISOString()}::timestamptz AT TIME ZONE 'UTC'`;
+  try {
+    await db.$executeRaw`
+      INSERT INTO notifications
+        ("id", "userId", "collectionId", "type", "handshakePath", "status", "expiresAt", "wave", "createdAt", "updatedAt")
+      SELECT gen_random_uuid()::text, n."userId", ${collectionId},
+        'COLLECTION_BLOCKED'::"NotificationType", '[]'::jsonb, 'UNREAD'::"NotificationStatus",
+        ${expires}, 0, ${now}, ${now}
+      FROM (SELECT DISTINCT "userId" FROM notifications WHERE "collectionId" = ${collectionId}) n
+      WHERE n."userId" <> ${creatorId}
+        AND NOT EXISTS (
+          SELECT 1 FROM obligations o WHERE o."collectionId" = ${collectionId} AND o."userId" = n."userId"
+        )
+      ON CONFLICT ("userId", "collectionId", "type", "wave") DO UPDATE
+        SET "status" = 'UNREAD'::"NotificationStatus", "expiresAt" = EXCLUDED."expiresAt", "updatedAt" = EXCLUDED."updatedAt"
+    `;
+    return;
+  } catch (err) {
+    console.error('[GoalReached] Batch notice failed, retrying per person:', err);
+  }
+
+  const notifiedUsers = await db.notification.findMany({
+    where: { collectionId },
+    select: { userId: true },
+    distinct: ['userId'],
+  });
+  const pledgedUserIds = new Set(
+    (await db.obligation.findMany({
+      where: { collectionId },
+      select: { userId: true },
+    })).map((row) => row.userId),
+  );
+  for (const { userId } of notifiedUsers) {
+    if (userId === creatorId) continue;
+    if (pledgedUserIds.has(userId)) continue;
+    try {
+      await db.notification.upsert({
+        where: {
+          userId_collectionId_type_wave: {
+            userId, collectionId, type: 'COLLECTION_BLOCKED', wave: 0,
+          },
+        },
+        create: {
+          userId, collectionId,
+          type: 'COLLECTION_BLOCKED', handshakePath: [], expiresAt, wave: 0,
+        },
+        update: { status: 'UNREAD', expiresAt },
+      });
+    } catch { /* skip */ }
   }
 }

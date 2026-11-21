@@ -17,6 +17,7 @@ import { Avatar } from './Avatar';
 import { BannerProvider } from './Banner';
 import { useAskProgress, type AskProgress } from './ask-progress';
 import { AskProgressSync } from '../collection/AskProgressSync';
+import { CIRCLE_STALE_MS } from '../../lib/circleLists';
 import {
   IconAdd,
   IconCircle,
@@ -293,7 +294,7 @@ function LiveShell({ children }: { children?: ReactNode }) {
   const ask = useAskProgress(useAuth((s) => s.userId));
   // One light poll keeps the badge and every list fresh (hooks/usePulse.ts): no timer per query
   usePulse();
-  const { data: attention } = trpc.notification.attention.useQuery();
+  const { data: attention } = trpc.notification.attention.useQuery(undefined, { staleTime: CIRCLE_STALE_MS });
   const accepted = useAcceptedRecent();
   const waiting = (attention?.needs ?? 0) + (attention?.incoming ?? 0) + accepted.unseen;
   const { data: me } = trpc.user.me.useQuery();

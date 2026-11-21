@@ -56,6 +56,8 @@ export async function removeBlockedUser(chatId: string | number): Promise<Remove
           where: { id: userId },
           data: {
             deletedAt: new Date(),
+            // A muted person gives nothing; the network's budget sync reads this column
+            budgetUpdatedAt: new Date(),
             name: 'Deleted user',
             bio: null,
             phone: null,

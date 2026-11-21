@@ -25,7 +25,9 @@ async function withGeneratedSlug<T>(write: (slug: string) => Promise<T>): Promis
 }
 
 export async function createUserWithReferralSlug(db: PrismaClient, data: Prisma.UserCreateInput, campaign?: Campaign) {
-  const user = await withGeneratedSlug((referralSlug) => db.user.create({ data: { ...data, referralSlug } }));
+  // A starting budget is a budget change: the network's budget sync reads `budgetUpdatedAt`.
+  const budgetUpdatedAt = data.budgetUpdatedAt ?? (data.remainingBudget != null ? new Date() : undefined);
+  const user = await withGeneratedSlug((referralSlug) => db.user.create({ data: { ...data, budgetUpdatedAt, referralSlug } }));
   if (campaign) {
     await db.$transaction(async (tx) => {
       // Serialize with deletion so a late campaign write cannot repopulate a deleted profile.
