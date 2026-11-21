@@ -54,10 +54,10 @@ function saveFigure(account: string, data: NetworkFigure, receivedAt: number): v
  * The network figure for every screen that shows it (Circle, Profile, My intention, the Need screen, the offline
  * home): one query per account, with the same key and options everywhere, so the people and the sum always come
  * as one pair from one answer. The query names the account it is for: an answer that a previous session's
- * request brings back is refused by the server and never shown or saved here. Until the first answer, after a
- * failed fetch and offline, the valid saved copy of this account stands in. `figure` is null when there is neither.
+ * request brings back is refused by the server and never shown or saved here. The last answer or saved copy can
+ * still be shown after a failed fetch. Only a current, successful answer is fresh.
  */
-export function useNetworkFigure(): { figure: NetworkFigure | null; fromSaved: boolean } {
+export function useNetworkFigure(): { figure: NetworkFigure | null; fromSaved: boolean; fresh: boolean } {
   const account = useAuth((s) => s.userId);
   const query = trpc.stats.networkFigure.useQuery(account ? { account } : undefined, {
     enabled: !!account,
@@ -88,5 +88,9 @@ export function useNetworkFigure(): { figure: NetworkFigure | null; fromSaved: b
     const timer = window.setTimeout(() => setExpiredTick((n) => n + 1), wait);
     return () => window.clearTimeout(timer);
   }, [saved]);
-  return live ? { figure: live, fromSaved: false } : { figure: saved?.data ?? null, fromSaved: saved != null };
+  const fresh = !!live && query.isSuccess && !query.isStale && !query.isPaused &&
+    !query.isPlaceholderData && query.failureCount === 0 && query.dataUpdatedAt >= query.errorUpdatedAt;
+  return live
+    ? { figure: live, fromSaved: false, fresh }
+    : { figure: saved?.data ?? null, fromSaved: saved != null, fresh: false };
 }

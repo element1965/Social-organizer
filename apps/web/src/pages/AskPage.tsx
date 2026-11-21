@@ -73,7 +73,7 @@ function AskBody() {
   const location = useLocation();
   const utils = trpc.useUtils();
   const access = useAskAccess();
-  const { figure, fromSaved } = useNetworkFigure();
+  const { figure, fresh } = useNetworkFigure();
   const mine = trpc.collection.myActive.useQuery(undefined, { enabled: access.data?.allowed === true });
   const create = trpc.collection.create.useMutation({
     meta: { notifyOnError: false },
@@ -175,8 +175,8 @@ function AskBody() {
   };
 
   const waveLimit = whole != null && whole >= MIN_COLLECTION_AMOUNT ? Math.ceil(whole / NOTIFICATION_RATIO) : null;
-  // Only an exact live figure can cap the wave. The saved figure still feeds the separate network line.
-  const reach = waveLimit != null && figure && !fromSaved && !figure.far.approx
+  // Older figures still feed the separate network line.
+  const reach = waveLimit != null && figure && fresh && !figure.far.approx
     ? Math.min(waveLimit, figure.people)
     : waveLimit;
 
