@@ -1302,7 +1302,7 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, a new cycle for the Need {{creator}} reported starts in 3 days. Each cycle lasts 28 days. You can withdraw your Participation at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new cycle has started for the Need {{creator}} reported.",
+    "renewalStartBody": "{{name}}, a new cycle has started. This Need was posted by {{creator}}.",
     "yourContribution": "Your Participation",
     "period": "Period",
     "pendingAcceptBtn": "Accept",

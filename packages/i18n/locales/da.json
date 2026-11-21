@@ -1302,7 +1302,7 @@
     "renewalReminderTitle": "Påmindelse om fornyelse",
     "renewalReminderBody": "{{name}}, om 3 dage begynder en ny cyklus for det behov, som {{creator}} har meldt. Hver cyklus varer 28 dage. Du kan til enhver tid trække din deltagelse tilbage.",
     "renewalStartTitle": "Ny cyklus er startet",
-    "renewalStartBody": "{{name}}, en ny cyklus er begyndt for det behov, som {{creator}} har meldt.",
+    "renewalStartBody": "{{name}}, en ny cyklus er begyndt. Behovet er meldt af {{creator}}.",
     "yourContribution": "Din deltagelse",
     "period": "Periode",
     "pendingAcceptBtn": "Acceptér",

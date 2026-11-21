@@ -1302,7 +1302,7 @@
     "renewalReminderTitle": "Yenileme hatırlatması",
     "renewalReminderBody": "{{name}}, {{creator}} tarafından bildirilen ihtiyaç için 3 gün sonra yeni bir döngü başlıyor. Her döngü 28 gün sürüyor. Katılımınızı istediğiniz zaman geri çekebilirsiniz.",
     "renewalStartTitle": "Yeni döngü başladı",
-    "renewalStartBody": "{{name}}, {{creator}} tarafından bildirilen ihtiyaç için yeni bir döngü başladı.",
+    "renewalStartBody": "{{name}}, yeni bir döngü başladı. Bu ihtiyacı bildiren kişi: {{creator}}.",
     "yourContribution": "Katılımınız",
     "period": "Dönem",
     "pendingAcceptBtn": "Kabul et",

@@ -1302,7 +1302,7 @@
     "renewalReminderTitle": "नए चक्र की याद",
     "renewalReminderBody": "{{name}}, {{creator}} ने जिस ज़रूरत की जानकारी दी थी, उसका नया चक्र 3 दिन में शुरू होगा। हर चक्र 28 दिन चलता है। आप कभी भी अपनी भागीदारी वापस ले सकते हैं।",
     "renewalStartTitle": "नया चक्र शुरू हुआ",
-    "renewalStartBody": "{{name}}, {{creator}} ने जिस ज़रूरत की जानकारी दी थी, उसका नया चक्र शुरू हो गया है।",
+    "renewalStartBody": "{{name}}, नया चक्र शुरू हो गया है। यह ज़रूरत {{creator}} ने बताई थी।",
     "yourContribution": "आपकी भागीदारी",
     "period": "अवधि",
     "pendingAcceptBtn": "स्वीकार करें",

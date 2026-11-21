@@ -1302,7 +1302,7 @@
     "renewalReminderTitle": "Påminnelse om ny syklus",
     "renewalReminderBody": "{{name}}, om 3 dager begynner en ny syklus for behovet som {{creator}} har meldt. Hver syklus varer i 28 dager. Du kan trekke tilbake deltakelsen din når som helst.",
     "renewalStartTitle": "Ny syklus er startet",
-    "renewalStartBody": "{{name}}, en ny syklus har begynt for behovet som {{creator}} har meldt.",
+    "renewalStartBody": "{{name}}, en ny syklus har begynt. Behovet er meldt av {{creator}}.",
     "yourContribution": "Din deltakelse",
     "period": "Periode",
     "pendingAcceptBtn": "Godta",

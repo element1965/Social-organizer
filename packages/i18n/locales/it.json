@@ -1310,7 +1310,7 @@
     "renewalReminderTitle": "Promemoria rinnovo",
     "renewalReminderBody": "{{name}}, tra 3 giorni inizia un nuovo ciclo per il bisogno segnalato da {{creator}}. Ogni ciclo dura 28 giorni. Puoi ritirare la tua partecipazione in qualsiasi momento.",
     "renewalStartTitle": "Nuovo ciclo iniziato",
-    "renewalStartBody": "{{name}}, è iniziato un nuovo ciclo per il bisogno segnalato da {{creator}}.",
+    "renewalStartBody": "{{name}}, è iniziato un nuovo ciclo. Questo bisogno è stato segnalato da {{creator}}.",
     "yourContribution": "La tua partecipazione",
     "period": "Periodo",
     "pendingAcceptBtn": "Accetta",

@@ -1302,7 +1302,7 @@
     "renewalReminderTitle": "Påminnelse om ny cykel",
     "renewalReminderBody": "{{name}}, om 3 dagar börjar en ny cykel för behovet som {{creator}} har anmält. Varje cykel varar i 28 dagar. Du kan dra tillbaka ditt deltagande när som helst.",
     "renewalStartTitle": "Ny cykel har startat",
-    "renewalStartBody": "{{name}}, en ny cykel har börjat för behovet som {{creator}} har anmält.",
+    "renewalStartBody": "{{name}}, en ny cykel har börjat. Behovet anmäldes av {{creator}}.",
     "yourContribution": "Ditt deltagande",
     "period": "Period",
     "pendingAcceptBtn": "Godkänn",

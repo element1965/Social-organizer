@@ -1294,7 +1294,7 @@
     "renewalReminderTitle": "更新リマインダー",
     "renewalReminderBody": "{{name}}さん、{{creator}}さんが知らせたニーズの新しい周期が3日後に始まります。1周期は28日です。参加はいつでも取り下げられます。",
     "renewalStartTitle": "新しい周期が始まりました",
-    "renewalStartBody": "{{name}}さん、{{creator}}さんが知らせたニーズの新しい周期が始まりました。",
+    "renewalStartBody": "{{name}}さん、新しい周期が始まりました。このニーズを投稿したのは{{creator}}さんです。",
     "yourContribution": "あなたの参加",
     "period": "期間",
     "pendingAcceptBtn": "承認",

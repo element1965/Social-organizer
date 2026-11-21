@@ -1302,7 +1302,7 @@
     "renewalReminderTitle": "Erinnerung an Verlängerung",
     "renewalReminderBody": "{{name}}, in 3 Tagen beginnt ein neuer Zyklus für den Bedarf, den {{creator}} gemeldet hat. Jeder Zyklus dauert 28 Tage. Sie können Ihre Beteiligung jederzeit zurückziehen.",
     "renewalStartTitle": "Neuer Zyklus gestartet",
-    "renewalStartBody": "{{name}}, für den Bedarf, den {{creator}} gemeldet hat, hat ein neuer Zyklus begonnen.",
+    "renewalStartBody": "{{name}}, ein neuer Zyklus hat begonnen. Gemeldet von {{creator}}.",
     "yourContribution": "Ihre Beteiligung",
     "period": "Zeitraum",
     "pendingAcceptBtn": "Annehmen",

@@ -1294,7 +1294,7 @@
     "renewalReminderTitle": "Pengingat perpanjangan",
     "renewalReminderBody": "{{name}}, 3 hari lagi siklus baru dimulai untuk kebutuhan yang disampaikan oleh {{creator}}. Setiap siklus berlangsung 28 hari. Anda bisa menarik partisipasi kapan saja.",
     "renewalStartTitle": "Siklus baru dimulai",
-    "renewalStartBody": "{{name}}, siklus baru sudah dimulai untuk kebutuhan yang disampaikan oleh {{creator}}.",
+    "renewalStartBody": "{{name}}, siklus baru telah dimulai. Kebutuhan ini disampaikan oleh {{creator}}.",
     "yourContribution": "Partisipasi Anda",
     "period": "Periode",
     "pendingAcceptBtn": "Terima",

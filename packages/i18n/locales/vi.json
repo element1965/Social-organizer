@@ -1294,7 +1294,7 @@
     "renewalReminderTitle": "Nhắc về chu kỳ mới",
     "renewalReminderBody": "{{name}}, 3 ngày nữa sẽ bắt đầu chu kỳ mới của nhu cầu mà {{creator}} đã thông báo. Mỗi chu kỳ kéo dài 28 ngày. Bạn có thể rút lại sự tham gia bất cứ lúc nào.",
     "renewalStartTitle": "Chu kỳ mới đã bắt đầu",
-    "renewalStartBody": "{{name}}, chu kỳ mới của nhu cầu mà {{creator}} đã thông báo đã bắt đầu.",
+    "renewalStartBody": "{{name}}, một chu kỳ mới đã bắt đầu. Người đăng nhu cầu này là {{creator}}.",
     "yourContribution": "Sự tham gia của bạn",
     "period": "Kỳ",
     "pendingAcceptBtn": "Chấp nhận",

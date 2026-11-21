@@ -1318,7 +1318,7 @@
     "renewalReminderTitle": "Напоминание о продлении",
     "renewalReminderBody": "{{name}}, через 3 дня начнётся новый цикл потребности, о которой сообщает {{creator}}. Каждый цикл длится 28 дней. Вы можете отозвать участие в любой момент.",
     "renewalStartTitle": "Начался новый цикл",
-    "renewalStartBody": "{{name}}, начался новый цикл по потребности, о которой сообщает {{creator}}.",
+    "renewalStartBody": "{{name}}, начался новый цикл. Автор потребности: {{creator}}.",
     "yourContribution": "Ваше участие",
     "period": "Период",
     "pendingAcceptBtn": "Принять",

@@ -1310,7 +1310,7 @@
     "renewalReminderTitle": "Подсетник за обнову",
     "renewalReminderBody": "{{name}}, за 3 дана почиње нови циклус потребе о којој обавештава {{creator}}. Сваки циклус траје 28 дана. Своје учешће можете да повучете у сваком тренутку.",
     "renewalStartTitle": "Нови циклус је почео",
-    "renewalStartBody": "{{name}}, почео је нови циклус потребе о којој обавештава {{creator}}.",
+    "renewalStartBody": "{{name}}, почео је нови циклус. Аутор потребе: {{creator}}.",
     "yourContribution": "Ваше учешће",
     "period": "Период",
     "pendingAcceptBtn": "Прихватите",

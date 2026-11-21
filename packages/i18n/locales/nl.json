@@ -1302,7 +1302,7 @@
     "renewalReminderTitle": "Herinnering voor een nieuwe cyclus",
     "renewalReminderBody": "{{name}}, over 3 dagen begint een nieuwe cyclus voor de behoefte die {{creator}} heeft gemeld. Elke cyclus duurt 28 dagen. Je kunt je deelname op elk moment intrekken.",
     "renewalStartTitle": "Nieuwe cyclus gestart",
-    "renewalStartBody": "{{name}}, er is een nieuwe cyclus begonnen voor de behoefte die {{creator}} heeft gemeld.",
+    "renewalStartBody": "{{name}}, er is een nieuwe cyclus begonnen. Deze behoefte is gemeld door {{creator}}.",
     "yourContribution": "Jouw deelname",
     "period": "Periode",
     "pendingAcceptBtn": "Accepteren",

@@ -1294,7 +1294,7 @@
     "renewalReminderTitle": "新一轮提醒",
     "renewalReminderBody": "{{name}}，{{creator}} 报告的需求将在 3 天后开始新一轮。每一轮持续 28 天。你可以随时撤回参与。",
     "renewalStartTitle": "新一轮已开始",
-    "renewalStartBody": "{{name}}，{{creator}} 报告的需求已开始新一轮。",
+    "renewalStartBody": "{{name}}，新一轮已经开始。这项需求由{{creator}}发布。",
     "yourContribution": "你的参与",
     "period": "周期",
     "pendingAcceptBtn": "接受",

@@ -1318,7 +1318,7 @@
     "renewalReminderTitle": "Напамін аб працягу",
     "renewalReminderBody": "{{name}}, праз 3 дні пачнецца новы цыкл патрэбы, пра якую паведамляе {{creator}}. Кожны цыкл доўжыцца 28 дзён. Вы можаце адклікаць свой удзел у любы момант.",
     "renewalStartTitle": "Пачаўся новы цыкл",
-    "renewalStartBody": "{{name}}, пачаўся новы цыкл патрэбы, пра якую паведамляе {{creator}}.",
+    "renewalStartBody": "{{name}}, пачаўся новы цыкл. Аўтар патрэбы: {{creator}}.",
     "yourContribution": "Ваш удзел",
     "period": "Перыяд",
     "pendingAcceptBtn": "Прыняць",

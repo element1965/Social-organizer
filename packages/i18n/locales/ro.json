@@ -1310,7 +1310,7 @@
     "renewalReminderTitle": "Reamintire de continuare",
     "renewalReminderBody": "{{name}}, peste 3 zile începe un nou ciclu pentru nevoia anunțată de {{creator}}. Fiecare ciclu durează 28 de zile. Îți poți retrage participarea oricând.",
     "renewalStartTitle": "A început un ciclu nou",
-    "renewalStartBody": "{{name}}, a început un nou ciclu pentru nevoia anunțată de {{creator}}.",
+    "renewalStartBody": "{{name}}, a început un nou ciclu. Această nevoie a fost anunțată de {{creator}}.",
     "yourContribution": "Participarea ta",
     "period": "Perioada",
     "pendingAcceptBtn": "Acceptă",

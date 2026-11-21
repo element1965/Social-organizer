@@ -1334,7 +1334,7 @@
     "renewalReminderTitle": "تذكير بالتجديد",
     "renewalReminderBody": "{{name}}، بعد 3 أيام تبدأ دورة جديدة للاحتياج الذي أبلغ عنه {{creator}}. تستمر كل دورة 28 يومًا. يمكنك سحب مشاركتك في أي وقت.",
     "renewalStartTitle": "بدأت دورة جديدة",
-    "renewalStartBody": "{{name}}، بدأت دورة جديدة للاحتياج الذي أبلغ عنه {{creator}}.",
+    "renewalStartBody": "{{name}}، بدأت دورة جديدة. صاحب الاحتياج: {{creator}}.",
     "yourContribution": "مشاركتك",
     "period": "الفترة",
     "pendingAcceptBtn": "قبول",

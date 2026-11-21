@@ -1310,7 +1310,7 @@
     "renewalReminderTitle": "Lembrete de renovação",
     "renewalReminderBody": "{{name}}, em 3 dias começa um novo ciclo da necessidade que {{creator}} comunicou. Cada ciclo dura 28 dias. Você pode retirar sua participação a qualquer momento.",
     "renewalStartTitle": "Novo ciclo começou",
-    "renewalStartBody": "{{name}}, começou um novo ciclo da necessidade que {{creator}} comunicou.",
+    "renewalStartBody": "{{name}}, começou um novo ciclo. Esta necessidade foi comunicada por {{creator}}.",
     "yourContribution": "Sua participação",
     "period": "Período",
     "pendingAcceptBtn": "Aceitar",

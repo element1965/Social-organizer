@@ -1294,7 +1294,7 @@
     "renewalReminderTitle": "เตือนเรื่องรอบใหม่",
     "renewalReminderBody": "{{name}} อีก 3 วันจะเริ่มรอบใหม่ของความต้องการที่ {{creator}} แจ้งไว้ แต่ละรอบมีระยะเวลา 28 วัน คุณถอนการมีส่วนร่วมได้ทุกเมื่อ",
     "renewalStartTitle": "รอบใหม่เริ่มแล้ว",
-    "renewalStartBody": "{{name}} รอบใหม่ของความต้องการที่ {{creator}} แจ้งไว้เริ่มแล้ว",
+    "renewalStartBody": "{{name}} รอบใหม่เริ่มแล้ว ผู้แจ้งความต้องการนี้คือ {{creator}}",
     "yourContribution": "การมีส่วนร่วมของคุณ",
     "period": "ช่วงเวลา",
     "pendingAcceptBtn": "ยอมรับ",

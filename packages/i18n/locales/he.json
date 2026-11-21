@@ -1310,7 +1310,7 @@
     "renewalReminderTitle": "תזכורת לחידוש",
     "renewalReminderBody": "{{name}}, בעוד 3 ימים יתחיל מחזור חדש של הצורך שעליו דיווחו {{creator}}. כל מחזור נמשך 28 יום. אפשר לבטל את ההשתתפות בכל רגע.",
     "renewalStartTitle": "מחזור חדש התחיל",
-    "renewalStartBody": "{{name}}, התחיל מחזור חדש של הצורך שעליו דיווחו {{creator}}.",
+    "renewalStartBody": "{{name}}, התחיל מחזור חדש. הצורך פורסם על ידי {{creator}}.",
     "yourContribution": "ההשתתפות שלכם",
     "period": "תקופה",
     "pendingAcceptBtn": "אשר",

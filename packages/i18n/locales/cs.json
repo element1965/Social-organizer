@@ -1318,7 +1318,7 @@
     "renewalReminderTitle": "Připomínka obnovení",
     "renewalReminderBody": "{{name}}, za 3 dny začne nový cyklus potřeby, o které informuje {{creator}}. Každý cyklus trvá 28 dní. Svou účast můžete kdykoli odvolat.",
     "renewalStartTitle": "Začal nový cyklus",
-    "renewalStartBody": "{{name}}, začal nový cyklus potřeby, o které informuje {{creator}}.",
+    "renewalStartBody": "{{name}}, začal nový cyklus. Potřebu nahlásil(a) {{creator}}.",
     "yourContribution": "Vaše účast",
     "period": "Období",
     "pendingAcceptBtn": "Přijmout",

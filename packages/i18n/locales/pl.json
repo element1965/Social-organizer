@@ -1318,7 +1318,7 @@
     "renewalReminderTitle": "Przypomnienie o odnowieniu",
     "renewalReminderBody": "{{name}}, za 3 dni zacznie się nowy cykl potrzeby zgłoszonej przez {{creator}}. Każdy cykl trwa 28 dni. Możesz wycofać swój udział w każdej chwili.",
     "renewalStartTitle": "Rozpoczął się nowy cykl",
-    "renewalStartBody": "{{name}}, zaczął się nowy cykl potrzeby zgłoszonej przez {{creator}}.",
+    "renewalStartBody": "{{name}}, rozpoczął się nowy cykl. Autor potrzeby: {{creator}}.",
     "yourContribution": "Twój udział",
     "period": "Okres",
     "pendingAcceptBtn": "Przyjmij",
