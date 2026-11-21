@@ -31,6 +31,31 @@ export const inviteRouter = router({
       return { token: invite.token, id: invite.id, expiresAt: invite.expiresAt };
     }),
 
+  liveClaims: protectedProcedure
+    .input(z.object({ inviteIds: z.array(z.string().min(1).max(64)).min(1).max(60) }))
+    .query(async ({ ctx, input }) => {
+      // Keep recently expired codes in the poll so a claim already in its transaction can settle.
+      const settledBefore = new Date(Date.now() - 30_000);
+      const invites = await ctx.db.inviteLink.findMany({
+        where: {
+          inviterId: ctx.userId,
+          id: { in: input.inviteIds },
+          expiresAt: { not: null },
+          OR: [{ usedAt: { not: null } }, { expiresAt: { lt: settledBefore } }],
+        },
+        select: {
+          id: true,
+          usedAt: true,
+          usedBy: { select: { id: true, name: true, photoUrl: true, deletedAt: true } },
+        },
+      });
+      return invites.map(({ id, usedAt, usedBy }) => ({
+        id,
+        claimed: usedAt != null,
+        person: usedBy && !usedBy.deletedAt ? { id: usedBy.id, name: usedBy.name, photoUrl: usedBy.photoUrl } : null,
+      }));
+    }),
+
   accept: protectedProcedure
     .input(z.object({
       token: z.string(),
@@ -302,20 +327,12 @@ export const inviteRouter = router({
   getByToken: publicProcedure
     .input(z.object({ token: z.string() }))
     .query(async ({ ctx, input }) => {
-      const getInviterStats = async (userId: string) => {
-        const [connectionsFrom, connectionsTo, intentions] = await Promise.all([
+      const getNetworkCount = async (userId: string) => {
+        const [connectionsFrom, connectionsTo] = await Promise.all([
           ctx.db.connection.count({ where: { userAId: userId } }),
           ctx.db.connection.count({ where: { userBId: userId } }),
-          // "Declared intentions" = the inviter's own recorded participation in collections
-          // (an intention is participation, SO-40), not the goals of the inviter's collections.
-          ctx.db.obligation.aggregate({
-            where: { userId, collection: { status: { not: 'CANCELLED' } } },
-            _sum: { amount: true },
-          }),
         ]);
-        const networkCount = connectionsFrom + connectionsTo;
-        const totalIntentions = intentions._sum.amount ?? 0;
-        return { networkCount, totalIntentions };
+        return connectionsFrom + connectionsTo;
       };
 
       // Try single-use invite first
@@ -328,7 +345,6 @@ export const inviteRouter = router({
         // An expired live QR still shows who invited: signing up takes longer than the code lives, and
         // accepting it from this page sends an ordinary request (accept with viaLink)
         const expired = !!invite.expiresAt && !invite.usedById && invite.expiresAt.getTime() <= Date.now();
-        const stats = await getInviterStats(invite.inviterId);
         // Only what the page needs: another person's id is never sent, only that someone else used it
         return {
           id: invite.id,
@@ -339,7 +355,7 @@ export const inviteRouter = router({
           createdAt: invite.createdAt,
           expired,
           inviter: { id: invite.inviter.id, name: invite.inviter.name, photoUrl: invite.inviter.photoUrl },
-          ...stats,
+          networkCount: await getNetworkCount(invite.inviterId),
         };
       }
 
@@ -356,7 +372,6 @@ export const inviteRouter = router({
       }
       if (user?.deletedAt) throw new TRPCError({ code: 'NOT_FOUND', message: 'INVITER_DELETED' });
       if (user) {
-        const stats = await getInviterStats(user.id);
         return {
           id: `permanent-${user.id}`,
           token: input.token,
@@ -365,7 +380,7 @@ export const inviteRouter = router({
           usedAt: null,
           createdAt: new Date(),
           inviter: { id: user.id, name: user.name, photoUrl: user.photoUrl },
-          ...stats,
+          networkCount: await getNetworkCount(user.id),
         };
       }
 

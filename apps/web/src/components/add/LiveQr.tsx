@@ -11,6 +11,7 @@ const MIN_GAP_MS = 3_000;
 const MAX_BACKOFF_MS = 30_000;
 
 interface Pass {
+  id: string;
   token: string;
   expiresAt: number;
 }
@@ -26,8 +27,9 @@ function formatLeft(ms: number): string {
  * Fills the height its parent gives it (a `fill` Screen), buttons at the bottom. `children` go under the buttons,
  * so an extra action never pushes the screen past the viewport.
  */
-export function LiveQr({ connectedHere, onScan, onDone, children }: {
-  connectedHere: number;
+export function LiveQr({ claimedIds, onIssued, onScan, onDone, children }: {
+  claimedIds: ReadonlySet<string>;
+  onIssued: (id: string) => void;
   onScan: () => void;
   onDone: () => void;
   children?: ReactNode;
@@ -36,19 +38,20 @@ export function LiveQr({ connectedHere, onScan, onDone, children }: {
   const generate = trpc.invite.generate.useMutation({ meta: { notifyOnError: false } });
   const generateRef = useRef(generate.mutateAsync);
   generateRef.current = generate.mutateAsync;
+  const issuedRef = useRef(onIssued);
+  issuedRef.current = onIssued;
   const [pass, setPass] = useState<Pass | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const [failed, setFailed] = useState(false);
   const [retry, setRetry] = useState(0);
-  const refreshRef = useRef<(() => void) | null>(null);
-  const lastTally = useRef(connectedHere);
+  const refreshRef = useRef<((ids: ReadonlySet<string>) => void) | null>(null);
 
   useEffect(() => {
     let stopped = false;
     let pending = false;
     let current: Pass | null = null;
     let failures = 0;
-    let lastIssued = 0;
+    let nextAttemptAt = 0;
     let epoch = 0;
     let wantFresh = false;
     let waitTimer = 0;
@@ -67,21 +70,12 @@ export function LiveQr({ connectedHere, onScan, onDone, children }: {
       interval = 0;
     };
 
-    // The countdown is the client clock from the moment the pass arrives.
-    // The server expiresAt is not compared with Date.now(): a skewed clock would refresh immediately.
-    const nextDelay = () => {
-      const since = lastIssued > 0 ? Date.now() - lastIssued : MIN_GAP_MS;
-      const floor = lastIssued > 0 ? Math.max(0, MIN_GAP_MS - since) : 0;
-      const backoff = failures > 0 ? Math.min(MAX_BACKOFF_MS, MIN_GAP_MS * 2 ** (failures - 1)) : 0;
-      return Math.max(floor, backoff);
-    };
-
-    const schedule = (delay: number) => {
+    const schedule = () => {
       clearWait();
       waitTimer = window.setTimeout(() => {
         waitTimer = 0;
         void issue();
-      }, delay);
+      }, Math.max(0, nextAttemptAt - Date.now()));
     };
 
     const armTick = () => {
@@ -100,31 +94,39 @@ export function LiveQr({ connectedHere, onScan, onDone, children }: {
 
     const issue = async (afterConnection = false) => {
       if (stopped || pending || hidden()) return;
-      const delay = afterConnection && failures === 0 ? 0 : nextDelay();
-      if (delay > 0) {
-        schedule(delay);
+      if (!afterConnection && Date.now() < nextAttemptAt) {
+        schedule();
         return;
       }
       clearWait();
       pending = true;
       const ticket = epoch;
-      lastIssued = Date.now();
+      const startedAt = Date.now();
+      nextAttemptAt = startedAt + MIN_GAP_MS;
       try {
         const res = await generateRef.current({ ttl: 60 });
         if (stopped || ticket !== epoch || hidden()) return;
-        const issuedAt = Date.now();
-        current = { token: res.token, expiresAt: issuedAt + TTL_MS };
+        // Start from the request to account for round-trip time without comparing different clocks.
+        const expiresAt = startedAt + TTL_MS;
+        const arrivedAt = Date.now();
         failures = 0;
-        setPass(current);
-        setNow(issuedAt);
         setFailed(false);
+        if (arrivedAt >= expiresAt) {
+          wantFresh = true;
+          return;
+        }
+        current = { id: res.id, token: res.token, expiresAt };
+        issuedRef.current(res.id);
+        setPass(current);
+        setNow(arrivedAt);
       } catch {
         if (stopped || ticket !== epoch || hidden()) return;
         failures += 1;
         current = null;
         setPass(null);
         setFailed(true);
-        schedule(nextDelay());
+        nextAttemptAt = Date.now() + Math.min(MAX_BACKOFF_MS, MIN_GAP_MS * 2 ** (failures - 1));
+        schedule();
       } finally {
         pending = false;
         if (!stopped && wantFresh && visible()) {
@@ -151,7 +153,8 @@ export function LiveQr({ connectedHere, onScan, onDone, children }: {
       else void issue();
     };
 
-    refreshRef.current = () => {
+    refreshRef.current = (ids) => {
+      if (!current || !ids.has(current.id)) return;
       current = null;
       setPass(null);
       void issue(true);
@@ -172,10 +175,8 @@ export function LiveQr({ connectedHere, onScan, onDone, children }: {
   }, [retry]);
 
   useEffect(() => {
-    if (connectedHere === lastTally.current) return;
-    lastTally.current = connectedHere;
-    refreshRef.current?.();
-  }, [connectedHere]);
+    refreshRef.current?.(claimedIds);
+  }, [claimedIds]);
 
   const remaining = pass ? Math.max(0, pass.expiresAt - now) : TTL_MS;
   const fraction = Math.min(1, remaining / TTL_MS);
@@ -186,12 +187,12 @@ export function LiveQr({ connectedHere, onScan, onDone, children }: {
       <QrCodeView
         url={url}
         fraction={fraction}
-        timeLabel={pass ? formatLeft(remaining) : '1:00'}
+        timeLabel={pass ? formatLeft(remaining) : null}
         failed={failed}
         onRetry={() => setRetry((value) => value + 1)}
       />
       <p className="mt-2 text-label font-bold tabular-nums text-ink-muted" role="status">
-        {t('add.connectedHere', { connections: new Intl.NumberFormat(i18n.language).format(connectedHere) })}
+        {t('add.connectedHere', { connections: new Intl.NumberFormat(i18n.language).format(claimedIds.size) })}
       </p>
       <div className="mt-auto w-full pt-8">
         <Button className="w-full" variant="secondary" icon={<IconScan />} onClick={onScan}>

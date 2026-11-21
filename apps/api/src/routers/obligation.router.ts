@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { Prisma } from '@so/db';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
@@ -109,13 +110,18 @@ export const obligationRouter = router({
 
       // Update obligation
       const updated = await ctx.db.obligation.update({
-        where: { id: input.obligationId },
+        where: { id: input.obligationId, unsubscribedAt: null },
         data: {
           amount: newAmountUSD,
           originalAmount: null, // clear amounts typed in other currencies before SO-40
           originalCurrency: null,
         },
         omit: { confirmedAt: true },
+      }).catch((err: unknown) => {
+        if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Participation is no longer active' });
+        }
+        throw err;
       });
 
       await syncCollectionGoal(ctx.db, obligation.collectionId);
@@ -227,19 +233,19 @@ export const obligationRouter = router({
     .mutation(async ({ ctx, input }) => {
       const obligation = await ctx.db.obligation.findUnique({
         where: { id: input.obligationId },
+        select: { userId: true, isSubscription: true, collectionId: true },
       });
       if (!obligation) throw new TRPCError({ code: 'NOT_FOUND' });
       if (obligation.userId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
       if (!obligation.isSubscription) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Not a subscription' });
       }
-      const updated = await ctx.db.obligation.update({
-        where: { id: input.obligationId },
+      await ctx.db.obligation.updateMany({
+        where: { id: input.obligationId, unsubscribedAt: null },
         data: { unsubscribedAt: new Date() },
-        omit: { confirmedAt: true },
       });
-      await syncCollectionGoal(ctx.db, updated.collectionId);
-      return updated;
+      await syncCollectionGoal(ctx.db, obligation.collectionId);
+      return { ok: true as const };
     }),
 
   // Used from the renewal reminder notification — finds the caller's active
@@ -253,18 +259,18 @@ export const obligationRouter = router({
           userId: ctx.userId,
           unsubscribedAt: null,
         },
+        select: { id: true },
       });
       if (!obligation) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Active intention not found' });
       }
-      const updated = await ctx.db.obligation.update({
-        where: { id: obligation.id },
+      const updated = await ctx.db.obligation.updateMany({
+        where: { id: obligation.id, unsubscribedAt: null },
         data: { unsubscribedAt: new Date() },
-        omit: { confirmedAt: true },
       });
       // A goal-reached hold (blockReason null) opens again when the active total drops below the goal.
-      await syncCollectionGoal(ctx.db, input.collectionId);
-      return updated;
+      if (updated.count > 0) await syncCollectionGoal(ctx.db, input.collectionId);
+      return { ok: true as const };
     }),
 
   /**

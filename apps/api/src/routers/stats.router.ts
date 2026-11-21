@@ -286,14 +286,20 @@ export const statsRouter = router({
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const targetUserId = input.userId;
-      // Who helped whom and for how much is private: only the person themself and admins
+      // Admins can open this view, but every item still requires access to its Need.
       if (targetUserId !== ctx.userId && !ADMIN_IDS.includes(ctx.userId)) {
         throw new TRPCError({ code: 'FORBIDDEN', message: 'Help history is visible only to its owner and admins' });
       }
 
+      const canSeeAmounts = {
+        OR: [
+          { creatorId: ctx.userId },
+          { obligations: { some: { userId: ctx.userId, unsubscribedAt: null } } },
+        ],
+      };
       // "Helped" = obligations where userId = target → collection.creator is who they helped
       const helpedObligations = await ctx.db.obligation.findMany({
-        where: { userId: targetUserId },
+        where: { userId: targetUserId, unsubscribedAt: null, collection: canSeeAmounts },
         select: {
           id: true,
           amount: true,
@@ -311,7 +317,10 @@ export const statsRouter = router({
 
       // "Helped by" = obligations in collections where creatorId = target → obligation.user is who helped them
       const helpedByObligations = await ctx.db.obligation.findMany({
-        where: { collection: { creatorId: targetUserId } },
+        where: {
+          unsubscribedAt: null,
+          collection: { creatorId: targetUserId, ...canSeeAmounts },
+        },
         select: {
           id: true,
           amount: true,

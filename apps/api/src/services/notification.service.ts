@@ -69,8 +69,8 @@ export async function sendCollectionNotifications(
     ignoredUserIds.add(n.userId);
   }
 
-  // Requests for help are routed by behaviour (notify-routing.service): the wave budget counts only external
-  // messages, and people who should not get one now get the in-app entry without taking a slot.
+  // The amount-based wave budget counts only external messages. People held back by the delivery rules
+  // get an in-app entry without taking a slot. The walk uses the graph directly, including the outer rings.
   // Other types keep the plain nearest-first walk.
   const isRequest = type === 'NEW_COLLECTION' || type === 'RE_NOTIFY';
   let recipients: BfsRecipient[];
@@ -426,7 +426,7 @@ export async function sendCycleRenewedTg(
 
   const collection = await db.collection.findUnique({
     where: { id: collectionId },
-    select: { chatLink: true, currentCycleStart: true, cycleNumber: true },
+    select: { currentCycleStart: true, cycleNumber: true },
   });
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
   if (!collection || !creator) return;
@@ -434,23 +434,19 @@ export async function sendCycleRenewedTg(
   // Called right after the cycle was rolled over, so currentCycleStart is the new cycle.
   const periodStart = collection.currentCycleStart ?? new Date();
   const periodEnd = new Date(periodStart.getTime() + (REGULAR_CYCLE_DAYS - 1) * DAY_MS); // last day of the cycle
-  const contributions = await getUserContributions(db, collectionId, recipientUserIds);
   const names = await userNames(db, recipientUserIds);
+  // Read active Participation again at dispatch, after the worker's candidate list was made.
+  const contributions = await getUserContributions(db, collectionId, recipientUserIds);
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
-  await deliverMany(db, recipientUserIds, (userId) => ({
+  await deliverMany(db, [...contributions.keys()], (userId) => ({
     key: `cycle:${collectionId}:${collection.cycleNumber}:start`,
     kind: 'cycle',
     push: { title: 'New cycle started', body: 'A Need you take part in (every 28 days) has started a new cycle.', url: webAppLink },
-    telegram: (lang) => {
-      const buttons: TgReplyMarkup['inline_keyboard'] = [];
-      if (collection.chatLink) buttons.push([{ text: `💬 ${tg(lang, 'open')}`, url: collection.chatLink }]);
-      buttons.push([{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]);
-      return {
-        text: `🔁 <b>${tg(lang, 'renewalStartTitle')}</b>\n\n${tg(lang, 'renewalStartBody').replace('{{name}}', tgEscape(names.get(userId))).replace('{{creator}}', tgEscape(creator.name))}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
-        replyMarkup: { inline_keyboard: buttons },
-      };
-    },
+    telegram: (lang) => ({
+      text: `🔁 <b>${tg(lang, 'renewalStartTitle')}</b>\n\n${tg(lang, 'renewalStartBody').replace('{{name}}', tgEscape(names.get(userId))).replace('{{creator}}', tgEscape(creator.name))}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
+      replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]] },
+    }),
   }));
 }
 

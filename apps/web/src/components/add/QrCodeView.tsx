@@ -9,8 +9,8 @@ type QrCodeViewProps = {
   url: string;
   /** The part of the code's life that is left, 0 to 1 (the ring around it). */
   fraction: number;
-  /** "0:45" */
-  timeLabel: string;
+  /** "0:45" when a code is displayed. */
+  timeLabel: string | null;
   failed?: boolean;
   onRetry?: () => void;
 };
@@ -53,12 +53,17 @@ export function QrCodeView({ url, fraction, timeLabel, failed, onRetry }: QrCode
           ) : null}
         </div>
       </div>
-      <p className="mt-3.5 text-h2 font-extrabold tabular-nums text-ink" aria-hidden="true">
-        {timeLabel}
+      <p
+        className={`mt-3.5 text-h2 font-extrabold tabular-nums text-ink${timeLabel ? '' : ' invisible'}`}
+        role="timer"
+        aria-live="off"
+        aria-label={timeLabel ? t('add.qrTimeLeft', { time: timeLabel }) : undefined}
+      >
+        {timeLabel ?? '1:00'}
       </p>
       <p className="mt-1.5 max-w-[30ch] text-caption font-semibold text-ink-muted">{t('add.qrHint')}</p>
       {failed ? (
-        <button type="button" className="so-focus mt-3 text-label font-bold text-sos" onClick={onRetry}>
+        <button type="button" className="so-focus relative mt-3 min-h-7 text-label font-bold text-sos before:absolute before:-inset-2" onClick={onRetry}>
           {t('add.qrError')}
         </button>
       ) : null}

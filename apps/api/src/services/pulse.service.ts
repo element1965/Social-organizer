@@ -20,7 +20,7 @@ export interface Pulse {
   /** pending.acceptedRecent: my requests the other person confirmed, as that list sees them. */
   accepted: { count: number; unseen: number; latestAt: number } | null;
   /** collection.myActive: my own active or paused Needs and the pledges on them. */
-  mine: NeedStamp | null;
+  mine: (NeedStamp & { confirmed: number }) | null;
   /** collection.myParticipating: the Needs I pledged to and every pledge on them. */
   participating: NeedStamp | null;
   /** milestone.list. */
@@ -38,8 +38,7 @@ export interface NeedStamp {
   pledges: number;
   /** Sum of the active pledges: an amount changed in place moves no time */
   pledged: number;
-  confirmed: number;
-  /** Newest pledge made, withdrawn or marked as received */
+  /** Newest pledge made or withdrawn. For the author this also tracks received marks. */
   pledgeAt: number;
 }
 
@@ -51,11 +50,11 @@ type NeedRow = {
   changed_at: Date | null;
   pledges: number;
   pledged: number | null;
-  confirmed: number;
   made_at: Date | null;
   left_at: Date | null;
-  confirmed_at: Date | null;
 };
+
+type MineRow = NeedRow & { confirmed: number; confirmed_at: Date | null };
 
 function needStamp(row: NeedRow | undefined): NeedStamp {
   return {
@@ -64,8 +63,7 @@ function needStamp(row: NeedRow | undefined): NeedStamp {
     pledges: num(row?.pledges),
     // Rounded to cents: a float sum must not differ between two identical states
     pledged: Math.round(num(row?.pledged) * 100) / 100,
-    confirmed: num(row?.confirmed),
-    pledgeAt: Math.max(ms(row?.made_at), ms(row?.left_at), ms(row?.confirmed_at)),
+    pledgeAt: Math.max(ms(row?.made_at), ms(row?.left_at)),
   };
 }
 
@@ -113,7 +111,7 @@ export async function getPulse(db: PrismaClient, userId: string): Promise<Pulse>
       _count: { _all: true, requesterSeenAt: true },
       _max: { resolvedAt: true },
     }),
-    db.$queryRaw<NeedRow[]>`
+    db.$queryRaw<MineRow[]>`
       SELECT count(DISTINCT c.id)::int AS count,
              max(c."updatedAt") AS changed_at,
              count(o.id)::int AS pledges,
@@ -131,10 +129,8 @@ export async function getPulse(db: PrismaClient, userId: string): Promise<Pulse>
              max(c."updatedAt") AS changed_at,
              count(o.id)::int AS pledges,
              sum(o.amount) FILTER (WHERE o."unsubscribedAt" IS NULL)::float8 AS pledged,
-             count(o."confirmedAt")::int AS confirmed,
              max(o."createdAt") AS made_at,
-             max(o."unsubscribedAt") AS left_at,
-             max(o."confirmedAt") AS confirmed_at
+             max(o."unsubscribedAt") AS left_at
       FROM obligations m
       JOIN collections c ON c.id = m."collectionId"
       LEFT JOIN obligations o ON o."collectionId" = c.id
@@ -166,6 +162,8 @@ export async function getPulse(db: PrismaClient, userId: string): Promise<Pulse>
 
   const n = notices?.[0];
   const node = graph?.find(userId);
+  const mineRow = mine?.[0];
+  const mineStamp = needStamp(mineRow);
   return {
     notifications: notices
       ? { active: num(n?.active), unread: num(n?.unread), live: num(n?.live), changedAt: Math.max(ms(n?.notice_at), ms(n?.need_at)) }
@@ -179,7 +177,11 @@ export async function getPulse(db: PrismaClient, userId: string): Promise<Pulse>
           latestAt: ms(accepted._max.resolvedAt),
         }
       : null,
-    mine: mine ? needStamp(mine[0]) : null,
+    mine: mine ? {
+      ...mineStamp,
+      confirmed: num(mineRow?.confirmed),
+      pledgeAt: Math.max(mineStamp.pledgeAt, ms(mineRow?.confirmed_at)),
+    } : null,
     participating: participating ? needStamp(participating[0]) : null,
     milestones: milestones
       ? {

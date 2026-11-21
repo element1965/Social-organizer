@@ -175,11 +175,10 @@ function AskBody() {
   };
 
   const waveLimit = whole != null && whole >= MIN_COLLECTION_AMOUNT ? Math.ceil(whole / NOTIFICATION_RATIO) : null;
-  const reach = networkPeople != null && waveLimit != null
-    ? Math.min(waveLimit, networkPeople)
-    : null;
-  // The public figure rounds the outer rings for privacy. Beyond the visible rings, the cap can be approximate.
-  const approximateReach = figure?.far.approx && waveLimit != null && waveLimit > figure.people - figure.far.count;
+  // A rounded network figure can be smaller than the real network and cannot cap the wave.
+  const reach = waveLimit != null && figure && !figure.far.approx
+    ? Math.min(waveLimit, figure.people)
+    : waveLimit;
 
   return (
     <>
@@ -236,22 +235,24 @@ function AskBody() {
             </button>
           )}
         </div>
-        {networkPeople != null ? (
+        {reach != null || networkPeople != null ? (
           <div className="mt-4 rounded-lg bg-care-soft px-3.5 py-3">
             {reach != null ? (
               <p className="text-caption font-semibold text-ink">
                 {t('ask.reach', {
                   count: reach,
-                  people: (approximateReach ? '≈' : '') + formatCount(reach, i18n.language),
+                  people: formatCount(reach, i18n.language),
                 })}
               </p>
             ) : null}
-            <p className="text-label font-semibold text-ink-muted">
-              {t('ask.reachNetwork', {
-                count: networkPeople,
-                people: (figure?.far.approx ? '≈' : '') + formatCount(networkPeople, i18n.language),
-              })}
-            </p>
+            {networkPeople != null ? (
+              <p className="text-label font-semibold text-ink-muted">
+                {t('ask.reachNetwork', {
+                  count: networkPeople,
+                  people: (figure?.far.approx ? '≈' : '') + formatCount(networkPeople, i18n.language),
+                })}
+              </p>
+            ) : null}
           </div>
         ) : null}
         {errors.form ? <p className="mt-3 text-label font-semibold text-sos">{errors.form}</p> : null}

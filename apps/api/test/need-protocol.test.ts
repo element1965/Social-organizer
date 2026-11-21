@@ -3,6 +3,9 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest
 import { appRouter } from '../src/routers/index.js';
 import { getAskAccess } from '../src/services/ask-access.service.js';
 import { invalidateGraph } from '../src/services/graph-cache.service.js';
+import { sendCycleRenewedTg } from '../src/services/notification.service.js';
+import * as telegram from '../src/services/telegram-bot.service.js';
+import { WEB_APP_URL } from '../src/deployment.js';
 import { runReNotify } from '../src/workers/re-notify.worker.js';
 import { createTestDatabase } from './test-database.js';
 
@@ -13,6 +16,7 @@ vi.hoisted(() => {
     'VAPID_PUBLIC_KEY', 'VAPID_PRIVATE_KEY', 'APNS_KEY', 'RESEND_API_KEY',
   ]) delete process.env[key];
   process.env.JWT_SECRET = 'local-need-protocol-test-key';
+  process.env.ADMIN_IDS = 'privacy-admin';
 });
 
 let db: PrismaClient;
@@ -60,8 +64,11 @@ async function seedNetwork(author: string, direct: number, depth: number, extraA
 }
 
 function reportNeed(userId: string, amount = 10) {
-  const caller = appRouter.createCaller({ db, userId, ip: '127.0.0.1' });
-  return caller.collection.create({ type: 'EMERGENCY', amount, chatLink: 'https://t.me/needprotocoltest' });
+  return caller(userId).collection.create({ type: 'EMERGENCY', amount, chatLink: 'https://t.me/needprotocoltest' });
+}
+
+function caller(userId: string | null) {
+  return appRouter.createCaller({ db, userId, ip: '127.0.0.1' });
 }
 
 function recipients(collectionId: string, type: 'NEW_COLLECTION' | 'RE_NOTIFY') {
@@ -112,12 +119,102 @@ describe('Need access', () => {
 });
 
 describe('Need participant visibility', () => {
+  it('keeps the inviter’s active and withdrawn amounts out of public invite responses', async () => {
+    const [inviter, author] = ['invite-private', 'invite-private-author'];
+    await db.user.createMany({ data: [inviter, author].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({ data: { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat' } });
+    await db.obligation.createMany({ data: [
+      { collectionId: need.id, userId: inviter, amount: 71 },
+      { collectionId: need.id, userId: inviter, amount: 39, unsubscribedAt: new Date() },
+    ] });
+    const { token } = await caller(inviter).invite.generate();
+    const guest = caller(null);
+    for (const key of [token, inviter]) {
+      const invite = await guest.invite.getByToken({ token: key });
+      expect(invite).toMatchObject({ networkCount: 0, inviter: { id: inviter } });
+      expect(invite).not.toHaveProperty('totalIntentions');
+    }
+  });
+
+  it('changes only the author’s pulse when a received mark is toggled', async () => {
+    const [author, participant] = ['pulse-author', 'pulse-participant'];
+    await db.user.createMany({ data: [author, participant].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({ data: { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat' } });
+    const row = await db.obligation.create({
+      data: { collectionId: need.id, userId: participant, amount: 4, createdAt: new Date(Date.now() - hour) },
+    });
+    const owner = caller(author);
+    const member = caller(participant);
+    const before = await member.notification.pulse();
+    expect(before.participating).toMatchObject({ count: 1, pledgeAt: row.createdAt.getTime() });
+    expect((await owner.notification.pulse()).mine).toMatchObject({ confirmed: 0 });
+    await owner.obligation.setPaid({ obligationIds: [row.id], paid: true });
+    expect(await member.notification.pulse()).toEqual(before);
+    expect(before.participating).not.toHaveProperty('confirmed');
+    const marked = (await owner.notification.pulse()).mine;
+    expect(marked).toMatchObject({ confirmed: 1 });
+    expect(marked?.pledgeAt).toBeGreaterThan(row.createdAt.getTime());
+    await owner.obligation.setPaid({ obligationIds: [row.id], paid: false });
+    expect(await member.notification.pulse()).toEqual(before);
+    expect((await owner.notification.pulse()).mine).toMatchObject({ confirmed: 0 });
+  });
+
+  it('excludes a withdrawn person from cycle renewal dispatch', async () => {
+    const [author, active, withdrawn] = ['renewal-author', 'renewal-active', 'renewal-withdrawn'];
+    await db.user.createMany({ data: [author, active, withdrawn].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'REGULAR', cycleNumber: 2, chatLink: 'https://example.com/private-chat' },
+    });
+    await db.obligation.createMany({ data: [
+      { collectionId: need.id, userId: active, amount: 4 },
+      { collectionId: need.id, userId: withdrawn, amount: 6, unsubscribedAt: new Date() },
+    ] });
+    await db.platformAccount.createMany({
+      data: [active, withdrawn].map((userId) => ({ platform: 'TELEGRAM', platformId: userId, userId })),
+    });
+    const send = vi.spyOn(telegram, 'sendTgMessages');
+    try {
+      await sendCycleRenewedTg(db, need.id, author, [active, withdrawn]);
+      const deliveries = await db.notificationDelivery.findMany({ where: { eventKey: `cycle:${need.id}:2:start` } });
+      expect(deliveries.map((delivery) => delivery.userId)).toEqual([active]);
+      expect(send).toHaveBeenCalledTimes(1);
+      const messages = send.mock.calls[0]?.[0];
+      expect(messages).toHaveLength(1);
+      expect(messages?.[0]?.replyMarkup?.inline_keyboard.flat()).toEqual([
+        expect.objectContaining({ web_app: { url: `${WEB_APP_URL}/collection/${need.id}` } }),
+      ]);
+      expect(JSON.stringify(messages)).not.toContain('https://example.com/private-chat');
+    } finally {
+      send.mockRestore();
+    }
+  });
+
+  it('tracks claims for the inviter’s requested QR tokens even after the connection is removed', async () => {
+    const [inviter, scanner, other] = ['qr-inviter', 'qr-scanner', 'qr-other'];
+    await db.user.createMany({ data: [inviter, scanner, other].map((id) => ({ id, name: id })) });
+    const owner = caller(inviter);
+    const visitor = caller(other);
+    const { id, token } = await owner.invite.generate({ ttl: 60 });
+    const unused = await owner.invite.generate({ ttl: 60 });
+    const unrelated = await visitor.invite.generate({ ttl: 60 });
+    await caller(scanner).invite.accept({ token });
+    const removed = await db.connection.deleteMany({ where: { userAId: inviter, userBId: scanner } });
+    expect(removed.count).toBe(1);
+    expect(await owner.invite.liveClaims({ inviteIds: [unused.id, unrelated.id] })).toEqual([]);
+    expect(await visitor.invite.liveClaims({ inviteIds: [id] })).toEqual([]);
+    expect(await owner.invite.liveClaims({ inviteIds: [id, unused.id] })).toEqual([
+      { id, claimed: true, person: { id: scanner, name: scanner, photoUrl: null } },
+    ]);
+  });
+
   it('limits amounts and chat to the author and active participants, and received marks to the author', async () => {
     const author = 'privacy-author';
     const { circle } = await seedNetwork(author, 5, 6);
     const participant = circle[0]!;
     const remaining = circle[1]!;
     const viewer = circle[2]!;
+    const admin = 'privacy-admin';
+    await db.user.create({ data: { id: admin, name: admin } });
     const chatLink = 'https://example.com/participants';
     const need = await db.collection.create({
       data: { creatorId: author, type: 'REGULAR', amount: 100, chatLink },
@@ -137,7 +234,6 @@ describe('Need participant visibility', () => {
       })),
     });
 
-    const caller = (userId: string) => appRouter.createCaller({ db, userId, ip: '127.0.0.1' });
     const detail = (userId: string) => caller(userId).collection.getById({ id: need.id });
     const notice = async (userId: string) => (await caller(userId).notification.list({}))
       .items.find((item) => item.collectionId === need.id)?.collection;
@@ -174,7 +270,16 @@ describe('Need participant visibility', () => {
     expect(publicView).not.toHaveProperty('chatLink');
 
     const withdrawn = await caller(participant).obligation.unsubscribe({ obligationId: marked.id });
-    expect(withdrawn).not.toHaveProperty('confirmedAt');
+    expect(withdrawn).toEqual({ ok: true });
+    const firstWithdrawal = await db.obligation.findUniqueOrThrow({ where: { id: marked.id } });
+    expect(await caller(participant).obligation.unsubscribe({ obligationId: marked.id })).toEqual({ ok: true });
+    await expect(caller(participant).obligation.updateAmount({ obligationId: marked.id, amount: 12 }))
+      .rejects.toMatchObject({ code: 'BAD_REQUEST' });
+    expect(await db.obligation.findUniqueOrThrow({ where: { id: marked.id } })).toEqual(firstWithdrawal);
+    expect(await caller(participant).stats.helpHistory({ userId: participant })).toEqual({ helped: [], helpedBy: [] });
+    expect(await caller(admin).stats.helpHistory({ userId: author })).toEqual({ helped: [], helpedBy: [] });
+    expect((await caller(author).stats.helpHistory({ userId: author })).helpedBy)
+      .toEqual([expect.objectContaining({ userId: remaining, amount: 6 })]);
     const withdrawnView = await detail(participant);
     expect(withdrawnView).toMatchObject({ chatLink: null, currentAmount: 6 });
     expect(withdrawnView.obligations).toEqual([expect.objectContaining({ userId: remaining, amount: null })]);

@@ -74,8 +74,6 @@ export async function processCycleClose(_job: Job): Promise<void> {
         select: {
           amount: true,
           userId: true,
-          unsubscribedAt: true,
-          user: { select: { notifyRenewalStart: true } },
         },
       },
     },
@@ -135,13 +133,17 @@ export async function processCycleClose(_job: Job): Promise<void> {
 
     // "Cycle renewed" notification for users carried over into the new cycle
     // (subscribers who did NOT unsubscribe and didn't disable the toggle).
-    const renewedUserIds: string[] = [];
-    for (const o of collection.obligations) {
-      if (o.unsubscribedAt) continue;
-      if (o.userId === collection.creatorId) continue;
-      if (o.user?.notifyRenewalStart === false) continue;
-      renewedUserIds.push(o.userId);
-    }
+    const renewed = await db.obligation.findMany({
+      where: {
+        collectionId: collection.id,
+        unsubscribedAt: null,
+        userId: { not: collection.creatorId },
+        user: { notifyRenewalStart: true, deletedAt: null },
+      },
+      select: { userId: true },
+      distinct: ['userId'],
+    });
+    const renewedUserIds = renewed.map((row) => row.userId);
 
     if (renewedUserIds.length > 0) {
       // In-app notification, unique per cycle via wave = newCycleNumber

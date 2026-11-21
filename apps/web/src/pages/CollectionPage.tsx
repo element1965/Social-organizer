@@ -733,7 +733,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
           )}
         />
       ) : (
-        <ParticipantList people={people} showPaid={false} onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)} />
+        <ParticipantList people={people} showPaid={owner} onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)} />
       )}
 
       {/* A participant can pass an open Need on to others who know its author: the page is public anyway */}

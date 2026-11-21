@@ -97,12 +97,12 @@ export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove, 
                   {formatMoney(person.amount)}
                 </span>
               ) : null}
-              {showPaid ? (
+              {showPaid && onPaid ? (
                 <button
                   type="button"
                   aria-pressed={person.paid}
                   aria-label={t('collection.paidToggle', { name: person.name })}
-                  onClick={() => onPaid?.(person)}
+                  onClick={() => onPaid(person)}
                   // 44 px hit area around the 28 px box
                   className={cn(
                     'so-focus relative grid h-7 w-7 place-items-center rounded-sm border transition-colors duration-150 before:absolute before:-inset-2',
@@ -111,6 +111,16 @@ export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove, 
                 >
                   <IconCheck className="h-4 w-4" />
                 </button>
+              ) : null}
+              {showPaid && !onPaid ? (
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-sm text-care">
+                  {person.paid ? (
+                    <>
+                      <IconCheck className="h-4 w-4" aria-hidden="true" />
+                      <span className="sr-only">{t('collection.paidToggle', { name: person.name })}</span>
+                    </>
+                  ) : null}
+                </span>
               ) : null}
             </li>
           ))}
