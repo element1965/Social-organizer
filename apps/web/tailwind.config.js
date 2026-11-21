@@ -5,12 +5,12 @@
  * do not use a dark: variant or the old gray/blue/teal/red/amber ramps.
  *
  * This file fails the build when a file under apps/web/src (.js, .jsx, .ts,
- * .tsx, .css) or apps/web/index.html contains a hex color, a Tailwind dark:
- * variant, an old color ramp (the default Tailwind palette plus a digit), or a
- * bare white/black utility (bg, text, border, ring, fill, stroke, from, via,
- * to, divide, outline, shadow).
+ * .tsx, .css) or apps/web/index.html contains a hex color, a raw RGB or HSL
+ * color function, a Tailwind dark: variant, an old color ramp (the default
+ * Tailwind palette plus a digit), or a bare white/black utility (bg, text,
+ * border, ring, fill, stroke, from, via, to, divide, outline, shadow).
  * Brand marks (components/onboarding/brand.tsx, components/ui/social-icons.tsx)
- * and styles/tokens.css are the only exceptions.
+ * and the live QR view are exempt, along with styles/tokens.css.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -55,12 +55,18 @@ function lintDesignTokens() {
   for (const target of lintTargets) walk(target, files);
   const problems = [];
   const hexRe = /#[0-9A-Fa-f]{3,8}\b/;
+  const literalColorRe = /(?<![\w-])(?:rgba?|hsla?)\(\s*(?:none\s+){0,2}[+-]?(?:\d|\.\d)/gi;
   const darkRe = /(^|[^A-Za-z0-9_-])dark:/;
   const rampRe = /(^|[^A-Za-z0-9_-])(?:[a-z0-9-]+:)*(?:gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d{1,3}(?![A-Za-z0-9_-])/;
   const bareRe = /(^|[^A-Za-z0-9_-])(?:[a-z0-9-]+:)*(?:bg|text|border|ring|fill|stroke|from|via|to|divide|outline|shadow)-(?:white|black)(?![A-Za-z0-9_-])/;
   for (const file of files) {
     if (lintSkip.has(file)) continue;
-    const lines = maskComments(fs.readFileSync(file, 'utf8')).split(/\r?\n/);
+    const source = maskComments(fs.readFileSync(file, 'utf8'));
+    for (const match of source.matchAll(literalColorRe)) {
+      const lineNumber = source.slice(0, match.index).split('\n').length;
+      problems.push(`${path.relative(here, file)}:${lineNumber}: raw RGB or HSL color`);
+    }
+    const lines = source.split(/\r?\n/);
     lines.forEach((lineText, index) => {
       const where = `${path.relative(here, file)}:${index + 1}`;
       if (hexRe.test(lineText)) problems.push(`${where}: hex color`);

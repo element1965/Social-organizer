@@ -1,3 +1,5 @@
+import { canvasRgb, landingCanvasPalette } from './canvasPalette';
+
 /**
  * "Next": a quiet network; a Need (red) travels a few handshakes and Participation (teal) answers back; dashed
  * warm and blue sparks are the signals we want to add later. The static network is drawn once to an offscreen
@@ -19,13 +21,6 @@ interface Signal {
   reply?: boolean;
 }
 
-const KIND: Record<Kind, [string, boolean]> = {
-  need: ['255,106,92', false],
-  part: ['95,211,198', false],
-  rec: ['242,190,104', true],
-  joint: ['173,190,255', true],
-};
-
 export interface NextNetHandle {
   update(options: { rtl: boolean }): void;
   destroy(): void;
@@ -35,6 +30,15 @@ export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): N
   let rtl = initial.rtl;
   const cx = cv.getContext('2d');
   if (!cx) return { update() {}, destroy() {} };
+  const palette = landingCanvasPalette(cv);
+  const kinds: Record<Kind, [string, boolean]> = {
+    need: [palette('sos-scene'), false],
+    part: [palette('care-scene'), false],
+    rec: [palette('warm'), true],
+    joint: [palette('joint'), true],
+  };
+  const edge = canvasRgb(palette('node-mid'), 0.16);
+  const node = canvasRgb(palette('network-node'), 0.55);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let W = 0;
   let H = 0;
@@ -91,7 +95,7 @@ export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): N
     if (!bx) return;
     bx.setTransform(d, 0, 0, d, 0, 0);
     bx.lineWidth = 1;
-    bx.strokeStyle = 'rgba(159,176,170,.16)';
+    bx.strokeStyle = edge;
     bx.beginPath();
     adj.forEach((l, i) => {
       l.forEach((j) => {
@@ -102,7 +106,7 @@ export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): N
       });
     });
     bx.stroke();
-    bx.fillStyle = 'rgba(207,222,217,.55)';
+    bx.fillStyle = node;
     nodes.forEach((nd) => {
       bx.beginPath();
       bx.arc(nd.x, nd.y, 2, 0, 6.283);
@@ -148,7 +152,7 @@ export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): N
         const end = nodes[g.path[segs]!];
         if (end) {
           end.glow = 1;
-          end.col = KIND[g.kind][0];
+          end.col = kinds[g.kind][0];
         }
         if (g.reply) sig.push({ path: g.path.slice().reverse(), t0: now + 160, kind: 'part' });
         sig.splice(s, 1);
@@ -162,8 +166,8 @@ export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): N
       const b = nodes[g.path[i0 + 1]!]!;
       const x = a.x + (b.x - a.x) * u;
       const y = a.y + (b.y - a.y) * u;
-      const c = KIND[g.kind];
-      cx.strokeStyle = `rgba(${c[0]},.55)`;
+      const c = kinds[g.kind];
+      cx.strokeStyle = canvasRgb(c[0], 0.55);
       cx.lineWidth = 1.6;
       if (c[1]) cx.setLineDash([4, 4]);
       cx.beginPath();
@@ -173,8 +177,8 @@ export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): N
       cx.stroke();
       cx.setLineDash([]);
       const gr = cx.createRadialGradient(x, y, 0, x, y, 12);
-      gr.addColorStop(0, `rgba(${c[0]},1)`);
-      gr.addColorStop(1, `rgba(${c[0]},0)`);
+      gr.addColorStop(0, canvasRgb(c[0]));
+      gr.addColorStop(1, canvasRgb(c[0], 0));
       cx.fillStyle = gr;
       cx.beginPath();
       cx.arc(x, y, 12, 0, 6.283);
@@ -182,7 +186,7 @@ export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): N
     }
     nodes.forEach((n) => {
       if (n.glow > 0) {
-        cx.fillStyle = `rgba(${n.col},${(n.glow * 0.9).toFixed(3)})`;
+        cx.fillStyle = canvasRgb(n.col, (n.glow * 0.9).toFixed(3));
         cx.beginPath();
         cx.arc(n.x, n.y, 3 + n.glow * 4, 0, 6.283);
         cx.fill();
