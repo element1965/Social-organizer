@@ -360,7 +360,9 @@ describe('Need participant visibility', () => {
     }
   });
 
-  it('retries guarded inactivity deletion when an in-flight pledge needs the locked user', async () => {
+  const needClosed = { code: 'BAD_REQUEST', message: 'Collection is not open', cause: { needClosed: true } };
+
+  it('finishes guarded inactivity deletion when an in-flight pledge needs the locked user', async () => {
     const [author, peer] = ['delete-inactive-author', 'delete-inactive-peer'];
     await db.user.createMany({ data: [author, peer].map((id) => ({ id, name: id })) });
     await db.connection.create({ data: { userAId: author, userBId: peer } });
@@ -387,11 +389,16 @@ describe('Need participant visibility', () => {
       cleanup = runInactiveCleanup(db, { now, onlyUserIds: [author] });
       await expect.poll(() => isBlockingTransaction(db, pid), { interval: 10 }).toBe(true);
       gate.resume();
-      const [pledge, result] = await Promise.all([pledging, cleanup]);
-      expect(result).toMatchObject({ deleted: 1, deletedSoft: 1 });
+      const [pledge, result] = await Promise.allSettled([pledging, cleanup]);
+      expect(result).toMatchObject({ status: 'fulfilled', value: { deleted: 1, deletedSoft: 1 } });
+      if (pledge.status === 'fulfilled') {
+        expect(pledge.value).toMatchObject({ id: expect.any(String), collectionId: need.id, userId: author, amount: 7 });
+      } else {
+        expect(pledge.reason).toMatchObject(needClosed);
+      }
       expect(await db.user.findUniqueOrThrow({ where: { id: author } })).toMatchObject({ deletedAt: expect.any(Date) });
       expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({ status: 'CANCELLED' });
-      expect(await db.obligation.findUnique({ where: { id: pledge.id } })).toBeNull();
+      expect(await db.obligation.findMany({ where: { collectionId: need.id } })).toEqual([]);
     } finally {
       gate.resume();
       await Promise.allSettled([pledging, cleanup]);
@@ -399,7 +406,7 @@ describe('Need participant visibility', () => {
     }
   });
 
-  it('retries user-initiated deletion when setPaid holds the Need and needs the obligation', async () => {
+  it('finishes user-initiated deletion when setPaid holds the Need and needs the obligation', async () => {
     const [author, peer] = ['delete-mark-author', 'delete-mark-peer'];
     await db.user.createMany({ data: [author, peer].map((id) => ({ id, name: id })) });
     await db.connection.create({ data: { userAId: author, userBId: peer } });
@@ -416,7 +423,13 @@ describe('Need participant visibility', () => {
       void deletion.catch(() => {});
       await expect.poll(() => isBlockingTransaction(db, pid), { interval: 10 }).toBe(true);
       gate.resume();
-      await expect(Promise.all([marking, deletion])).resolves.toEqual([{ changed: 1 }, { success: true }]);
+      const [marked, deleted] = await Promise.allSettled([marking, deletion]);
+      expect(deleted).toEqual({ status: 'fulfilled', value: { success: true } });
+      if (marked.status === 'fulfilled') {
+        expect(marked.value).toEqual({ changed: 1 });
+      } else {
+        expect(marked.reason).toMatchObject(needClosed);
+      }
       expect(await db.user.findUniqueOrThrow({ where: { id: author } })).toMatchObject({ deletedAt: expect.any(Date) });
       expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({ status: 'CANCELLED' });
       expect(await db.obligation.findUnique({ where: { id: row.id } })).toBeNull();
