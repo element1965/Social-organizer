@@ -232,8 +232,8 @@
       "step2Sub": "Envíe su enlace o muestre el QR",
       "step2Waiting": "Solicitud enviada, esperando la confirmación",
       "intention": "Mi intención",
-      "intentionIs": "Mi intención: {{amount}}",
-      "intentionSub": "La cantidad que está dispuesto a indicar cuando alguien que conoce comunica una necesidad."
+      "intentionSub": "La cantidad que está dispuesto a indicar cuando alguien que conoce comunica una necesidad.",
+      "setIntention": "Indicar importe"
     },
     "acquaint": {
       "sub": "Le pide que confirme que se conocen",
@@ -637,7 +637,8 @@
   },
   "invite": {
     "calls": "{{name}} le invita",
-    "say": "Ayuda mutua entre personas que se conocen. Entre, y {{name}} confirmará que se conocen.",
+    "say": "Una red de personas que se conocen en persona. Inicia sesión y {{name}} confirmará que se conocen.",
+    "sayQr": "Una red de personas que se conocen en persona. Inicia sesión antes de que caduque el código QR para confirmar de inmediato que conoces a {{name}}.",
     "known": "Nos conocemos",
     "notNow": "Ahora no",
     "toCircle": "Al círculo",
@@ -651,7 +652,8 @@
     "ownTitle": "Este es su enlace",
     "ownText": "Por él se le unen personas que conoce. Envíeselo a alguien que conozca en persona.",
     "shareOwn": "Compartir el enlace",
-    "sayKnown": "Ayuda mutua entre personas que se conocen. Pulse «Nos conocemos» y {{name}} recibirá su solicitud.",
+    "sayKnown": "Pulsa «{{action}}» para pedirle a {{name}} que lo confirme.",
+    "sayKnownQr": "Pulsa «{{action}}» antes de que caduque el código QR para confirmar al instante tu conexión con {{name}}.",
     "loadFailedTitle": "No se pudo abrir la invitación",
     "loadFailedText": "Parece que no hay conexión. El enlace está guardado; inténtelo de nuevo.",
     "waiting": "Esperando la confirmación.",
@@ -827,7 +829,7 @@
       },
       "next": {
         "label": "Lo siguiente",
-        "title": "Ayudar con un dólar es solo el principio",
+        "title": "Ayudar con {{min}} es solo el principio",
         "text": "Con el tiempo queremos que la gente encuentre en su red de conocidos a un profesional que alguien recomiende, socios para un proyecto común, personas afines para su propia iniciativa. Y que se pongan de acuerdo directamente, como ahora.",
         "now": "Ahora",
         "later": "Más adelante",
@@ -949,7 +951,6 @@
         ],
         "you": "Usted",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Chat de participantes",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Su círculo"
@@ -973,12 +974,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "necesita 300 $",
+        "askerSub": "necesita {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "su hermano",
         "you": "Usted",
         "youSub": "usted decide",
-        "amount": "300 $",
         "aria": "Camino de un mensaje"
       },
       "join": {
@@ -1505,6 +1505,7 @@
   },
   "add": {
     "linkLabel": "Su enlace",
+    "inPerson": "En persona",
     "share": "Compartir",
     "shareText": "{{name}} le invita a su círculo.",
     "shareError": "No se pudo compartir. Inténtelo de nuevo.",
@@ -1645,6 +1646,7 @@
     "removeConfirm": "Quitar",
     "keep": "Dejar",
     "openCollection": "Necesidad",
+    "openNeed": "Abrir la necesidad",
     "shared": "Participación conjunta",
     "noShared": "Aún no hay participación conjunta",
     "moreContacts": "{{count}} más",

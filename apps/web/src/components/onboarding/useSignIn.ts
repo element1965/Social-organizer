@@ -338,7 +338,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     telegram: true,
     email: true,
   };
-  const providers = AUTH_ORDER[device].filter((p) => available[p]);
+  const providers = (inTelegram ? (['telegram', 'email'] as const) : AUTH_ORDER[device]).filter((p) => available[p]);
   /** E-mail codes can be switched off on the server; then the e-mail entry opens the password form. */
   const emailCodes = methods?.email !== false;
 
@@ -353,6 +353,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
 
   return {
     providers,
+    inTelegram,
     start,
     emailCodes,
     busy,

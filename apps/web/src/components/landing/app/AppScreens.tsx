@@ -177,7 +177,7 @@ export function CircleScreen({ cast, shortfall, scene: custom }: { cast: Cast; s
           <span className="h-[5px] w-10 rounded-pill bg-line-strong" />
         </div>
         <div className="min-h-0 flex-1 overflow-hidden px-4 pb-4">
-          <EventFeed myId="you" events={events} onOpen={noop} onDismiss={noop} />
+          <EventFeed myId="you" events={events} waitingCount={1} onOpen={noop} onDismiss={noop} />
         </div>
       </section>
     </div>

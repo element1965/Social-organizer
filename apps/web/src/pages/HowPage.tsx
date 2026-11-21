@@ -8,7 +8,8 @@ import { useStoreLinks } from '../components/site/DeviceEntry';
 import { Reveal, usePlayOnEnter } from '../components/site/hooks';
 import { useLoginHref } from '../components/site/SiteHeader';
 import { SitePage } from '../components/site/SitePage';
-import { useFigureLabels, useMoney } from '../components/site/figureLabels';
+import { useFigureLabels } from '../components/site/figureLabels';
+import { formatIsolatedMoney, formatMoney } from '../components/ui2/format';
 
 const B = { b: <b /> };
 /** People per ring when everyone knows six (the example on the page). */
@@ -29,7 +30,6 @@ export function HowPage() {
   const { t } = useTranslation();
   const device = useDevice();
   const labels = useFigureLabels();
-  const money = useMoney();
   const links = useStoreLinks();
   const loginHref = useLoginHref();
   const arr = (key: string) => t(key, { returnObjects: true }) as unknown as string[];
@@ -104,8 +104,8 @@ export function HowPage() {
             <Trans defaults={orbitSays[depth] ?? ''} components={B} />
           </p>
           <div className="site-sum">
-            <b>{money(reach)}</b>
-            <span>{t('how.orbit.sumNote', { share: money(SHARE) })}</span>
+            <b><bdi dir="ltr">{formatMoney(reach)}</bdi></b>
+            <span>{t('how.orbit.sumNote', { share: formatIsolatedMoney(SHARE) })}</span>
           </div>
         </div>
         <div ref={orbitRef} className="site-fig orbit">

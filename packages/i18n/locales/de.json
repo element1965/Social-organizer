@@ -229,8 +229,8 @@
       "step2Sub": "Senden Sie Ihren Link oder zeigen Sie den QR",
       "step2Waiting": "Anfrage gesendet, wir warten auf die Bestätigung",
       "intention": "Meine Absicht",
-      "intentionIs": "Meine Absicht: {{amount}}",
-      "intentionSub": "Der Betrag, den Sie nennen möchten, wenn jemand, den Sie kennen, einen Bedarf meldet."
+      "intentionSub": "Der Betrag, den Sie nennen möchten, wenn jemand, den Sie kennen, einen Bedarf meldet.",
+      "setIntention": "Betrag festlegen"
     },
     "acquaint": {
       "sub": "Bittet Sie zu bestätigen, dass Sie sich kennen",
@@ -634,7 +634,8 @@
   },
   "invite": {
     "calls": "{{name}} lädt Sie ein",
-    "say": "Gegenseitige Unterstützung zwischen Menschen, die sich kennen. Melden Sie sich an, und {{name}} bestätigt, dass Sie sich kennen.",
+    "say": "Ein Netzwerk von Menschen, die sich persönlich kennen. Melde dich an, damit {{name}} bestätigen kann, dass ihr euch kennt.",
+    "sayQr": "Ein Netzwerk von Menschen, die sich persönlich kennen. Melde dich an, solange der QR-Code gültig ist, um gleich zu bestätigen, dass du {{name}} kennst.",
     "known": "Wir kennen uns",
     "notNow": "Nicht jetzt",
     "toCircle": "Zum Kreis",
@@ -648,7 +649,8 @@
     "ownTitle": "Das ist Ihr Link",
     "ownText": "Menschen, die Sie kennen, kommen darüber zu Ihnen. Senden Sie ihn an jemanden, den Sie persönlich kennen.",
     "shareOwn": "Link teilen",
-    "sayKnown": "Gegenseitige Unterstützung zwischen Menschen, die sich kennen. Tippen Sie auf „Wir kennen uns“, und {{name}} erhält Ihre Anfrage.",
+    "sayKnown": "Tippe auf „{{action}}“, um {{name}} um Bestätigung zu bitten.",
+    "sayKnownQr": "Tippe auf „{{action}}“, solange der QR-Code gültig ist, um die Verbindung zu {{name}} gleich zu bestätigen.",
     "loadFailedTitle": "Die Einladung konnte nicht geöffnet werden",
     "loadFailedText": "Anscheinend gibt es keine Verbindung. Der Link ist gespeichert, versuchen Sie es erneut.",
     "waiting": "Warten auf Bestätigung.",
@@ -819,7 +821,7 @@
       },
       "next": {
         "label": "Ausblick",
-        "title": "Ein Dollar Hilfe ist erst der Anfang",
+        "title": "Hilfe mit {{min}} ist erst der Anfang",
         "text": "Wir möchten, dass Menschen mit der Zeit über ihr Netzwerk aus Bekannten Handwerker auf Empfehlung, Partner für ein gemeinsames Projekt und Gleichgesinnte für eigene Vorhaben finden. Und dass sie sich, wie jetzt, direkt absprechen.",
         "now": "Jetzt",
         "later": "Später",
@@ -941,7 +943,6 @@
         ],
         "you": "Sie",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Chat der Beteiligten",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Ihr Kreis"
@@ -965,12 +966,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "braucht 300 $",
+        "askerSub": "braucht {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "Ihr Bruder",
         "you": "Sie",
         "youSub": "Sie entscheiden",
-        "amount": "300 $",
         "aria": "Weg einer Meldung"
       },
       "join": {
@@ -1494,6 +1494,7 @@
   },
   "add": {
     "linkLabel": "Ihr Link",
+    "inPerson": "Vor Ort",
     "share": "Teilen",
     "shareText": "{{name}} lädt Sie in den Kreis ein.",
     "shareError": "Teilen ist fehlgeschlagen. Versuchen Sie es erneut.",
@@ -1629,6 +1630,7 @@
     "removeConfirm": "Entfernen",
     "keep": "Behalten",
     "openCollection": "Bedarf",
+    "openNeed": "Bedarf öffnen",
     "shared": "Gemeinsame Beteiligung",
     "noShared": "Noch keine gemeinsame Beteiligung",
     "moreContacts": "Noch {{count}}",

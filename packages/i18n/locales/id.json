@@ -226,8 +226,8 @@
       "step2Sub": "Kirim tautan Anda atau tunjukkan QR",
       "step2Waiting": "Permintaan terkirim, menunggu konfirmasi",
       "intention": "Niat saya",
-      "intentionIs": "Niat saya: {{amount}}",
-      "intentionSub": "Jumlah yang siap Anda sebutkan saat seseorang yang Anda kenal menyampaikan kebutuhan."
+      "intentionSub": "Jumlah yang siap Anda sebutkan saat seseorang yang Anda kenal menyampaikan kebutuhan.",
+      "setIntention": "Tentukan jumlah"
     },
     "acquaint": {
       "sub": "Meminta Anda mengonfirmasi bahwa Anda saling mengenal",
@@ -631,7 +631,8 @@
   },
   "invite": {
     "calls": "{{name}} mengundang Anda",
-    "say": "Saling membantu secara langsung antara orang-orang yang saling kenal. Masuk, dan {{name}} akan mengonfirmasi bahwa Anda saling mengenal.",
+    "say": "Jaringan orang-orang yang saling mengenal secara langsung. Masuk, lalu {{name}} akan mengonfirmasi bahwa kalian saling mengenal.",
+    "sayQr": "Jaringan orang-orang yang saling mengenal secara langsung. Masuk sebelum kode QR kedaluwarsa untuk langsung mengonfirmasi bahwa kamu mengenal {{name}}.",
     "known": "Kami saling mengenal",
     "notNow": "Tidak sekarang",
     "toCircle": "Ke lingkaran",
@@ -645,7 +646,8 @@
     "ownTitle": "Ini tautan Anda",
     "ownText": "Orang yang Anda kenal bergabung lewat tautan ini. Kirimkan ke seseorang yang Anda kenal secara pribadi.",
     "shareOwn": "Bagikan tautan",
-    "sayKnown": "Saling membantu secara langsung antara orang-orang yang saling kenal. Ketuk “Kami saling mengenal”, dan {{name}} menerima permintaan Anda.",
+    "sayKnown": "Ketuk “{{action}}” untuk meminta konfirmasi dari {{name}}.",
+    "sayKnownQr": "Ketuk “{{action}}” sebelum kode QR kedaluwarsa untuk langsung mengonfirmasi hubunganmu dengan {{name}}.",
     "loadFailedTitle": "Tidak dapat membuka undangan",
     "loadFailedText": "Sepertinya tidak ada koneksi. Tautan tersimpan; silakan coba lagi.",
     "waiting": "Menunggu konfirmasi.",
@@ -811,7 +813,7 @@
       },
       "next": {
         "label": "Berikutnya",
-        "title": "Bantuan 1 $ hanyalah awal",
+        "title": "Bantuan {{min}} hanyalah awal",
         "text": "Ke depan, kami ingin orang memakai jaringan kenalannya untuk menemukan tukang yang direkomendasikan seseorang, rekan untuk proyek bersama, orang yang sepemikiran untuk inisiatif sendiri. Dan bersepakat langsung, seperti sekarang.",
         "now": "Sekarang",
         "later": "Nanti",
@@ -933,7 +935,6 @@
         ],
         "you": "Anda",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Chat peserta",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Lingkaran Anda"
@@ -957,12 +958,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "butuh 300 $",
+        "askerSub": "butuh {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "saudara Anda",
         "you": "Anda",
         "youSub": "Anda yang memutuskan",
-        "amount": "300 $",
         "aria": "Jalur pesan"
       },
       "join": {
@@ -1483,6 +1483,7 @@
   },
   "add": {
     "linkLabel": "Tautan Anda",
+    "inPerson": "Saat bertemu",
     "share": "Bagikan",
     "shareText": "{{name}} mengundang Anda ke lingkarannya.",
     "shareError": "Tidak dapat membagikan. Coba lagi.",
@@ -1613,6 +1614,7 @@
     "removeConfirm": "Hapus",
     "keep": "Pertahankan",
     "openCollection": "Kebutuhan",
+    "openNeed": "Buka kebutuhan",
     "shared": "Partisipasi bersama",
     "noShared": "Belum ada partisipasi bersama",
     "moreContacts": "{{count}} lagi",

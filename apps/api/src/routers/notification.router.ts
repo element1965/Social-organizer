@@ -1,12 +1,29 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure, paginationInput } from '../trpc.js';
-import type { PrismaClient } from '@so/db';
+import type { Prisma, PrismaClient } from '@so/db';
 import { dismissRequestEntries, recordOpenedById } from '../services/notify-routing.service.js';
 import { VISIBLE_RINGS } from '../services/network.service.js';
 import { getPulse } from '../services/pulse.service.js';
 import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
 import { chatLinkFor, confirmedRenewals } from '../services/collection-view.js';
+
+/** A Need waits once per collection until the person joins, dismisses it, or its last live notice expires.
+ * Opening a Need only marks it read. Incoming connection requests are the other items awaiting a decision.
+ */
+function waitingNeeds(userId: string, now: Date): Prisma.NotificationWhereInput {
+  return {
+    userId,
+    status: { in: ['UNREAD', 'READ'] },
+    type: { in: ['NEW_COLLECTION', 'RE_NOTIFY', 'SPECIAL_AUTHOR', 'SPECIAL_DEVELOPER'] },
+    expiresAt: { gt: now },
+    collection: {
+      status: 'ACTIVE',
+      creatorId: { not: userId },
+      obligations: { none: { userId, unsubscribedAt: null } },
+    },
+  };
+}
 
 /** Opening or dismissing a notice must not wipe a cycle acknowledgement (RESPONDED). */
 async function setNotificationStatus(
@@ -26,22 +43,23 @@ async function setNotificationStatus(
 
 export const notificationRouter = router({
   list: protectedProcedure
-    .input(paginationInput)
+    .input(paginationInput.extend({ includeWaiting: z.boolean().optional() }))
     .query(async ({ ctx, input }) => {
-      const notifications = await ctx.db.notification.findMany({
-        where: { userId: ctx.userId, status: { in: ['UNREAD', 'READ'] } },
-        include: {
-          collection: {
-            include: {
-              creator: { select: { id: true, name: true, photoUrl: true, remainingBudget: true } },
-              // Viewer's own active subscriptions — shown on regular-cycle notifications
-              obligations: {
-                where: { userId: ctx.userId, unsubscribedAt: null },
-                select: { amount: true, createdAt: true },
-              },
+      const include = {
+        collection: {
+          include: {
+            creator: { select: { id: true, name: true, photoUrl: true, remainingBudget: true } },
+            // Viewer's own active subscriptions, shown on regular-cycle notifications.
+            obligations: {
+              where: { userId: ctx.userId, unsubscribedAt: null },
+              select: { amount: true, createdAt: true },
             },
           },
         },
+      } as const;
+      const notifications = await ctx.db.notification.findMany({
+        where: { userId: ctx.userId, status: { in: ['UNREAD', 'READ'] } },
+        include,
         orderBy: { createdAt: 'desc' },
         take: input.limit + 1,
         cursor: input.cursor ? { id: input.cursor } : undefined,
@@ -51,6 +69,16 @@ export const notificationRouter = router({
       if (notifications.length > input.limit) {
         const next = notifications.pop();
         nextCursor = next?.id;
+      }
+      if (input.includeWaiting && !input.cursor && nextCursor) {
+        // The Circle shows every undecided Need even when newer activity fills the first page.
+        const shown = notifications.map((n) => n.id);
+        const olderWaiting = await ctx.db.notification.findMany({
+          where: { ...waitingNeeds(ctx.userId, new Date()), id: { notIn: shown } },
+          include,
+          orderBy: { createdAt: 'desc' },
+        });
+        notifications.push(...olderWaiting);
       }
 
       // Get connection counts for all creators
@@ -169,28 +197,13 @@ export const notificationRouter = router({
       return { count: result.count };
     }),
 
-  /**
-   * What waits for the person's own decision, for the badges in the navigation:
-   * - `needs`: active Needs of others with a notice that has not expired and that they have neither joined nor declined;
-   * - `incoming`: connection requests to confirm.
-   * Confirmations of their own requests come from `pending.acceptedRecent` ("seen" lives on the device).
-   */
+  /** Same count for the Circle tab badge and the "Waiting for you" section. */
   attention: protectedProcedure.query(async ({ ctx }) => {
     const [needRows, incoming] = await Promise.all([
       // One per Need, however many waves reached the person; the same rule as "Waiting for you" in the Circle
       // feed: opened (READ) still waits for a decision, only joining or "Not now" ends it
       ctx.db.notification.findMany({
-        where: {
-          userId: ctx.userId,
-          status: { in: ['UNREAD', 'READ'] },
-          type: { in: ['NEW_COLLECTION', 'RE_NOTIFY', 'SPECIAL_AUTHOR', 'SPECIAL_DEVELOPER'] },
-          expiresAt: { gt: new Date() },
-          collection: {
-            status: 'ACTIVE',
-            creatorId: { not: ctx.userId },
-            obligations: { none: { userId: ctx.userId, unsubscribedAt: null } },
-          },
-        },
+        where: waitingNeeds(ctx.userId, new Date()),
         distinct: ['collectionId'],
         select: { collectionId: true },
       }),

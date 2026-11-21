@@ -196,16 +196,13 @@ export function SignInFlow({
         foot={
           <>
             <Note icon={<InfoGlyph />}>{t('login.tgTabHint')}</Note>
-            <button
-              type="button"
+            <Button
               onClick={() => window.open(signIn.telegramBotUrl(), '_blank')}
-              className="so-focus mt-3 flex h-primary w-full items-center justify-center gap-2.5 rounded-lg bg-telegram text-body-l font-bold tracking-tight text-on-telegram"
+              className="mt-3 w-full"
+              icon={<TelegramMark />}
             >
-              <span className="inline-flex h-5 w-5">
-                <TelegramMark />
-              </span>
               {t('login.tgOpenAgain')}
-            </button>
+            </Button>
             <TextButton onClick={back}>{t('login.otherWayChoose')}</TextButton>
           </>
         }

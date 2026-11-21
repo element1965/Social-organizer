@@ -229,8 +229,8 @@
       "step2Sub": "Send lenken din eller vis QR-koden",
       "step2Waiting": "Forespørselen er sendt, venter på bekreftelse",
       "intention": "Min intensjon",
-      "intentionIs": "Min intensjon: {{amount}}",
-      "intentionSub": "Beløpet du er klar til å oppgi når noen du kjenner melder et behov."
+      "intentionSub": "Beløpet du er klar til å oppgi når noen du kjenner melder et behov.",
+      "setIntention": "Angi beløp"
     },
     "acquaint": {
       "sub": "Ber deg bekrefte at dere kjenner hverandre",
@@ -634,7 +634,8 @@
   },
   "invite": {
     "calls": "{{name}} inviterer deg",
-    "say": "Bistand mellom personer som kjenner hverandre. Logg inn, så bekrefter {{name}} at dere kjenner hverandre.",
+    "say": "Et nettverk av mennesker som kjenner hverandre personlig. Logg inn, så bekrefter {{name}} at dere kjenner hverandre.",
+    "sayQr": "Et nettverk av mennesker som kjenner hverandre personlig. Logg inn før QR-koden utløper for å bekrefte med en gang at du kjenner {{name}}.",
     "known": "Vi kjenner hverandre",
     "notNow": "Ikke nå",
     "toCircle": "Til kretsen",
@@ -648,7 +649,8 @@
     "ownTitle": "Dette er lenken din",
     "ownText": "Personer du kjenner, blir med gjennom den. Send den til noen du kjenner personlig.",
     "shareOwn": "Del lenken",
-    "sayKnown": "Bistand mellom personer som kjenner hverandre. Trykk på «Vi kjenner hverandre», så får {{name}} forespørselen din.",
+    "sayKnown": "Trykk på «{{action}}» for å be {{name}} om å bekrefte det.",
+    "sayKnownQr": "Trykk på «{{action}}» før QR-koden utløper for å bekrefte forbindelsen med {{name}} med en gang.",
     "loadFailedTitle": "Kunne ikke åpne invitasjonen",
     "loadFailedText": "Det ser ut som det ikke er noen forbindelse. Lenken er lagret. Prøv igjen.",
     "waiting": "Venter på bekreftelse.",
@@ -819,7 +821,7 @@
       },
       "next": {
         "label": "Fremover",
-        "title": "En dollar i hjelp er bare begynnelsen",
+        "title": "Hjelp med {{min}} er bare begynnelsen",
         "text": "Over tid vil vi at folk skal kunne bruke nettverket av bekjente til å finne en anbefalt håndverker, partnere til et felles prosjekt og likesinnede til et eget initiativ. Og at de, som nå, avtaler det direkte.",
         "now": "Nå",
         "later": "Senere",
@@ -941,7 +943,6 @@
         ],
         "you": "Du",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Deltakernes chat",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Kretsen din"
@@ -965,12 +966,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "trenger 300 $",
+        "askerSub": "trenger {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "broren din",
         "you": "Du",
         "youSub": "du bestemmer",
-        "amount": "300 $",
         "aria": "En meldings vei"
       },
       "join": {
@@ -1494,6 +1494,7 @@
   },
   "add": {
     "linkLabel": "Lenken din",
+    "inPerson": "Ansikt til ansikt",
     "share": "Del",
     "shareText": "{{name}} inviterer deg til kretsen sin.",
     "shareError": "Kunne ikke dele. Prøv igjen.",
@@ -1629,6 +1630,7 @@
     "removeConfirm": "Fjern",
     "keep": "Behold",
     "openCollection": "Behov",
+    "openNeed": "Åpne behovet",
     "shared": "Felles deltakelse",
     "noShared": "Ingen felles deltakelse ennå",
     "moreContacts": "{{count}} til",

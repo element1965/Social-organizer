@@ -81,6 +81,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   const utils = trpc.useUtils();
   const startedSos = useRef<string | null>(null);
   const { pathname, search, hash, state, key } = useLocation();
+  const needOrigin = (state as { needOrigin?: 'ask' | 'history' } | null)?.needOrigin;
   const navigationType = useNavigationType();
   const [justCreated, setJustCreated] = useState(false);
   const createdShown = useRef(false);
@@ -105,6 +106,9 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   const circleBack = justCreated
     ? { label: t('nav.circle'), onClick: () => navigate(-1) }
     : { label: t('nav.circle'), to: '/' };
+  const originBack = needOrigin === 'ask'
+    ? { label: t('nav.ask'), to: '/ask' }
+    : needOrigin === 'history' ? { label: t('collection.pastCrumb') } : null;
 
   const me = trpc.user.me.useQuery();
   const admin = trpc.faq.isAdmin.useQuery();
@@ -128,6 +132,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
     utils.collection.myParticipating.invalidate(undefined, { refetchType: 'all' });
     // Joining decides the request: the navigation badge drops at once
     utils.notification.attention.invalidate(undefined, { refetchType: 'all' });
+    utils.notification.list.invalidate(undefined, { refetchType: 'all' });
   };
 
   // Each action of this page says "Not saved" next to its own control (<ActionError>, or the field's own error
@@ -238,7 +243,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   // on the switch and the Need is read again for the new account, so it waits like a first load
   if (!id || collection.isLoading || (!collection.data && errorKind(collection.error) === 'aborted')) {
     return (
-      <Screen width="column" back={circleBack}>
+      <Screen width="column" back={originBack ?? circleBack}>
         <p className="pt-6 text-body-s font-semibold text-ink-muted">{t('common.loading')}</p>
       </Screen>
     );
@@ -247,7 +252,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   // closed to this account replaces it. With nothing loaded, the reason is told with the action that helps.
   if (!collection.data || isDefinitiveLoadError(collection.error)) {
     return (
-      <Screen width="column" back={circleBack}>
+      <Screen width="column" back={originBack ?? circleBack}>
         <NeedLoadError
           error={collection.error}
           signedIn
@@ -320,11 +325,11 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   const stageDone = closed ? 3 : owner || myObl ? 2 : 1;
   const showCloseNote = !owner && !closed && !held && !needsConfirm && !goalMet && hasGoal;
 
-  const back = closed
+  const back = originBack ?? (closed
     ? { label: t('collection.pastCrumb'), to: '/me/history' }
     : owner && !justCreated
       ? { label: t('nav.profile'), to: '/me' }
-      : circleBack;
+      : circleBack);
 
   const people: ParticipantRow[] = activeObligations.map((row) => {
     const mine = row.userId === userId;

@@ -232,8 +232,8 @@
       "step2Sub": "Envoyez votre lien ou montrez le QR",
       "step2Waiting": "Demande envoyée, en attente de confirmation",
       "intention": "Mon intention",
-      "intentionIs": "Mon intention : {{amount}}",
-      "intentionSub": "Le montant que vous comptez indiquer quand une personne que vous connaissez annonce un besoin."
+      "intentionSub": "Le montant que vous comptez indiquer quand une personne que vous connaissez annonce un besoin.",
+      "setIntention": "Indiquer un montant"
     },
     "acquaint": {
       "sub": "Vous demande de confirmer que vous vous connaissez",
@@ -637,7 +637,8 @@
   },
   "invite": {
     "calls": "{{name}} vous invite",
-    "say": "Entraide directe entre des personnes qui se connaissent. Connectez-vous, et {{name}} confirmera que vous vous connaissez.",
+    "say": "Un réseau de personnes qui se connaissent en personne. Connectez-vous et {{name}} confirmera que vous vous connaissez.",
+    "sayQr": "Un réseau de personnes qui se connaissent en personne. Connectez-vous avant que le code QR expire pour confirmer tout de suite que vous connaissez {{name}}.",
     "known": "Nous nous connaissons",
     "notNow": "Pas maintenant",
     "toCircle": "Vers le cercle",
@@ -651,7 +652,8 @@
     "ownTitle": "C’est votre lien",
     "ownText": "Les personnes que vous connaissez vous rejoignent par ce lien. Envoyez-le à quelqu’un que vous connaissez personnellement.",
     "shareOwn": "Partager le lien",
-    "sayKnown": "Entraide directe entre des personnes qui se connaissent. Appuyez sur « Nous nous connaissons », et {{name}} reçoit votre demande.",
+    "sayKnown": "Appuyez sur «{{action}}» pour demander à {{name}} de le confirmer.",
+    "sayKnownQr": "Appuyez sur «{{action}}» avant que le code QR expire pour confirmer aussitôt votre lien avec {{name}}.",
     "loadFailedTitle": "Impossible d’ouvrir l’invitation",
     "loadFailedText": "Il semble qu’il n’y ait pas de connexion. Le lien est enregistré, veuillez réessayer.",
     "waiting": "En attente de confirmation.",
@@ -827,7 +829,7 @@
       },
       "next": {
         "label": "Ensuite",
-        "title": "Un dollar d’aide, ce n’est qu’un début",
+        "title": "Aider avec {{min}}, ce n’est qu’un début",
         "text": "Avec le temps, nous voulons que les gens trouvent grâce à leur réseau de connaissances un artisan recommandé par quelqu’un, des partenaires pour un projet commun, des gens qui pensent comme eux pour leur propre initiative. Et qu’ils s’arrangent, comme aujourd’hui, directement.",
         "now": "Aujourd’hui",
         "later": "Plus tard",
@@ -949,7 +951,6 @@
         ],
         "you": "Vous",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Chat des participants",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Votre cercle"
@@ -973,12 +974,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "a besoin de 300 $",
+        "askerSub": "a besoin de {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "votre frère",
         "you": "Vous",
         "youSub": "vous décidez",
-        "amount": "300 $",
         "aria": "Chemin d’un message"
       },
       "join": {
@@ -1505,6 +1505,7 @@
   },
   "add": {
     "linkLabel": "Votre lien",
+    "inPerson": "En personne",
     "share": "Partager",
     "shareText": "{{name}} vous invite dans son cercle.",
     "shareError": "Partage impossible. Réessayez.",
@@ -1645,6 +1646,7 @@
     "removeConfirm": "Retirer",
     "keep": "Garder",
     "openCollection": "Besoin",
+    "openNeed": "Ouvrir le besoin",
     "shared": "Participation commune",
     "noShared": "Pas encore de participation commune",
     "moreContacts": "{{count}} de plus",

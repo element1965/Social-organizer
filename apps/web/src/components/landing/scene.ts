@@ -8,6 +8,7 @@
  * breadth-first search, nearest first. Loaded with a dynamic import, so Three.js stays out of the app bundle.
  */
 import * as THREE from 'three';
+import { formatIsolatedMoney } from '../ui2/format';
 import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
 import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
@@ -1198,7 +1199,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     if (k >= 4 && k <= 7 && hud !== lastHud) {
       lastHud = hud;
       if (hR) hR.textContent = opts.format(reached);
-      if (hRep) hRep.textContent = opts.format(reported);
+      if (hRep) hRep.textContent = formatIsolatedMoney(reported);
       if (hP) hP.textContent = opts.format(people);
       if (hRL) hRL.textContent = opts.label('reached', reached);
       if (hPL) hPL.textContent = opts.label('people', people);

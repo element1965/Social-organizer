@@ -232,8 +232,8 @@
       "step2Sub": "Invia il link o mostra il QR",
       "step2Waiting": "Richiesta inviata, in attesa di conferma",
       "intention": "La mia intenzione",
-      "intentionIs": "La mia intenzione: {{amount}}",
-      "intentionSub": "L'importo che intendi indicare quando qualcuno che conosci comunica un bisogno."
+      "intentionSub": "L'importo che intendi indicare quando qualcuno che conosci comunica un bisogno.",
+      "setIntention": "Imposta un importo"
     },
     "acquaint": {
       "sub": "Ti chiede di confermare che vi conoscete",
@@ -637,7 +637,8 @@
   },
   "invite": {
     "calls": "{{name}} ti invita",
-    "say": "Assistenza reciproca tra persone che si conoscono. Accedi e {{name}} confermerà che vi conoscete.",
+    "say": "Una rete di persone che si conoscono di persona. Accedi e {{name}} confermerà che vi conoscete.",
+    "sayQr": "Una rete di persone che si conoscono di persona. Accedi prima che il codice QR scada per confermare subito che conosci {{name}}.",
     "known": "Ci conosciamo",
     "notNow": "Non ora",
     "toCircle": "Al cerchio",
@@ -651,7 +652,8 @@
     "ownTitle": "Questo è il tuo link",
     "ownText": "Le persone che conosci ti raggiungono da qui. Invialo a qualcuno che conosci di persona.",
     "shareOwn": "Condividi il link",
-    "sayKnown": "Assistenza reciproca tra persone che si conoscono. Tocca «Ci conosciamo» e {{name}} riceve la tua richiesta.",
+    "sayKnown": "Tocca «{{action}}» per chiedere conferma a {{name}}.",
+    "sayKnownQr": "Tocca «{{action}}» prima che il codice QR scada per confermare subito il legame con {{name}}.",
     "loadFailedTitle": "Impossibile aprire l'invito",
     "loadFailedText": "Sembra che non ci sia connessione. Il link è salvato; riprova.",
     "waiting": "In attesa di conferma.",
@@ -827,7 +829,7 @@
       },
       "next": {
         "label": "Prossimi passi",
-        "title": "Un dollaro di aiuto è solo l'inizio",
+        "title": "Aiutare con {{min}} è solo l'inizio",
         "text": "Con il tempo vorremmo che le persone usassero la loro rete di conoscenti per trovare un artigiano consigliato da qualcuno, soci per un progetto comune, persone affini per una propria iniziativa. E che si accordassero direttamente, come oggi.",
         "now": "Oggi",
         "later": "Più avanti",
@@ -949,7 +951,6 @@
         ],
         "you": "Tu",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Chat dei partecipanti",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Il tuo cerchio"
@@ -973,12 +974,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "servono 300 $",
+        "askerSub": "servono {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "tuo fratello",
         "you": "Tu",
         "youSub": "decidi tu",
-        "amount": "300 $",
         "aria": "Percorso di un messaggio"
       },
       "join": {
@@ -1505,6 +1505,7 @@
   },
   "add": {
     "linkLabel": "Il tuo link",
+    "inPerson": "Di persona",
     "share": "Condividi",
     "shareText": "{{name}} ti invita nel suo cerchio.",
     "shareError": "Impossibile condividere. Riprova.",
@@ -1645,6 +1646,7 @@
     "removeConfirm": "Togli",
     "keep": "Tieni",
     "openCollection": "Bisogno",
+    "openNeed": "Apri il bisogno",
     "shared": "Partecipazione insieme",
     "noShared": "Ancora nessuna partecipazione insieme",
     "moreContacts": "Altri {{count}}",

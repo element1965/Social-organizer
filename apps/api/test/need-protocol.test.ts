@@ -846,6 +846,53 @@ describe('Need participant visibility', () => {
     ]);
   });
 
+  it('describes the time limit for a browser invite only when it came from an in-person QR', async () => {
+    const inviter = 'qr-copy-inviter';
+    const visitor = 'qr-copy-visitor';
+    await db.user.createMany({ data: [inviter, visitor].map((id) => ({ id, name: id })) });
+    const qr = await caller(inviter).invite.generate({ ttl: 60 });
+    const personal = await caller(inviter).invite.generate();
+    const view = caller(visitor).invite;
+    expect(await view.getByToken({ token: qr.token })).toMatchObject({ inPersonUntil: qr.expiresAt, expired: false });
+    expect(await view.getByToken({ token: personal.token })).toMatchObject({ inPersonUntil: null });
+    expect(await view.getByToken({ token: inviter })).toMatchObject({ inPersonUntil: null });
+
+    const expiredAt = new Date(Date.now() - hour);
+    await db.inviteLink.update({ where: { id: qr.id }, data: { expiresAt: expiredAt } });
+    expect(await view.getByToken({ token: qr.token })).toMatchObject({ inPersonUntil: expiredAt, expired: true });
+    expect(await view.accept({ token: qr.token, viaLink: true })).toMatchObject({ pending: true });
+  });
+
+  it('keeps a read undecided Need in Circle after newer notices, and counts it once', async () => {
+    const author = 'attention-author';
+    const viewer = 'attention-viewer';
+    await db.user.createMany({ data: [author, viewer].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 100, chatLink: 'https://example.test/chat' },
+    });
+    const expiresAt = new Date(Date.now() + hour);
+    const notice = { userId: viewer, collectionId: need.id };
+    await db.notification.createMany({ data: [
+      { ...notice, type: 'NEW_COLLECTION', status: 'READ', createdAt: new Date(1000), expiresAt },
+      { ...notice, type: 'RE_NOTIFY', status: 'READ', createdAt: new Date(2000), expiresAt },
+      { ...notice, type: 'COLLECTION_CLOSED', status: 'UNREAD', createdAt: new Date(3000), expiresAt },
+    ] });
+    await db.pendingConnection.create({ data: { fromUserId: author, toUserId: viewer } });
+
+    const notifications = caller(viewer).notification;
+    expect(await notifications.attention()).toEqual({ needs: 1, incoming: 1 });
+    expect((await notifications.list({ limit: 1 })).items.map((n) => n.type)).toEqual(['COLLECTION_CLOSED']);
+    expect((await notifications.list({ limit: 1, includeWaiting: true })).items.map((n) => n.type))
+      .toEqual(['COLLECTION_CLOSED', 'RE_NOTIFY', 'NEW_COLLECTION']);
+
+    await db.notification.updateMany({
+      where: { ...notice, type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] } },
+      data: { expiresAt: new Date(Date.now() - hour) },
+    });
+    expect(await notifications.attention()).toEqual({ needs: 0, incoming: 1 });
+    expect((await notifications.list({ limit: 1, includeWaiting: true })).items.map((n) => n.type)).toEqual(['COLLECTION_CLOSED']);
+  });
+
   it('limits amounts and chat to the author and active participants, and received marks to the author', async () => {
     const author = 'privacy-author';
     const { circle } = await seedNetwork(author, 5, 6);

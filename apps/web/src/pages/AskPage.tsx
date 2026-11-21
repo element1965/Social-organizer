@@ -57,6 +57,7 @@ function NeedsLink() {
   return (
     <Link
       to="/me/history"
+      state={{ fromNeedTab: true }}
       aria-label={t('profile.collections')}
       className="so-focus inline-flex min-h-[44px] shrink-0 items-center gap-0.5 whitespace-nowrap text-body-s font-bold text-care"
     >
@@ -316,7 +317,7 @@ function OwnCollection({ col }: { col: { id: string; amount: number | null; curr
     : t('collection.participantsCount', { count: people });
 
   return (
-    <Link to={`/collection/${col.id}`} className="so-focus flex items-center gap-3 rounded-xl bg-surface p-3 shadow-card">
+    <Link to={`/collection/${col.id}`} state={{ needOrigin: 'ask' }} className="so-focus flex items-center gap-3 rounded-xl bg-surface p-3 shadow-card">
       <Ring ratio={goal > 0 ? ratio : null} />
       <span className="min-w-0 flex-1">
         <span className="block truncate text-body-s font-extrabold tracking-tight">{title}</span>

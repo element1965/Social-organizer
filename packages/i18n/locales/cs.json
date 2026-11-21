@@ -235,8 +235,8 @@
       "step2Sub": "Pošlete odkaz, nebo ukažte QR",
       "step2Waiting": "Žádost odeslána, čekáme na potvrzení",
       "intention": "Můj záměr",
-      "intentionIs": "Můj záměr: {{amount}}",
-      "intentionSub": "Částka, kterou jste ochotni uvést, když někdo ze známých oznámí potřebu."
+      "intentionSub": "Částka, kterou jste ochotni uvést, když někdo ze známých oznámí potřebu.",
+      "setIntention": "Nastavit částku"
     },
     "acquaint": {
       "sub": "Žádá vás, abyste potvrdili, že se znáte",
@@ -640,7 +640,8 @@
   },
   "invite": {
     "calls": "{{name}} vás zve",
-    "say": "Vzájemná pomoc mezi lidmi, kteří se znají. Přihlaste se a {{name}} potvrdí, že se znáte.",
+    "say": "Síť lidí, kteří se osobně znají. Přihlaste se a {{name}} potvrdí, že se znáte.",
+    "sayQr": "Síť lidí, kteří se osobně znají. Přihlaste se, dokud je QR kód platný, a potvrďte hned, že se s {{name}} znáte.",
     "known": "Známe se",
     "notNow": "Teď ne",
     "toCircle": "Do kruhu",
@@ -654,7 +655,8 @@
     "ownTitle": "Tohle je váš odkaz",
     "ownText": "Přes něj k vám přijdou lidé, které znáte. Pošlete ho někomu, koho znáte osobně.",
     "shareOwn": "Sdílet odkaz",
-    "sayKnown": "Vzájemná pomoc mezi lidmi, kteří se znají. Klepněte na „Známe se“ a {{name}} dostane vaši žádost.",
+    "sayKnown": "Klepněte na „{{action}}“ a požádejte {{name}} o potvrzení.",
+    "sayKnownQr": "Klepněte na „{{action}}“, dokud je QR kód platný, a potvrďte hned spojení s {{name}}.",
     "loadFailedTitle": "Pozvánku se nepodařilo otevřít",
     "loadFailedText": "Vypadá to, že nejste připojeni. Odkaz je uložený, zkuste to znovu.",
     "waiting": "Čekáme na potvrzení.",
@@ -835,7 +837,7 @@
       },
       "next": {
         "label": "Dál",
-        "title": "Pomoc po dolaru je teprve začátek",
+        "title": "Pomoc po {{min}} je teprve začátek",
         "text": "Chceme, aby lidé časem přes síť známých našli řemeslníka na doporučení, partnery pro společný projekt nebo stejně smýšlející lidi pro vlastní iniciativu. A domlouvali se, stejně jako teď, přímo.",
         "now": "Teď",
         "later": "Později",
@@ -957,7 +959,6 @@
         ],
         "you": "Vy",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Chat účastníků",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Váš kruh"
@@ -981,12 +982,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "potřeba 300 $",
+        "askerSub": "potřeba {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "váš bratr",
         "you": "Vy",
         "youSub": "rozhodujete vy",
-        "amount": "300 $",
         "aria": "Cesta oznámení"
       },
       "join": {
@@ -1516,6 +1516,7 @@
   },
   "add": {
     "linkLabel": "Váš odkaz",
+    "inPerson": "Osobně",
     "share": "Sdílet",
     "shareText": "{{name}} vás zve do svého kruhu.",
     "shareError": "Nepodařilo se sdílet. Zkuste to znovu.",
@@ -1661,6 +1662,7 @@
     "removeConfirm": "Odebrat",
     "keep": "Ponechat",
     "openCollection": "Potřeba",
+    "openNeed": "Otevřít potřebu",
     "shared": "Společná účast",
     "noShared": "Zatím žádná společná účast",
     "moreContacts": "ještě {{count}}",

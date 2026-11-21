@@ -235,8 +235,8 @@
       "step2Sub": "Wyślij link albo pokaż kod QR",
       "step2Waiting": "Zgłoszenie wysłane, czekamy na potwierdzenie",
       "intention": "Mój zamiar",
-      "intentionIs": "Mój zamiar: {{amount}}",
-      "intentionSub": "Kwota, którą możesz podać, gdy ktoś ze znajomych zgłosi potrzebę."
+      "intentionSub": "Kwota, którą możesz podać, gdy ktoś ze znajomych zgłosi potrzebę.",
+      "setIntention": "Ustaw kwotę"
     },
     "acquaint": {
       "sub": "Prosi, żeby potwierdzić, że się znacie",
@@ -640,7 +640,8 @@
   },
   "invite": {
     "calls": "{{name}} zaprasza Cię",
-    "say": "Wzajemne wsparcie między osobami, które się znają. Zaloguj się, a {{name}} potwierdzi, że się znacie.",
+    "say": "Sieć osób, które znają się osobiście. Zaloguj się, a {{name}} potwierdzi, że się znacie.",
+    "sayQr": "Sieć osób, które znają się osobiście. Zaloguj się, zanim kod QR wygaśnie, żeby od razu potwierdzić znajomość z {{name}}.",
     "known": "Znamy się",
     "notNow": "Nie teraz",
     "toCircle": "Do kręgu",
@@ -654,7 +655,8 @@
     "ownTitle": "To Twój link",
     "ownText": "Tędy dołączą osoby, które znasz. Wyślij go komuś, kogo znasz osobiście.",
     "shareOwn": "Udostępnij link",
-    "sayKnown": "Wzajemne wsparcie między osobami, które się znają. Stuknij „Znamy się”, a {{name}} dostanie Twoje zgłoszenie.",
+    "sayKnown": "Naciśnij „{{action}}”, aby poprosić {{name}} o potwierdzenie znajomości.",
+    "sayKnownQr": "Naciśnij „{{action}}”, zanim kod QR wygaśnie, żeby od razu potwierdzić znajomość z {{name}}.",
     "loadFailedTitle": "Nie udało się otworzyć zaproszenia",
     "loadFailedText": "Wygląda na to, że nie ma połączenia. Link jest zapisany, spróbuj jeszcze raz.",
     "waiting": "Czekamy na potwierdzenie.",
@@ -835,7 +837,7 @@
       },
       "next": {
         "label": "Dalej",
-        "title": "Pomoc po dolarze to dopiero początek",
+        "title": "Pomoc po {{min}} to dopiero początek",
         "text": "Chcemy, żeby z czasem ludzie znajdowali przez sieć znajomych fachowca z polecenia, partnerów do wspólnego projektu, podobnie myślące osoby do własnej inicjatywy. I żeby, tak jak teraz, umawiali się bezpośrednio.",
         "now": "Teraz",
         "later": "Później",
@@ -957,7 +959,6 @@
         ],
         "you": "Ty",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Czat uczestników",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Twój krąg"
@@ -981,12 +982,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "potrzebuje 300 $",
+        "askerSub": "potrzebuje {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "Twój brat",
         "you": "Ty",
         "youSub": "decydujesz sam",
-        "amount": "300 $",
         "aria": "Droga wiadomości"
       },
       "join": {
@@ -1516,6 +1516,7 @@
   },
   "add": {
     "linkLabel": "Twój link",
+    "inPerson": "Na spotkaniu",
     "share": "Udostępnij",
     "shareText": "{{name}} zaprasza Cię do swojego kręgu.",
     "shareError": "Nie udało się udostępnić. Spróbuj jeszcze raz.",
@@ -1661,6 +1662,7 @@
     "removeConfirm": "Usuń",
     "keep": "Zostaw",
     "openCollection": "Potrzeba",
+    "openNeed": "Otwórz potrzebę",
     "shared": "Wspólny udział",
     "noShared": "Nie ma jeszcze wspólnego udziału",
     "moreContacts": "Jeszcze {{count}}",

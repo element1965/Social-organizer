@@ -20,7 +20,7 @@ import { PathChain } from '../components/person/PathChain';
 import { contactHref } from '../components/person/contactHref';
 import { Sheet } from '../components/ui2/Sheet';
 import { AdminPersonPanel } from '../components/admin/AdminPersonPanel';
-import { formatMoney } from '../components/ui2/format';
+import { formatIsolatedMoney, formatMoney } from '../components/ui2/format';
 import { SocialIcon } from '../components/ui/social-icons';
 import { isLive } from '../components/profile/collections';
 import { ONLINE_MS } from '../components/profile/constants';
@@ -299,6 +299,20 @@ function PersonScreen() {
         </div>
       </div>
 
+      {activeAsks.map((ask, index) => (
+        <Card
+          key={ask.id}
+          className="mt-4"
+          title={ask.type === 'REGULAR' ? t('profile.every28') : t('profile.once')}
+          subtitle={ask.amount ? formatIsolatedMoney(ask.amount) : t('profile.goalMissing')}
+        >
+          <Button variant={index === 0 ? 'primary' : 'secondary'} size="md" onClick={() => navigate(`/collection/${ask.id}`)}>
+            {t('person.openNeed')}
+          </Button>
+          {ask.status === 'BLOCKED' ? <p className="mt-2 text-label font-semibold text-ink-muted">{t('profile.paused')}</p> : null}
+        </Card>
+      ))}
+
       {ring1 ? (
         <div className="mt-5">
           <Input
@@ -312,29 +326,6 @@ function PersonScreen() {
           />
         </div>
       ) : null}
-
-      {/* Contacts have their own list below with a button per contact, so no separate Contacts button here */}
-      {activeAsks[0] ? (
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Button variant="primary" size="md" onClick={() => navigate(`/collection/${activeAsks[0]!.id}`)}>
-            {t('person.openCollection')}
-          </Button>
-        </div>
-      ) : null}
-
-      {activeAsks.map((ask) => (
-        <Card
-          key={ask.id}
-          className="mt-4"
-          title={ask.type === 'REGULAR' ? t('profile.every28') : t('profile.once')}
-          subtitle={ask.amount ? formatMoney(ask.amount) : t('profile.goalMissing')}
-        >
-          <Button variant="secondary" size="md" onClick={() => navigate(`/collection/${ask.id}`)}>
-            {t('person.openCollection')}
-          </Button>
-          {ask.status === 'BLOCKED' ? <p className="mt-2 text-label font-semibold text-ink-muted">{t('profile.paused')}</p> : null}
-        </Card>
-      ))}
 
       {deeper ? (
         <div className="mt-5">

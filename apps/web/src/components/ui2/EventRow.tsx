@@ -42,7 +42,7 @@ export function EventRow({ icon, title, subtitle, wrapSubtitle, note, amount, ho
         ) : null}
         {note ? <span dir="auto" className="mt-0.5 line-clamp-2 block break-words text-label font-semibold text-ink">{note}</span> : null}
       </span>
-      {amount ? <span className="text-body font-extrabold tabular-nums text-ink">{amount}</span> : null}
+      {amount ? <bdi dir="ltr" className="text-body font-extrabold tabular-nums text-ink">{amount}</bdi> : null}
       <IconChevron className="h-[18px] w-[18px] shrink-0 text-ink-subtle" />
     </>
   );

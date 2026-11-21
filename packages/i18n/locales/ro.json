@@ -232,8 +232,8 @@
       "step2Sub": "Trimite linkul sau arată codul QR",
       "step2Waiting": "Cerere trimisă, se așteaptă confirmarea",
       "intention": "Intenția mea",
-      "intentionIs": "Intenția mea: {{amount}}",
-      "intentionSub": "Suma pe care ești gata să o spui când cineva cunoscut anunță o nevoie."
+      "intentionSub": "Suma pe care ești gata să o spui când cineva cunoscut anunță o nevoie.",
+      "setIntention": "Setează suma"
     },
     "acquaint": {
       "sub": "Îți cere să confirmi că vă cunoașteți",
@@ -637,7 +637,8 @@
   },
   "invite": {
     "calls": "{{name}} te invită",
-    "say": "Ajutor reciproc între oameni care se cunosc. Conectează-te, iar {{name}} va confirma că vă cunoașteți.",
+    "say": "O rețea de oameni care se cunosc personal. Autentifică-te, iar {{name}} va confirma că vă cunoașteți.",
+    "sayQr": "O rețea de oameni care se cunosc personal. Autentifică-te înainte să expire codul QR pentru a confirma imediat că îl cunoști pe {{name}}.",
     "known": "Ne cunoaștem",
     "notNow": "Nu acum",
     "toCircle": "În cerc",
@@ -651,7 +652,8 @@
     "ownTitle": "Acesta e linkul tău",
     "ownText": "Prin el vin la tine oameni cunoscuți. Trimite-l cuiva pe care îl cunoști personal.",
     "shareOwn": "Distribuie linkul",
-    "sayKnown": "Ajutor reciproc între oameni care se cunosc. Apasă „Ne cunoaștem”, iar {{name}} primește cererea ta.",
+    "sayKnown": "Apasă „{{action}}” pentru a-i cere lui {{name}} să confirme.",
+    "sayKnownQr": "Apasă „{{action}}” înainte să expire codul QR pentru a confirma imediat legătura cu {{name}}.",
     "loadFailedTitle": "Nu am putut deschide invitația",
     "loadFailedText": "Pare că nu ai conexiune. Linkul e salvat; încearcă din nou.",
     "waiting": "Se așteaptă confirmarea.",
@@ -827,7 +829,7 @@
       },
       "next": {
         "label": "Mai departe",
-        "title": "Un dolar de ajutor e doar începutul",
+        "title": "Ajutorul de {{min}} e doar începutul",
         "text": "Ne dorim ca, în timp, oamenii să găsească prin rețeaua de cunoscuți un meșter recomandat de cineva, parteneri pentru un proiect comun, oameni cu aceleași idei pentru propria inițiativă. Și să se înțeleagă direct, ca acum.",
         "now": "Acum",
         "later": "Mai târziu",
@@ -949,7 +951,6 @@
         ],
         "you": "Tu",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Chatul participanților",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Cercul tău"
@@ -973,12 +974,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "are nevoie de 300 $",
+        "askerSub": "are nevoie de {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "fratele tău",
         "you": "Tu",
         "youSub": "decizi tu",
-        "amount": "300 $",
         "aria": "Drumul unui mesaj"
       },
       "join": {
@@ -1505,6 +1505,7 @@
   },
   "add": {
     "linkLabel": "Linkul tău",
+    "inPerson": "Față în față",
     "share": "Distribuie",
     "shareText": "{{name}} te invită în cercul său.",
     "shareError": "Nu s-a putut distribui. Încearcă din nou.",
@@ -1645,6 +1646,7 @@
     "removeConfirm": "Scoate",
     "keep": "Păstrează",
     "openCollection": "Nevoie",
+    "openNeed": "Deschide nevoia",
     "shared": "Participare comună",
     "noShared": "Încă nu există participare comună",
     "moreContacts": "încă {{count}}",

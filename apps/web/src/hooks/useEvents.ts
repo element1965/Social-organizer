@@ -49,7 +49,7 @@ export type FeedEvent = {
   /** The person on the row, for the avatars of a stacked card. */
   photoUrl?: string | null;
   collectionId?: string;
-  /** Every unread notification the row stands for: read or dismissed together. */
+  /** The open notices the row stands for: read or dismissed together. */
   notificationIds?: string[];
   pendingId?: string;
   milestone?: MilestoneKind;
@@ -155,14 +155,23 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
   // No timers here: the shell's pulse (hooks/usePulse.ts) re-reads each list when its part of the pulse changes.
   // A return to the Circle within CIRCLE_STALE_MS shows them from memory (lib/circleLists.ts).
   const fresh = { staleTime: CIRCLE_STALE_MS };
-  const unread = trpc.notification.unreadCount.useQuery(undefined, fresh);
-  const notifications = trpc.notification.list.useQuery({ limit: 100 }, fresh);
+  const notifications = trpc.notification.list.useQuery({ limit: 100, includeWaiting: true }, fresh);
   const incoming = trpc.pending.incoming.useQuery(undefined, fresh);
   const outgoing = trpc.pending.myPending.useQuery(undefined, fresh);
   const participating = trpc.collection.myParticipating.useQuery(undefined, fresh);
   const mine = trpc.collection.myActive.useQuery(undefined, fresh);
   const milestones = trpc.milestone.list.useQuery(undefined, fresh);
   const accepted = useAcceptedRecent();
+  const utils = trpc.useUtils();
+  const noticeItems = notifications.data?.items as NotificationItem[] | undefined;
+  const expiryTick = useExpiryTick(noticeItems);
+  const lastExpiryTick = useRef(expiryTick);
+  useEffect(() => {
+    if (lastExpiryTick.current === expiryTick) return;
+    lastExpiryTick.current = expiryTick;
+    void utils.notification.attention.invalidate();
+  }, [expiryTick, utils]);
+  const now = useMemo(() => Date.now(), [noticeItems, expiryTick]);
 
   const dateFmt = useMemo(
     () => new Intl.DateTimeFormat(i18n.language, { day: 'numeric', month: 'long' }),
@@ -188,20 +197,21 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
       });
     }
 
-    // One row per collection and kind; every unread notification it collapses is carried along,
-    // so opening or dismissing the row clears all of them. Items arrive newest first.
+    // One row per collection and kind. Opening or dismissing the row updates the notices it represents.
+    // Items arrive newest first.
     const rows = new Map<string, FeedEvent>();
     const covered = new Set<string>();
     for (const n of items) {
-      if (n.status !== 'UNREAD' || !n.collection) continue;
+      if (!n.collection) continue;
       const c = n.collection;
       const isRequest = REQUEST_TYPES.has(n.type);
       const isCycle = n.type === 'CYCLE_RENEWED' || n.type === 'CYCLE_RENEWAL_REMINDER';
 
-      if (isRequest && joined.has(c.id)) {
-        joined.get(c.id)!.ids.push(n.id);
+      if (isRequest && (joined.has(c.id) || c.obligations?.length)) {
+        if (n.status === 'UNREAD') joined.get(c.id)?.ids.push(n.id);
         continue;
       }
+      if (isRequest ? c.creatorId === myId || !isPendingRequest(n, now) : n.status !== 'UNREAD') continue;
 
       const group = isRequest ? 'request' : isCycle ? 'cycle' : n.type;
       const key = `${group}:${c.id}`;
@@ -221,7 +231,6 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
       };
 
       if (isRequest) {
-        if (c.status !== 'ACTIVE') continue;
         const path = n.handshakePathResolved ?? [];
         // Path runs from the author to me: the person next to me is the one I know.
         const near = path.length > 2 ? path[path.length - 2] : undefined;
@@ -360,11 +369,9 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
     }
 
     return out.sort((a, b) => b.at - a.at);
-  }, [notifications.data, incoming.data, outgoing.data, mine.data, participating.data, milestones.data, accepted.items, myId, t, name, dateFmt]);
+  }, [notifications.data, incoming.data, outgoing.data, mine.data, participating.data, milestones.data, accepted.items, myId, t, name, dateFmt, now]);
 
-  // Active incoming Needs I have not decided on: unlike the feed rows (unread only) they stay after the Need was
-  // opened, and end when I join, dismiss the notice, or the Need is no longer active (see isPendingRequest).
-  const expiryTick = useExpiryTick(notifications.data?.items as unknown as NotificationItem[] | undefined);
+  // The same undecided Needs send an impulse through the graph, even after being opened.
   const impulses = useMemo<ImpulseNeed[]>(() => {
     // Until my Participations are known a Need I joined could flash up
     if (!notifications.data || !participating.data) return [];
@@ -372,19 +379,17 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
     for (const o of participating.data) {
       if (!o.unsubscribedAt && o.collection?.status === 'ACTIVE') joined.add(o.collection.id);
     }
-    const now = Date.now();
     const byNeed = new Map<string, ImpulseNeed>();
     for (const n of notifications.data.items as unknown as NotificationItem[]) {
       const c = n.collection;
-      if (!c || c.creatorId === myId || joined.has(c.id) || !isPendingRequest(n, now)) continue;
+      if (!c || c.creatorId === myId || joined.has(c.id) || c.obligations?.length || !isPendingRequest(n, now)) continue;
       const at = new Date(n.createdAt).getTime();
       const prev = byNeed.get(c.id);
       if (prev && prev.at >= at) continue;
       byNeed.set(c.id, { id: c.id, personId: c.creator.id, at, path: (n.handshakePathResolved ?? []).map((p) => p.id) });
     }
     return [...byNeed.values()].sort((a, b) => b.at - a.at);
-    // expiryTick: the memo reads the clock, and the data keeps its identity while a notice runs out
-  }, [notifications.data, participating.data, myId, expiryTick]);
+  }, [notifications.data, participating.data, myId, now]);
 
   const loading =
     notifications.isLoading ||
@@ -394,7 +399,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
     mine.isLoading ||
     milestones.isLoading;
 
-  return { events, impulses, loading, unreadCount: unread.data?.count ?? 0, markAcceptedSeen: accepted.markSeen, dismissAccepted: accepted.dismiss };
+  return { events, impulses, loading, markAcceptedSeen: accepted.markSeen, dismissAccepted: accepted.dismiss };
 }
 
 /**

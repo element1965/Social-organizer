@@ -229,8 +229,8 @@
       "step2Sub": "Stuur je link of toon de QR",
       "step2Waiting": "Verzoek verstuurd, wachten op bevestiging",
       "intention": "Mijn intentie",
-      "intentionIs": "Mijn intentie: {{amount}}",
-      "intentionSub": "Het bedrag dat je wilt noemen als iemand die je kent een behoefte meldt."
+      "intentionSub": "Het bedrag dat je wilt noemen als iemand die je kent een behoefte meldt.",
+      "setIntention": "Bedrag instellen"
     },
     "acquaint": {
       "sub": "Vraagt je te bevestigen dat jullie elkaar kennen",
@@ -634,7 +634,8 @@
   },
   "invite": {
     "calls": "{{name}} nodigt je uit",
-    "say": "Onderlinge hulp tussen mensen die elkaar kennen. Log in, dan bevestigt {{name}} dat jullie elkaar kennen.",
+    "say": "Een netwerk van mensen die elkaar persoonlijk kennen. Log in en {{name}} bevestigt dat jullie elkaar kennen.",
+    "sayQr": "Een netwerk van mensen die elkaar persoonlijk kennen. Log in voordat de QR-code verloopt om meteen te bevestigen dat je {{name}} kent.",
     "known": "We kennen elkaar",
     "notNow": "Niet nu",
     "toCircle": "Naar de kring",
@@ -648,7 +649,8 @@
     "ownTitle": "Dit is je link",
     "ownText": "Mensen die je kent, komen via deze link bij je. Stuur hem naar iemand die je persoonlijk kent.",
     "shareOwn": "Link delen",
-    "sayKnown": "Onderlinge hulp tussen mensen die elkaar kennen. Tik op “We kennen elkaar”, dan krijgt {{name}} je verzoek.",
+    "sayKnown": "Tik op ‘{{action}}’ om {{name}} om bevestiging te vragen.",
+    "sayKnownQr": "Tik op ‘{{action}}’ voordat de QR-code verloopt om je verbinding met {{name}} meteen te bevestigen.",
     "loadFailedTitle": "De uitnodiging kon niet worden geopend",
     "loadFailedText": "Het lijkt erop dat er geen verbinding is. De link is bewaard; probeer het opnieuw.",
     "waiting": "Wachten op bevestiging.",
@@ -819,7 +821,7 @@
       },
       "next": {
         "label": "Vooruitblik",
-        "title": "Een dollar hulp is pas het begin",
+        "title": "Helpen met {{min}} is pas het begin",
         "text": "Op termijn willen we dat mensen via hun netwerk van kennissen ook een vakman op aanbeveling vinden, partners voor een gezamenlijk project en gelijkgestemden voor een eigen initiatief. En dat ze, net als nu, rechtstreeks afspraken maken.",
         "now": "Nu",
         "later": "Later",
@@ -941,7 +943,6 @@
         ],
         "you": "Jij",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Chat van de deelnemers",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Je kring"
@@ -965,12 +966,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "heeft 300 $ nodig",
+        "askerSub": "heeft {{amount}} nodig",
         "mediator": "Oleg",
         "mediatorSub": "je broer",
         "you": "Jij",
         "youSub": "jij beslist",
-        "amount": "300 $",
         "aria": "Pad van een bericht"
       },
       "join": {
@@ -1494,6 +1494,7 @@
   },
   "add": {
     "linkLabel": "Je link",
+    "inPerson": "In persoon",
     "share": "Delen",
     "shareText": "{{name}} nodigt je uit in hun kring.",
     "shareError": "Delen mislukt. Probeer opnieuw.",
@@ -1629,6 +1630,7 @@
     "removeConfirm": "Verwijderen",
     "keep": "Houden",
     "openCollection": "Behoefte",
+    "openNeed": "Open de behoefte",
     "shared": "Gezamenlijke deelname",
     "noShared": "Nog geen gezamenlijke deelname",
     "moreContacts": "nog {{count}}",
