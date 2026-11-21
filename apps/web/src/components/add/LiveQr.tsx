@@ -26,8 +26,13 @@ function formatLeft(ms: number): string {
  * Fills the height its parent gives it (a `fill` Screen), buttons at the bottom. `children` go under the buttons,
  * so an extra action never pushes the screen past the viewport.
  */
-export function LiveQr({ onScan, onDone, children }: { onScan: () => void; onDone: () => void; children?: ReactNode }) {
-  const { t } = useTranslation();
+export function LiveQr({ connectedHere, onScan, onDone, children }: {
+  connectedHere: number;
+  onScan: () => void;
+  onDone: () => void;
+  children?: ReactNode;
+}) {
+  const { t, i18n } = useTranslation();
   const generate = trpc.invite.generate.useMutation({ meta: { notifyOnError: false } });
   const generateRef = useRef(generate.mutateAsync);
   generateRef.current = generate.mutateAsync;
@@ -35,6 +40,8 @@ export function LiveQr({ onScan, onDone, children }: { onScan: () => void; onDon
   const [now, setNow] = useState(() => Date.now());
   const [failed, setFailed] = useState(false);
   const [retry, setRetry] = useState(0);
+  const refreshRef = useRef<(() => void) | null>(null);
+  const lastTally = useRef(connectedHere);
 
   useEffect(() => {
     let stopped = false;
@@ -91,13 +98,14 @@ export function LiveQr({ onScan, onDone, children }: { onScan: () => void; onDon
       }, 250);
     };
 
-    const issue = async () => {
+    const issue = async (afterConnection = false) => {
       if (stopped || pending || hidden()) return;
-      const delay = nextDelay();
+      const delay = afterConnection && failures === 0 ? 0 : nextDelay();
       if (delay > 0) {
         schedule(delay);
         return;
       }
+      clearWait();
       pending = true;
       const ticket = epoch;
       lastIssued = Date.now();
@@ -143,6 +151,11 @@ export function LiveQr({ onScan, onDone, children }: { onScan: () => void; onDon
       else void issue();
     };
 
+    refreshRef.current = () => {
+      current = null;
+      setPass(null);
+      void issue(true);
+    };
     document.addEventListener('visibilitychange', onVisibility);
     if (visible()) {
       armTick();
@@ -153,9 +166,16 @@ export function LiveQr({ onScan, onDone, children }: { onScan: () => void; onDon
       epoch += 1;
       clearWait();
       clearTick();
+      refreshRef.current = null;
       document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [retry]);
+
+  useEffect(() => {
+    if (connectedHere === lastTally.current) return;
+    lastTally.current = connectedHere;
+    refreshRef.current?.();
+  }, [connectedHere]);
 
   const remaining = pass ? Math.max(0, pass.expiresAt - now) : TTL_MS;
   const fraction = Math.min(1, remaining / TTL_MS);
@@ -170,6 +190,9 @@ export function LiveQr({ onScan, onDone, children }: { onScan: () => void; onDon
         failed={failed}
         onRetry={() => setRetry((value) => value + 1)}
       />
+      <p className="mt-2 text-label font-bold tabular-nums text-ink-muted" role="status">
+        {t('add.connectedHere', { connections: new Intl.NumberFormat(i18n.language).format(connectedHere) })}
+      </p>
       <div className="mt-auto w-full pt-8">
         <Button className="w-full" variant="secondary" icon={<IconScan />} onClick={onScan}>
           {t('add.scanOther')}

@@ -66,16 +66,26 @@ export const obligationRouter = router({
     const creatorIds = [...new Set(obligations.map((o) => o.collection.creatorId))];
     const countMap = await getDirectConnectionCounts(ctx.db, creatorIds);
 
-    return obligations.map((o) => ({
-      ...o,
-      collection: {
-        ...o.collection,
-        creator: {
-          ...o.collection.creator,
-          connectionCount: countMap.get(o.collection.creatorId) || 0,
+    const activeIds = new Set(obligations.filter((o) => o.unsubscribedAt == null).map((o) => o.collectionId));
+    return obligations.map((o) => {
+      const owner = o.collection.creatorId === ctx.userId;
+      const canSeeParticipation = owner || activeIds.has(o.collectionId);
+      return {
+        ...o,
+        amount: canSeeParticipation ? o.amount : null,
+        originalAmount: canSeeParticipation ? o.originalAmount : null,
+        originalCurrency: canSeeParticipation ? o.originalCurrency : null,
+        confirmedAt: owner ? o.confirmedAt : null,
+        collection: {
+          ...o.collection,
+          chatLink: canSeeParticipation ? o.collection.chatLink : null,
+          creator: {
+            ...o.collection.creator,
+            connectionCount: countMap.get(o.collection.creatorId) || 0,
+          },
         },
-      },
-    }));
+      };
+    });
   }),
 
   updateAmount: protectedProcedure
@@ -105,6 +115,7 @@ export const obligationRouter = router({
           originalAmount: null, // clear amounts typed in other currencies before SO-40
           originalCurrency: null,
         },
+        omit: { confirmedAt: true },
       });
 
       await syncCollectionGoal(ctx.db, obligation.collectionId);
@@ -225,6 +236,7 @@ export const obligationRouter = router({
       const updated = await ctx.db.obligation.update({
         where: { id: input.obligationId },
         data: { unsubscribedAt: new Date() },
+        omit: { confirmedAt: true },
       });
       await syncCollectionGoal(ctx.db, updated.collectionId);
       return updated;
@@ -248,6 +260,7 @@ export const obligationRouter = router({
       const updated = await ctx.db.obligation.update({
         where: { id: obligation.id },
         data: { unsubscribedAt: new Date() },
+        omit: { confirmedAt: true },
       });
       // A goal-reached hold (blockReason null) opens again when the active total drops below the goal.
       await syncCollectionGoal(ctx.db, input.collectionId);

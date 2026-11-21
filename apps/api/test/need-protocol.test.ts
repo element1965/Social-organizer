@@ -111,6 +111,83 @@ describe('Need access', () => {
   });
 });
 
+describe('Need participant visibility', () => {
+  it('limits amounts and chat to the author and active participants, and received marks to the author', async () => {
+    const author = 'privacy-author';
+    const { circle } = await seedNetwork(author, 5, 6);
+    const participant = circle[0]!;
+    const remaining = circle[1]!;
+    const viewer = circle[2]!;
+    const chatLink = 'https://example.com/participants';
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'REGULAR', amount: 100, chatLink },
+    });
+    const marked = await db.obligation.create({
+      data: {
+        collectionId: need.id, userId: participant, amount: 4, originalAmount: 8,
+        originalCurrency: 'EUR', confirmedAt: new Date(), isSubscription: true,
+      },
+    });
+    await db.obligation.create({
+      data: { collectionId: need.id, userId: remaining, amount: 6, originalAmount: 9, originalCurrency: 'EUR' },
+    });
+    await db.notification.createMany({
+      data: [author, participant, viewer].map((userId) => ({
+        userId, collectionId: need.id, type: 'NEW_COLLECTION', expiresAt: new Date(Date.now() + hour),
+      })),
+    });
+
+    const caller = (userId: string) => appRouter.createCaller({ db, userId, ip: '127.0.0.1' });
+    const detail = (userId: string) => caller(userId).collection.getById({ id: need.id });
+    const notice = async (userId: string) => (await caller(userId).notification.list({}))
+      .items.find((item) => item.collectionId === need.id)?.collection;
+
+    const ownerView = await detail(author);
+    expect(ownerView.chatLink).toBe(chatLink);
+    expect(ownerView.obligations).toContainEqual(expect.objectContaining({
+      id: marked.id, amount: 4, confirmedAt: marked.confirmedAt,
+    }));
+    expect(await notice(author)).toMatchObject({ chatLink });
+
+    const activeView = await detail(participant);
+    expect(activeView).toMatchObject({ chatLink, currentAmount: 10, amount: 100 });
+    expect(activeView.obligations).toHaveLength(2);
+    expect(activeView.obligations).toContainEqual(expect.objectContaining({ userId: remaining, amount: 6 }));
+    expect(activeView.obligations.every((row) => row.confirmedAt === null)).toBe(true);
+    expect(await notice(participant)).toMatchObject({ chatLink, obligations: [{ amount: 4 }] });
+    expect(await caller(participant).obligation.myList()).toEqual([
+      expect.objectContaining({ amount: 4, confirmedAt: null, collection: expect.objectContaining({ chatLink }) }),
+    ]);
+
+    const viewerView = await detail(viewer);
+    expect(viewerView).toMatchObject({ chatLink: null, currentAmount: 10, amount: 100 });
+    expect(viewerView.obligations).toHaveLength(2);
+    expect(viewerView.obligations).toContainEqual(expect.objectContaining({ user: expect.objectContaining({ name: participant }) }));
+    for (const row of viewerView.obligations) {
+      expect(row).toMatchObject({ amount: null, originalAmount: null, originalCurrency: null, confirmedAt: null });
+    }
+    expect(await notice(viewer)).toMatchObject({ chatLink: null, obligations: [] });
+
+    const publicView = await caller(viewer).collection.getPublic({ id: need.id });
+    expect(publicView).toMatchObject({ currentAmount: 10, amount: 100, _count: { obligations: 2 } });
+    expect(publicView).not.toHaveProperty('obligations');
+    expect(publicView).not.toHaveProperty('chatLink');
+
+    const withdrawn = await caller(participant).obligation.unsubscribe({ obligationId: marked.id });
+    expect(withdrawn).not.toHaveProperty('confirmedAt');
+    const withdrawnView = await detail(participant);
+    expect(withdrawnView).toMatchObject({ chatLink: null, currentAmount: 6 });
+    expect(withdrawnView.obligations).toEqual([expect.objectContaining({ userId: remaining, amount: null })]);
+    expect(await notice(participant)).toMatchObject({ chatLink: null, obligations: [] });
+    expect(await caller(participant).obligation.myList()).toEqual([
+      expect.objectContaining({
+        amount: null, originalAmount: null, originalCurrency: null, confirmedAt: null,
+        collection: expect.objectContaining({ chatLink: null }),
+      }),
+    ]);
+  });
+});
+
 describe('Need notification waves', () => {
   it('notifies the nearest people first, with one reachable recipient per dollar', async () => {
     const { circle, chain } = await seedNetwork('wave', 5, 6, 5);

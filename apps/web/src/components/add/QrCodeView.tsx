@@ -53,7 +53,7 @@ export function QrCodeView({ url, fraction, timeLabel, failed, onRetry }: QrCode
           ) : null}
         </div>
       </div>
-      <p className="mt-3.5 text-h2 font-extrabold tabular-nums text-ink" aria-live="polite">
+      <p className="mt-3.5 text-h2 font-extrabold tabular-nums text-ink" aria-hidden="true">
         {timeLabel}
       </p>
       <p className="mt-1.5 max-w-[30ch] text-caption font-semibold text-ink-muted">{t('add.qrHint')}</p>

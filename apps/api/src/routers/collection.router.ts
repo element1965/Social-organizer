@@ -47,6 +47,7 @@ export const collectionRouter = router({
       const blocked = await ctx.db.collection.update({
         where: { id: input.id },
         data: { status: 'BLOCKED', blockedAt: new Date(), blockReason: input.reason },
+        omit: { chatLink: true },
       });
       // Stop the request from circulating: pending "new request" notifications are no longer actionable
       await ctx.db.notification.updateMany({
@@ -72,7 +73,7 @@ export const collectionRouter = router({
       });
       // A goal hold must come back if the circle (or an admin) lift was the only reason it stayed paused.
       await syncCollectionGoal(ctx.db, input.id);
-      return ctx.db.collection.findUniqueOrThrow({ where: { id: input.id } });
+      return ctx.db.collection.findUniqueOrThrow({ where: { id: input.id }, omit: { chatLink: true } });
     }),
 
   /**
@@ -186,13 +187,14 @@ export const collectionRouter = router({
         },
       });
       if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
+      const owner = collection.creatorId === ctx.userId;
       // Opening a collection one was asked to help with, from any entry point (feed, Telegram, push)
-      if (collection.creatorId !== ctx.userId) {
+      if (!owner) {
         recordOpened(ctx.db, ctx.userId, collection.id).catch((err) => console.error('[notify-stats] open', err));
       }
 
       // The author has seen the responses: they won't come again in the grouped message (SO-45)
-      if (collection.creatorId === ctx.userId) {
+      if (owner) {
         // Raw SQL on purpose: an ORM update would also move "updatedAt", which other people's apps watch
         // (notification.pulse) — the author keeping the page open would make every notified person refetch
         ctx.db.$executeRaw`UPDATE collections SET "creatorViewedAt" = NOW() WHERE id = ${collection.id}`
@@ -203,6 +205,7 @@ export const collectionRouter = router({
       const userIds = [collection.creatorId, ...collection.obligations.map((o) => o.userId)];
       const countMap = await getDirectConnectionCounts(ctx.db, userIds);
       const visible = collection.obligations.filter((o) => o.unsubscribedAt == null);
+      const canSeeParticipation = owner || visible.some((o) => o.userId === ctx.userId);
       const renewal = collection.type === 'REGULAR' && collection.cycleNumber > 1 && collection.currentCycleStart != null;
       const acked = new Set<string>();
       if (renewal) {
@@ -220,7 +223,7 @@ export const collectionRouter = router({
 
       // Recorded by invite.acceptSos. Older connections stay null and are not guessed.
       const viaLink = new Set<string>();
-      if (ctx.userId === collection.creatorId) {
+      if (owner) {
         const links = await ctx.db.connection.findMany({
           where: { viaCollectionId: collection.id },
           select: { userAId: true, userBId: true },
@@ -232,10 +235,10 @@ export const collectionRouter = router({
       }
 
       const cycleStart = collection.currentCycleStart?.getTime() ?? 0;
-      const totals = await activeObligationTotals(ctx.db, collection.id);
-      const currentAmount = totals.amount;
+      const currentAmount = visible.reduce((sum, row) => sum + row.amount, 0);
       return {
         ...collection,
+        chatLink: canSeeParticipation ? collection.chatLink : null,
         currentAmount,
         creator: {
           ...collection.creator,
@@ -243,8 +246,11 @@ export const collectionRouter = router({
         },
         obligations: visible.map((o) => ({
           ...o,
+          amount: canSeeParticipation ? o.amount : null,
+          originalAmount: canSeeParticipation ? o.originalAmount : null,
+          originalCurrency: canSeeParticipation ? o.originalCurrency : null,
           // The received mark is the author's own record; other viewers never get it.
-          confirmedAt: ctx.userId === collection.creatorId ? o.confirmedAt : null,
+          confirmedAt: owner ? o.confirmedAt : null,
           user: {
             ...o.user,
             connectionCount: countMap.get(o.userId) || 0,
@@ -429,6 +435,7 @@ export const collectionRouter = router({
       const active = obligations.filter((o) => o.unsubscribedAt == null);
       return {
         ...row,
+        confirmedAt: collection.creatorId === ctx.userId ? row.confirmedAt : null,
         collection: {
           ...collection,
           currentAmount: active.reduce((sum, o) => sum + o.amount, 0),

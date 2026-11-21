@@ -215,7 +215,7 @@ export function MarkTransfersSheet({
 
   const all = people.length > 0 && picked.size === people.length;
   const chosen = people.filter((row) => picked.has(row.id));
-  const sum = chosen.reduce((acc, row) => acc + row.amount, 0);
+  const sum = chosen.reduce((acc, row) => acc + (row.amount ?? 0), 0);
   const flip = (id: string) =>
     setPicked((prev) => {
       const next = new Set(prev);
@@ -260,7 +260,9 @@ export function MarkTransfersSheet({
               >
                 <Avatar name={row.name} src={row.photoUrl} size={36} />
                 <span className="min-w-0 flex-1 truncate text-body font-body text-ink">{row.name}</span>
-                <span className="text-body font-extrabold tabular-nums text-ink">{formatMoney(row.amount)}</span>
+                {row.amount != null ? (
+                  <span className="text-body font-extrabold tabular-nums text-ink">{formatMoney(row.amount)}</span>
+                ) : null}
                 <Tick on={on} />
               </button>
             </li>
@@ -306,7 +308,7 @@ export function MarkableParticipantList({
   const [sheetOpen, setSheetOpen] = useState(false);
   const unpaid = marks.people.filter((row) => !row.paid);
   const allPaid = marks.people.length > 0 && unpaid.length === 0;
-  const total = marks.people.reduce((acc, row) => acc + row.amount, 0);
+  const total = marks.people.reduce((acc, row) => acc + (row.amount ?? 0), 0);
   // Hidden with × until a mark is taken off again
   const [offerDismissed, setOfferDismissed] = useState(false);
   useEffect(() => {

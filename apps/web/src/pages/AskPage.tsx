@@ -1,7 +1,7 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LARGE_AMOUNT_WARNING, MAX_CHAT_LINK_LENGTH, MIN_COLLECTION_AMOUNT } from '@so/shared';
+import { LARGE_AMOUNT_WARNING, MAX_CHAT_LINK_LENGTH, MIN_COLLECTION_AMOUNT, NOTIFICATION_RATIO } from '@so/shared';
 import { IconChevron } from '../components/ui2/icons';
 import { amountIssue, chatLinkIssue, formatCount, parseWhole } from '../components/collection/text';
 import { Button } from '../components/ui2/Button';
@@ -174,14 +174,12 @@ function AskBody() {
     send();
   };
 
-  const reach = networkPeople == null
-    ? null
-    : networkPeople === 0 && access.data.directCount === 0
-      ? t('ask.reachEmpty')
-      : t('ask.reach', {
-          network: formatCount(networkPeople, i18n.language),
-          direct: formatCount(access.data.directCount, i18n.language),
-        });
+  const waveLimit = whole != null && whole >= MIN_COLLECTION_AMOUNT ? Math.ceil(whole / NOTIFICATION_RATIO) : null;
+  const reach = networkPeople != null && waveLimit != null
+    ? Math.min(waveLimit, networkPeople)
+    : null;
+  // The public figure rounds the outer rings for privacy. Beyond the visible rings, the cap can be approximate.
+  const approximateReach = figure?.far.approx && waveLimit != null && waveLimit > figure.people - figure.far.count;
 
   return (
     <>
@@ -238,7 +236,24 @@ function AskBody() {
             </button>
           )}
         </div>
-        {reach ? <p className="mt-4 rounded-lg bg-care-soft px-3.5 py-3 text-caption font-semibold text-ink">{reach}</p> : null}
+        {networkPeople != null ? (
+          <div className="mt-4 rounded-lg bg-care-soft px-3.5 py-3">
+            {reach != null ? (
+              <p className="text-caption font-semibold text-ink">
+                {t('ask.reach', {
+                  count: reach,
+                  people: (approximateReach ? '≈' : '') + formatCount(reach, i18n.language),
+                })}
+              </p>
+            ) : null}
+            <p className="text-label font-semibold text-ink-muted">
+              {t('ask.reachNetwork', {
+                count: networkPeople,
+                people: (figure?.far.approx ? '≈' : '') + formatCount(networkPeople, i18n.language),
+              })}
+            </p>
+          </div>
+        ) : null}
         {errors.form ? <p className="mt-3 text-label font-semibold text-sos">{errors.form}</p> : null}
         <Button type="submit" className="mt-4 w-full" loading={create.isPending} disabled={offline}>
           {t('ask.submit')}

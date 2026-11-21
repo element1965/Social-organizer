@@ -84,6 +84,9 @@ export const notificationRouter = router({
           collection: n.collection
             ? {
                 ...n.collection,
+                chatLink: n.collection.creatorId === ctx.userId || n.collection.obligations.length > 0
+                  ? n.collection.chatLink
+                  : null,
                 creator: {
                   ...n.collection.creator,
                   connectionCount: countMap.get(n.collection.creatorId) || 0,
