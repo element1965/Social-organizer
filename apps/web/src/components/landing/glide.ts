@@ -166,9 +166,7 @@ export function initGlide(beats: HTMLElement[], main: HTMLElement, root: HTMLEle
     }
     return false;
   };
-  const detachMove = () => root.removeEventListener('touchmove', onTouchMove);
   const cancelTouch = () => {
-    detachMove();
     if (dragFrame) cancelAnimationFrame(dragFrame);
     dragFrame = 0;
     dragY = null;
@@ -189,8 +187,6 @@ export function initGlide(beats: HTMLElement[], main: HTMLElement, root: HTMLEle
     track = { x0: t.clientX, y0: t.clientY, s0: scrollY, vertical: false, samples: [[e.timeStamp, t.clientY]] };
     touching = true;
     anchorY = scrollY;
-    // The deciding move must be cancelable before the browser takes over the gesture.
-    root.addEventListener('touchmove', onTouchMove, { passive: false });
   };
   const onTouchMove = (e: TouchEvent) => {
     const tr = track;
@@ -219,23 +215,20 @@ export function initGlide(beats: HTMLElement[], main: HTMLElement, root: HTMLEle
   };
   const onTouchEnd = (e: TouchEvent) => {
     const tr = track;
-    detachMove();
-    track = null;
     if (!tr?.vertical) return cancelTouch();
+    track = null;
     // the speed of the last 100 ms of the gesture; a finger that rested before lifting has none
     let v = 0;
     const s = tr.samples;
     const lastS = s[s.length - 1]!;
-    if (e.type === 'touchend' && s.length >= 2 && e.timeStamp - lastS[0] < 60) {
+    if (s.length >= 2 && e.timeStamp - lastS[0] < 60) {
       const firstS = s[0]!;
       v = -(lastS[1] - firstS[1]) / Math.max(16, lastS[0] - firstS[0]);
     }
     if (dragFrame) cancelAnimationFrame(dragFrame);
-    dragFrame = requestAnimationFrame(() => {
-      flushDrag();
-      touching = false;
-      release(tr.s0, v);
-    });
+    flushDrag();
+    touching = false;
+    release(tr.s0, v);
   };
   const release = (from: number, v: number) => {
     const y0 = scrollY;
@@ -263,8 +256,10 @@ export function initGlide(beats: HTMLElement[], main: HTMLElement, root: HTMLEle
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', onResize, { passive: true });
   addEventListener('touchstart', onTouchStart, { passive: true });
+  // The browser must see the blocking listener before a gesture starts, even during a busy touch-down.
+  root.addEventListener('touchmove', onTouchMove, { passive: false });
   addEventListener('touchend', onTouchEnd, { passive: true });
-  addEventListener('touchcancel', onTouchEnd, { passive: true });
+  addEventListener('touchcancel', cancelTouch, { passive: true });
   if (import.meta.env.DEV) (window as unknown as { __lvRest?: () => number[] }).__lvRest = () => restPoints().map(Math.round);
   return () => {
     stop();
@@ -275,8 +270,9 @@ export function initGlide(beats: HTMLElement[], main: HTMLElement, root: HTMLEle
     removeEventListener('scroll', onScroll);
     removeEventListener('resize', onResize);
     removeEventListener('touchstart', onTouchStart);
+    root.removeEventListener('touchmove', onTouchMove);
     removeEventListener('touchend', onTouchEnd);
-    removeEventListener('touchcancel', onTouchEnd);
+    removeEventListener('touchcancel', cancelTouch);
     if (import.meta.env.DEV) delete (window as unknown as { __lvRest?: unknown }).__lvRest;
   };
 }
