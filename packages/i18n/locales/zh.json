@@ -341,7 +341,7 @@
     "change": "修改",
     "openCollectionChat": "打开参与者聊天",
     "moneyNote": "金额是你的自愿意向。如何、何时交付钱款，由参与者在聊天里直接商定。Social Organizer 不接收、不转移、不保管资金。",
-    "beforeParticipation": "详情在参与者群聊中，参与后即可进入。需求开放期间，你可以修改或撤回参与。如需交付钱款，请在应用之外完成。",
+    "beforeParticipation": "参与后，你就可以打开参与者聊天，了解详情。需求开放期间，你可以修改已申报的金额，也可以撤回参与。钱款由参与者在应用外直接交付。",
     "askAcquaintance": "向<name>{{name}}</name>询问此事",
     "decline": "撤回参与",
     "declineTitle": "撤回参与？",

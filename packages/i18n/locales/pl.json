@@ -351,7 +351,7 @@
     "openCollectionChat": "Otwórz czat uczestników",
     "moneyNote": "Kwota to Twój dobrowolny zamiar. Jak i kiedy przekazać pieniądze, uczestnicy ustalają bezpośrednio na czacie. Social Organizer nie przyjmuje, nie przekazuje ani nie przetrzymuje środków.",
     "beforeParticipation": "Szczegóły są na czacie uczestników, który otworzy się, gdy dołączysz. Dopóki potrzeba jest otwarta, możesz zmienić lub wycofać swój udział. Pieniądze przekazuje się poza aplikacją.",
-    "askAcquaintance": "Zapytaj o to: <name>{{name}}</name>",
+    "askAcquaintance": "<name>{{name}}</name> · zapytaj o szczegóły",
     "decline": "Wycofaj udział",
     "declineTitle": "Wycofać udział?",
     "stay": "Zostań",

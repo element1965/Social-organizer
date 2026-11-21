@@ -294,6 +294,7 @@ function usePendingSettingsSync() {
 function LiveShell({ children }: { children?: ReactNode }) {
   const mode = useShellMode();
   const location = useLocation();
+  const section = shellSection(location.pathname, location.state);
   const theme = useTheme((state) => state.mode);
   const setMode = useTheme((state) => state.setMode);
   // The ring belongs to the signed-in account only (another account's value is never shown)
@@ -316,7 +317,7 @@ function LiveShell({ children }: { children?: ReactNode }) {
       {mode === 'tabs' ? null : (
         <ShellChrome
           mode={mode}
-          section={shellSection(location.pathname)}
+          section={section}
           pathname={location.pathname}
           ask={ask}
           unread={waiting}
@@ -334,7 +335,7 @@ function LiveShell({ children }: { children?: ReactNode }) {
       {showTabs ? (
         <ShellChrome
           mode="tabs"
-          section={shellSection(location.pathname)}
+          section={section}
           pathname={location.pathname}
           ask={ask}
           unread={waiting}

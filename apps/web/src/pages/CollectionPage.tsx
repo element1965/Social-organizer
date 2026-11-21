@@ -322,10 +322,10 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   ));
   const showPath = !owner && pathNames.length > 1;
   const acquaintance = pathPeople[1];
-  const acquaintanceName = acquaintance && !acquaintance.hidden
+  const acquaintanceName = acquaintance?.contactable && !acquaintance.hidden
     ? resolve(acquaintance.id, acquaintance.name).trim()
     : '';
-  const askAcquaintance = !owner && data.status === 'ACTIVE' && !held
+  const askAcquaintance = !owner && (data.status === 'ACTIVE' || goalMet) && !held
     && pathPeople.length >= 3 && acquaintance && acquaintance.id !== data.creatorId && acquaintanceName
     ? { id: acquaintance.id, name: acquaintanceName }
     : undefined;

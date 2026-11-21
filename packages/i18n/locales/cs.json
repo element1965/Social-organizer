@@ -351,7 +351,7 @@
     "openCollectionChat": "Otevřít chat účastníků",
     "moneyNote": "Částka je váš dobrovolný záměr. Jak a kdy předat peníze, domlouvají účastníci přímo v chatu. Social Organizer peníze nepřijímá, nepřevádí ani nedrží.",
     "beforeParticipation": "Podrobnosti najdete v chatu účastníků, který se vám otevře, jakmile se zapojíte. Dokud je potřeba otevřená, můžete svou účast změnit nebo odvolat. Případné peníze se předávají mimo aplikaci.",
-    "askAcquaintance": "Zeptat se na to: <name>{{name}}</name>",
+    "askAcquaintance": "<name>{{name}}</name> · zeptat se na podrobnosti",
     "decline": "Odvolat účast",
     "declineTitle": "Odvolat účast?",
     "stay": "Zůstat",

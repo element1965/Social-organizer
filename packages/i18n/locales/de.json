@@ -344,7 +344,7 @@
     "change": "Ändern",
     "openCollectionChat": "Chat der Beteiligten öffnen",
     "moneyNote": "Der Betrag ist Ihre freiwillige Absicht. Wie und wann Geld übergeben wird, vereinbaren die Beteiligten direkt im Chat. Social Organizer nimmt keine Gelder an, überweist keine und hält keine.",
-    "beforeParticipation": "Die Details stehen im Chat der Teilnehmenden. Er öffnet sich, sobald Sie teilnehmen. Solange der Bedarf offen ist, können Sie Ihre Teilnahme ändern oder zurückziehen. Geld wird außerhalb der App weitergegeben.",
+    "beforeParticipation": "Die Details finden Sie im Chat der Beteiligten. Sie können ihn öffnen, sobald Sie sich beteiligen. Solange der Bedarf offen ist, können Sie Ihre Beteiligung ändern oder zurückziehen. Geld wird außerhalb der App übergeben.",
     "askAcquaintance": "Bei <name>{{name}}</name> nachfragen",
     "decline": "Beteiligung zurückziehen",
     "declineTitle": "Beteiligung zurückziehen?",
