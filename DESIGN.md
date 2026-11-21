@@ -27,7 +27,7 @@ colors:
   surface-2: "#e9eeec"
   ink: "#14211e"
   ink-muted: "#5c6d68"
-  ink-subtle: "#8a9a95"
+  ink-subtle: "#5e6d68"
   dark-canvas: "#121917"
   dark-surface: "#1c2622"
   dark-surface-2: "#24302b"
@@ -253,7 +253,7 @@ A green-black palette with one teal accent, one red signal and one warm note. Ev
 
 ## Layout
 
-The app is a single centred column of 680 px with a 16 px gutter inside, used the same way by the main bar and the screen body so edges line up. On phones the tab bar sits at the bottom (84 px high, four tabs: Circle, Ask, Add, Profile; the wider shells add People). From 768 px it becomes a side rail, and from 1024 px a sidebar with labels; sheets turn into centred dialogs on wide screens. Rows are at least 56 px high and grouped into rounded lists with soft dividers. Spacing follows a 4 px base with 12, 16 and 20 px as the common steps. Safe-area insets (`--sa-top`) are respected by sticky bars.
+The app is a single centred column of 680 px with a 16 px gutter inside, used the same way by the main bar and the screen body so edges line up. On phones the tab bar sits at the bottom (84 px high, four tabs: Circle, Need (route `/ask`), Add, Profile; the wider shells add People). From 768 px it becomes a side rail, and from 1024 px a sidebar with labels; sheets turn into centred dialogs on wide screens. Rows are at least 56 px high and grouped into rounded lists with soft dividers. Spacing follows a 4 px base with 12, 16 and 20 px as the common steps. Safe-area insets (`--sa-top`) are respected by sticky bars.
 
 The Circle is the exception: a full-screen 3D scene with a scrim behind the header numbers, ring chips on top and an event sheet that collapses into a pill.
 
@@ -305,7 +305,7 @@ Calm and firm: full-width where they end a task, bold label, a small press.
 - **Code field:** six 48 px cells for the sign-in code, paste fills all of them.
 
 ### Navigation
-- **Tab bar (phones):** four tabs with 24 px icons (the Ask tab shows a thin progress ring until a Need can be reported) over a 12 px label; the active tab is ink and bumps once; the Circle tab carries a Signal Red count badge (9+ cap).
+- **Tab bar (phones):** four tabs with 24 px icons (the Need tab shows a thin progress ring until a Need can be reported) over a 12 px label; the active tab is ink and bumps once; the Circle tab carries a Signal Red count badge (9+ cap).
 - **Rail and sidebar (768 px and up):** 22 px icons, labels from 1024 px, tooltips on the rail.
 - **Main bar:** sticky, canvas-coloured, 64 px; a Care Teal back crumb, a 1.5rem extrabold title, actions at the end.
 
