@@ -803,6 +803,7 @@
         "title": "Die App selbst",
         "example": "Beispiel",
         "circle": "Ihr Kreis: die Menschen, die Sie kennen, und die, die diese kennen. Julias Bedarf erreicht Sie über Markus.",
+        "circleSubtitle": "Bedarf · über Markus",
         "need": "Julias Bedarf: Sie melden Ihren Anteil, und die Beteiligten sprechen sich in ihrem eigenen Chat ab.",
         "add": "Hier fängt es an: Schicken Sie Ihren Link oder zeigen Sie Ihren QR Menschen, die Sie persönlich kennen."
       },
@@ -900,7 +901,7 @@
   },
   "how": {
     "meta": {
-      "title": "So funktioniert es — Social Organizer",
+      "title": "So funktioniert es · Social Organizer",
       "description": "Sie bauen ein Netzwerk aus Menschen auf, die Sie kennen. Ein Bedarf erreicht so viele Menschen darin, wie er Dollar nennt, und die Beteiligten stimmen sich direkt ab. Die Seite vergleicht Social Organizer außerdem mit Chinas Online-Plattformen für gegenseitige Hilfe."
     },
     "hero": {
@@ -937,7 +938,7 @@
       "lead": "Das Netzwerk wächst nur über Menschen, die sich kennen: Jemand kommt über Ihren Link, und Sie bestätigen die Bekanntschaft.",
       "says": [
         "Lena öffnet Ihren Link und meldet sich an. <b>Das ist noch keine Verbindung:</b> Sie bekommen eine Push-Nachricht.",
-        "Sie bestätigen: Ja, wir kennen uns. <b>Jetzt ist Lena Ihr 1. Handschlag.</b>"
+        "Sie bestätigen: Ja, wir kennen uns. <b>Lena gehört jetzt zu Ihren direkten Kontakten im Netzwerk.</b>"
       ]
     },
     "cta": {
@@ -1126,7 +1127,7 @@
   },
   "press": {
     "meta": {
-      "title": "Für die Presse — Social Organizer",
+      "title": "Für die Presse · Social Organizer",
       "description": "Was Social Organizer ist, wer dahintersteht, die wichtigsten Fakten, Logo und Screenshots zum Herunterladen und wie Sie das Team erreichen."
     },
     "hero": {

@@ -126,7 +126,7 @@ export function CircleScreen({ cast, shortfall, scene: custom }: { cast: Cast; s
         kind: 'request',
         at: 2,
         title: cast.sarah,
-        subtitle: t('circle.feed.requestVia', { name: cast.tom, kind: t('circle.feed.once') }),
+        subtitle: t('landing.v2.app.circleSubtitle'),
         amount: formatMoney(shortfall),
         amountValue: shortfall,
         hot: true,

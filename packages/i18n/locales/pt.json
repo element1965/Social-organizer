@@ -721,7 +721,7 @@
       },
       "hero": {
         "title": "O mundo é menor do que você imagina.",
-        "lead": "O Social Organizer reúne pessoas que se conhecem pessoalmente. Quando uma delas passa por um aperto, os conhecidos dela ficam sabendo primeiro, depois os conhecidos deles.",
+        "lead": "No Social Organizer, você monta uma rede com pessoas que conhece pessoalmente. Quando uma delas passa por um aperto, os conhecidos dela ficam sabendo primeiro, depois os conhecidos deles.",
         "cta": "Montar minha rede",
         "how": "Como funciona",
         "facts": "Grátis · sem taxas · <code>código aberto</code>"
@@ -809,6 +809,7 @@
         "title": "O aplicativo em si",
         "example": "Exemplo",
         "circle": "Seu Círculo: as pessoas que você conhece e as que elas conhecem. A Necessidade de Beatriz chega até você por meio de João.",
+        "circleSubtitle": "Necessidade · via João",
         "need": "A Necessidade de Beatriz: você informa a sua parte, e os participantes combinam tudo no próprio chat.",
         "add": "Tudo começa aqui: envie seu link ou mostre seu QR para quem você conhece pessoalmente."
       },
@@ -909,7 +910,7 @@
   },
   "how": {
     "meta": {
-      "title": "Como funciona — Social Organizer",
+      "title": "Como funciona · Social Organizer",
       "description": "Você constrói uma rede de pessoas que conhece. Uma necessidade chega a tantas pessoas dela quantos dólares indica, e os participantes se coordenam diretamente. A página também compara o Social Organizer com as plataformas chinesas de ajuda mútua on-line."
     },
     "hero": {
@@ -945,8 +946,8 @@
       "title": "Tudo começa com uma pessoa que você conhece",
       "lead": "A rede só cresce por meio de pessoas que se conhecem: alguém entra pelo seu link, e você confirma o conhecimento.",
       "says": [
-        "Júlia abre seu link e entra. <b>Ainda não é uma conexão:</b> você recebe um push.",
-        "Você confirma: sim, conhecemo-nos. <b>Agora Júlia é seu 1.º aperto de mão.</b>"
+        "Júlia abre seu link e entra. <b>Ainda não é uma conexão:</b> você recebe uma notificação para confirmar que conhece Júlia.",
+        "Você confirma que conhece Júlia. <b>Agora ela faz parte do seu círculo de contatos diretos.</b>"
       ]
     },
     "cta": {
@@ -1135,7 +1136,7 @@
   },
   "press": {
     "meta": {
-      "title": "Imprensa — Social Organizer",
+      "title": "Imprensa · Social Organizer",
       "description": "O que é o Social Organizer, quem faz, os principais fatos, o logotipo e capturas de tela para baixar, e como falar com a equipe."
     },
     "hero": {

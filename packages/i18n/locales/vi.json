@@ -713,7 +713,7 @@
       },
       "hero": {
         "title": "Thế giới nhỏ hơn bạn nghĩ.",
-        "lead": "Social Organizer kết nối những người quen nhau ngoài đời. Khi một người gặp khó khăn, người quen của họ biết trước, rồi đến người quen của những người đó.",
+        "lead": "Trên Social Organizer, bạn xây dựng mạng lưới cùng những người mình quen ngoài đời. Khi một người gặp khó khăn, người quen của họ biết trước, rồi đến người quen của những người đó.",
         "cta": "Xây mạng lưới của bạn",
         "how": "Xem cách hoạt động",
         "facts": "Miễn phí · không thu phí · <code>mã nguồn mở</code>"
@@ -797,6 +797,7 @@
         "title": "Chính ứng dụng",
         "example": "Ví dụ",
         "circle": "Vòng tròn của bạn: những người bạn quen và những người họ quen. Nhu cầu của Linh đến với bạn qua Tuấn.",
+        "circleSubtitle": "Nhu cầu · qua Tuấn",
         "need": "Nhu cầu của Linh: bạn báo phần của mình, còn những người tham gia tự thỏa thuận trong nhóm chat của họ.",
         "add": "Mọi thứ bắt đầu từ đây: gửi liên kết hoặc đưa mã QR của bạn cho những người bạn quen biết ngoài đời."
       },
@@ -871,7 +872,7 @@
         "text": "Vào ngày khó khăn, bạn sẽ không còn thời gian hay sức lực cho việc này.",
         "s1": "Mở liên kết từ người bạn quen, hoặc tự đăng nhập bằng Google, Apple, Telegram hay mã gửi qua email. Không cần mật khẩu.",
         "s2": "Thêm những người bạn quen ngoài đời: bằng liên kết, mã QR hoặc lắc hai điện thoại cạnh nhau.",
-        "s3": "Đặt dự định của bạn: số tiền bạn thường sẵn sàng nêu ra khi có người trong mạng lưới gặp khó khăn.",
+        "s3": "Hãy ghi số tiền bạn thường sẵn sàng đề xuất khi có người trong mạng lưới gặp khó khăn.",
         "qr": "Hướng camera điện thoại vào đây, cửa hàng phù hợp sẽ mở ra.",
         "playTop": "Tải nội dung trên",
         "play": "Google Play",
@@ -891,7 +892,7 @@
   },
   "how": {
     "meta": {
-      "title": "Cách hoạt động — Social Organizer",
+      "title": "Cách hoạt động · Social Organizer",
       "description": "Bạn xây dựng một mạng lưới những người bạn quen. Một nhu cầu tới số người trong đó bằng số đô la nó nêu, và những người tham gia phối hợp trực tiếp. Trang này cũng so sánh Social Organizer với các nền tảng tương trợ trực tuyến của Trung Quốc."
     },
     "hero": {
@@ -928,7 +929,7 @@
       "lead": "Mạng lưới chỉ lớn lên qua những người quen nhau: ai đó vào bằng liên kết của bạn, và bạn xác nhận mối quen.",
       "says": [
         "Ngọc mở liên kết của bạn và đăng nhập. <b>Đây chưa phải kết nối:</b> bạn nhận một thông báo đẩy.",
-        "Bạn xác nhận: đúng, chúng tôi quen nhau. <b>Giờ Ngọc là cái bắt tay thứ 1 của bạn.</b>"
+        "Bạn xác nhận: đúng, chúng tôi quen nhau. <b>Giờ bạn và Ngọc đã kết nối trực tiếp với nhau trong mạng lưới.</b>"
       ]
     },
     "cta": {
@@ -1117,7 +1118,7 @@
   },
   "press": {
     "meta": {
-      "title": "Báo chí — Social Organizer",
+      "title": "Báo chí · Social Organizer",
       "description": "Social Organizer là gì, ai làm ra nó, các thông tin chính, logo và ảnh chụp màn hình để tải về, và cách liên hệ với nhóm."
     },
     "hero": {

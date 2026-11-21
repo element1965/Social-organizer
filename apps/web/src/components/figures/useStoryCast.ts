@@ -10,6 +10,6 @@ export function useStoryCast() {
   ) as Record<Role, string>;
   // Keep the mediator and supporter in the ring positions highlighted by NetFigure.
   const names = [friend1, mediator, friend2, friend3, supporter, friend4];
-  const chatMembers = [asker, mediator, supporter].join(' · ');
+  const chatMembers = [asker, mediator, supporter] as const;
   return { asker, mediator, supporter, newcomer, names, chatMembers };
 }

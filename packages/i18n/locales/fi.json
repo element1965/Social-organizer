@@ -717,7 +717,7 @@
       },
       "hero": {
         "title": "Maailma on pienempi kuin luulet.",
-        "lead": "Social Organizer kokoaa yhteen ihmiset, jotka tuntevat toisensa henkilökohtaisesti. Kun joku on pulassa, siitä kuulevat ensin hänen tuttunsa ja sitten heidän tuttunsa.",
+        "lead": "Social Organizerissa rakennat verkoston ihmisistä, jotka tunnet henkilökohtaisesti. Kun joku on pulassa, siitä kuulevat ensin hänen tuttunsa ja sitten heidän tuttunsa.",
         "cta": "Rakenna verkostosi",
         "how": "Näin se toimii",
         "facts": "Ilmainen · ei palvelumaksuja · <code>avoin lähdekoodi</code>"
@@ -803,6 +803,7 @@
         "title": "Itse sovellus",
         "example": "Esimerkki",
         "circle": "Piirisi: ihmiset, jotka tunnet, ja ihmiset, jotka he tuntevat. Lauran Tarve tulee sinulle Mikon kautta.",
+        "circleSubtitle": "Tarve · Mikon kautta",
         "need": "Lauran Tarve: ilmoitat oman osuutesi, ja osallistujat sopivat asioista omassa keskustelussaan.",
         "add": "Kaikki alkaa tästä: lähetä linkkisi tai näytä QR-koodisi ihmisille, jotka tunnet henkilökohtaisesti."
       },
@@ -900,7 +901,7 @@
   },
   "how": {
     "meta": {
-      "title": "Näin se toimii — Social Organizer",
+      "title": "Näin se toimii · Social Organizer",
       "description": "Rakennat verkoston ihmisistä, jotka tunnet. Tarve tavoittaa siinä yhtä monta ihmistä kuin siinä on dollareita, ja osallistujat sopivat suoraan keskenään. Sivulla verrataan myös Social Organizer -palvelua Kiinan verkossa toimiviin keskinäisen avun alustoihin."
     },
     "hero": {
@@ -937,7 +938,7 @@
       "lead": "Verkosto kasvaa vain toisensa tuntevien ihmisten kautta: joku liittyy linkkisi kautta, ja sinä vahvistat tuttavuuden.",
       "says": [
         "Sari avaa linkkisi ja kirjautuu. <b>Tämä ei ole vielä yhteys:</b> saat ilmoituksen.",
-        "Vahvistat: kyllä, tunnemme toisemme. <b>Nyt Sari on 1. kädenpuristuksesi.</b>"
+        "Vahvistat: kyllä, tunnemme toisemme. <b>Sari on nyt verkostossasi yhden kädenpuristuksen päässä.</b>"
       ]
     },
     "cta": {
@@ -1126,7 +1127,7 @@
   },
   "press": {
     "meta": {
-      "title": "Medialle — Social Organizer",
+      "title": "Medialle · Social Organizer",
       "description": "Mikä Social Organizer on, kuka sitä tekee, tärkeimmät faktat, logo ja kuvakaappaukset ladattavaksi sekä tiimin yhteystiedot."
     },
     "hero": {

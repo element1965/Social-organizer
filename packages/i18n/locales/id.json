@@ -713,7 +713,7 @@
       },
       "hero": {
         "title": "Dunia ini lebih kecil dari yang Anda kira.",
-        "lead": "Social Organizer mempertemukan orang yang saling kenal secara langsung. Saat salah satu dari mereka kesulitan, orang yang ia kenal tahu lebih dulu, lalu orang yang dikenal orang-orang itu.",
+        "lead": "Di Social Organizer, Anda membangun jaringan bersama orang-orang yang Anda kenal langsung. Saat salah satu dari mereka kesulitan, orang yang ia kenal tahu lebih dulu, lalu orang yang dikenal orang-orang itu.",
         "cta": "Bangun jaringan Anda",
         "how": "Lihat cara kerjanya",
         "facts": "Gratis · tanpa biaya · <code>sumber terbuka</code>"
@@ -797,6 +797,7 @@
         "title": "Aplikasinya sendiri",
         "example": "Contoh",
         "circle": "Lingkaran Anda: orang yang Anda kenal dan orang yang mereka kenal. Kebutuhan Siti sampai kepada Anda melalui Agus.",
+        "circleSubtitle": "Kebutuhan · lewat Agus",
         "need": "Kebutuhan Siti: Anda melaporkan bagian Anda, lalu para peserta bersepakat di chat mereka sendiri.",
         "add": "Semuanya dimulai di sini: kirim tautan Anda atau tunjukkan QR Anda kepada orang yang Anda kenal secara langsung."
       },
@@ -891,7 +892,7 @@
   },
   "how": {
     "meta": {
-      "title": "Cara kerja — Social Organizer",
+      "title": "Cara kerja · Social Organizer",
       "description": "Anda membangun jaringan orang yang Anda kenal. Kebutuhan menjangkau sebanyak dolar yang disebutkannya di dalam jaringan itu, dan para peserta berkoordinasi langsung. Halaman ini juga membandingkan Social Organizer dengan platform saling membantu online di Tiongkok."
     },
     "hero": {
@@ -928,7 +929,7 @@
       "lead": "Jaringan tumbuh hanya lewat orang yang saling kenal: seseorang bergabung lewat tautan Anda, dan Anda mengonfirmasi perkenalan itu.",
       "says": [
         "Putri membuka tautan Anda dan masuk. <b>Anda mendapat notifikasi untuk mengonfirmasi bahwa Anda mengenalnya.</b>",
-        "Anda mengonfirmasi bahwa kalian saling kenal. <b>Putri kini masuk ke lingkar jabat tangan pertama Anda.</b>"
+        "Anda mengonfirmasi bahwa kalian saling kenal. <b>Kini Anda dan Putri terhubung langsung di jaringan.</b>"
       ]
     },
     "cta": {
@@ -1117,7 +1118,7 @@
   },
   "press": {
     "meta": {
-      "title": "Untuk pers — Social Organizer",
+      "title": "Untuk pers · Social Organizer",
       "description": "Apa itu Social Organizer, siapa pembuatnya, fakta utama, logo dan tangkapan layar untuk diunduh, serta cara menghubungi tim."
     },
     "hero": {
@@ -1325,7 +1326,7 @@
     "fullLine": "Jumlah yang dibutuhkan sudah dinyatakan.",
     "takePart": "Ikut serta",
     "nextTitle": "Jika Anda ikut serta",
-    "next1": "Sebutkan jumlah yang Anda inginkan untuk ikut berpartisipasi. Anda bisa mulai dari {{amount}}.",
+    "next1": "Sebutkan jumlah yang bersedia Anda nyatakan untuk berpartisipasi. Anda bisa mulai dari {{amount}}.",
     "next2": "Jika ada tautan chat yang ditambahkan, Anda bisa membukanya setelah ikut berpartisipasi.",
     "next3": "Jika sampai ke soal uang, Anda sendiri yang menyerahkannya langsung kepada pembuat kebutuhan. Di sini Anda tidak membayar apa pun: Social Organizer tidak menerima atau mentransfer uang.",
     "signInTitle": "Masuk untuk ikut serta dalam kebutuhan ini"

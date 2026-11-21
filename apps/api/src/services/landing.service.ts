@@ -72,7 +72,7 @@ export function registerLandingEndpoints(app: FastifyInstance) {
   });
 
   let expiresAt = 0;
-  let count: number | null = null;
+  let observation: { count: number; observedAt: string } | null = null;
   let pending: Promise<void> | undefined;
   app.get('/api/landing/people', async (_req, reply) => {
     if (Date.now() >= expiresAt) {
@@ -86,17 +86,19 @@ export function registerLandingEndpoints(app: FastifyInstance) {
           ],
         },
       })).then((result) => {
-        count = result;
-        expiresAt = Date.now() + TEN_MINUTES;
+        const now = Date.now();
+        observation = { count: result, observedAt: new Date(now).toISOString() };
+        expiresAt = now + TEN_MINUTES;
       }).catch(() => {
-        count = null;
+        observation = null;
         expiresAt = Date.now() + PEOPLE_FAILURE_TTL;
         app.log.warn('Landing people count unavailable');
       }).finally(() => { pending = undefined; });
       await pending;
     }
-    if (count === null) return reply.code(503).send();
+    if (!observation) return reply.code(503).send();
     reply.header('Cache-Control', 'public, max-age=' + Math.max(0, Math.floor((expiresAt - Date.now()) / 1000)));
-    return count;
+    reply.header('X-Observed-At', observation.observedAt);
+    return observation.count;
   });
 }

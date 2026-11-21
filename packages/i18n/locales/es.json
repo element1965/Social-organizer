@@ -721,7 +721,7 @@
       },
       "hero": {
         "title": "El mundo es más pequeño de lo que cree.",
-        "lead": "Social Organizer reúne a personas que se conocen personalmente. Cuando una de ellas pasa por un mal momento, primero se enteran sus conocidos y después los conocidos de estos.",
+        "lead": "En Social Organizer, usted forma una red con personas que conoce personalmente. Cuando una de ellas pasa por un mal momento, primero se enteran sus conocidos y después los conocidos de estos.",
         "cta": "Crear mi red",
         "how": "Cómo funciona",
         "facts": "Gratis · sin comisiones · <code>código abierto</code>"
@@ -809,6 +809,7 @@
         "title": "La aplicación en sí",
         "example": "Ejemplo",
         "circle": "Su Círculo: las personas que usted conoce y las que ellas conocen. La Necesidad de Lucía le llega a través de Carlos.",
+        "circleSubtitle": "Necesidad · a través de Carlos",
         "need": "La Necesidad de Lucía: usted indica su parte y los participantes se ponen de acuerdo en su propio chat.",
         "add": "Todo empieza aquí: envíe su enlace o muestre su QR a las personas que conoce en persona."
       },
@@ -909,7 +910,7 @@
   },
   "how": {
     "meta": {
-      "title": "Cómo funciona — Social Organizer",
+      "title": "Cómo funciona · Social Organizer",
       "description": "Usted construye una red de personas que conoce. Una necesidad llega a tantas personas de esa red como dólares indica, y los participantes se coordinan directamente. La página también compara Social Organizer con las plataformas chinas de ayuda mutua en línea."
     },
     "hero": {
@@ -946,7 +947,7 @@
       "lead": "La red crece solo a través de personas que se conocen: alguien entra con su enlace y usted confirma el conocimiento.",
       "says": [
         "Paula abre su enlace y entra. <b>Esto aún no es una conexión:</b> le llega un aviso.",
-        "Usted confirma: sí, nos conocemos. <b>Ahora Paula es su 1.er apretón.</b>"
+        "Usted confirma: sí, nos conocemos. <b>Ahora Paula forma parte de su círculo de contactos directos.</b>"
       ]
     },
     "cta": {
@@ -1135,7 +1136,7 @@
   },
   "press": {
     "meta": {
-      "title": "Prensa — Social Organizer",
+      "title": "Prensa · Social Organizer",
       "description": "Qué es Social Organizer, quién lo hace, los datos principales, el logotipo y capturas para descargar, y cómo contactar con el equipo."
     },
     "hero": {

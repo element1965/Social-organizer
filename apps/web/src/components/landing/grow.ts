@@ -61,6 +61,7 @@ export function initGrow(els: GrowElements, initial: GrowOptions): GrowHandle {
   let flashes: { a: Person; b: Person; t: number }[] = [];
   let frontier: Person[] = [];
   let wave = 0;
+  let growingWaves = 0;
   let hist: number[] = [1];
   let seed: { x: number; y: number } | null = null;
   let grid = new Map<number, Person[]>();
@@ -198,11 +199,13 @@ export function initGrow(els: GrowElements, initial: GrowOptions): GrowHandle {
         if (placed) next.push(placed);
       }
     }
+    // The initial seed is not a newcomer cohort. Require two successive increases after it.
+    growingWaves = wave >= 1 && next.length > frontier.length ? growingWaves + 1 : 0;
     wave++;
     frontier = next;
     hist.push(nodes.length);
     stats();
-    if (wave >= 2 && hist[wave]! > hist[wave - 1]! * 1.05) showState('grows');
+    showState(R > 1 && growingWaves >= 2 ? 'grows' : '');
     return frontier.length > 0 && nodes.length < POP;
   };
   const finish = () => {
@@ -216,6 +219,7 @@ export function initGrow(els: GrowElements, initial: GrowOptions): GrowHandle {
     flashes = [];
     grid = new Map();
     wave = 0;
+    growingWaves = 0;
     hist = [1];
     const wide = W > 860;
     seed = { x: x ?? W * (wide ? (opts.rtl ? 0.3 : 0.7) : 0.5), y: y ?? H * 0.5 };
@@ -314,6 +318,8 @@ export function initGrow(els: GrowElements, initial: GrowOptions): GrowHandle {
   };
   const onInput = () => {
     R = +slider.value;
+    growingWaves = 0;
+    if (state === 'grows') showState('');
     showValue();
     if (!running) restart(seed?.x, seed?.y);
   };

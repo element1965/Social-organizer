@@ -717,7 +717,7 @@
       },
       "hero": {
         "title": "It's a smaller world than you think.",
-        "lead": "Social Organizer brings together people who know each other in person. When someone is in trouble, their acquaintances hear about it first, then the people those acquaintances know.",
+        "lead": "In Social Organizer, you build a network with people you know in person. When someone is in trouble, their acquaintances hear about it first, then the people those acquaintances know.",
         "cta": "Build your network",
         "how": "How it works",
         "facts": "Free · no fees · <code>open source</code>"
@@ -803,6 +803,7 @@
         "title": "The app itself",
         "example": "Example",
         "circle": "Your Circle: the people you know and the people they know. Sarah’s Need reaches you through Tom.",
+        "circleSubtitle": "Need · through Tom",
         "need": "Sarah’s Need: you report your share, and the participants agree in their own chat.",
         "add": "It starts here: send your link or show your QR to people you know in person."
       },
@@ -900,7 +901,7 @@
   },
   "how": {
     "meta": {
-      "title": "How it works — Social Organizer",
+      "title": "How it works · Social Organizer",
       "description": "You build a network of people you know. A Need reaches as many people in it as the dollars it names, and participants coordinate directly. The page also compares Social Organizer with China’s online mutual aid platforms."
     },
     "hero": {
@@ -937,7 +938,7 @@
       "lead": "The network grows only through people who know each other: someone joins by your link, and you confirm the acquaintance.",
       "says": [
         "Ruth opens your link and signs in. <b>You get a notification to confirm that you know her.</b>",
-        "You confirm that you know each other. <b>Ruth is now in your 1st handshake.</b>"
+        "You confirm that you know each other. <b>Ruth is now one handshake away from you.</b>"
       ]
     },
     "cta": {
@@ -1126,7 +1127,7 @@
   },
   "press": {
     "meta": {
-      "title": "Press kit — Social Organizer",
+      "title": "Press kit · Social Organizer",
       "description": "What Social Organizer is, who makes it, the main facts, the logo and screenshots to download, and how to reach the team."
     },
     "hero": {

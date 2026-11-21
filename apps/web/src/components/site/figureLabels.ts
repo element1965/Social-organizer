@@ -5,7 +5,7 @@ import { useStoryCast } from '../figures/useStoryCast';
 
 /** Translated labels for the explainer figures (how.figures in the locales). */
 export function useFigureLabels() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { names, asker, mediator, newcomer, chatMembers } = useStoryCast();
   const arr = (key: string) => t(key, { returnObjects: true }) as unknown as string[];
   const amount = formatIsolatedMoney(300);
@@ -16,6 +16,7 @@ export function useFigureLabels() {
     amount,
     chatTitle: t('how.figures.net.chatTitle'),
     chatMembers,
+    rtl: i18n.dir() === 'rtl',
     aria: t('how.figures.net.aria'),
   };
   const orbit: Partial<OrbitFigureLabels> = {

@@ -6,7 +6,7 @@ import { MIN_OBLIGATION_AMOUNT } from '@so/shared';
 import { STORE_URL } from '../lib/device';
 import { Avatar } from '../components/ui2';
 import { formatIsolatedMoney as pressAmount } from '../components/ui2/format';
-import { Reveal, useLivePeopleCount } from '../components/site/hooks';
+import { PeopleCount, Reveal } from '../components/site/hooks';
 import { GITHUB_URL } from '../components/site/SiteHeader';
 import { SitePage } from '../components/site/SitePage';
 import { REPORT_URL, TEAM, TEAM_ORGS, TEAM_URL } from '../components/site/team';
@@ -50,7 +50,6 @@ export function PressPage() {
   const { t, i18n } = useTranslation();
   const lang = i18n.resolvedLanguage || i18n.language || 'en';
   const nf = useMemo(() => new Intl.NumberFormat(lang), [lang]);
-  const people = useLivePeopleCount();
   const download = t('press.download');
 
   const link = (href: string) => <a href={href} {...ext} />;
@@ -68,9 +67,7 @@ export function PressPage() {
       ),
     },
     { id: 'languages', value: nf.format(SUPPORTED_LANGUAGES.length) },
-    ...(people === undefined
-      ? []
-      : [{ id: 'network', value: <><b>{nf.format(people)}</b> {t('landing.v2.join.nowLive', { count: people })}</> }]),
+    { id: 'network', value: <PeopleCount /> },
     { id: 'theory', value: <Trans i18nKey="press.facts.theoryValue" components={{ report: link(REPORT_URL) }} /> },
   ];
 

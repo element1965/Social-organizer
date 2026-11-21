@@ -721,7 +721,7 @@
       },
       "hero": {
         "title": "Il mondo è più piccolo di quanto pensi.",
-        "lead": "Social Organizer riunisce persone che si conoscono di persona. Quando una di loro è in difficoltà, lo vengono a sapere prima i suoi conoscenti, poi i conoscenti dei conoscenti.",
+        "lead": "Con Social Organizer crei una rete con le persone che conosci di persona. Quando una di loro è in difficoltà, lo vengono a sapere prima i suoi conoscenti, poi i conoscenti dei conoscenti.",
         "cta": "Crea la tua rete",
         "how": "Come funziona",
         "facts": "Gratis · senza commissioni · <code>codice aperto</code>"
@@ -809,6 +809,7 @@
         "title": "L’app vera e propria",
         "example": "Esempio",
         "circle": "Il tuo Cerchio: le persone che conosci e quelle che conoscono loro. Il Bisogno di Giulia ti arriva tramite Marco.",
+        "circleSubtitle": "Bisogno · tramite Marco",
         "need": "Il Bisogno di Giulia: comunichi la tua parte e i partecipanti si accordano nella loro chat.",
         "add": "Si comincia da qui: manda il tuo link o mostra il tuo QR alle persone che conosci di persona."
       },
@@ -909,7 +910,7 @@
   },
   "how": {
     "meta": {
-      "title": "Come funziona — Social Organizer",
+      "title": "Come funziona · Social Organizer",
       "description": "Costruisci una rete di persone che conosci. Un bisogno raggiunge al suo interno tante persone quanti sono i dollari indicati, e i partecipanti si coordinano direttamente. La pagina confronta anche Social Organizer con il mutuo aiuto online cinese."
     },
     "hero": {
@@ -945,8 +946,8 @@
       "title": "Si parte da una persona che conosci",
       "lead": "La rete cresce solo attraverso persone che si conoscono: qualcuno entra con il tuo link e tu confermi la conoscenza.",
       "says": [
-        "Chiara apre il tuo link e accede. <b>Non è ancora una connessione:</b> ti arriva un push.",
-        "Confermi: sì, ci conosciamo. <b>Ora Chiara è la tua 1ª stretta di mano.</b>"
+        "Chiara apre il tuo link e accede. <b>Non è ancora una connessione:</b> ricevi una notifica che ti chiede di confermare che la conosci.",
+        "Confermi: sì, ci conosciamo. <b>Chiara ora fa parte dei tuoi contatti diretti.</b>"
       ]
     },
     "cta": {
@@ -1135,7 +1136,7 @@
   },
   "press": {
     "meta": {
-      "title": "Per la stampa — Social Organizer",
+      "title": "Per la stampa · Social Organizer",
       "description": "Che cos’è Social Organizer, chi c’è dietro, i fatti principali, il logo e gli screenshot da scaricare, e come contattare il team."
     },
     "hero": {

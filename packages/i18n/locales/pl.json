@@ -815,6 +815,7 @@
         "title": "Sama aplikacja",
         "example": "Przykład",
         "circle": "Twój Krąg: ludzie, których znasz, i ludzie, których oni znają. Potrzeba Joanny dociera do ciebie przez Marka.",
+        "circleSubtitle": "Potrzeba · przez Marka",
         "need": "Potrzeba Joanny: zgłaszasz swój udział, a uczestnicy umawiają się na własnym czacie.",
         "add": "Wszystko zaczyna się tutaj: wyślij swój link albo pokaż swój kod QR osobom, które znasz osobiście."
       },
@@ -898,7 +899,7 @@
         "text": "W trudny dzień nie ma na to ani czasu, ani siły.",
         "s1": "Otwórz link od znajomego albo zaloguj się samodzielnie: przez Google, Apple, Telegram lub kodem wysłanym na e-mail. Hasło nie jest potrzebne.",
         "s2": "Dodaj osoby, które znasz osobiście: linkiem, kodem QR albo potrząsając telefonami obok siebie.",
-        "s3": "Ustal swój zamiar: kwotę, którą zwykle podasz, gdy komuś w sieci będzie ciężko.",
+        "s3": "Podaj kwotę, jaką zwykle chcesz zadeklarować, gdy ktoś w sieci potrzebuje wsparcia.",
         "qr": "Skieruj tu aparat telefonu, a otworzy się właściwy sklep.",
         "playTop": "Pobierz z",
         "play": "Google Play",
@@ -918,7 +919,7 @@
   },
   "how": {
     "meta": {
-      "title": "Jak to działa — Social Organizer",
+      "title": "Jak to działa · Social Organizer",
       "description": "Budujesz sieć ludzi, których znasz. Potrzeba dociera w niej do tylu osób, ile dolarów wskazuje, a uczestnicy koordynują się bezpośrednio. Na stronie jest też porównanie Social Organizer z chińskimi internetowymi platformami wzajemnej pomocy."
     },
     "hero": {
@@ -955,7 +956,7 @@
       "lead": "Sieć rośnie tylko przez ludzi, którzy się znają: ktoś dołącza z Twojego linku, a Ty potwierdzasz znajomość.",
       "says": [
         "Ewa otwiera Twój link i się loguje. <b>To jeszcze nie połączenie:</b> dostajesz powiadomienie push.",
-        "Potwierdzasz: tak, znamy się. <b>Teraz Ewa jest Twoim 1. uściskiem dłoni.</b>"
+        "Potwierdzasz: tak, znamy się. <b>Teraz Ewa należy do grona Twoich bezpośrednich znajomych.</b>"
       ]
     },
     "cta": {
@@ -1144,7 +1145,7 @@
   },
   "press": {
     "meta": {
-      "title": "Dla prasy — Social Organizer",
+      "title": "Dla prasy · Social Organizer",
       "description": "Czym jest Social Organizer, kto go tworzy, najważniejsze fakty, logo i zrzuty ekranu do pobrania oraz kontakt z zespołem."
     },
     "hero": {

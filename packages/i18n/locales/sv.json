@@ -803,6 +803,7 @@
         "title": "Själva appen",
         "example": "Exempel",
         "circle": "Din Krets: de du känner och de som de känner. Annas Behov når dig genom Johan.",
+        "circleSubtitle": "Behov · via Johan",
         "need": "Annas Behov: du rapporterar din andel, och deltagarna kommer överens i sin egen chatt.",
         "add": "Det börjar här: skicka din länk eller visa din QR för människor du känner personligen."
       },
@@ -900,7 +901,7 @@
   },
   "how": {
     "meta": {
-      "title": "Så fungerar det — Social Organizer",
+      "title": "Så fungerar det · Social Organizer",
       "description": "Du bygger ett nätverk av människor du känner. Ett behov når lika många av dem som det anger dollar, och deltagarna samordnar sig direkt. Sidan jämför också Social Organizer med Kinas nätbaserade plattformar för ömsesidig hjälp."
     },
     "hero": {
@@ -937,7 +938,7 @@
       "lead": "Nätverket växer bara genom människor som känner varandra: någon går med via din länk, och du bekräftar bekantskapen.",
       "says": [
         "Elin öppnar din länk och loggar in. <b>Det är inte en koppling ännu:</b> du får en notis.",
-        "Du bekräftar: ja, vi känner varandra. <b>Nu är Elin ditt 1:a handslag.</b>"
+        "Du bekräftar: ja, vi känner varandra. <b>Nu är det ett handslag mellan dig och Elin.</b>"
       ]
     },
     "cta": {
@@ -1126,7 +1127,7 @@
   },
   "press": {
     "meta": {
-      "title": "Press — Social Organizer",
+      "title": "Press · Social Organizer",
       "description": "Vad Social Organizer är, vem som står bakom, de viktigaste fakta, logotyp och skärmbilder att ladda ner, och hur du når teamet."
     },
     "hero": {

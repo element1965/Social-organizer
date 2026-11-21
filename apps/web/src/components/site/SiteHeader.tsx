@@ -22,7 +22,7 @@ export function SiteBrand({ small }: { small?: boolean } = {}) {
   return (
     <Link to="/" className="site-brand">
       <BrandMark size={small ? 24 : 30} />
-      <span>{t('landing.site.brand')}</span>
+      <span className="site-brand-name">{t('landing.site.brand')}</span>
     </Link>
   );
 }

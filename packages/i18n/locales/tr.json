@@ -717,7 +717,7 @@
       },
       "hero": {
         "title": "Dünya sandığınızdan daha küçük.",
-        "lead": "Social Organizer birbirini yüz yüze tanıyan insanları bir araya getirir. Biri zor durumda kaldığında önce onun tanıdıkları duyar, sonra onların tanıdıkları.",
+        "lead": "Social Organizer’da yüz yüze tanıdığınız insanlarla bir ağ kurarsınız. Biri zor durumda kaldığında önce onun tanıdıkları duyar, sonra onların tanıdıkları.",
         "cta": "Ağınızı kurun",
         "how": "Nasıl çalışır",
         "facts": "Ücretsiz · komisyon yok · <code>açık kaynak</code>"
@@ -803,6 +803,7 @@
         "title": "Uygulamanın kendisi",
         "example": "Örnek",
         "circle": "Çevreniz: tanıdığınız kişiler ve onların tanıdıkları. Ayşe’nin İhtiyacı size Murat üzerinden ulaşıyor.",
+        "circleSubtitle": "İhtiyaç · Murat üzerinden",
         "need": "Ayşe’nin İhtiyacı: payınızı bildiriyorsunuz, katılımcılar da kendi sohbetlerinde anlaşıyor.",
         "add": "Her şey burada başlıyor: bağlantınızı gönderin ya da QR’ınızı yüz yüze tanıdığınız kişilere gösterin."
       },
@@ -900,7 +901,7 @@
   },
   "how": {
     "meta": {
-      "title": "Nasıl çalışır — Social Organizer",
+      "title": "Nasıl çalışır · Social Organizer",
       "description": "Tanıdığınız insanlardan bir ağ kurarsınız. İhtiyaç, bu ağda belirttiği dolar kadar kişiye ulaşır ve katılımcılar doğrudan eşgüdüm kurar. Sayfa ayrıca Social Organizer'ı Çin'deki çevrimiçi karşılıklı yardım platformlarıyla karşılaştırır."
     },
     "hero": {
@@ -937,7 +938,7 @@
       "lead": "Ağ yalnızca birbirini tanıyan insanlar üzerinden büyür: biri bağlantınızla katılır ve siz tanışıklığı onaylarsınız.",
       "says": [
         "Deniz bağlantınızı açıp giriş yapar. <b>Bu henüz bir bağlantı değil:</b> size bir bildirim gelir.",
-        "Onaylarsınız: evet, birbirimizi tanıyoruz. <b>Deniz artık 1. tokalaşmanız.</b>"
+        "Onaylarsınız: evet, birbirimizi tanıyoruz. <b>Artık Deniz’le ağda doğrudan bağlantınız var.</b>"
       ]
     },
     "cta": {
@@ -1126,7 +1127,7 @@
   },
   "press": {
     "meta": {
-      "title": "Basın — Social Organizer",
+      "title": "Basın · Social Organizer",
       "description": "Social Organizer nedir, kim yapıyor, temel bilgiler, indirilebilir logo ve ekran görüntüleri ve ekiple nasıl iletişime geçilir."
     },
     "hero": {

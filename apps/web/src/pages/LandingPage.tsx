@@ -7,7 +7,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { RTL_LANGUAGES } from '@so/i18n/languages';
 import { GITHUB_URL, LanguageSelect, useLoginHref } from '../components/site/SiteHeader';
 import { usePendingInvite } from '../components/site/DeviceEntry';
-import { useDocumentTitle, useLivePeopleCount, useSitePhone } from '../components/site/hooks';
+import { PeopleCount, useDocumentTitle, useSitePhone } from '../components/site/hooks';
 import { copyText } from '../lib/share';
 import { REPORT_URL, TEAM_URL } from '../components/site/team';
 import { SITE_ORIGIN, storeLinks, useDevice } from '../lib/device';
@@ -33,8 +33,6 @@ import '../components/landing/landing.css';
 const STUDY_URL = 'https://research.facebook.com/blog/2016/02/three-and-a-half-degrees-of-separation/';
 const BOT_URL = TELEGRAM_BOT_URL;
 const ICON_CREDITS = 'Gil Barbara logos (CC0)';
-/** People with connections in the network on the date in `join.now`. */
-const NETWORK_NOW = 287;
 const STORES = ['play', 'appstore', 'web', 'telegram'] as const;
 
 function LandingPhoto({ name, hero = false }: { name: 'sky' | 'starlings' | 'wave'; hero?: boolean }) {
@@ -107,7 +105,6 @@ export function LandingPage() {
   const links = storeLinks(invite, firstTouchCampaign());
   const { search } = useLocation();
   const viewed = useRef<string | undefined>(undefined);
-  const liveCount = useLivePeopleCount();
   useEffect(() => {
     if (viewed.current === search) return;
     viewed.current = search;
@@ -379,24 +376,26 @@ export function LandingPage() {
   }, [shareUrl]);
   const share = async () => {
     recordLandingEvent('share', search);
-    const url = `${window.location.origin}${window.location.pathname}`;
+    const url = new URL(window.location.pathname, window.location.origin);
+    url.searchParams.set('lang', lang);
+    const href = url.href;
     window.clearTimeout(sharedTimer.current);
     setShared(false);
     setShareUrl('');
     if (navigator.share) {
       try {
-        await navigator.share({ title: document.title, url });
+        await navigator.share({ title: document.title, url: href });
         return;
       } catch (error) {
         if (error instanceof DOMException && error.name === 'AbortError') return;
       }
     }
     try {
-      await copyText(url);
+      await copyText(href);
       setShared(true);
       sharedTimer.current = window.setTimeout(() => setShared(false), 2400);
     } catch {
-      setShareUrl(url);
+      setShareUrl(href);
     }
   };
 
@@ -714,10 +713,7 @@ export function LandingPage() {
               <span className="mono">{t('landing.v2.join.label')}</span>
               <h2 id="lv-join-title">{t('landing.v2.join.title')}</h2>
               <p className="lead">{t('landing.v2.join.text')}</p>
-              <p className="now">
-                <b>{nf.format(liveCount ?? NETWORK_NOW)}</b>
-                <span>{liveCount === undefined ? t('landing.v2.join.now') : t('landing.v2.join.nowLive', { count: liveCount })}</span>
-              </p>
+              <p className="now"><PeopleCount /></p>
               <div className="actions">
                 <a className="btn ghost" href={TEAM_URL} {...ext} onClick={() => recordLandingEvent('team', search)}>
                   {t('landing.v2.join.cta')}

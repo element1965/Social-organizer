@@ -4,7 +4,7 @@ import { useStoryCast } from '../figures/useStoryCast';
 
 /** NetFigure texts from the `intro.figure` locale section. */
 export function useNetLabels(): Partial<NetFigureLabels> {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { names, asker, chatMembers } = useStoryCast();
   return {
     names,
@@ -13,6 +13,7 @@ export function useNetLabels(): Partial<NetFigureLabels> {
     amount: t('intro.figure.amount'),
     chatTitle: t('intro.figure.chatTitle'),
     chatMembers,
+    rtl: i18n.dir() === 'rtl',
     aria: t('intro.figure.aria'),
   };
 }

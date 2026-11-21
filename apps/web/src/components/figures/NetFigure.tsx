@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from 'react';
 import { usePrefersReducedMotion } from '../../lib/scrollPlay';
 import { C, FigText, Glyph, polar, r1 } from './shared';
 
@@ -12,7 +13,8 @@ export interface NetFigureLabels {
   /** Amount tag on the request path. */
   amount: string;
   chatTitle: string;
-  chatMembers: string;
+  chatMembers: readonly [string, string, string];
+  rtl: boolean;
   aria: string;
 }
 
@@ -22,7 +24,8 @@ export const NET_LABELS_RU: NetFigureLabels = {
   asker: 'Мария',
   amount: '300 $',
   chatTitle: 'Чат участников',
-  chatMembers: 'Мария · Олег · Лена',
+  chatMembers: ['Мария', 'Олег', 'Лена'],
+  rtl: false,
   aria: 'Схема круга',
 };
 
@@ -38,6 +41,76 @@ const CX = 160;
 const CY = 150;
 const R1 = 74;
 const R2 = 126;
+
+const CHAT = { x: 35, width: 250, anchorY: 238, bottom: 290, textOffset: 82 };
+const CHAT_MEMBERS_WIDTH = CHAT.width - CHAT.textOffset - 24;
+
+type ChatCardLabels = Pick<NetFigureLabels, 'chatTitle' | 'chatMembers' | 'rtl'>;
+
+function ChatCard({ chatTitle, chatMembers: [first, second, third], rtl }: ChatCardLabels) {
+  const all = `${first} · ${second} · ${third}`;
+  const firstPair = `${first} · ${second}`;
+  const lastPair = `${second} · ${third}`;
+  const measurements = useRef<SVGGElement>(null);
+  const [wrap, setWrap] = useState<'none' | 'after-pair' | 'before-pair' | 'each'>('none');
+
+  useLayoutEffect(() => {
+    const labels = Array.from(measurements.current!.querySelectorAll('text'));
+    const fits = (index: number) => labels[index]!.getComputedTextLength() <= CHAT_MEMBERS_WIDTH;
+    const measure = () => {
+      setWrap(fits(0) ? 'none' : fits(1) ? 'after-pair' : fits(2) ? 'before-pair' : 'each');
+    };
+    measure();
+    document.fonts.addEventListener('loadingdone', measure);
+    return () => document.fonts.removeEventListener('loadingdone', measure);
+  }, [all, firstPair, lastPair, rtl]);
+
+  const rows = {
+    none: [all],
+    'after-pair': [firstPair, third],
+    'before-pair': [first, lastPair],
+    each: [first, second, third],
+  }[wrap];
+  const height = 54 + (rows.length - 1) * 13;
+  const y = CHAT.bottom - height;
+  const centerY = y + height / 2;
+  const fromStart = (offset: number) => CHAT.x + (rtl ? CHAT.width - offset : offset);
+  const memberRow = (content: string, baseline: number) => (
+    <FigText key={baseline} x={fromStart(CHAT.textOffset)} y={baseline} size={11} weight={700} color={C.muted} anchor="start">
+      {content}
+    </FigText>
+  );
+
+  return (
+    <g className="net-chat" direction={rtl ? 'rtl' : 'ltr'}>
+      <rect x={CHAT.x} y={y} width={CHAT.width} height={height} rx={27} fill={C.paper} stroke={C.line} />
+      <g className="net-chat-avatars">
+        {[
+          [C.care, C.onCare],
+          [C.ink, C.canvas],
+          [C.muted, C.canvas],
+        ].map(([bg, fg], i) => {
+          const x = fromStart(26 + i * 18);
+          return (
+            <g key={i}>
+              <circle cx={x} cy={centerY} r={12} fill={bg!} stroke={C.paper} strokeWidth={2} />
+              <Glyph x={x} y={centerY} r={11} color={fg!} />
+            </g>
+          );
+        })}
+      </g>
+      <g className="net-chat-labels">
+        <FigText x={fromStart(CHAT.textOffset)} y={y + 22} size={13} weight={800} color={C.ink} anchor="start">
+          {chatTitle}
+        </FigText>
+        {rows.map((row, i) => memberRow(row, y + 38 + i * 13))}
+      </g>
+      <g ref={measurements} visibility="hidden" aria-hidden="true">
+        {[all, firstPair, lastPair].map((row, i) => memberRow(row, i))}
+      </g>
+    </g>
+  );
+}
 
 /** The network around you in three frames. viewBox 320x300. */
 export function NetFigure({ step, labels, className }: NetFigureProps) {
@@ -86,8 +159,6 @@ export function NetFigure({ step, labels, className }: NetFigureProps) {
     </g>
   );
 
-  const card = { x: 62, y: 236, w: 196, h: 54 };
-  const cardCx = card.x + card.w / 2;
   const requestPath = `M${r1(asker.x)} ${r1(asker.y)} L${r1(ask.x)} ${r1(ask.y)} L${CX} ${CY}`;
 
   return (
@@ -132,34 +203,13 @@ export function NetFigure({ step, labels, className }: NetFigureProps) {
       {step === 2 && (
         <>
           {[helper, ask, asker].map((p, i) => (
-            <line key={i} x1={r1(p.x)} y1={r1(p.y)} x2={cardCx} y2={card.y + 2} stroke={C.care} strokeWidth={2} strokeLinecap="round" opacity={0.7} />
+            <line key={i} x1={r1(p.x)} y1={r1(p.y)} x2={CX} y2={CHAT.anchorY} stroke={C.care} strokeWidth={2} strokeLinecap="round" opacity={0.7} />
           ))}
           {avaHot(helper.x, helper.y, 17, helper.n)}
           {avaHot(ask.x, ask.y, 17, ask.n)}
           {avaHot(asker.x, asker.y, 15, L.asker)}
           {you}
-          <g>
-            <rect x={card.x} y={card.y} width={card.w} height={card.h} rx={27} fill={C.paper} stroke={C.line} />
-            {[
-              [C.care, C.onCare],
-              [C.ink, C.canvas],
-              [C.muted, C.canvas],
-            ].map(([bg, fg], i) => {
-              const x = card.x + 26 + i * 18;
-              return (
-                <g key={i}>
-                  <circle cx={x} cy={card.y + 27} r={12} fill={bg!} stroke={C.paper} strokeWidth={2} />
-                  <Glyph x={x} y={card.y + 27} r={11} color={fg!} />
-                </g>
-              );
-            })}
-            <FigText x={card.x + 86} y={card.y + 23} size={13} weight={800} color={C.ink} anchor="start">
-              {L.chatTitle}
-            </FigText>
-            <FigText x={card.x + 86} y={card.y + 40} size={11} weight={700} color={C.muted} anchor="start">
-              {L.chatMembers}
-            </FigText>
-          </g>
+          <ChatCard {...L} />
         </>
       )}
 

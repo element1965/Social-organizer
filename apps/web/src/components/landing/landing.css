@@ -128,6 +128,7 @@ html[dir="rtl"] .lv.graph .tag.t-maria.flip { transform: translate(18px, -50%); 
 .lv .beat .mono { color: var(--lv-care-scene); margin-bottom: 22px; display: block; }
 .lv .hero .copy { max-width: 640px; }
 .lv .hero h1 { text-wrap: balance; }
+.lv .hero h1:lang(hi) { line-height: 1.34; letter-spacing: normal; }
 /* These scripts fill the measure sooner than Manrope's Latin letters. */
 .lv .hero h1:lang(ja) { font-size: clamp(38px, 5.2vw, 78px); }
 .lv .hero h1:lang(ko) { font-size: clamp(38px, 5.56vw, 84px); }

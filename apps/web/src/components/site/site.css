@@ -40,6 +40,7 @@
 /* ---------- header ---------- */
 .site-top { height: 72px; display: flex; align-items: center; gap: 28px; padding: 0 48px; }
 .site-brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; letter-spacing: -.02em; color: var(--ink); }
+.site-top .site-brand { min-width: 44px; min-height: 44px; }
 .site-top nav { display: flex; gap: 24px; font-weight: 700; font-size: 15px; }
 .site-top nav a { color: var(--muted); }
 .site-top nav a:hover, .site-top nav a[aria-current="page"] { color: var(--ink); }
@@ -228,8 +229,8 @@
   .site-top { padding: 0 16px; height: 64px; gap: 12px; }
   .site-top nav, .site:not(.site-how, .site-press) .site-top .site-lang { display: none; }
   :is(.site-how, .site-press) .site-top { padding-inline: 12px; gap: 8px; }
-  :is(.site-how, .site-press) .site-top .site-brand { min-width: 0; gap: 6px; font-size: 14px; white-space: nowrap; }
-  :is(.site-how, .site-press) .site-top .site-brand span { overflow: hidden; text-overflow: ellipsis; }
+  :is(.site-how, .site-press) .site-top .site-brand { gap: 6px; font-size: 14px; white-space: nowrap; }
+  :is(.site-how, .site-press) .site-top .site-brand-name { overflow: hidden; text-overflow: ellipsis; }
   :is(.site-how, .site-press) .site-top .right { flex: none; gap: 6px; }
   :is(.site-how, .site-press) .site-top .site-lang { height: 44px; padding-inline: 8px; }
   :is(.site-how, .site-press) .site-top .site-ibtn { width: 44px; height: 44px; }
@@ -277,7 +278,8 @@
 }
 
 @container (max-width: 400px) {
-  :is(.site-how, .site-press) .site-top .site-brand span {
+  :is(.site-how, .site-press) .site-top .site-brand { justify-content: center; }
+  :is(.site-how, .site-press) .site-top .site-brand-name {
     position: absolute;
     width: 1px;
     height: 1px;

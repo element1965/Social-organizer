@@ -803,6 +803,7 @@
         "title": "De app zelf",
         "example": "Voorbeeld",
         "circle": "Je Kring: de mensen die je kent en de mensen die zij kennen. De Behoefte van Sanne bereikt je via Jeroen.",
+        "circleSubtitle": "Behoefte · via Jeroen",
         "need": "De Behoefte van Sanne: je meldt jouw deel, en de deelnemers spreken af in hun eigen chat.",
         "add": "Hier begint het: stuur je link of laat je QR zien aan mensen die je persoonlijk kent."
       },
@@ -900,7 +901,7 @@
   },
   "how": {
     "meta": {
-      "title": "Hoe het werkt — Social Organizer",
+      "title": "Hoe het werkt · Social Organizer",
       "description": "Je bouwt een netwerk van mensen die je kent. Een behoefte bereikt zoveel mensen in dat netwerk als het bedrag in dollars, en deelnemers regelen het direct met elkaar. Op de pagina staat ook een vergelijking van Social Organizer met de Chinese online platforms voor onderlinge hulp."
     },
     "hero": {
@@ -936,8 +937,8 @@
       "title": "Het begint bij iemand die je kent",
       "lead": "Het netwerk groeit alleen via mensen die elkaar kennen: iemand sluit zich aan via jouw link, en jij bevestigt de kennismaking.",
       "says": [
-        "Noor opent je link en logt in. <b>Dit is nog geen verbinding:</b> jij krijgt een push.",
-        "Je bevestigt: ja, we kennen elkaar. <b>Nu is Noor je 1e handdruk.</b>"
+        "Noor opent je link en logt in. <b>Dit is nog geen verbinding:</b> je krijgt een melding met de vraag of je haar kent.",
+        "Je bevestigt: ja, we kennen elkaar. <b>Noor is nu een van je directe contacten in het netwerk.</b>"
       ]
     },
     "cta": {
@@ -1126,7 +1127,7 @@
   },
   "press": {
     "meta": {
-      "title": "Voor de pers — Social Organizer",
+      "title": "Voor de pers · Social Organizer",
       "description": "Wat Social Organizer is, wie het maakt, de belangrijkste feiten, het logo en screenshots om te downloaden, en hoe je het team bereikt."
     },
     "hero": {

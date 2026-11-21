@@ -23,23 +23,52 @@ export function useSitePhone(): boolean {
   return useMediaQuery('(max-width: 600px)');
 }
 
-/**
- * The live number of people with connections in the network (the landing's cached public count), or undefined
- * while it loads or when the request fails. No cookies go with the request.
- */
-export function useLivePeopleCount(): number | undefined {
-  const [count, setCount] = useState<number>();
+/** People with connections in the network on the date in `join.now`. */
+const NETWORK_NOW = 287;
+
+interface PeopleObservation {
+  count: number;
+  observedAt: Date;
+}
+
+export function PeopleCount() {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.resolvedLanguage || i18n.language || 'en';
+  const [observation, setObservation] = useState<PeopleObservation>();
   useEffect(() => {
     const controller = new AbortController();
     void fetch('/api/landing/people', { credentials: 'omit', signal: controller.signal })
-      .then((response) => (response.ok ? response.json() : undefined))
-      .then((value: unknown) => {
-        if (typeof value === 'number' && Number.isSafeInteger(value) && value >= 0) setCount(value);
+      .then(async (response) => {
+        const timestamp = response.headers.get('X-Observed-At');
+        if (!response.ok || !timestamp) return;
+
+        const observedAt = new Date(timestamp);
+        if (!Number.isFinite(observedAt.getTime())) return;
+        const count: unknown = await response.json();
+        if (!controller.signal.aborted && typeof count === 'number' && Number.isSafeInteger(count) && count >= 0) {
+          setObservation({ count, observedAt });
+        }
       })
       .catch(() => undefined);
     return () => controller.abort();
   }, []);
-  return count;
+
+  const count = new Intl.NumberFormat(lang).format(observation?.count ?? NETWORK_NOW);
+  return (
+    <>
+      <b>{count}</b>{' '}
+      <span>
+        {observation ? (
+          <>
+            {t('landing.v2.join.nowLive', { count: observation.count })}{' · '}
+            <time dateTime={observation.observedAt.toISOString()}>
+              {new Intl.DateTimeFormat(lang, { dateStyle: 'long', timeZone: 'UTC' }).format(observation.observedAt)}
+            </time>
+          </>
+        ) : t('landing.v2.join.now')}
+      </span>
+    </>
+  );
 }
 
 /** The description from index.html; every page restores it when it leaves. */

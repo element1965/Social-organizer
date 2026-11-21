@@ -721,7 +721,7 @@
       },
       "hero": {
         "title": "Lumea e mai mică decât crezi.",
-        "lead": "Social Organizer adună oameni care se cunosc personal. Când unuia dintre ei îi e greu, află mai întâi cunoscuții lui, apoi cunoscuții acestora.",
+        "lead": "În Social Organizer îți construiești o rețea cu oameni pe care îi cunoști personal. Când unuia dintre ei îi e greu, află mai întâi cunoscuții lui, apoi cunoscuții acestora.",
         "cta": "Construiește-ți rețeaua",
         "how": "Cum funcționează",
         "facts": "Gratuit · fără comisioane · <code>cod deschis</code>"
@@ -809,6 +809,7 @@
         "title": "Aplicația în sine",
         "example": "Exemplu",
         "circle": "Cercul tău: oamenii pe care îi cunoști și oamenii pe care îi cunosc ei. Nevoia Ioanei ajunge la tine prin Mihai.",
+        "circleSubtitle": "Nevoie · prin Mihai",
         "need": "Nevoia Ioanei: îți anunți partea, iar participanții se înțeleg în propriul lor chat.",
         "add": "Totul începe aici: trimite linkul tău sau arată QR-ul tău oamenilor pe care îi cunoști personal."
       },
@@ -889,7 +890,7 @@
         "text": "Într-o zi grea nu ai nici timp, nici putere pentru asta.",
         "s1": "Deschide linkul primit de la un cunoscut sau conectează-te direct cu Google, Apple, Telegram ori cu un cod primit pe e-mail. Nu-ți trebuie parolă.",
         "s2": "Adaugă oamenii pe care îi cunoști personal: cu un link, cu un cod QR sau scuturând telefoanele unul lângă altul.",
-        "s3": "Stabilește-ți intenția: suma pe care ai spune-o de obicei dacă i-ar fi greu cuiva din rețea.",
+        "s3": "Alege suma pe care ai fi dispus să o indici dacă cineva din rețea ar trece printr-o perioadă grea.",
         "qr": "Îndreaptă aici camera telefonului și se va deschide magazinul potrivit.",
         "playTop": "Disponibil pe",
         "play": "Google Play",
@@ -909,7 +910,7 @@
   },
   "how": {
     "meta": {
-      "title": "Cum funcționează — Social Organizer",
+      "title": "Cum funcționează · Social Organizer",
       "description": "Construiești o rețea de oameni pe care îi cunoști. O nevoie ajunge la atâția oameni din ea câți dolari are suma, iar participanții se coordonează direct. Pagina compară și Social Organizer cu platformele chineze online de ajutor reciproc."
     },
     "hero": {
@@ -945,8 +946,8 @@
       "title": "Începe cu o persoană pe care o cunoști",
       "lead": "Rețeaua crește doar prin oameni care se cunosc: cineva se alătură prin linkul tău, iar tu confirmi cunoștința.",
       "says": [
-        "Irina îți deschide linkul și se conectează. <b>Încă nu e o legătură:</b> primești un push.",
-        "Confirmi: da, ne cunoaștem. <b>Acum Irina e prima ta strângere de mână.</b>"
+        "Irina îți deschide linkul și se conectează. <b>Încă nu e o legătură:</b> primești o notificare prin care ți se cere să confirmi că o cunoști.",
+        "Confirmi: da, ne cunoaștem. <b>Irina face acum parte din cercul tău de cunoscuți direcți.</b>"
       ]
     },
     "cta": {
@@ -1135,7 +1136,7 @@
   },
   "press": {
     "meta": {
-      "title": "Presă — Social Organizer",
+      "title": "Presă · Social Organizer",
       "description": "Ce este Social Organizer, cine îl face, faptele principale, logoul și capturi de ecran de descărcat și cum contactezi echipa."
     },
     "hero": {

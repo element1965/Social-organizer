@@ -721,7 +721,7 @@
       },
       "hero": {
         "title": "Le monde est plus petit qu'on ne le pense.",
-        "lead": "Social Organizer réunit des personnes qui se connaissent personnellement. Quand l’une d’elles est en difficulté, ses connaissances l’apprennent en premier, puis les leurs.",
+        "lead": "Avec Social Organizer, vous créez un réseau avec des personnes que vous connaissez dans la vie. Quand l’une d’elles est en difficulté, ses connaissances l’apprennent en premier, puis les leurs.",
         "cta": "Créer mon réseau",
         "how": "Comment ça marche",
         "facts": "Gratuit · sans commission · <code>open source</code>"
@@ -809,6 +809,7 @@
         "title": "L’application elle-même",
         "example": "Exemple",
         "circle": "Votre Cercle : les personnes que vous connaissez et celles qu’elles connaissent. Le Besoin de Sophie vous parvient par Julien.",
+        "circleSubtitle": "Besoin · par Julien",
         "need": "Le Besoin de Sophie : vous indiquez votre part, et les participants s’organisent dans leur propre chat.",
         "add": "Tout commence ici : envoyez votre lien ou montrez votre QR aux personnes que vous connaissez en vrai."
       },
@@ -909,7 +910,7 @@
   },
   "how": {
     "meta": {
-      "title": "Fonctionnement — Social Organizer",
+      "title": "Fonctionnement · Social Organizer",
       "description": "Vous construisez un réseau de personnes que vous connaissez. Un besoin atteint autant de personnes de ce réseau que de dollars indiqués, et les participants se coordonnent directement. La page compare aussi Social Organizer avec les plateformes chinoises d’entraide en ligne."
     },
     "hero": {
@@ -945,8 +946,8 @@
       "title": "Tout commence par une personne que vous connaissez",
       "lead": "Le réseau ne grandit que par des personnes qui se connaissent : quelqu’un le rejoint par votre lien, et vous confirmez la connaissance.",
       "says": [
-        "Chloé ouvre votre lien et se connecte. <b>Ce n’est pas encore un lien :</b> vous recevez un push.",
-        "Vous confirmez : oui, nous nous connaissons. <b>Chloé est maintenant votre 1re poignée de main.</b>"
+        "Chloé ouvre votre lien et se connecte. <b>Ce n’est pas encore un lien :</b> vous recevez une notification vous demandant de confirmer que vous la connaissez.",
+        "Vous confirmez : oui, nous nous connaissons. <b>Chloé fait désormais partie de vos contacts directs.</b>"
       ]
     },
     "cta": {
@@ -1135,7 +1136,7 @@
   },
   "press": {
     "meta": {
-      "title": "Presse — Social Organizer",
+      "title": "Presse · Social Organizer",
       "description": "Ce qu’est Social Organizer, qui le fait, les faits essentiels, le logo et des captures d’écran à télécharger, et comment joindre l’équipe."
     },
     "hero": {
