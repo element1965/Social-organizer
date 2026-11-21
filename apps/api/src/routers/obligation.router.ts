@@ -261,10 +261,18 @@ export const obligationRouter = router({
       }
       const updated = await transactionWithRetry(ctx.db, async (tx) => {
         assertOpenNeed(await lockNeed(tx, obligation.collectionId));
-        return tx.obligation.updateMany({
+        const result = await tx.obligation.updateMany({
           where: { id: input.obligationId, unsubscribedAt: null },
           data: { unsubscribedAt: new Date() },
         });
+        if (result.count > 0) {
+          const remaining = await tx.obligation.findFirst({
+            where: { collectionId: obligation.collectionId, userId: ctx.userId, unsubscribedAt: null },
+            select: { id: true },
+          });
+          if (!remaining) await dismissNeedRequests(tx, ctx.userId, obligation.collectionId);
+        }
+        return result;
       });
       if (updated.count > 0) await syncCollectionGoal(ctx.db, obligation.collectionId);
       return { ok: true as const };

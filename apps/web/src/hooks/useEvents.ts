@@ -5,6 +5,7 @@ import { trpc } from '../lib/trpc';
 import { CIRCLE_STALE_MS } from '../lib/circleLists';
 import { useAuth } from './useAuth';
 import { useAcceptedRecent } from './useAcceptedRecent';
+import { groupNeedActivity } from './needActivity';
 import { formatIsolatedMoney, formatMoney } from '../components/ui2/format';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -57,8 +58,6 @@ export type FeedEvent = {
 };
 
 type Person = { id: string; name: string };
-
-const REQUEST_TYPES = new Set(['NEW_COLLECTION', 'RE_NOTIFY', 'SPECIAL_AUTHOR', 'SPECIAL_DEVELOPER']);
 
 /** Re-render when the next waiting request expires, even if the server data has not changed. */
 export function useExpiryTick(expiries: number[]): number {
@@ -135,7 +134,6 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
 
   const events = useMemo<FeedEvent[]>(() => {
     const out: FeedEvent[] = [];
-    const items = notifications.data?.items ?? [];
 
     // Collections I already joined: their requests are handled, they show as "Discussion" rows.
     const joined = new Map<string, { amount: number; at: number; creator: Person; id: string; ids: string[] }>();
@@ -185,12 +183,14 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
         : t('circle.feed.cycle', { date });
     };
 
-    const renewalIds = new Set<string>();
-    for (const { collection: c, amount } of notifications.data?.waitingRenewals ?? []) {
-      renewalIds.add(c.id);
+    const { confirmations, requests, activity } = groupNeedActivity(
+      notifications.data?.waitingRenewals ?? [],
+      notifications.data?.items ?? [],
+    );
+    for (const { collection: c, amount, id } of confirmations) {
       covered.add(c.id);
       out.push({
-        id: `n:cycle:${c.id}`,
+        id,
         at: c.currentCycleStart ? new Date(c.currentCycleStart).getTime() : 0,
         collectionId: c.id,
         personId: c.creator.id,
@@ -202,30 +202,16 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
       });
     }
 
-    // The paginated activity still groups notices of the same kind for each Need.
-    const rows = new Map<string, FeedEvent>();
-    for (const n of items) {
-      if (!n.collection || n.status !== 'UNREAD') continue;
-      const c = n.collection;
-      if (REQUEST_TYPES.has(n.type)) {
-        joined.get(c.id)?.ids.push(n.id);
-        continue;
-      }
-      const isCycle = n.type === 'CYCLE_RENEWED' || n.type === 'CYCLE_RENEWAL_REMINDER';
-      if (isCycle && renewalIds.has(c.id)) continue;
+    for (const { collectionId, notificationId } of requests) {
+      joined.get(collectionId)?.ids.push(notificationId);
+    }
 
-      const key = `${isCycle ? 'cycle' : n.type}:${c.id}`;
-      const existing = rows.get(key);
-      if (existing) {
-        existing.notificationIds!.push(n.id);
-        continue;
-      }
-
+    for (const { collection: c, notice: n, id, isCycle, notificationIds } of activity) {
       const creator = name(c.creator.id, c.creator.name);
       const base = {
-        id: `n:${key}`,
+        id,
         at: new Date(n.createdAt).getTime(),
-        notificationIds: [n.id],
+        notificationIds,
         collectionId: c.id,
         personId: c.creator.id,
       };
@@ -233,7 +219,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
       if (isCycle) {
         const end = cycleEnd(c, n.type, n.wave);
         const total = (c.obligations ?? []).reduce((sum, o) => sum + o.amount, 0);
-        rows.set(key, {
+        out.push({
           ...base,
           kind: 'cycle',
           title: creator,
@@ -241,17 +227,16 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
           hot: n.type === 'CYCLE_RENEWED',
         });
       } else if (n.type === 'COLLECTION_CLOSED') {
-        rows.set(key, { ...base, kind: 'closed', title: creator, subtitle: t('circle.feed.closed'), hot: false });
+        out.push({ ...base, kind: 'closed', title: creator, subtitle: t('circle.feed.closed'), hot: false });
       } else if (n.type === 'COLLECTION_BLOCKED') {
-        rows.set(key, { ...base, kind: 'blocked', title: creator, subtitle: t('circle.feed.blocked'), hot: false });
+        out.push({ ...base, kind: 'blocked', title: creator, subtitle: t('circle.feed.blocked'), hot: false });
       } else if (n.type === 'NEW_OBLIGATION') {
-        rows.set(key, { ...base, kind: 'joined', title: t('circle.feed.joinedTitle'), subtitle: t('circle.feed.joined'), hot: false });
+        out.push({ ...base, kind: 'joined', title: t('circle.feed.joinedTitle'), subtitle: t('circle.feed.joined'), hot: false });
       } else {
         continue;
       }
       covered.add(c.id);
     }
-    out.push(...rows.values());
 
     for (const p of incoming.data ?? []) {
       out.push({

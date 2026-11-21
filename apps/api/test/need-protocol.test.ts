@@ -967,6 +967,43 @@ describe('Need participant visibility', () => {
     expect(await notification.attention()).toEqual({ needs: 0, incoming: 0 });
   });
 
+  it('clears a live request wave when the last Participation is withdrawn by ID', async () => {
+    const author = 'withdraw-by-id-author';
+    const viewer = 'withdraw-by-id-viewer';
+    await db.user.createMany({ data: [author, viewer].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({
+      data: {
+        creatorId: author, type: 'REGULAR', amount: 100, chatLink: 'https://example.test/chat',
+        cycleNumber: 2, currentCycleStart: new Date(Date.now() - hour),
+      },
+    });
+    const [first, last] = await db.obligation.createManyAndReturn({
+      data: [2, 3].map((amount) => ({
+        userId: viewer, collectionId: need.id, amount, isSubscription: true, createdAt: new Date(1000),
+      })),
+    });
+    const request = await db.notification.create({
+      data: {
+        userId: viewer, collectionId: need.id, type: 'RE_NOTIFY', status: 'READ',
+        expiresAt: new Date(Date.now() + hour),
+      },
+    });
+
+    const { collection, notification, obligation } = caller(viewer);
+    const detail = () => collection.getById({ id: need.id });
+    expect(await detail()).toMatchObject({ waitingForMe: true, needsCycleConfirmation: true });
+    expect(await notification.attention()).toEqual({ needs: 1, incoming: 0 });
+
+    await obligation.unsubscribe({ obligationId: first!.id });
+    expect(await db.notification.findUniqueOrThrow({ where: { id: request.id } }))
+      .toMatchObject({ status: 'READ' });
+    expect(await detail()).toMatchObject({ waitingForMe: true, needsCycleConfirmation: true });
+
+    await obligation.unsubscribe({ obligationId: last!.id });
+    expect(await detail()).toMatchObject({ waitingForMe: false, needsCycleConfirmation: false, waitingExpiresAt: null });
+    expect(await notification.attention()).toEqual({ needs: 0, incoming: 0 });
+  });
+
   it('limits amounts and chat to the author and active participants, and received marks to the author', async () => {
     const author = 'privacy-author';
     const { circle } = await seedNetwork(author, 5, 6);
@@ -1043,6 +1080,13 @@ describe('Need participant visibility', () => {
     const withdrawnView = await detail(participant);
     expect(withdrawnView).toMatchObject({ chatLink: null, currentAmount: 6 });
     expect(withdrawnView.obligations).toEqual([expect.objectContaining({ userId: remaining, amount: null })]);
+    expect(await notice(participant)).toBeUndefined();
+    await db.notification.create({
+      data: {
+        userId: participant, collectionId: need.id, type: 'CYCLE_RENEWAL_REMINDER',
+        expiresAt: new Date(Date.now() + hour),
+      },
+    });
     expect(await notice(participant)).toMatchObject({ chatLink: null, obligations: [] });
     expect(await caller(participant).obligation.myList()).toEqual([
       expect.objectContaining({
