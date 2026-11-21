@@ -1,18 +1,19 @@
 import { TELEGRAM_BOT_USERNAME } from '../deployment.js';
 import { createUserWithReferralSlug } from '../services/referral-slug.service.js';
 import { z } from 'zod';
-import { router, publicProcedure, protectedProcedure } from '../trpc.js';
+import { router, publicProcedure, protectedProcedure, authAttemptProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import bcrypt from 'bcryptjs';
 import {
-  createAccessToken,
-  createRefreshToken,
   verifyToken,
   generateLinkingCode,
+  tokenIssuedMs,
+  issuedBeforeEmailProof,
 } from '../services/auth.service.js';
+import { issueSignInTokens, issueTokensIf } from '../services/session.service.js';
 import { validateTelegramInitData, validateTelegramWidget, isTelegramWidgetEnabled, telegramBotId, type TelegramUserData } from '../services/telegram.service.js';
 import { applyBotStartInvite } from '../services/invite-fallback.service.js';
-import { findLinkingCode, LinkCodeRateLimitError } from '../services/link-code.service.js';
+import { claimLinkingCode, LinkCodeRateLimitError } from '../services/link-code.service.js';
 import type { Context } from '../context.js';
 import { isEmptyAccount, linkTelegramByCode, mergeEmptyAccountInto, type TelegramLinkResult } from '../services/telegram-link.service.js';
 import { verifyGoogleIdToken } from '../services/google.service.js';
@@ -20,20 +21,16 @@ import { resolveExternalIdentity, AccountExistsError } from '../services/identit
 import { requestEmailCode, verifyEmailCode, EmailCodeError } from '../services/email-code.service.js';
 import { isMailConfigured, MailUnavailableError } from '../services/mail.service.js';
 import { campaignFrom, type Campaign, DEFAULT_INTENTION_AMOUNT, LINKING_CODE_TTL_MINUTES } from '@so/shared';
-import { touchUser } from '../services/activity.service.js';
 import { restoreMutedAccount } from '../services/account-restore.service.js';
 import { invalidateGraph } from '../services/graph-cache.service.js';
 
-/** Access token for a successful sign-in / refresh / link-code flow; counts as activity. */
-function signedInToken(db: Context['db'], userId: string): string {
-  touchUser(db, userId);
-  return createAccessToken(userId);
-}
-
-/** Link-code lookup for tRPC callers: limited per IP, 429 when over the limit (SO-14). */
+/**
+ * Link-code redemption for tRPC callers: limited per IP, 429 when over the limit (SO-14). The code is spent
+ * here, before the caller writes anything (SEC-4); null when it is wrong, expired or already used.
+ */
 async function linkCodeOrThrow(ctx: { db: Context['db']; ip: string }, code: string) {
   try {
-    return await findLinkingCode(ctx.db, code, [`ip:${ctx.ip}`]);
+    return await claimLinkingCode(ctx.db, code, [`ip:${ctx.ip}`]);
   } catch (err) {
     if (err instanceof LinkCodeRateLimitError) {
       throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: err.message });
@@ -146,39 +143,23 @@ function toEmailCodeTrpcError(err: unknown): unknown {
 }
 
 export const authRouter = router({
-  registerWithEmail: publicProcedure
+  /**
+   * Retired: an e-mail typed at password sign-up was never proven, so it could reserve someone else's address
+   * (SEC-1). No client calls it any more (accounts are created by e-mail code, Google, Apple or Telegram);
+   * the procedure stays so an old caller gets a clear refusal instead of NOT_FOUND.
+   */
+  registerWithEmail: authAttemptProcedure
     .input(z.object({
       email: z.string().email(),
       password: z.string().min(6),
       name: z.string().min(1).optional(),
       campaign: z.unknown().optional(),
     }))
-    .mutation(async ({ ctx, input }) => {
-      const existingUser = await ctx.db.user.findUnique({
-        where: { email: input.email.toLowerCase() },
-      });
-
-      if (existingUser) {
-        throw new TRPCError({ code: 'CONFLICT', message: 'Email already registered' });
-      }
-
-      const passwordHash = await bcrypt.hash(input.password, 10);
-      const user = await createUserWithReferralSlug(ctx.db, {
-        email: input.email.toLowerCase(),
-        passwordHash,
-        name: input.name || input.email.split('@')[0] || 'User',
-        monthlyBudget: DEFAULT_INTENTION_AMOUNT,
-        remainingBudget: DEFAULT_INTENTION_AMOUNT,
-        onboardingCompleted: true,
-      }, campaignFrom(input.campaign));
-
-      const accessToken = signedInToken(ctx.db, user.id);
-      const refreshToken = createRefreshToken(user.id);
-
-      return { accessToken, refreshToken, userId: user.id };
+    .mutation(() => {
+      throw new TRPCError({ code: 'FORBIDDEN', message: 'PASSWORD_SIGNUP_RETIRED: sign in with a code sent to your e-mail' });
     }),
 
-  loginWithEmail: publicProcedure
+  loginWithEmail: authAttemptProcedure
     .input(z.object({
       email: z.string().email(),
       password: z.string().min(1),
@@ -193,15 +174,20 @@ export const authRouter = router({
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid email or password' });
       }
 
-      const validPassword = await bcrypt.compare(input.password, user.passwordHash);
+      const comparedHash = user.passwordHash;
+      const validPassword = await bcrypt.compare(input.password, comparedHash);
       if (!validPassword) {
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid email or password' });
       }
 
-      const accessToken = signedInToken(ctx.db, user.id);
-      const refreshToken = createRefreshToken(user.id);
+      // The compare takes a while: a first mailbox proof may have ended this password meanwhile (SEC-1).
+      // Tokens come only if the stored hash is still the one that was compared, checked under the row lock.
+      const tokens = await issueTokensIf(ctx.db, user.id, (row) => row.passwordHash === comparedHash);
+      if (!tokens) {
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid email or password' });
+      }
 
-      return { accessToken, refreshToken, userId: user.id };
+      return { ...tokens, userId: user.id };
     }),
 
   loginWithTelegram: publicProcedure
@@ -227,8 +213,7 @@ export const authRouter = router({
 
       const { userId, isNew } = await signInTelegramUser(ctx.db, tgUser, input.initData, campaignFrom(input.campaign));
 
-      const accessToken = signedInToken(ctx.db, userId);
-      const refreshToken = createRefreshToken(userId);
+      const { accessToken, refreshToken } = await issueSignInTokens(ctx.db, userId);
 
       return { accessToken, refreshToken, userId, isNew, ...(linkResult ? { linkResult } : {}) };
     }),
@@ -272,9 +257,7 @@ export const authRouter = router({
         if (googleUser.picture && !user.photoUrl) {
           await ctx.db.user.update({ where: { id: user.id }, data: { photoUrl: googleUser.picture } });
         }
-        await ctx.db.linkingCode.delete({ where: { id: linkingCode.id } });
-        const accessToken = signedInToken(ctx.db, user.id);
-        const refreshToken = createRefreshToken(user.id);
+        const { accessToken, refreshToken } = await issueSignInTokens(ctx.db, user.id);
         return { accessToken, refreshToken, userId: user.id, isNew: false };
       }
 
@@ -296,8 +279,7 @@ export const authRouter = router({
         throw err;
       }
 
-      const accessToken = signedInToken(ctx.db, userId);
-      const refreshToken = createRefreshToken(userId);
+      const { accessToken, refreshToken } = await issueSignInTokens(ctx.db, userId);
 
       return { accessToken, refreshToken, userId, isNew };
     }),
@@ -315,7 +297,7 @@ export const authRouter = router({
   })),
 
   /** Sends a one-time code. Same answer for registered and unknown addresses. */
-  requestEmailCode: publicProcedure
+  requestEmailCode: authAttemptProcedure
     .input(z.object({ email: z.string().trim().email().max(254), lang: z.string().max(10).optional() }))
     .mutation(async ({ ctx, input }) => {
       try {
@@ -326,12 +308,12 @@ export const authRouter = router({
     }),
 
   /** Checks the code: the proven address signs in to its account or creates one. */
-  verifyEmailCode: publicProcedure
+  verifyEmailCode: authAttemptProcedure
     .input(z.object({ email: z.string().trim().email().max(254), code: z.string().regex(/^\d{6}$/), campaign: z.unknown().optional() }))
     .mutation(async ({ ctx, input }) => {
       try {
         const { userId, isNew } = await verifyEmailCode(ctx.db, input.email, input.code, campaignFrom(input.campaign));
-        return { accessToken: signedInToken(ctx.db, userId), refreshToken: createRefreshToken(userId), userId, isNew };
+        return { ...(await issueSignInTokens(ctx.db, userId)), userId, isNew };
       } catch (err) {
         throw toEmailCodeTrpcError(err);
       }
@@ -355,7 +337,7 @@ export const authRouter = router({
       const tgUser = validateTelegramWidget(signedData);
       if (!tgUser) throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid Telegram login data' });
       const { userId, isNew } = await signInTelegramUser(ctx.db, tgUser, `widget:${input.auth_date}`, campaignFrom(campaign));
-      return { accessToken: signedInToken(ctx.db, userId), refreshToken: createRefreshToken(userId), userId, isNew };
+      return { ...(await issueSignInTokens(ctx.db, userId)), userId, isNew };
     }),
 
   refresh: publicProcedure
@@ -365,14 +347,15 @@ export const authRouter = router({
       if (!payload) {
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid refresh token' });
       }
-      // A deleted account gets no new tokens
-      const user = await ctx.db.user.findUnique({ where: { id: payload.sub }, select: { deletedAt: true } });
-      if (!user || user.deletedAt) {
+      // A deleted account gets no new tokens, and neither does a session from before the first mailbox proof
+      // (SEC-1); checked under the row lock, so a proof running at the same moment cannot be overtaken
+      const issuedMs = tokenIssuedMs(payload);
+      const tokens = await issueTokensIf(ctx.db, payload.sub, (row) =>
+        !row.deletedAt && !issuedBeforeEmailProof(issuedMs, row.emailVerifiedAt));
+      if (!tokens) {
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid refresh token' });
       }
-      const accessToken = signedInToken(ctx.db, payload.sub);
-      const refreshToken = createRefreshToken(payload.sub);
-      return { accessToken, refreshToken };
+      return tokens;
     }),
 
   generateLinkCode: protectedProcedure
@@ -387,7 +370,7 @@ export const authRouter = router({
     }),
 
   /** Login on a new device using a 6-digit link code generated in Settings */
-  loginWithLinkCode: publicProcedure
+  loginWithLinkCode: authAttemptProcedure
     .input(z.object({ code: z.string().length(6) }))
     .mutation(async ({ ctx, input }) => {
       const linkingCode = await linkCodeOrThrow(ctx, input.code);
@@ -401,49 +384,22 @@ export const authRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
       }
 
-      await ctx.db.linkingCode.delete({ where: { id: linkingCode.id } });
-
-      const accessToken = signedInToken(ctx.db, user.id);
-      const refreshToken = createRefreshToken(user.id);
+      const { accessToken, refreshToken } = await issueSignInTokens(ctx.db, user.id);
 
       return { accessToken, refreshToken, userId: user.id };
     }),
 
-  /** Link code + set email/password for TG users migrating to mobile app */
-  claimWithLinkCode: publicProcedure
+  /**
+   * Retired: it set an unproven e-mail and a password on an account (SEC-1). No client calls it any more;
+   * the e-mail sign-in is the code flow, which proves the address. The procedure stays so an old caller gets a clear refusal instead of NOT_FOUND.
+   */
+  claimWithLinkCode: authAttemptProcedure
     .input(z.object({
       code: z.string().length(6),
       email: z.string().email(),
       password: z.string().min(6),
     }))
-    .mutation(async ({ ctx, input }) => {
-      const linkingCode = await linkCodeOrThrow(ctx, input.code);
-      if (!linkingCode) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Invalid or expired code' });
-      }
-
-      const user = await ctx.db.user.findUnique({ where: { id: linkingCode.userId } });
-      if (!user || user.deletedAt) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
-      }
-
-      const emailLower = input.email.toLowerCase();
-      const existingEmail = await ctx.db.user.findUnique({ where: { email: emailLower } });
-      if (existingEmail && existingEmail.id !== user.id) {
-        throw new TRPCError({ code: 'CONFLICT', message: 'Email already registered' });
-      }
-
-      const passwordHash = await bcrypt.hash(input.password, 10);
-      await ctx.db.user.update({
-        where: { id: user.id },
-        data: { email: emailLower, passwordHash },
-      });
-
-      await ctx.db.linkingCode.delete({ where: { id: linkingCode.id } });
-
-      const accessToken = signedInToken(ctx.db, user.id);
-      const refreshToken = createRefreshToken(user.id);
-
-      return { accessToken, refreshToken, userId: user.id };
+    .mutation(() => {
+      throw new TRPCError({ code: 'FORBIDDEN', message: 'CLAIM_RETIRED: sign in with a code sent to your e-mail' });
     }),
 });

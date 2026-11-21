@@ -4,6 +4,7 @@ import {
   JWT_REFRESH_TTL_DAYS,
   LINKING_CODE_LENGTH,
 } from '@so/shared';
+import { sessionClockMs } from './session-clock.js';
 
 // No fallback: a known default secret would let anyone sign tokens (SO-14).
 const JWT_SECRET = process.env.JWT_SECRET ?? '';
@@ -15,6 +16,12 @@ interface JwtPayload {
   sub: string;
   type: 'access' | 'refresh';
   iat: number;
+  /**
+   * Issue time in milliseconds. `iat` has whole seconds only, which cannot tell a token issued just before the
+   * first mailbox proof from one issued by the proving request itself (SEC-1). Tokens issued before this claim
+   * existed lack it and are judged by `iat`.
+   */
+  iatMs?: number;
   exp: number;
 }
 
@@ -31,24 +38,52 @@ function sign(payload: object): string {
   return `${header}.${body}.${signature}`;
 }
 
-export function createAccessToken(userId: string): string {
-  const now = Math.floor(Date.now() / 1000);
+/**
+ * Issue time for a new token: the session clock (session-clock.ts, the same clock that writes the first-proof
+ * cutoff), raised to `notBeforeMs` when the caller knows the account's cutoff, so the token is never judged as
+ * issued before it.
+ */
+function issueTimeMs(notBeforeMs?: number): number {
+  const nowMs = sessionClockMs();
+  return notBeforeMs != null && Number.isFinite(notBeforeMs) && notBeforeMs > nowMs ? Math.ceil(notBeforeMs) : nowMs;
+}
+
+export function createAccessToken(userId: string, notBeforeMs?: number): string {
+  const nowMs = issueTimeMs(notBeforeMs);
+  const now = Math.floor(nowMs / 1000);
   return sign({
     sub: userId,
     type: 'access',
     iat: now,
+    iatMs: nowMs,
     exp: now + JWT_ACCESS_TTL_MINUTES * 60,
   });
 }
 
-export function createRefreshToken(userId: string): string {
-  const now = Math.floor(Date.now() / 1000);
+export function createRefreshToken(userId: string, notBeforeMs?: number): string {
+  const nowMs = issueTimeMs(notBeforeMs);
+  const now = Math.floor(nowMs / 1000);
   return sign({
     sub: userId,
     type: 'refresh',
     iat: now,
+    iatMs: nowMs,
     exp: now + JWT_REFRESH_TTL_DAYS * 24 * 60 * 60,
   });
+}
+
+/** When a verified token was issued, in milliseconds (the start of its second for tokens without `iatMs`). */
+export function tokenIssuedMs(payload: Pick<JwtPayload, 'iat' | 'iatMs'>): number {
+  return typeof payload.iatMs === 'number' && Number.isFinite(payload.iatMs) ? payload.iatMs : payload.iat * 1000;
+}
+
+/**
+ * A token issued before the account's first mailbox proof (SEC-1). Whoever held the account until then may not
+ * be the mailbox owner (an address typed at password sign-up was never checked), so every session from before
+ * the proof ends; the proving request issues its own tokens after the timestamp is written.
+ */
+export function issuedBeforeEmailProof(issuedMs: number, emailVerifiedAt: Date | null | undefined): boolean {
+  return emailVerifiedAt != null && issuedMs < emailVerifiedAt.getTime();
 }
 
 export function verifyToken(
@@ -72,6 +107,7 @@ export function verifyToken(
 
     if (payload.type !== expectedType) return null;
     if (typeof payload.sub !== 'string' || !payload.sub) return null;
+    if (typeof payload.iat !== 'number' || !Number.isFinite(payload.iat)) return null;
     if (!(payload.exp > Math.floor(Date.now() / 1000))) return null;
 
     return payload;
@@ -80,10 +116,11 @@ export function verifyToken(
   }
 }
 
-/** userId from an `Authorization: Bearer <access token>` header, or null if missing/invalid. */
-export function userIdFromAuthHeader(header: string | undefined): string | null {
+/** The account and issue time of an `Authorization: Bearer <access token>` header, or null if missing/invalid. */
+export function accessFromAuthHeader(header: string | undefined): { userId: string; issuedMs: number } | null {
   if (!header?.startsWith('Bearer ')) return null;
-  return verifyToken(header.slice(7))?.sub ?? null;
+  const payload = verifyToken(header.slice(7));
+  return payload ? { userId: payload.sub, issuedMs: tokenIssuedMs(payload) } : null;
 }
 
 export function generateLinkingCode(): string {

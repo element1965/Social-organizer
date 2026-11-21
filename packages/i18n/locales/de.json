@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Falscher Code. Erneut versuchen oder neuen anfordern",
     "errExpired": "Der Code ist abgelaufen. Fordern Sie einen neuen an",
     "errAttempts": "Zu viele falsche Versuche. Fordern Sie einen neuen Code an",
+    "errRateLimit": "Zu viele Anmeldeversuche. Versuchen Sie es später erneut",
     "errTooSoon": "Neuen Code in {{sec}} s anfordern",
     "errUnavailable": "E-Mails können gerade nicht gesendet werden. Wählen Sie eine andere Anmeldung",
     "errNetwork": "Senden fehlgeschlagen. Prüfen Sie die Verbindung und versuchen Sie es erneut",

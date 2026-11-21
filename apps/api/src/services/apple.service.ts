@@ -1,11 +1,10 @@
 import type { Campaign } from '@so/shared';
 import { APPLE_BUNDLE_ID } from '../deployment.js';
-import { findLinkingCode } from './link-code.service.js';
+import { claimLinkingCode } from './link-code.service.js';
 import { resolveExternalIdentity } from './identity.service.js';
 import crypto from 'node:crypto';
 import type { PrismaClient } from '@so/db';
-import { createAccessToken, createRefreshToken } from './auth.service.js';
-import { touchUser } from './activity.service.js';
+import { issueSignInTokens } from './session.service.js';
 
 // Sign in with Apple is verified entirely from the id_token returned by Apple's
 // web OAuth flow (response_type=code id_token, response_mode=form_post). We verify
@@ -142,7 +141,8 @@ export async function findOrCreateAppleUser(
 
   // 0. Link to existing user via 6-digit code
   if (linkCode) {
-    const linkingCode = await findLinkingCode(db, linkCode, [...callerKeys, `apple:${apple.sub}`]);
+    // Spent before anything is written (SEC-4): a second redemption running at once gets null
+    const linkingCode = await claimLinkingCode(db, linkCode, [...callerKeys, `apple:${apple.sub}`]);
     if (!linkingCode) throw new Error('Invalid or expired link code');
     const user = await db.user.findUnique({ where: { id: linkingCode.userId } });
     if (!user || user.deletedAt) throw new Error('User not found');
@@ -151,9 +151,7 @@ export async function findOrCreateAppleUser(
       create: { userId: user.id, platform: 'APPLE', platformId: apple.sub },
       update: { userId: user.id },
     });
-    await db.linkingCode.delete({ where: { id: linkingCode.id } });
-    touchUser(db, user.id);
-    return { ...issue(user.id), userId: user.id, isNew: false };
+    return { ...(await issueSignInTokens(db, user.id)), userId: user.id, isNew: false };
   }
 
   // 1–3. Known Apple account, same proven e-mail, or a new person (SO-21).
@@ -165,13 +163,6 @@ export async function findOrCreateAppleUser(
     verifiedEmail: apple.email_verified && apple.email ? apple.email : null,
     name,
   });
-  touchUser(db, userId);
-  return { ...issue(userId), userId, isNew };
+  return { ...(await issueSignInTokens(db, userId)), userId, isNew };
 }
 
-function issue(userId: string): { accessToken: string; refreshToken: string } {
-  return {
-    accessToken: createAccessToken(userId),
-    refreshToken: createRefreshToken(userId),
-  };
-}

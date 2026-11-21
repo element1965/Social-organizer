@@ -262,7 +262,11 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   const owner = data.creatorId === userId;
   // The server list already drops unsubscribed rows. Filter here too so an older API does not put them back.
   const activeObligations = data.obligations.filter((row) => row.unsubscribedAt == null);
-  const myObl = activeObligations.find((row) => row.userId === userId);
+  const myRow = activeObligations.find((row) => row.userId === userId);
+  // The viewer's own row always carries its amount (amounts are hidden only from viewers who have not joined)
+  const myObl = myRow ? { ...myRow, amount: myRow.amount ?? 0 } : undefined;
+  // Sent only to the author, and to a participant while the chat is offered (the server mirrors canOpenChat)
+  const chatLink = data.chatLink ?? '';
   const communityHold = data.blockReason === 'COMMUNITY';
   const adminHold = data.status === 'BLOCKED' && isReason(data.blockReason);
   const held = adminHold || communityHold;
@@ -272,7 +276,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   const renewal = data.type === 'REGULAR' && data.cycleNumber > 1 && data.currentCycleStart != null;
   const needsConfirm = !!myObl && renewal && myObl.cycleConfirmed === false && !held && !closed && data.status === 'ACTIVE';
   const showDecline = !owner && !!myObl && !closed && !held;
-  const canOpenChat = !owner && !!myObl && !needsConfirm && !closed && !held && !editing && isHttpsUrl(data.chatLink);
+  const canOpenChat = !owner && !!myObl && !needsConfirm && !closed && !held && !editing && isHttpsUrl(chatLink);
   const firstParticipation = createObligation.data;
   const firstHandshake = acceptSos.variables?.collectionId === data.id && acceptSos.data?.firstConnection === true;
   // Asked to help, not yet in, and the notice is still open: "Not now" ends the impulse on the Circle
@@ -292,8 +296,9 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   });
 
   // Every active pledge counts until the person declines. Confirming a cycle does not change the total.
-  const mineTotal = activeObligations.filter((row) => row.userId === userId).reduce((sum, row) => sum + row.amount, 0);
-  const othersTotal = activeObligations.filter((row) => row.userId !== userId).reduce((sum, row) => sum + row.amount, 0);
+  // The others' part comes from the server's total: a viewer who has not joined gets the rows without amounts.
+  const mineTotal = activeObligations.filter((row) => row.userId === userId).reduce((sum, row) => sum + (row.amount ?? 0), 0);
+  const othersTotal = Math.max(0, data.currentAmount - mineTotal);
 
   const typeLabel = data.type === 'REGULAR' ? t('collection.monthly') : t('collection.oneTime');
   let subtitle = typeLabel;
@@ -640,7 +645,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
             </>
           ) : undefined}
           onChange={() => { setEditAmount(String(myObl.amount)); setEditError(''); updateObligation.reset(); setEditing(true); }}
-          onOpenChat={canOpenChat ? () => window.open(data.chatLink, '_blank', 'noopener,noreferrer') : undefined}
+          onOpenChat={canOpenChat ? () => window.open(chatLink, '_blank', 'noopener,noreferrer') : undefined}
           footer={showAdmin && showDecline ? (
             <Button variant="textDanger" className="mt-2 w-full" onClick={() => setDeclineOpen(true)}>{t('collection.decline')}</Button>
           ) : undefined}
@@ -688,11 +693,11 @@ function CollectionScreen({ id }: { id: string | undefined }) {
             <button
               type="button"
               className="so-focus flex w-full items-center gap-3 rounded-lg bg-canvas px-3.5 py-3 text-start"
-              onClick={() => { setChatValue(data.chatLink); setChatError(''); updateChat.reset(); setChatEditing(true); }}
+              onClick={() => { setChatValue(chatLink); setChatError(''); updateChat.reset(); setChatEditing(true); }}
             >
               <span className="min-w-0 flex-1">
                 <span className="block text-micro font-semibold text-ink-muted">{t('collection.chatLabel')}</span>
-                <span className="block truncate text-body-s font-extrabold">{shortUrl(data.chatLink)}</span>
+                <span className="block truncate text-body-s font-extrabold">{shortUrl(chatLink)}</span>
               </span>
               <IconPen className="h-5 w-5 shrink-0 text-care" />
             </button>
@@ -730,6 +735,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
           )}
         />
       ) : (
+        // Participants see everyone's amounts; a viewer who has not joined sees the people without amounts
         <ParticipantList people={people} showPaid={false} onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)} />
       )}
 

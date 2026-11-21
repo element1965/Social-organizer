@@ -6,6 +6,7 @@ import { dismissRequestEntries, recordOpenedById } from '../services/notify-rout
 import { VISIBLE_RINGS } from '../services/network.service.js';
 import { getPulse } from '../services/pulse.service.js';
 import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
+import { chatLinkFor, confirmedRenewals } from '../services/collection-view.js';
 
 /** Opening or dismissing a notice must not wipe a cycle acknowledgement (RESPONDED). */
 async function setNotificationStatus(
@@ -36,7 +37,7 @@ export const notificationRouter = router({
               // Viewer's own active subscriptions — shown on regular-cycle notifications
               obligations: {
                 where: { userId: ctx.userId, unsubscribedAt: null },
-                select: { amount: true },
+                select: { amount: true, createdAt: true },
               },
             },
           },
@@ -74,6 +75,8 @@ export const notificationRouter = router({
           })
         : [];
       const nameMap = new Map(pathUsers.map((u) => [u.id, u.name]));
+      const needs = [...new Map(notifications.flatMap((n) => (n.collection ? [[n.collection.id, n.collection] as const] : []))).values()];
+      const confirmed = await confirmedRenewals(ctx.db, ctx.userId, needs);
 
       const items = notifications.map((n) => {
         const path = visiblePath(n.handshakePath as string[] | null);
@@ -84,6 +87,14 @@ export const notificationRouter = router({
           collection: n.collection
             ? {
                 ...n.collection,
+                // A notice is no invitation to the participants' chat: the same rule as the Need page (SEC-6).
+                // `obligations` here is already the viewer's own active rows.
+                chatLink: chatLinkFor(
+                  n.collection,
+                  ctx.userId,
+                  n.collection.obligations[0],
+                  confirmed.has(`${n.collection.id}:${n.collection.cycleNumber}`),
+                ),
                 creator: {
                   ...n.collection.creator,
                   connectionCount: countMap.get(n.collection.creatorId) || 0,

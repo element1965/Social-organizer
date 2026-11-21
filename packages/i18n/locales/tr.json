@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Yanlış kod. Tekrar deneyin veya yeni kod isteyin",
     "errExpired": "Kodun süresi doldu. Yeni kod isteyin",
     "errAttempts": "Çok fazla yanlış deneme. Yeni kod isteyin",
+    "errRateLimit": "Çok fazla giriş denemesi. Daha sonra yeniden deneyin",
     "errTooSoon": "{{sec}} sn sonra yeni kod isteyebilirsiniz",
     "errUnavailable": "Şu anda e-posta gönderilemiyor. Başka bir yol seçin",
     "errNetwork": "Gönderilemedi. Bağlantınızı kontrol edip tekrar deneyin",

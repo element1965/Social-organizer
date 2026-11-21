@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Wrong code. Try again or request a new one",
     "errExpired": "The code has expired. Request a new one",
     "errAttempts": "Too many wrong attempts. Request a new code",
+    "errRateLimit": "Too many sign-in attempts. Try again later",
     "errTooSoon": "You can request a new code in {{sec}} s",
     "errUnavailable": "E-mails can't be sent right now. Choose another way to sign in",
     "errNetwork": "Couldn't send. Check your connection and try again",

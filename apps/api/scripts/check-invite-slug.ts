@@ -10,7 +10,7 @@ if (!['localhost', '127.0.0.1', '[::1]'].includes(database.hostname)) {
 delete process.env.TELEGRAM_BOT_TOKEN;
 delete process.env.REDIS_URL;
 
-const { authRouter } = await import('../src/routers/auth.router.js');
+const { createUserWithReferralSlug } = await import('../src/services/referral-slug.service.js');
 const { userRouter } = await import('../src/routers/user.router.js');
 const { findInvitePreview } = await import('../src/services/invite-preview.service.js');
 const db = getDb();
@@ -22,8 +22,8 @@ const context = { db, ip: '127.0.0.1' };
 let legacyId: string | undefined;
 
 try {
-  const { userId } = await authRouter.createCaller({ ...context, userId: null })
-    .registerWithEmail({ email, password: randomUUID(), name: 'New invite check' });
+  // Every sign-up path creates the account through this helper (password sign-up is retired, SEC-1)
+  const { id: userId } = await createUserWithReferralSlug(db, { email, name: 'New invite check' });
   const created = await db.user.findUniqueOrThrow({ where: { id: userId } });
   assert.match(created.referralSlug ?? '', readable, 'registration assigns a readable slug');
 

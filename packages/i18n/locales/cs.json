@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Špatný kód. Zkuste to znovu nebo si vyžádejte nový",
     "errExpired": "Platnost kódu vypršela. Vyžádejte si nový",
     "errAttempts": "Příliš mnoho špatných pokusů. Vyžádejte si nový kód",
+    "errRateLimit": "Příliš mnoho pokusů o přihlášení. Zkuste to později",
     "errTooSoon": "Nový kód lze vyžádat za {{sec}} s",
     "errUnavailable": "E-maily teď nelze odesílat. Zvolte jiný způsob přihlášení",
     "errNetwork": "Nepodařilo se odeslat. Zkontrolujte připojení a zkuste to znovu",

@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Código incorrecto. Inténtelo de nuevo o pida otro",
     "errExpired": "El código ha caducado. Pida uno nuevo",
     "errAttempts": "Demasiados intentos fallidos. Pida un código nuevo",
+    "errRateLimit": "Demasiados intentos de inicio de sesión. Inténtelo más tarde",
     "errTooSoon": "Podrá pedir otro código en {{sec}} s",
     "errUnavailable": "Ahora no se pueden enviar correos. Elija otra forma de entrar",
     "errNetwork": "No se pudo enviar. Revise la conexión e inténtelo de nuevo",
