@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { cn } from '../../lib/utils';
 
 export type SegmentOption<T extends string> = { value: T; label: string; disabled?: boolean };
@@ -14,7 +14,7 @@ type SegmentedProps<T extends string> = {
 };
 
 /**
- * Tabs with one highlight that slides to the chosen option. The highlight is measured from the selected button,
+ * Radios with one highlight that slides to the chosen option. The highlight is measured from the selected button,
  * so it follows any label width (inline) and any column count (block); the first placement does not animate.
  */
 export function Segmented<T extends string>({
@@ -28,12 +28,14 @@ export function Segmented<T extends string>({
   const listRef = useRef<HTMLDivElement>(null);
   const [thumb, setThumb] = useState<{ left: number; width: number } | null>(null);
   const placed = useRef(false);
+  const enabled = options.filter((option) => !option.disabled);
+  const tabStop = enabled.find((option) => option.value === value) ?? enabled[0];
 
   useLayoutEffect(() => {
     const list = listRef.current;
     if (!list) return;
     const measure = () => {
-      const selected = list.querySelector<HTMLElement>('[aria-selected="true"]');
+      const selected = list.querySelector<HTMLElement>('[aria-checked="true"]');
       setThumb(selected ? { left: selected.offsetLeft, width: selected.offsetWidth } : null);
     };
     measure();
@@ -63,10 +65,24 @@ export function Segmented<T extends string>({
     ? { width: thumb.width, transform: `translateX(${thumb.left}px)` }
     : undefined;
 
+  function moveSelection(event: KeyboardEvent<HTMLButtonElement>, current: T) {
+    const rtl = getComputedStyle(event.currentTarget).direction === 'rtl';
+    const forward = event.key === 'ArrowDown' || event.key === (rtl ? 'ArrowLeft' : 'ArrowRight');
+    const backward = event.key === 'ArrowUp' || event.key === (rtl ? 'ArrowRight' : 'ArrowLeft');
+    if (!forward && !backward) return;
+    event.preventDefault();
+    const index = enabled.findIndex((option) => option.value === current);
+    const nextIndex = (index + (forward ? 1 : -1) + enabled.length) % enabled.length;
+    const next = enabled[nextIndex];
+    if (!next || next.value === current) return;
+    listRef.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')[nextIndex]?.focus();
+    onChange(next.value);
+  }
+
   return (
     <div
       ref={listRef}
-      role="tablist"
+      role="radiogroup"
       aria-label={label}
       className={cn(
         'relative',
@@ -94,14 +110,16 @@ export function Segmented<T extends string>({
           <button
             key={option.value}
             type="button"
-            role="tab"
-            aria-selected={selected}
+            role="radio"
+            aria-checked={selected}
+            tabIndex={option === tabStop ? 0 : -1}
             disabled={option.disabled}
+            onKeyDown={(event) => moveSelection(event, option.value)}
             onClick={() => onChange(option.value)}
             className={cn(
               'so-focus relative font-bold transition-colors duration-base ease-so disabled:opacity-40 motion-reduce:transition-none',
               variant === 'inline'
-                ? 'h-[30px] rounded-sm px-2.5 text-micro'
+                ? 'h-[30px] min-w-[42px] rounded-sm px-2.5 text-micro before:absolute before:-inset-y-[7px] before:-inset-x-px'
                 : 'h-secondary rounded-md px-2 text-body-s',
               selected
                 ? variant === 'inline'

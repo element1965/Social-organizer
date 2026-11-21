@@ -467,7 +467,7 @@ export function BroadcastPanel() {
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-2">
                         <Button variant="icon" aria-label={t('broadcast.editChain')} title={t('broadcast.editChain')} onClick={() => startEdit(cm)} icon={<IconPencil className="h-4 w-4" />} />
                         <Button
                           variant="icon"

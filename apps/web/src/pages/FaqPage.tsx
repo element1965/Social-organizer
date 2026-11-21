@@ -233,6 +233,8 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                 />
                 <input
                   type="url"
+                  dir="ltr"
+                  inputMode="url"
                   value={linkUrl}
                   onChange={e => setLinkUrl(e.target.value)}
                   placeholder={t('faq.urlPlaceholder')}
@@ -355,7 +357,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                     )}
                     <FaqAnswer text={item.answer} />
                     {isAdmin && (
-                      <div className="mt-3 flex items-center gap-1 border-t border-line-soft pt-2">
+                      <div className="mt-3 flex items-center gap-2 border-t border-line-soft pt-2">
                         <Button
                           variant="icon"
                           aria-label={t('faq.edit')}

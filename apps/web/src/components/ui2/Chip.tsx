@@ -31,11 +31,11 @@ export function Chip({
     <button
       type={type}
       className={cn(
-        'relative inline-flex items-center justify-center gap-1 whitespace-nowrap font-bold',
+        'relative inline-flex min-w-11 items-center justify-center gap-1 whitespace-nowrap font-bold',
         'transition-[background-color,color,border-color,box-shadow,transform,opacity] duration-fast ease-so active:scale-[0.95] motion-reduce:transition-none motion-reduce:active:scale-100',
         'before:absolute before:-inset-y-1.5 before:inset-x-0',
         'so-focus',
-        variant === 'preset' && 'h-small rounded-md bg-surface px-3.5 text-body-s text-ink-muted shadow-float',
+        variant === 'preset' && 'h-small rounded-md bg-surface px-3.5 text-body-s text-ink-muted shadow-float before:-inset-y-0.5',
         variant === 'preset' && active && 'bg-ink text-canvas shadow-none',
         variant === 'ring' && 'h-chip rounded-md bg-surface px-2.5 text-micro text-ink-muted shadow-float',
         variant === 'ring' && active && 'text-ink',

@@ -200,8 +200,8 @@ export function SupportChatPage() {
                   className={cn(
                     'max-w-[85%] space-y-2 rounded-2xl p-3 text-body-s',
                     msg.fromAdmin
-                      ? 'ms-auto rounded-br-md bg-care text-care-on'
-                      : 'rounded-bl-md border border-line bg-surface text-ink',
+                      ? 'ms-auto rounded-ee-md bg-care text-care-on'
+                      : 'rounded-es-md border border-line bg-surface text-ink',
                   )}
                 >
                   {msg.mediaFileId && msg.mediaType && (

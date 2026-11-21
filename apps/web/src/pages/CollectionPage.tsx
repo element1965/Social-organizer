@@ -486,6 +486,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
       <NeedSummaryCard
         pathNames={showPath ? pathNames : undefined}
         creatorName={creatorName}
+        pageHeading={!desktop}
         photoUrl={data.creator.photoUrl}
         onCreator={() => navigate(`/person/${data.creatorId}`)}
         subtitle={subtitle}
@@ -680,6 +681,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
                 value={chatValue}
                 error={chatError || serverFieldError(updateChat.error, 'chatLink', t('ask.chatInvalid'))}
                 inputMode="url"
+                dir="ltr"
                 autoCapitalize="none"
                 onChange={(event) => { setChatValue(event.target.value); setChatError(''); updateChat.reset(); }}
               />

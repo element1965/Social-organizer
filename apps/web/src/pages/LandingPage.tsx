@@ -674,7 +674,7 @@ export function LandingPage() {
             <div className="qs">
               {FAQ.map((n) => (
                 <details key={n} ref={n === 1 ? firstFaqRef : undefined}>
-                  <summary onClick={toggleFaq}>{t(`landing.v2.faq.q${n}`)}</summary>
+                  <summary onClick={toggleFaq}><span>{t(`landing.v2.faq.q${n}`)}</span></summary>
                   <div className="a">
                     <p>{t(`landing.v2.faq.a${n}`, { bot: '@' + TELEGRAM_BOT_USERNAME })}</p>
                     {n === 6 && <p>{t('legal.policy.campaigns')}</p>}

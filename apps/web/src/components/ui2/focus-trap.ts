@@ -36,7 +36,7 @@ export function useFocusTrap(
     const previously = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
     const items = () =>
-      Array.from(root.querySelectorAll<HTMLElement>(SELECTOR)).filter((el) => !el.hasAttribute('disabled'));
+      Array.from(root.querySelectorAll<HTMLElement>(SELECTOR)).filter((el) => el.tabIndex >= 0);
 
     const list = items();
     const first = list[0];

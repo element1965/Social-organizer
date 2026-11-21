@@ -6,12 +6,24 @@
 @tailwind components;
 @tailwind utilities;
 
+html[dir="rtl"] .so-url-placeholder:placeholder-shown {
+  direction: rtl;
+  text-align: start;
+}
+
 /* System bars (status bar / gesture bar).
    On Android 15+ the app is drawn edge-to-edge; Capacitor writes the bar sizes
    into --safe-area-inset-*, browsers and iOS give them via env(). */
 :root {
   --sa-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
   --sa-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+  --sa-inline: max(var(--safe-area-inset-left, env(safe-area-inset-left, 0px)), var(--safe-area-inset-right, env(safe-area-inset-right, 0px)));
+  --so-tab-bar-height: 84px;
+  --so-tab-bar-space: calc(var(--so-tab-bar-height) + var(--sa-bottom));
+}
+
+html:has([data-tab-bar]) {
+  scroll-padding-block-end: calc(var(--so-tab-bar-space) + 4px);
 }
 
 body {

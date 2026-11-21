@@ -137,10 +137,12 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
 
         {!value.mediaFileId && (
           <input
+            dir="ltr"
+            inputMode="url"
             value={value.mediaUrl || ''}
             onChange={(e) => handleUrlChange(e.target.value)}
             placeholder={t('broadcast.mediaUrlPlaceholder')}
-            className={fieldCls}
+            className={`${fieldCls} so-url-placeholder`}
             disabled={disabled}
             onFocus={focusIntoView}
           />
@@ -162,6 +164,8 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
             onFocus={focusIntoView}
           />
           <input
+            dir="ltr"
+            inputMode="url"
             value={value.buttonUrl || ''}
             onChange={(e) => onChange({ ...value, buttonUrl: e.target.value })}
             placeholder={t('broadcast.urlPlaceholder')}

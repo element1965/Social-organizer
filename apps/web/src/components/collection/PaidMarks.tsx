@@ -186,7 +186,7 @@ export function UndoBar({ undo, onUndo, onDone }: { undo: Undo | null; onUndo: (
       className="flex items-center gap-3 rounded-lg bg-ink py-2 ps-4 pe-2 text-canvas shadow-sheet"
     >
       <span className="min-w-0 flex-1 truncate text-body-s font-semibold">{undo.text}</span>
-      <button type="button" onClick={onUndo} className="so-focus h-10 shrink-0 rounded-md px-3 text-body-s font-extrabold text-care-bright">
+      <button type="button" onClick={onUndo} className="so-focus h-10 shrink-0 rounded-md px-3 text-body-s font-extrabold text-care-on-ink">
         {t('collection.undo')}
       </button>
     </div>

@@ -9,6 +9,11 @@
  * Line colors are the ink triplet; Tailwind applies .14 / .08 / .24 alpha.
  * Scene colors stay dark in both themes.
  */
+:root {
+  --so-telegram: 24 119 176;
+  --so-on-telegram: 255 255 255;
+}
+
 :root,
 .light {
   --so-canvas: 243 246 244;
@@ -22,11 +27,12 @@
   --so-care: 8 127 113;
   --so-care-hover: 8 103 92;
   --so-care-soft: 229 245 243;
-  --so-care-text: 8 127 113;
+  --so-care-text: 7 120 106;
   --so-on-care: 255 255 255;
   --so-care-bright: 13 148 136;
+  --so-care-on-ink: 15 151 139;
 
-  --so-link: 84 104 212;
+  --so-link: 72 92 200;
   --so-link-soft: 238 241 252;
 
   --so-sos: 197 52 44;
@@ -59,11 +65,11 @@
   --teal: #087f71;
   --care-hover: #08675c;
   --care-soft: #e5f5f3;
-  --care-text: #087f71;
+  --care-text: #07786a;
   --teal-soft: #e5f5f3;
   --on-care: #ffffff;
   --care-bright: #0d9488;
-  --link: #5468d4;
+  --link: #485cc8;
   --link-soft: #eef1fc;
   --sos: #c5342c;
   --danger: #c5342c;
@@ -141,14 +147,14 @@ html:not(.dark) .scene-follows-theme {
   --so-node-1: 20 33 30;
   --so-node-2: 74 90 85;
   --so-node-3: 138 154 149;
-  --so-care-scene: 8 127 113;
+  --so-care-scene: 7 120 106;
   --scene: #eef3f1;
   --scene-2: #f8fbfa;
   --scene-3: #e2e9e6;
   --node-1: #14211e;
   --node-2: #4a5a55;
   --node-3: #8a9a95;
-  --care-scene: #087f71;
+  --care-scene: #07786a;
   --star: rgba(20, 33, 30, 0.3);
 }
 
@@ -167,6 +173,7 @@ html.dark,
   --so-care-soft: 24 47 43;
   --so-care-text: 108 188 175;
   --so-on-care: 4 36 31;
+  --so-care-on-ink: 8 118 105;
 
   --so-link: 154 168 240;
   --so-link-soft: 40 50 101;
@@ -238,7 +245,7 @@ html.dark,
   --lv-text-2: #b6c6c1;
   --lv-text-3: #82938e;
   --lv-foot-link: #cfdcd8;
-  --lv-foot-fine: #66766f;
+  --lv-foot-fine: #7d8d87;
   /* the app's graph (graph-3d palette): its names and the wash behind the ball */
   --lv-node: #e7eeeb;
   --lv-wash: #1b332e;

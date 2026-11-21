@@ -59,8 +59,8 @@ export function LanguageSheet({ open, onClose }: { open: boolean; onClose: () =>
   };
 
   return (
-    <Sheet open={open} onClose={onClose} title={t('settings.language')}>
-      <div ref={listRef} className="-mx-1 grid max-h-[60vh] grid-cols-2 gap-1 overflow-y-auto px-1 pb-1">
+    <Sheet open={open} onClose={onClose} title={t('settings.language')} bodyClassName="max-h-[60dvh]">
+      <div ref={listRef} className="grid grid-cols-2 gap-1 pb-1">
         {codes.map((code) => {
           const selected = code === current;
           return (
