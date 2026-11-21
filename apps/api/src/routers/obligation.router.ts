@@ -66,7 +66,7 @@ export const obligationRouter = router({
     // Get connection counts for all creators
     const creatorIds = [...new Set(obligations.map((o) => o.collection.creatorId))];
     const countMap = await getDirectConnectionCounts(ctx.db, creatorIds);
-        const confirmed = await confirmedRenewals(ctx.db, ctx.userId, obligations.map((o) => o.collection));
+    const confirmed = await confirmedRenewals(ctx.db, ctx.userId, obligations.map((o) => o.collection));
 
     return obligations.map((o) => ({
       ...o,
