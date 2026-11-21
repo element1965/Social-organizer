@@ -1,11 +1,15 @@
+import * as database from '@so/db';
 import type { PrismaClient } from '@so/db';
+import type { Job } from 'bullmq';
+import { REGULAR_CYCLE_DAYS } from '@so/shared';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { appRouter } from '../src/routers/index.js';
 import { getAskAccess } from '../src/services/ask-access.service.js';
 import { invalidateGraph } from '../src/services/graph-cache.service.js';
-import { sendCycleRenewedTg } from '../src/services/notification.service.js';
+import { sendCycleRenewalReminderTg, sendCycleRenewedTg } from '../src/services/notification.service.js';
 import * as telegram from '../src/services/telegram-bot.service.js';
 import { WEB_APP_URL } from '../src/deployment.js';
+import { processCycleClose } from '../src/workers/cycle-close.worker.js';
 import { runReNotify } from '../src/workers/re-notify.worker.js';
 import { createTestDatabase } from './test-database.js';
 
@@ -159,14 +163,122 @@ describe('Need participant visibility', () => {
     expect((await owner.notification.pulse()).mine).toMatchObject({ confirmed: 0 });
   });
 
-  it('excludes a withdrawn person from cycle renewal dispatch', async () => {
-    const [author, active, withdrawn] = ['renewal-author', 'renewal-active', 'renewal-withdrawn'];
+  it('withdraws every active Participation from the Need page in one request', async () => {
+    const [author, member, other] = ['withdraw-author', 'withdraw-member', 'withdraw-other'];
+    await db.user.createMany({ data: [author, member, other].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'REGULAR', amount: 10, status: 'BLOCKED', chatLink: 'https://example.com/chat' },
+    });
+    await db.obligation.createMany({ data: [
+      { collectionId: need.id, userId: member, amount: 4, isSubscription: true },
+      { collectionId: need.id, userId: member, amount: 5 },
+      { collectionId: need.id, userId: other, amount: 3 },
+    ] });
+
+    const viewer = caller(member);
+    expect(await viewer.obligation.unsubscribeFromCollection({ collectionId: need.id })).toEqual({ ok: true });
+    expect(await viewer.collection.getById({ id: need.id })).toMatchObject({
+      status: 'ACTIVE', currentAmount: 3, participantCount: 1, chatLink: null,
+    });
+    const rows = await db.obligation.findMany({ where: { collectionId: need.id, userId: member } });
+    expect(rows.map((row) => row.unsubscribedAt)).toEqual([expect.any(Date), expect.any(Date)]);
+    expect(rows[0]?.unsubscribedAt).toEqual(rows[1]?.unsubscribedAt);
+  });
+
+  it('returns success when the Need page repeats a completed withdrawal', async () => {
+    const [author, member] = ['repeat-withdraw-author', 'repeat-withdraw-member'];
+    await db.user.createMany({ data: [author, member].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({ data: { creatorId: author, type: 'EMERGENCY', chatLink: 'https://example.com/chat' } });
+    const row = await db.obligation.create({ data: { collectionId: need.id, userId: member, amount: 4 } });
+    const viewer = caller(member);
+    expect(await viewer.obligation.unsubscribeFromCollection({ collectionId: need.id })).toEqual({ ok: true });
+    const withdrawn = await db.obligation.findUniqueOrThrow({ where: { id: row.id } });
+    expect(await viewer.obligation.unsubscribeFromCollection({ collectionId: need.id })).toEqual({ ok: true });
+    expect(await db.obligation.findUniqueOrThrow({ where: { id: row.id } })).toEqual(withdrawn);
+  });
+
+  it('preserves the received summary when either mark procedure runs after closure', async () => {
+    const [author, participant] = ['close-marks-author', 'close-marks-member'];
+    await db.user.createMany({ data: [author, participant].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({ data: { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat' } });
+    const row = await db.obligation.create({ data: { collectionId: need.id, userId: participant, amount: 4 } });
+    const unmarked = await db.obligation.create({ data: { collectionId: need.id, userId: participant, amount: 6 } });
+    const owner = caller(author);
+    const marked = await owner.obligation.confirmPayment({ obligationId: row.id });
+    expect(marked.confirmedAt).toBeInstanceOf(Date);
+    await owner.collection.close({ id: need.id });
+    const summary = async () => {
+      const view = await owner.collection.getById({ id: need.id });
+      return view.obligations.filter((row) => row.confirmedAt != null).map(({ id, confirmedAt, amount }) => ({ id, confirmedAt, amount }));
+    };
+    const before = await summary();
+    expect(before).toEqual([{ id: marked.id, confirmedAt: marked.confirmedAt, amount: 4 }]);
+    const results = await Promise.allSettled([
+      owner.obligation.confirmPayment({ obligationId: marked.id }),
+      owner.obligation.setPaid({ obligationIds: [unmarked.id], paid: true }),
+    ]);
+    expect(await summary()).toEqual(before);
+    const rejected = { status: 'rejected', reason: expect.objectContaining({ code: 'BAD_REQUEST' }) };
+    expect(results).toEqual([rejected, rejected]);
+  });
+
+  it('excludes a person withdrawn after the cycle snapshot from rollover notices', async () => {
+    const [author, active, withdrawn] = ['rollover-author', 'rollover-active', 'rollover-withdrawn'];
     await db.user.createMany({ data: [author, active, withdrawn].map((id) => ({ id, name: id })) });
     const need = await db.collection.create({
-      data: { creatorId: author, type: 'REGULAR', cycleNumber: 2, chatLink: 'https://example.com/private-chat' },
+      data: {
+        creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat',
+        currentCycleStart: new Date(Date.now() - (REGULAR_CYCLE_DAYS + 1) * 24 * hour),
+      },
     });
     await db.obligation.createMany({ data: [
       { collectionId: need.id, userId: active, amount: 4 },
+      { collectionId: need.id, userId: active, amount: 6 },
+      { collectionId: need.id, userId: withdrawn, amount: 7 },
+    ] });
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    const findCycles = db.collection.findMany.bind(db.collection);
+    const cycleSnapshot = vi.spyOn(db.collection, 'findMany').mockImplementationOnce((args) => {
+      const snapshot = findCycles(args).then(async (rows) => {
+        await caller(withdrawn).obligation.unsubscribeFromCollection({ collectionId: need.id });
+        return rows;
+      });
+      // The worker awaits the query directly, so the delayed real result is sufficient.
+      return snapshot as ReturnType<typeof findCycles>;
+    });
+    try {
+      await processCycleClose({} as Job);
+    } finally {
+      cycleSnapshot.mockRestore();
+      getDb.mockRestore();
+    }
+    const notices = await db.notification.findMany({
+      where: { collectionId: need.id, type: { in: ['COLLECTION_CLOSED', 'CYCLE_RENEWED'] } },
+      select: { userId: true, type: true, wave: true },
+      orderBy: [{ wave: 'asc' }, { userId: 'asc' }],
+    });
+    expect(notices).toEqual([
+      { userId: active, type: 'COLLECTION_CLOSED', wave: 1 },
+      { userId: active, type: 'CYCLE_RENEWED', wave: 2 },
+    ]);
+    await expect.poll(() => db.notificationDelivery.count({ where: { eventKey: `cycle:${need.id}:2:start` } })).toBe(1);
+  });
+
+  it.each([
+    ['reminder', sendCycleRenewalReminderTg, REGULAR_CYCLE_DAYS],
+    ['start', sendCycleRenewedTg, 0],
+  ] as const)('sends the %s message only to active participants', async (event, sendCycleNotice, offsetDays) => {
+    const author = `renewal-${event}-author`;
+    const active = `renewal-${event}-active`;
+    const withdrawn = `renewal-${event}-withdrawn`;
+    await db.user.createMany({ data: [author, active, withdrawn].map((id) => ({ id, name: id, language: 'ru' })) });
+    const currentCycleStart = new Date('2026-11-20T18:30:00Z');
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'REGULAR', cycleNumber: 2, currentCycleStart, chatLink: 'https://example.com/private-chat' },
+    });
+    await db.obligation.createMany({ data: [
+      { collectionId: need.id, userId: active, amount: 120 },
+      { collectionId: need.id, userId: active, amount: 180 },
       { collectionId: need.id, userId: withdrawn, amount: 6, unsubscribedAt: new Date() },
     ] });
     await db.platformAccount.createMany({
@@ -174,8 +286,8 @@ describe('Need participant visibility', () => {
     });
     const send = vi.spyOn(telegram, 'sendTgMessages');
     try {
-      await sendCycleRenewedTg(db, need.id, author, [active, withdrawn]);
-      const deliveries = await db.notificationDelivery.findMany({ where: { eventKey: `cycle:${need.id}:2:start` } });
+      await sendCycleNotice(db, need.id, author, [active, withdrawn]);
+      const deliveries = await db.notificationDelivery.findMany({ where: { eventKey: `cycle:${need.id}:2:${event}` } });
       expect(deliveries.map((delivery) => delivery.userId)).toEqual([active]);
       expect(send).toHaveBeenCalledTimes(1);
       const messages = send.mock.calls[0]?.[0];
@@ -183,6 +295,14 @@ describe('Need participant visibility', () => {
       expect(messages?.[0]?.replyMarkup?.inline_keyboard.flat()).toEqual([
         expect.objectContaining({ web_app: { url: `${WEB_APP_URL}/collection/${need.id}` } }),
       ]);
+      const day = 24 * hour;
+      const period = new Intl.DateTimeFormat('ru', { dateStyle: 'medium', timeZone: 'UTC' }).formatRange(
+        new Date(currentCycleStart.getTime() + offsetDays * day),
+        new Date(currentCycleStart.getTime() + (offsetDays + REGULAR_CYCLE_DAYS - 1) * day),
+      );
+      expect(messages?.[0]?.text).toContain('Период: ' + period);
+      expect(messages?.[0]?.text).toContain('300\u00a0$');
+      expect(messages?.[0]?.text).not.toContain('—');
       expect(JSON.stringify(messages)).not.toContain('https://example.com/private-chat');
     } finally {
       send.mockRestore();

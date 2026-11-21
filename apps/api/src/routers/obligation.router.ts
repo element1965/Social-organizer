@@ -8,7 +8,9 @@ import { scheduleResponseDigest } from '../services/notification.service.js';
 import { recordResponded } from '../services/notify-routing.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
 import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
-import { chatLinkFor, confirmedRenewals } from '../services/collection-view.js';
+import { chatLinkFor, confirmedRenewals, isClosed } from '../services/collection-view.js';
+
+const openNeed = { status: { in: ['ACTIVE', 'BLOCKED'] } } satisfies Prisma.CollectionWhereInput;
 
 export const obligationRouter = router({
   create: protectedProcedure
@@ -146,12 +148,13 @@ export const obligationRouter = router({
       });
       if (!obligation) throw new TRPCError({ code: 'NOT_FOUND' });
       if (obligation.collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
-      // Toggle: confirm if not yet confirmed, unconfirm if already confirmed
-      const confirmedAt = obligation.confirmedAt ? null : new Date();
-      return ctx.db.obligation.update({
-        where: { id: input.obligationId },
-        data: { confirmedAt },
+      // Check the Need's status in the write as well, in case it closed since the read.
+      const [updated] = await ctx.db.obligation.updateManyAndReturn({
+        where: { id: input.obligationId, collection: openNeed },
+        data: { confirmedAt: obligation.confirmedAt ? null : new Date() },
       });
+      if (!updated) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not open' });
+      return updated;
     }),
 
   /**
@@ -164,15 +167,18 @@ export const obligationRouter = router({
       const ids = [...new Set(input.obligationIds)];
       const rows = await ctx.db.obligation.findMany({
         where: { id: { in: ids } },
-        select: { id: true, collectionId: true, collection: { select: { creatorId: true } } },
+        select: { id: true, collectionId: true, collection: { select: { creatorId: true, status: true } } },
       });
       if (rows.length !== ids.length) throw new TRPCError({ code: 'NOT_FOUND' });
       if (rows.some((row) => row.collection.creatorId !== ctx.userId)) throw new TRPCError({ code: 'FORBIDDEN' });
       if (new Set(rows.map((row) => row.collectionId)).size > 1) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Transfers must belong to one collection' });
       }
+      if (rows.some((row) => isClosed(row.collection))) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not open' });
+      }
       const result = await ctx.db.obligation.updateMany({
-        where: { id: { in: ids }, confirmedAt: input.paid ? null : { not: null } },
+        where: { id: { in: ids }, collection: openNeed, confirmedAt: input.paid ? null : { not: null } },
         data: { confirmedAt: input.paid ? new Date() : null },
       });
       return { changed: result.count };
@@ -257,24 +263,12 @@ export const obligationRouter = router({
       return { ok: true as const };
     }),
 
-  // Used from the renewal reminder notification — finds the caller's active
-  // obligation in the given collection and marks it as unsubscribed.
+  // Used by the Need page and renewal reminder to withdraw all of the viewer's Participation.
   unsubscribeFromCollection: protectedProcedure
     .input(z.object({ collectionId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const obligation = await ctx.db.obligation.findFirst({
-        where: {
-          collectionId: input.collectionId,
-          userId: ctx.userId,
-          unsubscribedAt: null,
-        },
-        select: { id: true },
-      });
-      if (!obligation) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Active intention not found' });
-      }
       const updated = await ctx.db.obligation.updateMany({
-        where: { id: obligation.id, unsubscribedAt: null },
+        where: { collectionId: input.collectionId, userId: ctx.userId, unsubscribedAt: null },
         data: { unsubscribedAt: new Date() },
       });
       // A goal-reached hold (blockReason null) opens again when the active total drops below the goal.

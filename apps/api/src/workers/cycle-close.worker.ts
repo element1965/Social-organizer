@@ -67,26 +67,13 @@ export async function processCycleClose(_job: Job): Promise<void> {
     select: {
       id: true,
       creatorId: true,
-      amount: true,
-      currency: true,
       cycleNumber: true,
-      obligations: {
-        select: {
-          amount: true,
-          userId: true,
-        },
-      },
     },
   });
 
   const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
 
   for (const collection of expiredCycles) {
-    // Check undercollection (only for collections with target amount)
-    const currentAmount = collection.obligations.reduce((sum, o) => sum + o.amount, 0);
-    const hasGoal = collection.amount != null;
-    const undercollected = hasGoal && currentAmount < collection.amount!;
-
     const newCycleNumber = collection.cycleNumber + 1;
 
     await db.$transaction(async (tx) => {
@@ -104,23 +91,20 @@ export async function processCycleClose(_job: Job): Promise<void> {
       // The author's received marks of the ended cycle go to the history; the new cycle starts unmarked
       await recordCycleReceipts(tx, collection.id, collection.cycleNumber);
 
-      // Notification about cycle closure (with undercollection if needed)
-      const notifType = undercollected ? 'COLLECTION_CLOSED' : 'COLLECTION_CLOSED';
-      const participantIds = [...new Set(collection.obligations.map((o) => o.userId))];
-      for (const userId of participantIds) {
-        try {
-          await tx.notification.create({
-            data: {
-              userId,
-              collectionId: collection.id,
-              type: notifType,
-              handshakePath: [],
-              expiresAt,
-              wave: collection.cycleNumber, // wave = номер завершённого цикла
-            },
-          });
-        } catch { /* skip duplicates */ }
-      }
+      // Select each still-active recipient in the insert, after recording the ended cycle.
+      await tx.$executeRaw`
+        INSERT INTO notifications
+          ("id", "userId", "collectionId", "type", "expiresAt", "wave", "updatedAt")
+        SELECT gen_random_uuid()::text, active."userId", ${collection.id},
+          'COLLECTION_CLOSED'::"NotificationType",
+          ${expiresAt.toISOString()}::timestamptz AT TIME ZONE 'UTC',
+          ${collection.cycleNumber}, CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
+        FROM (
+          SELECT DISTINCT "userId" FROM obligations
+          WHERE "collectionId" = ${collection.id} AND "unsubscribedAt" IS NULL
+        ) active
+        ON CONFLICT ("userId", "collectionId", "type", "wave") DO NOTHING
+      `;
 
       // Delete ONLY unsubscribed subscriptions (one-time obligations are kept for statistics)
       await tx.obligation.deleteMany({

@@ -338,13 +338,15 @@ export async function scheduleResponseDigest(db: PrismaClient, collectionId: str
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-/** Format a date for a given UI language, e.g. 12.11.2026 */
-function formatDate(d: Date, lang: string): string {
+function formatCycleRange(lang: string, start: Date, end: Date): string {
+  const options = { dateStyle: 'medium', timeZone: 'UTC' } as const;
+  let formatter: Intl.DateTimeFormat;
   try {
-    return d.toLocaleDateString(lang, { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
+    formatter = new Intl.DateTimeFormat(lang, options);
   } catch {
-    return d.toISOString().slice(0, 10);
+    formatter = new Intl.DateTimeFormat('en', options);
   }
+  return formatter.formatRange(start, end);
 }
 
 /**
@@ -363,15 +365,15 @@ async function getUserContributions(
   const sums = new Map<string, number>();
   for (const o of obligations) sums.set(o.userId, (sums.get(o.userId) ?? 0) + o.amount);
   const result = new Map<string, string>();
-  for (const [userId, sum] of sums) result.set(userId, `${groupNumber(Math.round(sum * 100) / 100)}\u00a0USD`);
+  for (const [userId, sum] of sums) result.set(userId, `${groupNumber(Math.round(sum * 100) / 100)}\u00a0$`);
   return result;
 }
 
-/** "Your contribution: X\nPeriod: a — b" block for cycle notifications */
+/** The person’s Participation amount and the cycle dates. */
 function cycleDetails(lang: string, contribution: string | undefined, start: Date, end: Date): string {
   const lines: string[] = [];
   if (contribution) lines.push(`${tg(lang, 'yourContribution')}: <b>${contribution}</b>`);
-  lines.push(`${tg(lang, 'period')}: ${formatDate(start, lang)} — ${formatDate(end, lang)}`);
+  lines.push(`${tg(lang, 'period')}: ${formatCycleRange(lang, start, end)}`);
   return `\n\n${lines.join('\n')}`;
 }
 
@@ -399,10 +401,11 @@ export async function sendCycleRenewalReminderTg(
   const periodStart = new Date(cycleStart.getTime() + REGULAR_CYCLE_DAYS * DAY_MS);
   const periodEnd = new Date(periodStart.getTime() + (REGULAR_CYCLE_DAYS - 1) * DAY_MS); // last day of the cycle
   const contributions = await getUserContributions(db, collectionId, recipientUserIds);
-  const names = await userNames(db, recipientUserIds);
+  const activeUserIds = [...contributions.keys()];
+  const names = await userNames(db, activeUserIds);
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
-  await deliverMany(db, recipientUserIds, (userId) => ({
+  await deliverMany(db, activeUserIds, (userId) => ({
     key: `cycle:${collectionId}:${collection.cycleNumber}:reminder`,
     kind: 'cycle',
     push: { title: 'New cycle in 3 days', body: 'A Need you take part in (every 28 days) starts a new cycle in 3 days.', url: webAppLink },
