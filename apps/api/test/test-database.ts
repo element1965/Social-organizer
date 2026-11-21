@@ -2,7 +2,8 @@ import { spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import { PrismaClient } from '@so/db';
+import { PrismaClient, type Prisma } from '@so/db';
+import { vi } from 'vitest';
 
 const composeTestUrl = 'postgresql://organizer:organizer-dev@127.0.0.1:54329/social_organizer_test';
 const invalidUrl = 'Tests require a local PostgreSQL DATABASE_URL with "test" in the database name.';
@@ -63,4 +64,45 @@ export async function createTestDatabase() {
     await dispose();
     throw error;
   }
+}
+
+/** Pause the first transaction just after its Need read, keeping the real connection and any locks open. */
+export function pauseAfterNeedRead(db: PrismaClient) {
+  let signalRead!: (pid: number) => void;
+  const read = new Promise<number>((resolve) => { signalRead = resolve; });
+  let resume!: () => void;
+  const paused = new Promise<void>((resolve) => { resume = resolve; });
+  const transact = db.$transaction.bind(db);
+  const spy = vi.spyOn(db, '$transaction').mockImplementationOnce(((operation: (tx: Prisma.TransactionClient) => Promise<unknown>) =>
+    transact(async (tx) => {
+      const [backend] = await tx.$queryRaw<{ pid: number }[]>`SELECT pg_backend_pid() AS pid`;
+      const query = tx.$queryRaw.bind(tx);
+      let firstRead = true;
+      const gated = new Proxy(tx, {
+        get(target, key, receiver) {
+          if (key !== '$queryRaw') return Reflect.get(target, key, receiver);
+          return async (...args: Parameters<typeof query>) => {
+            const result = await query(...args);
+            if (firstRead) {
+              firstRead = false;
+              signalRead(backend!.pid);
+              await paused;
+            }
+            return result;
+          };
+        },
+      });
+      return operation(gated);
+    })) as typeof db.$transaction);
+  return { read, resume, restore: () => spy.mockRestore() };
+}
+
+export async function isBlockingTransaction(db: PrismaClient, pid: number) {
+  const [row] = await db.$queryRaw<{ waiting: boolean }[]>`
+    SELECT EXISTS (
+      SELECT 1 FROM pg_stat_activity
+      WHERE datname = current_database() AND ${pid}::integer = ANY(pg_blocking_pids(pid))
+    ) AS waiting
+  `;
+  return row!.waiting;
 }

@@ -2,12 +2,22 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
-import { syncCollectionGoal } from '../services/collection-amount.js';
+import { transactionWithRetry } from '../lib/tx-retry.js';
+import { applyCollectionGoal, dispatchCollectionGoalReached, syncCollectionGoal } from '../services/collection-amount.js';
 import { scheduleResponseDigest } from '../services/notification.service.js';
 import { recordResponded } from '../services/notify-routing.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
 import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
 import { chatLinkFor, confirmedRenewals } from '../services/collection-view.js';
+import { assertOpenNeed, lockNeed } from '../services/collection-state.js';
+
+const displayedCycle = z.object({ collectionId: z.string(), cycleNumber: z.number().int().positive() });
+
+function assertCurrentCycle(current: number, displayed: number): void {
+  if (current !== displayed) {
+    throw new TRPCError({ code: 'CONFLICT', message: 'The Need has moved to a different cycle' });
+  }
+}
 
 export const obligationRouter = router({
   create: protectedProcedure
@@ -18,23 +28,21 @@ export const obligationRouter = router({
       isSubscription: z.boolean().default(false),
     }))
     .mutation(async ({ ctx, input }) => {
-      const collection = await ctx.db.collection.findUnique({
-        where: { id: input.collectionId },
-      });
-      if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
-      if (collection.status !== 'ACTIVE') {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
-      }
-
-      const amountUSD = input.amount;
-
-      const obligation = await ctx.db.obligation.create({
-        data: {
-          collectionId: input.collectionId,
-          userId: ctx.userId,
-          amount: amountUSD,
-          isSubscription: input.isSubscription,
-        },
+      const { collection, obligation } = await transactionWithRetry(ctx.db, async (tx) => {
+        const collection = await lockNeed(tx, input.collectionId);
+        assertOpenNeed(collection);
+        if (collection.status !== 'ACTIVE') {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
+        }
+        const obligation = await tx.obligation.create({
+          data: {
+            collectionId: input.collectionId,
+            userId: ctx.userId,
+            amount: input.amount,
+            isSubscription: input.isSubscription,
+          },
+        });
+        return { collection, obligation };
       });
 
       // The author hears about responses as one grouped message, not one per person (SO-45)
@@ -68,24 +76,33 @@ export const obligationRouter = router({
     const countMap = await getDirectConnectionCounts(ctx.db, creatorIds);
     const confirmed = await confirmedRenewals(ctx.db, ctx.userId, obligations.map((o) => o.collection));
 
-    return obligations.map((o) => ({
-      ...o,
-      collection: {
-        ...o.collection,
-        // The same rule as the Need page (SEC-6): a declined Participation, a closed or held Need and a cycle
-        // waiting for confirmation do not open the participants' chat
-        chatLink: chatLinkFor(
-          o.collection,
-          ctx.userId,
-          o.unsubscribedAt == null ? o : null,
-          confirmed.has(`${o.collection.id}:${o.collection.cycleNumber}`),
-        ),
-        creator: {
-          ...o.collection.creator,
-          connectionCount: countMap.get(o.collection.creatorId) || 0,
+    const activeIds = new Set(obligations.filter((o) => o.unsubscribedAt == null).map((o) => o.collectionId));
+    return obligations.map((o) => {
+      const owner = o.collection.creatorId === ctx.userId;
+      const canSeeParticipation = owner || activeIds.has(o.collectionId);
+      return {
+        ...o,
+        amount: canSeeParticipation ? o.amount : null,
+        originalAmount: canSeeParticipation ? o.originalAmount : null,
+        originalCurrency: canSeeParticipation ? o.originalCurrency : null,
+        confirmedAt: owner ? o.confirmedAt : null,
+        collection: {
+          ...o.collection,
+          // The same rule as the Need page (SEC-6): a declined Participation, a closed or held Need and a cycle
+          // waiting for confirmation do not open the participants' chat
+          chatLink: chatLinkFor(
+            o.collection,
+            ctx.userId,
+            o.unsubscribedAt == null ? o : null,
+            confirmed.has(`${o.collection.id}:${o.collection.cycleNumber}`),
+          ),
+          creator: {
+            ...o.collection.creator,
+            connectionCount: countMap.get(o.collection.creatorId) || 0,
+          },
         },
-      },
-    }));
+      };
+    });
   }),
 
   updateAmount: protectedProcedure
@@ -97,24 +114,24 @@ export const obligationRouter = router({
     .mutation(async ({ ctx, input }) => {
       const obligation = await ctx.db.obligation.findUnique({
         where: { id: input.obligationId },
-        include: { collection: true },
+        select: { userId: true, collectionId: true },
       });
       if (!obligation) throw new TRPCError({ code: 'NOT_FOUND' });
       if (obligation.userId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
-      if (obligation.collection.status !== 'ACTIVE' && obligation.collection.status !== 'BLOCKED') {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
-      }
 
-      const newAmountUSD = input.amount;
-
-      // Update obligation
-      const updated = await ctx.db.obligation.update({
-        where: { id: input.obligationId },
-        data: {
-          amount: newAmountUSD,
-          originalAmount: null, // clear amounts typed in other currencies before SO-40
-          originalCurrency: null,
-        },
+      const updated = await transactionWithRetry(ctx.db, async (tx) => {
+        assertOpenNeed(await lockNeed(tx, obligation.collectionId));
+        const [row] = await tx.obligation.updateManyAndReturn({
+          where: { id: input.obligationId, unsubscribedAt: null },
+          data: {
+            amount: input.amount,
+            originalAmount: null, // clear amounts typed in other currencies before SO-40
+            originalCurrency: null,
+          },
+          omit: { confirmedAt: true },
+        });
+        if (!row) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Participation is no longer active' });
+        return row;
       });
 
       await syncCollectionGoal(ctx.db, obligation.collectionId);
@@ -122,44 +139,53 @@ export const obligationRouter = router({
     }),
 
   confirmPayment: protectedProcedure
-    .input(z.object({ obligationId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const obligation = await ctx.db.obligation.findUnique({
-        where: { id: input.obligationId },
-        include: { collection: true },
-      });
-      if (!obligation) throw new TRPCError({ code: 'NOT_FOUND' });
-      if (obligation.collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
-      // Toggle: confirm if not yet confirmed, unconfirm if already confirmed
-      const confirmedAt = obligation.confirmedAt ? null : new Date();
-      return ctx.db.obligation.update({
-        where: { id: input.obligationId },
-        data: { confirmedAt },
-      });
-    }),
+    .input(displayedCycle.extend({ obligationId: z.string() }))
+    .mutation(({ ctx, input }) =>
+      transactionWithRetry(ctx.db, async (tx) => {
+        const collection = await lockNeed(tx, input.collectionId);
+        if (collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
+        assertCurrentCycle(collection.cycleNumber, input.cycleNumber);
+        assertOpenNeed(collection);
+        const current = await tx.obligation.findUnique({
+          where: { id: input.obligationId, collectionId: input.collectionId },
+          select: { confirmedAt: true },
+        });
+        if (!current) throw new TRPCError({ code: 'NOT_FOUND' });
+        return tx.obligation.update({
+          where: { id: input.obligationId },
+          data: { confirmedAt: current.confirmedAt ? null : new Date() },
+        });
+      }),
+    ),
 
   /**
    * Mark several transfers as received (or clear the mark) in one go. Idempotent, unlike the
    * confirmPayment toggle: rows already in the wanted state are left alone. Author only, one collection.
    */
   setPaid: protectedProcedure
-    .input(z.object({ obligationIds: z.array(z.string()).min(1).max(500), paid: z.boolean() }))
-    .mutation(async ({ ctx, input }) => {
+    .input(displayedCycle.extend({ obligationIds: z.array(z.string()).min(1).max(500), paid: z.boolean() }))
+    .mutation(({ ctx, input }) => {
       const ids = [...new Set(input.obligationIds)];
-      const rows = await ctx.db.obligation.findMany({
-        where: { id: { in: ids } },
-        select: { id: true, collectionId: true, collection: { select: { creatorId: true } } },
+      return transactionWithRetry(ctx.db, async (tx) => {
+        const collection = await lockNeed(tx, input.collectionId);
+        if (collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
+        assertCurrentCycle(collection.cycleNumber, input.cycleNumber);
+        assertOpenNeed(collection);
+        const rows = await tx.obligation.findMany({
+          where: { id: { in: ids } },
+          select: { collectionId: true, collection: { select: { creatorId: true } } },
+        });
+        if (rows.length !== ids.length) throw new TRPCError({ code: 'NOT_FOUND' });
+        if (rows.some((row) => row.collection.creatorId !== ctx.userId)) throw new TRPCError({ code: 'FORBIDDEN' });
+        if (rows.some((row) => row.collectionId !== input.collectionId)) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Transfers must belong to one collection' });
+        }
+        const result = await tx.obligation.updateMany({
+          where: { id: { in: ids }, confirmedAt: input.paid ? null : { not: null } },
+          data: { confirmedAt: input.paid ? new Date() : null },
+        });
+        return { changed: result.count };
       });
-      if (rows.length !== ids.length) throw new TRPCError({ code: 'NOT_FOUND' });
-      if (rows.some((row) => row.collection.creatorId !== ctx.userId)) throw new TRPCError({ code: 'FORBIDDEN' });
-      if (new Set(rows.map((row) => row.collectionId)).size > 1) {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Transfers must belong to one collection' });
-      }
-      const result = await ctx.db.obligation.updateMany({
-        where: { id: { in: ids }, confirmedAt: input.paid ? null : { not: null } },
-        data: { confirmedAt: input.paid ? new Date() : null },
-      });
-      return { changed: result.count };
     }),
 
   /**
@@ -226,42 +252,38 @@ export const obligationRouter = router({
     .mutation(async ({ ctx, input }) => {
       const obligation = await ctx.db.obligation.findUnique({
         where: { id: input.obligationId },
+        select: { userId: true, isSubscription: true, collectionId: true },
       });
       if (!obligation) throw new TRPCError({ code: 'NOT_FOUND' });
       if (obligation.userId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
       if (!obligation.isSubscription) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Not a subscription' });
       }
-      const updated = await ctx.db.obligation.update({
-        where: { id: input.obligationId },
-        data: { unsubscribedAt: new Date() },
+      const updated = await transactionWithRetry(ctx.db, async (tx) => {
+        assertOpenNeed(await lockNeed(tx, obligation.collectionId));
+        return tx.obligation.updateMany({
+          where: { id: input.obligationId, unsubscribedAt: null },
+          data: { unsubscribedAt: new Date() },
+        });
       });
-      await syncCollectionGoal(ctx.db, updated.collectionId);
-      return updated;
+      if (updated.count > 0) await syncCollectionGoal(ctx.db, obligation.collectionId);
+      return { ok: true as const };
     }),
 
-  // Used from the renewal reminder notification — finds the caller's active
-  // obligation in the given collection and marks it as unsubscribed.
+  // Used by the Need page and renewal reminder to withdraw all of the viewer's Participation.
   unsubscribeFromCollection: protectedProcedure
     .input(z.object({ collectionId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const obligation = await ctx.db.obligation.findFirst({
-        where: {
-          collectionId: input.collectionId,
-          userId: ctx.userId,
-          unsubscribedAt: null,
-        },
-      });
-      if (!obligation) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Active intention not found' });
-      }
-      const updated = await ctx.db.obligation.update({
-        where: { id: obligation.id },
-        data: { unsubscribedAt: new Date() },
+      const updated = await transactionWithRetry(ctx.db, async (tx) => {
+        assertOpenNeed(await lockNeed(tx, input.collectionId));
+        return tx.obligation.updateMany({
+          where: { collectionId: input.collectionId, userId: ctx.userId, unsubscribedAt: null },
+          data: { unsubscribedAt: new Date() },
+        });
       });
       // A goal-reached hold (blockReason null) opens again when the active total drops below the goal.
-      await syncCollectionGoal(ctx.db, input.collectionId);
-      return updated;
+      if (updated.count > 0) await syncCollectionGoal(ctx.db, input.collectionId);
+      return { ok: true as const };
     }),
 
   /**
@@ -271,43 +293,67 @@ export const obligationRouter = router({
    * markRead and dismiss leave RESPONDED rows alone so opening the notice does not clear it.
    */
   confirmCycle: protectedProcedure
-    .input(z.object({ collectionId: z.string() }))
+    .input(displayedCycle.extend({
+      pledge: z.object({ obligationId: z.string(), amount: z.number().int().min(MIN_OBLIGATION_AMOUNT) }).optional(),
+    }))
     .mutation(async ({ ctx, input }) => {
-      const collection = await ctx.db.collection.findUnique({ where: { id: input.collectionId } });
-      if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
-      if (collection.type !== 'REGULAR' || collection.cycleNumber < 2 || collection.currentCycleStart == null) {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not waiting for a cycle confirmation' });
-      }
-      if (collection.status !== 'ACTIVE') {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
-      }
-      const obligation = await ctx.db.obligation.findFirst({
-        where: { collectionId: input.collectionId, userId: ctx.userId, unsubscribedAt: null },
-      });
-      if (!obligation) throw new TRPCError({ code: 'NOT_FOUND', message: 'Active intention not found' });
+      const hold = await transactionWithRetry(ctx.db, async (tx) => {
+        const collection = await lockNeed(tx, input.collectionId);
+        assertCurrentCycle(collection.cycleNumber, input.cycleNumber);
+        assertOpenNeed(collection);
+        if (collection.type !== 'REGULAR' || collection.cycleNumber < 2 || collection.currentCycleStart == null) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not waiting for a cycle confirmation' });
+        }
+        if (collection.status !== 'ACTIVE') {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
+        }
+        const obligation = await tx.obligation.findFirst({
+          where: {
+            id: input.pledge?.obligationId,
+            collectionId: input.collectionId,
+            userId: ctx.userId,
+            unsubscribedAt: null,
+          },
+          select: { id: true },
+        });
+        if (!obligation) throw new TRPCError({ code: 'NOT_FOUND', message: 'Active intention not found' });
 
-      const cycleEnd = collection.currentCycleStart.getTime() + REGULAR_CYCLE_DAYS * 24 * 60 * 60 * 1000;
-      const expiresAt = new Date(cycleEnd + 8 * 24 * 60 * 60 * 1000);
-      await ctx.db.notification.upsert({
-        where: {
-          userId_collectionId_type_wave: {
+        if (input.pledge) {
+          await tx.obligation.update({
+            where: { id: obligation.id },
+            data: { amount: input.pledge.amount, originalAmount: null, originalCurrency: null },
+          });
+        }
+
+        const cycleEnd = collection.currentCycleStart.getTime() + REGULAR_CYCLE_DAYS * 24 * 60 * 60 * 1000;
+        const expiresAt = new Date(cycleEnd + 8 * 24 * 60 * 60 * 1000);
+        await tx.notification.upsert({
+          where: {
+            userId_collectionId_type_wave: {
+              userId: ctx.userId,
+              collectionId: input.collectionId,
+              type: 'CYCLE_RENEWED',
+              wave: collection.cycleNumber,
+            },
+          },
+          create: {
             userId: ctx.userId,
             collectionId: input.collectionId,
             type: 'CYCLE_RENEWED',
+            handshakePath: [],
+            expiresAt,
             wave: collection.cycleNumber,
+            status: 'RESPONDED',
           },
-        },
-        create: {
-          userId: ctx.userId,
-          collectionId: input.collectionId,
-          type: 'CYCLE_RENEWED',
-          handshakePath: [],
-          expiresAt,
-          wave: collection.cycleNumber,
-          status: 'RESPONDED',
-        },
-        update: { status: 'RESPONDED', expiresAt },
+          update: { status: 'RESPONDED', expiresAt },
+        });
+        if (input.pledge) return applyCollectionGoal(tx, input.collectionId, collection);
       });
+      if (hold) {
+        await dispatchCollectionGoalReached(ctx.db, input.collectionId, hold).catch((err) =>
+          console.error('[obligation.confirmCycle] Goal notice dispatch failed:', err),
+        );
+      }
       return { ok: true as const };
     }),
 });

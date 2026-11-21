@@ -138,7 +138,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
     onError: (error: unknown) => {
       const kind = errorKind(error);
       // Only this Need's own data: nothing else was written (the broader refresh is for successful writes)
-      if ((kind === 'changed' || kind === 'notFound') && id) void utils.collection.getById.invalidate({ id });
+      if ((kind === 'changed' || kind === 'notFound' || kind === 'needClosed') && id) void utils.collection.getById.invalidate({ id });
     },
     meta: { notifyOnError: false },
   } as const;
@@ -263,10 +263,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   // The server list already drops unsubscribed rows. Filter here too so an older API does not put them back.
   const activeObligations = data.obligations.filter((row) => row.unsubscribedAt == null);
   const myRow = activeObligations.find((row) => row.userId === userId);
-  // The viewer's own row always carries its amount (amounts are hidden only from viewers who have not joined)
-  const myObl = myRow ? { ...myRow, amount: myRow.amount ?? 0 } : undefined;
-  // Sent only to the author, and to a participant while the chat is offered (the server mirrors canOpenChat)
-  const chatLink = data.chatLink ?? '';
+  const myObl = myRow?.amount == null ? undefined : { ...myRow, amount: myRow.amount };
   const communityHold = data.blockReason === 'COMMUNITY';
   const adminHold = data.status === 'BLOCKED' && isReason(data.blockReason);
   const held = adminHold || communityHold;
@@ -276,6 +273,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   const renewal = data.type === 'REGULAR' && data.cycleNumber > 1 && data.currentCycleStart != null;
   const needsConfirm = !!myObl && renewal && myObl.cycleConfirmed === false && !held && !closed && data.status === 'ACTIVE';
   const showDecline = !owner && !!myObl && !closed && !held;
+  const chatLink = data.chatLink ?? '';
   const canOpenChat = !owner && !!myObl && !needsConfirm && !closed && !held && !editing && isHttpsUrl(chatLink);
   const firstParticipation = createObligation.data;
   const firstHandshake = acceptSos.variables?.collectionId === data.id && acceptSos.data?.firstConnection === true;
@@ -431,13 +429,12 @@ function CollectionScreen({ id }: { id: string | undefined }) {
       return;
     }
     setEditError('');
-    // Both steps start clean, so the message under the card is always about this attempt
-    updateObligation.reset();
     confirmCycle.reset();
-    if (amount !== myObl.amount) {
-      await updateObligation.mutateAsync({ obligationId: myObl.id, amount, inputCurrency: 'USD' });
-    }
-    await confirmCycle.mutateAsync({ collectionId: data.id });
+    await confirmCycle.mutateAsync({
+      collectionId: data.id,
+      cycleNumber: data.cycleNumber,
+      pledge: amount !== myObl.amount ? { obligationId: myObl.id, amount } : undefined,
+    });
     setOtherOpen(false);
     setEditing(false);
   };
@@ -548,6 +545,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
               </>
             ) : t('collection.minStake', { amount: formatMoney(intention) })}
           />
+          <p className="mt-2 text-label font-semibold text-ink-muted">{t('collection.beforeParticipation')}</p>
           <Button className="mt-4 w-full" loading={createObligation.isPending} disabled={offline || acceptSos.isPending} onClick={join}>{t('collection.participate')}</Button>
           {offline ? <OfflineHint /> : null}
           <ActionError error={actionErrorBesides(createObligation.error, 'amount')} />
@@ -582,11 +580,11 @@ function CollectionScreen({ id }: { id: string | undefined }) {
                 label={t('collection.otherAmount')}
                 value={editAmount}
                 onValueChange={setEditAmount}
-                error={editError || serverFieldError(updateObligation.error, 'amount', t('errors.invalid'))}
+                error={editError || serverFieldError(confirmCycle.error, 'pledge', t('errors.invalid'))}
               />
               <Button
                 className="mt-3 w-full"
-                loading={confirmCycle.isPending || updateObligation.isPending}
+                loading={confirmCycle.isPending}
                 onClick={() => {
                   const message = pledgeMessage(editAmount);
                   const amount = parseWhole(editAmount);
@@ -620,10 +618,9 @@ function CollectionScreen({ id }: { id: string | undefined }) {
               {editError ? <p className="text-label font-semibold text-sos">{editError}</p> : null}
             </div>
           )}
-          {/* confirm() resets both before each attempt, so this is always about the last one */}
-          <ActionError error={confirmCycle.error ?? actionErrorBesides(updateObligation.error, 'amount')} />
         </Card>
       ) : null}
+      <ActionError error={actionErrorBesides(confirmCycle.error, 'pledge')} />
 
       {!owner && myObl && !needsConfirm && !closed && !held ? (
         <MyParticipationCard
@@ -725,6 +722,9 @@ function CollectionScreen({ id }: { id: string | undefined }) {
       {owner && !closed ? (
         // The author marks transfers: one tap with undo, or several at once in a sheet
         <MarkableParticipantList
+          key={data.id}
+          collectionId={data.id}
+          cycleNumber={data.cycleNumber}
           people={people}
           onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)}
           onRemove={setRemoveTarget}
@@ -737,8 +737,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
           )}
         />
       ) : (
-        // Participants see everyone's amounts; a viewer who has not joined sees the people without amounts
-        <ParticipantList people={people} showPaid={false} onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)} />
+        <ParticipantList people={people} showPaid={owner} onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)} />
       )}
 
       {/* A participant can pass an open Need on to others who know its author: the page is public anyway */}

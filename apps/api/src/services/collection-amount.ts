@@ -1,6 +1,8 @@
 import { Prisma, type PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS } from '@so/shared';
+import { transactionWithRetry } from '../lib/tx-retry.js';
 import { sendGoalReachedToCreator } from './notification.service.js';
+import { findNeedForUpdate, type NeedState } from './collection-state.js';
 
 type Db = PrismaClient | Prisma.TransactionClient;
 
@@ -24,25 +26,25 @@ export async function activeObligationTotals(
   };
 }
 
-/**
- * Goal-reached BLOCKED (blockReason stays null) follows the active total.
- * A hold with any blockReason, including COMMUNITY, is never opened, cleared, or replaced.
- * The write is conditional on the status and reason just read, so a circle hold that lands
- * between the read and the write is left untouched.
- */
-export async function syncCollectionGoal(db: PrismaClient, collectionId: string): Promise<void> {
-  const collection = await db.collection.findUnique({ where: { id: collectionId } });
-  if (!collection || collection.amount == null) return;
+type GoalHold = { blockedAt: Date; creatorId: string };
 
-  const { amount: sum } = await activeObligationTotals(db, collectionId);
-  if (sum >= collection.amount && collection.status === 'ACTIVE' && collection.blockReason == null) {
-    const blocked = await db.collection.updateMany({
-      where: { id: collectionId, status: 'ACTIVE', blockReason: null },
-      data: { status: 'BLOCKED', blockedAt: new Date(), blockReason: null },
+/** Apply the goal state while the caller holds the Need lock, using the latest active total. */
+export async function applyCollectionGoal(
+  tx: Prisma.TransactionClient,
+  collectionId: string,
+  collection: NeedState,
+): Promise<GoalHold | undefined> {
+  if (collection.amount == null || collection.blockReason != null ||
+    (collection.status !== 'ACTIVE' && collection.status !== 'BLOCKED')) return;
+
+  const { amount: sum } = await activeObligationTotals(tx, collectionId);
+  if (sum >= collection.amount && collection.status === 'ACTIVE') {
+    const blockedAt = new Date();
+    await tx.collection.update({
+      where: { id: collectionId },
+      data: { status: 'BLOCKED', blockedAt },
     });
-    if (blocked.count !== 1) return;
-
-    await db.notification.updateMany({
+    await tx.notification.updateMany({
       where: {
         collectionId,
         type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] },
@@ -50,31 +52,38 @@ export async function syncCollectionGoal(db: PrismaClient, collectionId: string)
       },
       data: { status: 'EXPIRED' },
     });
-
-    const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
-    await notifyGoalReached(db, collectionId, collection.creatorId, expiresAt);
-
-    sendGoalReachedToCreator(db, collectionId, collection.creatorId).catch((err) =>
-      console.error('[TG GoalReached] Failed:', err),
-    );
-    return;
+    return { blockedAt, creatorId: collection.creatorId };
   }
 
-  if (sum < collection.amount && collection.status === 'BLOCKED' && collection.blockReason == null) {
-    const reopened = await db.collection.updateMany({
-      where: { id: collectionId, status: 'BLOCKED', blockReason: null },
-      data: { status: 'ACTIVE', blockedAt: null, blockReason: null },
+  if (sum < collection.amount && collection.status === 'BLOCKED') {
+    await tx.collection.update({
+      where: { id: collectionId },
+      data: { status: 'ACTIVE', blockedAt: null },
     });
-    if (reopened.count !== 1) return;
-    await db.notification.updateMany({
-      where: {
-        collectionId,
-        type: 'COLLECTION_BLOCKED',
-        status: { in: ['UNREAD', 'READ'] },
-      },
+    await tx.notification.updateMany({
+      where: { collectionId, type: 'COLLECTION_BLOCKED', status: { in: ['UNREAD', 'READ'] } },
       data: { status: 'EXPIRED' },
     });
   }
+}
+
+export async function dispatchCollectionGoalReached(db: PrismaClient, collectionId: string, hold: GoalHold): Promise<void> {
+  const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
+  try {
+    await notifyGoalReached(db, collectionId, hold.creatorId, expiresAt, hold.blockedAt);
+  } finally {
+    sendGoalReachedToCreator(db, collectionId, hold.creatorId, hold.blockedAt).catch((err) =>
+      console.error('[GoalReached] Author delivery failed:', err),
+    );
+  }
+}
+
+export async function syncCollectionGoal(db: PrismaClient, collectionId: string): Promise<void> {
+  const hold = await transactionWithRetry(db, async (tx) => {
+    const collection = await findNeedForUpdate(tx, collectionId);
+    if (collection) return applyCollectionGoal(tx, collectionId, collection);
+  });
+  if (hold) await dispatchCollectionGoalReached(db, collectionId, hold);
 }
 
 /**
@@ -94,58 +103,50 @@ export async function notifyGoalReached(
   collectionId: string,
   creatorId: string,
   expiresAt: Date,
+  blockedAt?: Date,
 ): Promise<void> {
-  // Prisma stores DateTime as UTC wall time in timestamp(3) columns; convert
-  // explicitly so the session time zone cannot shift these values.
+  // Prisma stores DateTime as UTC wall time in timestamp(3) columns.
   const expires = Prisma.sql`${expiresAt.toISOString()}::timestamptz AT TIME ZONE 'UTC'`;
   const now = Prisma.sql`${new Date().toISOString()}::timestamptz AT TIME ZONE 'UTC'`;
+  const sameHold = blockedAt ? Prisma.sql` AND EXISTS (
+    SELECT 1 FROM collections
+    WHERE "id" = ${collectionId} AND "status" = 'BLOCKED' AND "blockReason" IS NULL
+      AND "blockedAt" = ${blockedAt.toISOString()}::timestamptz AT TIME ZONE 'UTC'
+    FOR SHARE
+  )
+  ` : Prisma.empty;
+  const upsertNotices = (userId?: string) => Prisma.sql`
+    INSERT INTO notifications
+      ("id", "userId", "collectionId", "type", "handshakePath", "status", "expiresAt", "wave", "createdAt", "updatedAt")
+    SELECT gen_random_uuid()::text, n."userId", ${collectionId},
+      'COLLECTION_BLOCKED'::"NotificationType", '[]'::jsonb, 'UNREAD'::"NotificationStatus", ${expires}, 0, ${now}, ${now}
+    FROM (SELECT DISTINCT "userId" FROM notifications WHERE "collectionId" = ${collectionId}) n
+    WHERE n."userId" <> ${creatorId}
+      ${userId === undefined ? Prisma.empty : Prisma.sql` AND n."userId" = ${userId}`}
+      ${sameHold}
+      AND NOT EXISTS (
+        SELECT 1 FROM obligations o WHERE o."collectionId" = ${collectionId} AND o."userId" = n."userId"
+      )
+    ON CONFLICT ("userId", "collectionId", "type", "wave") DO UPDATE
+      SET "status" = 'UNREAD'::"NotificationStatus", "expiresAt" = EXCLUDED."expiresAt", "updatedAt" = EXCLUDED."updatedAt"
+  `;
   try {
-    await db.$executeRaw`
-      INSERT INTO notifications
-        ("id", "userId", "collectionId", "type", "handshakePath", "status", "expiresAt", "wave", "createdAt", "updatedAt")
-      SELECT gen_random_uuid()::text, n."userId", ${collectionId},
-        'COLLECTION_BLOCKED'::"NotificationType", '[]'::jsonb, 'UNREAD'::"NotificationStatus",
-        ${expires}, 0, ${now}, ${now}
-      FROM (SELECT DISTINCT "userId" FROM notifications WHERE "collectionId" = ${collectionId}) n
-      WHERE n."userId" <> ${creatorId}
-        AND NOT EXISTS (
-          SELECT 1 FROM obligations o WHERE o."collectionId" = ${collectionId} AND o."userId" = n."userId"
-        )
-      ON CONFLICT ("userId", "collectionId", "type", "wave") DO UPDATE
-        SET "status" = 'UNREAD'::"NotificationStatus", "expiresAt" = EXCLUDED."expiresAt", "updatedAt" = EXCLUDED."updatedAt"
-    `;
+    await db.$executeRaw(upsertNotices());
     return;
   } catch (err) {
     console.error('[GoalReached] Batch notice failed, retrying per person:', err);
   }
 
   const notifiedUsers = await db.notification.findMany({
-    where: { collectionId },
+    where: { collectionId, userId: { not: creatorId } },
     select: { userId: true },
     distinct: ['userId'],
   });
-  const pledgedUserIds = new Set(
-    (await db.obligation.findMany({
-      where: { collectionId },
-      select: { userId: true },
-    })).map((row) => row.userId),
-  );
   for (const { userId } of notifiedUsers) {
-    if (userId === creatorId) continue;
-    if (pledgedUserIds.has(userId)) continue;
     try {
-      await db.notification.upsert({
-        where: {
-          userId_collectionId_type_wave: {
-            userId, collectionId, type: 'COLLECTION_BLOCKED', wave: 0,
-          },
-        },
-        create: {
-          userId, collectionId,
-          type: 'COLLECTION_BLOCKED', handshakePath: [], expiresAt, wave: 0,
-        },
-        update: { status: 'UNREAD', expiresAt },
-      });
-    } catch { /* skip */ }
+      await db.$queryRaw`${upsertNotices(userId)} RETURNING "userId"`;
+    } catch (err) {
+      console.error('[GoalReached] Notice retry failed:', err);
+    }
   }
 }

@@ -1,7 +1,10 @@
 import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
 import { REGULAR_CYCLE_DAYS, NOTIFICATION_TTL_HOURS } from '@so/shared';
+import { transactionWithRetry } from '../lib/tx-retry.js';
 import { sendCycleRenewalReminderTg } from '../services/notification.service.js';
+import { insertCycleNotices } from '../services/cycle-notices.js';
+import { findNeedForUpdate } from '../services/collection-state.js';
 
 const DAYS_BEFORE_RENEWAL = 3;
 
@@ -17,9 +20,7 @@ export async function processCycleRenewalReminder(_job: Job): Promise<void> {
   const now = Date.now();
   const cycleMs = REGULAR_CYCLE_DAYS * 24 * 60 * 60 * 1000;
   const dayMs = 24 * 60 * 60 * 1000;
-  // Reminder window: collections whose currentCycleStart falls between
-  // (now - 28d + 3d) and (now - 28d + 4d) — i.e. ~3 days remain until renewal.
-  // The 1-day window gives slack in case the worker is paused/restarted.
+  // Pick cycles with 2 to 3 days remaining. The one-day window gives the hourly worker slack.
   const windowEnd = new Date(now - cycleMs + DAYS_BEFORE_RENEWAL * dayMs);
   const windowStart = new Date(windowEnd.getTime() - dayMs);
 
@@ -34,10 +35,7 @@ export async function processCycleRenewalReminder(_job: Job): Promise<void> {
       id: true,
       creatorId: true,
       cycleNumber: true,
-      obligations: {
-        where: { unsubscribedAt: null },
-        select: { userId: true, user: { select: { notifyRenewalReminder: true } } },
-      },
+      currentCycleStart: true,
     },
   });
 
@@ -46,39 +44,17 @@ export async function processCycleRenewalReminder(_job: Job): Promise<void> {
   const expiresAt = new Date(now + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
 
   for (const collection of dueCollections) {
-    // Exclude creator (they don't subscribe to their own collection, but be safe)
-    // and users who disabled the reminder.
-    const recipients = collection.obligations
-      .filter((o) => o.userId !== collection.creatorId)
-      .filter((o) => o.user?.notifyRenewalReminder !== false)
-      .map((o) => o.userId);
-
-    if (recipients.length === 0) continue;
-
-    // Create in-app notifications (unique key prevents duplicates per cycle)
-    const createdUserIds: string[] = [];
-    for (const userId of recipients) {
-      try {
-        await db.notification.create({
-          data: {
-            userId,
-            collectionId: collection.id,
-            type: 'CYCLE_RENEWAL_REMINDER',
-            handshakePath: [],
-            expiresAt,
-            wave: collection.cycleNumber,
-          },
-        });
-        createdUserIds.push(userId);
-      } catch {
-        // Duplicate (already reminded this cycle) — skip silently
-      }
-    }
+    const createdUserIds = await transactionWithRetry(db, async (tx) => {
+      // Take the same lock as withdrawals before the insert takes its statement snapshot.
+      if (!await findNeedForUpdate(tx, collection.id)) return [];
+      return insertCycleNotices(
+        tx, collection.id, collection.cycleNumber, collection.currentCycleStart, expiresAt, 'CYCLE_RENEWAL_REMINDER',
+      );
+    });
 
     if (createdUserIds.length > 0) {
-      sendCycleRenewalReminderTg(db, collection.id, collection.creatorId, createdUserIds).catch((err) =>
-        console.error('[CycleRenewalReminder] TG/Push dispatch failed:', err),
-      );
+      sendCycleRenewalReminderTg(db, collection.id, collection.creatorId, createdUserIds, collection.cycleNumber)
+        .catch((err) => console.error('[CycleRenewalReminder] TG/Push dispatch failed:', err));
     }
   }
 }

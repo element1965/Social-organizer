@@ -1,7 +1,9 @@
 import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
 import { REGULAR_CYCLE_DAYS, NOTIFICATION_TTL_HOURS } from '@so/shared';
+import { transactionWithRetry } from '../lib/tx-retry.js';
 import { sendCycleRenewedTg } from '../services/notification.service.js';
+import { insertCycleNotices } from '../services/cycle-notices.js';
 
 type ReceiptDb = Pick<ReturnType<typeof getDb>, 'obligation' | 'obligationReceipt'>;
 
@@ -67,100 +69,67 @@ export async function processCycleClose(_job: Job): Promise<void> {
     select: {
       id: true,
       creatorId: true,
-      amount: true,
-      currency: true,
       cycleNumber: true,
-      obligations: {
-        select: {
-          amount: true,
-          userId: true,
-          unsubscribedAt: true,
-          user: { select: { notifyRenewalStart: true } },
-        },
-      },
+      currentCycleStart: true,
     },
   });
 
   const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
 
   for (const collection of expiredCycles) {
-    // Check undercollection (only for collections with target amount)
-    const currentAmount = collection.obligations.reduce((sum, o) => sum + o.amount, 0);
-    const hasGoal = collection.amount != null;
-    const undercollected = hasGoal && currentAmount < collection.amount!;
-
     const newCycleNumber = collection.cycleNumber + 1;
 
-    await db.$transaction(async (tx) => {
-      // Close current cycle -> new one
-      await tx.collection.update({
-        where: { id: collection.id },
+    const renewedUserIds = await transactionWithRetry(db, async (tx) => {
+      const currentCycleStart = new Date();
+      const result = await tx.collection.updateMany({
+        where: {
+          id: collection.id,
+          type: 'REGULAR',
+          status: { in: ['ACTIVE', 'BLOCKED'] },
+          blockReason: null,
+          cycleNumber: collection.cycleNumber,
+          currentCycleStart: { equals: collection.currentCycleStart, lte: cutoff },
+        },
         data: {
-          currentCycleStart: new Date(),
+          currentCycleStart,
           cycleNumber: { increment: 1 },
           status: 'ACTIVE',
           blockedAt: null,
         },
       });
 
+      if (result.count === 0) return [];
+
       // The author's received marks of the ended cycle go to the history; the new cycle starts unmarked
       await recordCycleReceipts(tx, collection.id, collection.cycleNumber);
 
-      // Notification about cycle closure (with undercollection if needed)
-      const notifType = undercollected ? 'COLLECTION_CLOSED' : 'COLLECTION_CLOSED';
-      const participantIds = [...new Set(collection.obligations.map((o) => o.userId))];
-      for (const userId of participantIds) {
-        try {
-          await tx.notification.create({
-            data: {
-              userId,
-              collectionId: collection.id,
-              type: notifType,
-              handshakePath: [],
-              expiresAt,
-              wave: collection.cycleNumber, // wave = номер завершённого цикла
-            },
-          });
-        } catch { /* skip duplicates */ }
-      }
+      // Select each still-active recipient in the insert, after recording the ended cycle.
+      await tx.$executeRaw`
+        INSERT INTO notifications
+          ("id", "userId", "collectionId", "type", "expiresAt", "wave", "updatedAt")
+        SELECT gen_random_uuid()::text, active."userId", ${collection.id},
+          'COLLECTION_CLOSED'::"NotificationType",
+          ${expiresAt.toISOString()}::timestamptz AT TIME ZONE 'UTC',
+          ${collection.cycleNumber}, CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
+        FROM (
+          SELECT DISTINCT "userId" FROM obligations
+          WHERE "collectionId" = ${collection.id} AND "unsubscribedAt" IS NULL
+        ) active
+        ON CONFLICT ("userId", "collectionId", "type", "wave") DO NOTHING
+      `;
 
-      // Delete ONLY unsubscribed subscriptions (one-time obligations are kept for statistics)
+      // Remove withdrawn obligations. Their received marks are already in the history.
       await tx.obligation.deleteMany({
         where: {
           collectionId: collection.id,
           unsubscribedAt: { not: null },
         },
       });
+      return insertCycleNotices(tx, collection.id, newCycleNumber, currentCycleStart, expiresAt, 'CYCLE_RENEWED');
     });
 
-    // "Cycle renewed" notification for users carried over into the new cycle
-    // (subscribers who did NOT unsubscribe and didn't disable the toggle).
-    const renewedUserIds: string[] = [];
-    for (const o of collection.obligations) {
-      if (o.unsubscribedAt) continue;
-      if (o.userId === collection.creatorId) continue;
-      if (o.user?.notifyRenewalStart === false) continue;
-      renewedUserIds.push(o.userId);
-    }
-
     if (renewedUserIds.length > 0) {
-      // In-app notification, unique per cycle via wave = newCycleNumber
-      for (const userId of renewedUserIds) {
-        try {
-          await db.notification.create({
-            data: {
-              userId,
-              collectionId: collection.id,
-              type: 'CYCLE_RENEWED',
-              handshakePath: [],
-              expiresAt,
-              wave: newCycleNumber,
-            },
-          });
-        } catch { /* skip duplicates */ }
-      }
-
-      sendCycleRenewedTg(db, collection.id, collection.creatorId, renewedUserIds).catch((err) =>
+      sendCycleRenewedTg(db, collection.id, collection.creatorId, renewedUserIds, newCycleNumber).catch((err) =>
         console.error('[CycleClose] CycleRenewed dispatch failed:', err),
       );
     }

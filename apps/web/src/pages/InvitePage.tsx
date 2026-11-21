@@ -6,7 +6,7 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { getLastLoginMethod, useAuth, type LoginMethod } from '../hooks/useAuth';
-import { Avatar, Button, Pill, formatMoney } from '../components/ui2';
+import { Avatar, Button, Pill } from '../components/ui2';
 import { NetFigure } from '../components/figures';
 import { BrandLine, LanguageCorner, OnboardingFrame, StepText } from '../components/onboarding/OnboardingFrame';
 import { SignInFlow } from '../components/onboarding/SignInFlow';
@@ -147,9 +147,8 @@ export function InvitePage() {
   if (!invite.data) return <DeadLink signedIn={isRealUser} reason="notFound" />;
 
   const inviter = invite.data.inviter;
-  const networkCount = Number((invite.data as { networkCount?: number }).networkCount ?? 0);
-  const total = Math.round(Number((invite.data as { totalIntentions?: number }).totalIntentions ?? 0));
-  const hero = <InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} token={token} addressee={addressee} />;
+  const { networkCount } = invite.data;
+  const hero = <InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} token={token} addressee={addressee} />;
 
   if (!isRealUser || sessionDead || !me.data) {
     return <SignInFlow top={<BrandLine />} centre redirect={`/invite/${token}`} hero={hero} />;
@@ -165,7 +164,7 @@ export function InvitePage() {
       firstRun={firstRun || !me.data.onboardingCompleted}
       cameThroughInvite={cameThroughInvite}
       src={src}
-      hero={<InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} token={token} addressee={addressee} signedIn />}
+      hero={<InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} token={token} addressee={addressee} signedIn />}
     />
   );
 }
@@ -174,7 +173,6 @@ function InviteHero({
   name,
   photoUrl,
   networkCount,
-  total,
   token,
   addressee = null,
   signedIn = false,
@@ -182,7 +180,6 @@ function InviteHero({
   name: string;
   photoUrl?: string | null;
   networkCount: number;
-  total: number;
   /** For the way back from "How it works" */
   token: string;
   /** The invited person's name from `?to=`, put before the sentence. */
@@ -198,12 +195,6 @@ function InviteHero({
       <p className="mt-2.5 max-w-[30ch] text-body-s text-ink-muted">{t(signedIn ? 'invite.sayKnown' : 'invite.say', { name: firstName(name) })}</p>
       <div className="mt-4 flex flex-wrap justify-center gap-2">
         <Pill className="whitespace-nowrap">{t('invite.network', { count: networkCount, n: num(networkCount) })}</Pill>
-        {/* An intention is at least 1 $, so a smaller total is not shown at all */}
-        {total >= 1 ? (
-          <Pill tone="care" className="whitespace-nowrap">
-            {t('invite.canHelp', { amount: formatMoney(total) })}
-          </Pill>
-        ) : null}
       </div>
       {/* A guest through a link skips the landing: one tap to the explanation, and a way back to this invite */}
       <Link

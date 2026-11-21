@@ -1,4 +1,5 @@
 import type { PrismaClient, Prisma } from '@so/db';
+import { transactionWithRetry } from '../lib/tx-retry.js';
 import { sendUserDeletedNotification } from './notification.service.js';
 import { countConnections } from './connection-request.service.js';
 import { invalidateGraph } from './graph-cache.service.js';
@@ -34,7 +35,7 @@ export async function deleteUserAccount(
     select: { inviterId: true },
   });
 
-  const mode = await db.$transaction(async (tx): Promise<'hard' | 'soft' | null> => {
+  const deleted = await transactionWithRetry(db, async (tx) => {
     if (opts.guard) {
       await tx.$executeRaw`SELECT 1 FROM "users" WHERE "id" = ${userId} FOR UPDATE`;
       if (!(await opts.guard(tx))) return null;
@@ -87,10 +88,6 @@ export async function deleteUserAccount(
         ],
       },
     });
-    // Inside the transaction: the first signature check after the commit re-reads these people only.
-    // The acquaintances are named too: each of them lost a direct connection, so their numbers go at once.
-    invalidateGraph([userId, ...links.map((c) => (c.userAId === userId ? c.userBId : c.userAId))]);
-
     if (!hasNetworkTies) {
       // No connections and no invitees — full delete with no traces
       // Clear usedById references pointing to this user
@@ -105,7 +102,7 @@ export async function deleteUserAccount(
       }
       // Hard delete user (cascade removes all related records)
       await tx.user.delete({ where: { id: userId } });
-      return 'hard';
+      return { mode: 'hard' as const, links };
     } else {
       // Had connections or invitees — soft delete (mute) so their invite chain stays intact
       // but user is removed from the active network
@@ -126,11 +123,14 @@ export async function deleteUserAccount(
       await tx.userContact.deleteMany({ where: { userId } });
       await tx.userSkill.deleteMany({ where: { userId } });
       await tx.userNeed.deleteMany({ where: { userId } });
-      return 'soft';
+      return { mode: 'soft' as const, links };
     }
   });
 
-  if (!mode) return null;
+  if (!deleted) return null;
+  const { mode, links } = deleted;
+  // Each former contact lost a direct connection and needs its cached counts refreshed.
+  invalidateGraph([userId, ...links.map((c) => (c.userAId === userId ? c.userBId : c.userAId))]);
   if (mode === 'soft') {
     await db.userSignupCampaign.deleteMany({ where: { userId } })
       .catch((error) => console.warn('[UserDelete] Could not remove campaign attribution:', error));

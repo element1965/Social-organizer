@@ -12,16 +12,23 @@ const t = initTRPC.context<Context>().create({
   // An input that fails the procedure's schema (BAD_REQUEST caused by a ZodError) carries `invalidFields`: the
   // top-level input fields at fault ("chatLink"), so the client can say which field to check instead of
   // treating it as a refusal of the current state. Field names only, never values or messages.
+  // Actions that lost a race with Need closure carry needClosed so the UI can reuse its localized notice.
   errorFormatter({ shape, error }) {
-    const cause = error.cause as { maskedEmail?: unknown } | undefined;
+    const cause = error.cause as { maskedEmail?: unknown; needClosed?: unknown } | undefined;
     const maskedEmail = typeof cause?.maskedEmail === 'string' ? cause.maskedEmail : undefined;
     const invalidFields = error.code === 'BAD_REQUEST' && error.cause instanceof z.ZodError
       ? [...new Set(error.cause.issues.map((issue) => String(issue.path[0] ?? '')).filter(Boolean))]
       : undefined;
-    if (!maskedEmail && !invalidFields) return shape;
+    const needClosed = error.code === 'BAD_REQUEST' && cause?.needClosed === true;
+    if (!maskedEmail && !invalidFields && !needClosed) return shape;
     return {
       ...shape,
-      data: { ...shape.data, ...(maskedEmail ? { maskedEmail } : {}), ...(invalidFields ? { invalidFields } : {}) },
+      data: {
+        ...shape.data,
+        ...(maskedEmail ? { maskedEmail } : {}),
+        ...(invalidFields ? { invalidFields } : {}),
+        ...(needClosed ? { needClosed } : {}),
+      },
     };
   },
 });

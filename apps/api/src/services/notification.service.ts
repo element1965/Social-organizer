@@ -69,8 +69,8 @@ export async function sendCollectionNotifications(
     ignoredUserIds.add(n.userId);
   }
 
-  // Requests for help are routed by behaviour (notify-routing.service): the wave budget counts only external
-  // messages, and people who should not get one now get the in-app entry without taking a slot.
+  // The amount-based wave budget counts only external messages. People held back by the delivery rules
+  // get an in-app entry without taking a slot. The walk uses the graph directly, including the outer rings.
   // Other types keep the plain nearest-first walk.
   const isRequest = type === 'NEW_COLLECTION' || type === 'RE_NOTIFY';
   let recipients: BfsRecipient[];
@@ -162,16 +162,17 @@ export async function sendGoalReachedToCreator(
   db: PrismaClient,
   collectionId: string,
   creatorId: string,
+  blockedAt: Date,
 ): Promise<void> {
   const collection = await db.collection.findUnique({
-    where: { id: collectionId },
-    select: { amount: true, chatLink: true, blockedAt: true, cycleNumber: true },
+    where: { id: collectionId, status: 'BLOCKED', blockReason: null, blockedAt },
+    select: { amount: true, chatLink: true },
   });
   if (!collection) return;
 
-  const amountStr = collection.amount != null ? `${groupNumber(collection.amount)}\u00a0USD` : '';
+  const amountStr = collection.amount != null ? `${groupNumber(collection.amount)}\u00a0USD` : ''; // 1 unit = 1 $
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
-  const stamp = collection.blockedAt ? collection.blockedAt.getTime() : `c${collection.cycleNumber}`;
+  const stamp = blockedAt.getTime();
 
   await deliver(db, creatorId, {
     key: `goal:${collectionId}:${stamp}`,
@@ -338,13 +339,15 @@ export async function scheduleResponseDigest(db: PrismaClient, collectionId: str
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-/** Format a date for a given UI language, e.g. 12.11.2026 */
-function formatDate(d: Date, lang: string): string {
+function formatCycleRange(lang: string, start: Date, end: Date): string {
+  const options = { dateStyle: 'medium', timeZone: 'UTC' } as const;
+  let formatter: Intl.DateTimeFormat;
   try {
-    return d.toLocaleDateString(lang, { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
+    formatter = new Intl.DateTimeFormat(lang, options);
   } catch {
-    return d.toISOString().slice(0, 10);
+    formatter = new Intl.DateTimeFormat('en', options);
   }
+  return formatter.formatRange(start, end);
 }
 
 /**
@@ -355,23 +358,24 @@ async function getUserContributions(
   db: PrismaClient,
   collectionId: string,
   userIds: string[],
+  preference: 'notifyRenewalReminder' | 'notifyRenewalStart',
 ): Promise<Map<string, string>> {
   const obligations = await db.obligation.findMany({
-    where: { collectionId, userId: { in: userIds }, unsubscribedAt: null },
+    where: { collectionId, userId: { in: userIds }, unsubscribedAt: null, user: { deletedAt: null, [preference]: true } },
     select: { userId: true, amount: true },
   });
   const sums = new Map<string, number>();
   for (const o of obligations) sums.set(o.userId, (sums.get(o.userId) ?? 0) + o.amount);
   const result = new Map<string, string>();
-  for (const [userId, sum] of sums) result.set(userId, `${groupNumber(Math.round(sum * 100) / 100)}\u00a0USD`);
+  for (const [userId, sum] of sums) result.set(userId, `${groupNumber(Math.round(sum * 100) / 100)}\u00a0$`);
   return result;
 }
 
-/** "Your contribution: X\nPeriod: a — b" block for cycle notifications */
+/** The person’s Participation amount and the cycle dates. */
 function cycleDetails(lang: string, contribution: string | undefined, start: Date, end: Date): string {
   const lines: string[] = [];
   if (contribution) lines.push(`${tg(lang, 'yourContribution')}: <b>${contribution}</b>`);
-  lines.push(`${tg(lang, 'period')}: ${formatDate(start, lang)} — ${formatDate(end, lang)}`);
+  lines.push(`${tg(lang, 'period')}: ${formatCycleRange(lang, start, end)}`);
   return `\n\n${lines.join('\n')}`;
 }
 
@@ -384,26 +388,29 @@ export async function sendCycleRenewalReminderTg(
   collectionId: string,
   creatorId: string,
   recipientUserIds: string[],
+  cycleNumber: number,
 ): Promise<void> {
   if (recipientUserIds.length === 0) return;
 
   const collection = await db.collection.findUnique({
-    where: { id: collectionId },
-    select: { currentCycleStart: true, cycleNumber: true },
+    where: { id: collectionId, type: 'REGULAR', cycleNumber, status: { in: ['ACTIVE', 'BLOCKED'] }, blockReason: null },
+    select: { currentCycleStart: true },
   });
+  if (!collection?.currentCycleStart) return;
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
-  if (!collection || !creator) return;
+  if (!creator) return;
 
   // The reminder is about the NEXT cycle: it starts when the current one ends.
-  const cycleStart = collection.currentCycleStart ?? new Date();
+  const cycleStart = collection.currentCycleStart;
   const periodStart = new Date(cycleStart.getTime() + REGULAR_CYCLE_DAYS * DAY_MS);
   const periodEnd = new Date(periodStart.getTime() + (REGULAR_CYCLE_DAYS - 1) * DAY_MS); // last day of the cycle
-  const contributions = await getUserContributions(db, collectionId, recipientUserIds);
-  const names = await userNames(db, recipientUserIds);
+  const contributions = await getUserContributions(db, collectionId, recipientUserIds, 'notifyRenewalReminder');
+  const activeUserIds = [...contributions.keys()];
+  const names = await userNames(db, activeUserIds);
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
-  await deliverMany(db, recipientUserIds, (userId) => ({
-    key: `cycle:${collectionId}:${collection.cycleNumber}:reminder`,
+  await deliverMany(db, activeUserIds, (userId) => ({
+    key: `cycle:${collectionId}:${cycleNumber}:reminder`,
     kind: 'cycle',
     push: { title: 'New cycle in 3 days', body: 'A Need you take part in (every 28 days) starts a new cycle in 3 days.', url: webAppLink },
     telegram: (lang) => ({
@@ -421,36 +428,34 @@ export async function sendCycleRenewedTg(
   collectionId: string,
   creatorId: string,
   recipientUserIds: string[],
+  cycleNumber: number,
 ): Promise<void> {
   if (recipientUserIds.length === 0) return;
 
   const collection = await db.collection.findUnique({
-    where: { id: collectionId },
-    select: { chatLink: true, currentCycleStart: true, cycleNumber: true },
+    where: { id: collectionId, type: 'REGULAR', cycleNumber, status: { in: ['ACTIVE', 'BLOCKED'] }, blockReason: null },
+    select: { currentCycleStart: true },
   });
+  if (!collection?.currentCycleStart) return;
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
-  if (!collection || !creator) return;
+  if (!creator) return;
 
   // Called right after the cycle was rolled over, so currentCycleStart is the new cycle.
-  const periodStart = collection.currentCycleStart ?? new Date();
+  const periodStart = collection.currentCycleStart;
   const periodEnd = new Date(periodStart.getTime() + (REGULAR_CYCLE_DAYS - 1) * DAY_MS); // last day of the cycle
-  const contributions = await getUserContributions(db, collectionId, recipientUserIds);
   const names = await userNames(db, recipientUserIds);
+  // Read active Participation again at dispatch, after the worker's candidate list was made.
+  const contributions = await getUserContributions(db, collectionId, recipientUserIds, 'notifyRenewalStart');
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
-  await deliverMany(db, recipientUserIds, (userId) => ({
-    key: `cycle:${collectionId}:${collection.cycleNumber}:start`,
+  await deliverMany(db, [...contributions.keys()], (userId) => ({
+    key: `cycle:${collectionId}:${cycleNumber}:start`,
     kind: 'cycle',
     push: { title: 'New cycle started', body: 'A Need you take part in (every 28 days) has started a new cycle.', url: webAppLink },
-    telegram: (lang) => {
-      const buttons: TgReplyMarkup['inline_keyboard'] = [];
-      if (collection.chatLink) buttons.push([{ text: `💬 ${tg(lang, 'open')}`, url: collection.chatLink }]);
-      buttons.push([{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]);
-      return {
-        text: `🔁 <b>${tg(lang, 'renewalStartTitle')}</b>\n\n${tg(lang, 'renewalStartBody').replace('{{name}}', tgEscape(names.get(userId))).replace('{{creator}}', tgEscape(creator.name))}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
-        replyMarkup: { inline_keyboard: buttons },
-      };
-    },
+    telegram: (lang) => ({
+      text: `🔁 <b>${tg(lang, 'renewalStartTitle')}</b>\n\n${tg(lang, 'renewalStartBody').replace('{{name}}', tgEscape(names.get(userId))).replace('{{creator}}', tgEscape(creator.name))}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
+      replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]] },
+    }),
   }));
 }
 

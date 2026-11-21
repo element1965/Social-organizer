@@ -1,11 +1,15 @@
+import * as database from '@so/db';
+import type { Job } from 'bullmq';
+import { processCheckBlock } from '../src/workers/check-block.worker.js';
 import type { PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { appRouter } from '../src/routers/index.js';
 import { notifyGoalReached, syncCollectionGoal } from '../src/services/collection-amount.js';
 import { createUserWithReferralSlug } from '../src/services/referral-slug.service.js';
 import { remainingBudgets } from '../src/services/network.service.js';
 import { touchUserNow } from '../src/services/activity.service.js';
-import { createTestDatabase } from './test-database.js';
+import { createTestDatabase, isBlockingTransaction, pauseAfterNeedRead } from './test-database.js';
 
 vi.hoisted(() => {
   // Enable only local behavior, even if a developer's shell exports integration settings.
@@ -117,6 +121,66 @@ describe('goal reached notices (PERF-1)', () => {
     await notifyGoalReached(failing, need.id, id('author'), new Date(Date.now() + NOTIFICATION_TTL_HOURS * hour));
     log.mockRestore();
     expectGoalNotices(await blockedRows(need.id), id, earlier.id, startedAt);
+  });
+
+  it('skips a newly pledged recipient when retrying goal notices per person', async () => {
+    const { need, id } = await seedGoal('fallback-race');
+    const failing = Object.create(db) as PrismaClient;
+    Object.defineProperty(failing, '$executeRaw', { value: () => Promise.reject(new Error('batch failed')) });
+    const upsert = db.notification.upsert.bind(db.notification);
+    const write = db.$queryRaw.bind(db);
+    const pledge = () => db.obligation.create({ data: { collectionId: need.id, userId: id('told'), amount: 5 } });
+    const oldWrite = vi.spyOn(db.notification, 'upsert').mockImplementationOnce((args) =>
+      pledge().then(() => upsert(args)) as ReturnType<typeof upsert>,
+    );
+    const retryWrite = vi.spyOn(db, '$queryRaw').mockImplementationOnce((query, ...values) =>
+      pledge().then(() => write(query, ...values)) as ReturnType<typeof write>,
+    );
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      await notifyGoalReached(failing, need.id, id('author'), new Date(Date.now() + NOTIFICATION_TTL_HOURS * hour));
+      expect((await blockedRows(need.id)).map((row) => row.userId)).toEqual([id('heldBefore')]);
+    } finally {
+      log.mockRestore();
+      oldWrite.mockRestore();
+      retryWrite.mockRestore();
+    }
+  });
+
+  it('keeps a Need closed when the goal worker overlaps its closure', async () => {
+    const { need, id } = await seedGoal('hold-worker-race');
+    const job = { data: { collectionId: need.id } } as Job<{ collectionId: string }>;
+    const author = appRouter.createCaller({ db, userId: id('author'), ip: '127.0.0.1' });
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    const gate = pauseAfterNeedRead(db);
+    const worker = processCheckBlock(job);
+    let closing: ReturnType<typeof author.collection.close> | undefined;
+    try {
+      const pid = await Promise.race([gate.read, worker.then(() => { throw new Error('Worker finished before reading the Need'); })]);
+      closing = author.collection.close({ id: need.id });
+      void closing.catch(() => {});
+      await expect.poll(() => isBlockingTransaction(db, pid)).toBe(true);
+      gate.resume();
+      await Promise.all([worker, closing]);
+      expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({ status: 'CLOSED' });
+    } finally {
+      gate.resume();
+      await Promise.allSettled([worker, closing]);
+      gate.restore();
+      getDb.mockRestore();
+    }
+  });
+
+  it('leaves a Need open when withdrawn participation would have met its goal', async () => {
+    const { need, id } = await seedGoal('withdrawn-worker');
+    await db.obligation.updateMany({ where: { collectionId: need.id, userId: id('pledger') }, data: { amount: 6 } });
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    try {
+      await processCheckBlock({ data: { collectionId: need.id } } as Job<{ collectionId: string }>);
+      expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({ status: 'ACTIVE' });
+    } finally {
+      getDb.mockRestore();
+    }
   });
 });
 

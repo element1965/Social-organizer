@@ -45,7 +45,7 @@ export interface NetworkReach {
    * shown numbers gives an exact count for any far ring. "A few" counts as 0 in `people`.
    */
   far: FarCount;
-  /** The network figure: people up to the 6th handshake, `visible + far.count` */
+  /** Display figure up to the 6th handshake, `visible + far.count`. Exact only when `far.approx` is false. */
   people: number;
   /** The network figure: the sum of saved intentions up to the 6th handshake */
   canHelp: number;

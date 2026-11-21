@@ -105,7 +105,7 @@ export function SosLandingPage() {
               </p>
             ) : null}
             <p className="mt-2.5 max-w-[32ch] text-body-s text-ink-muted">
-              {t('sos.joinCircle')}
+              {t('sos.joinCircle', { name: firstName(collection.creator.name) })}
             </p>
           </>
         }
@@ -263,19 +263,16 @@ function PublicBody({
         </section>
       ) : null}
 
-      {joinable ? (
-        <div className="mt-3 flex w-full items-start gap-3 rounded-lg bg-care-soft p-3.5 text-start text-caption font-semibold">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-surface text-care">
-            <IconAdd className="h-5 w-5" />
-          </span>
-          <p>{t('sos.joinCircle')}</p>
-        </div>
-      ) : null}
-
       <div className="mt-auto w-full pb-2 pt-8">
         {joinable ? (
           <>
-            <Button className="w-full" onClick={onJoin}>{t('sos.takePart')}</Button>
+            <div id="sos-connection" className="mb-3 flex w-full items-center gap-3 rounded-lg bg-care-soft p-3.5 text-start text-caption font-semibold">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-surface text-care">
+                <IconAdd className="h-5 w-5" />
+              </span>
+              <p>{t('sos.joinCircle', { name: firstName(name) })}</p>
+            </div>
+            <Button className="w-full" aria-describedby="sos-connection" onClick={onJoin}>{t('sos.takePart')}</Button>
             {telegramUrl ? (
               <a href={telegramUrl} className="mt-3 block text-center text-body-s font-extrabold text-care">
                 {t('sos.openTelegram')}
