@@ -448,8 +448,6 @@
     "minimum": "Моё намерение",
     "stakeEmpty": "Не задано",
     "collections": "Активность",
-    "openOne": "{{count}} открытый",
-    "openMany": "{{count}} открытых",
     "notifications": "Уведомления",
     "notificationsAll": "Все",
     "notificationsSome": "Часть",

@@ -439,8 +439,6 @@
     "minimum": "我的意向",
     "stakeEmpty": "未设置",
     "collections": "活动",
-    "openOne": "{{count}} 个进行中",
-    "openMany": "{{count}} 个进行中",
     "notifications": "通知",
     "notificationsAll": "全部",
     "notificationsSome": "部分",

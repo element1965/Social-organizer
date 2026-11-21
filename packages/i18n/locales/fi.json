@@ -442,8 +442,6 @@
     "minimum": "Aikomukseni",
     "stakeEmpty": "Ei asetettu",
     "collections": "Toiminta",
-    "openOne": "{{count}} avoin",
-    "openMany": "{{count}} avointa",
     "notifications": "Ilmoitukset",
     "notificationsAll": "Kaikki",
     "notificationsSome": "Osa",

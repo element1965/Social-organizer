@@ -448,8 +448,6 @@
     "minimum": "Můj záměr",
     "stakeEmpty": "Nenastaveno",
     "collections": "Aktivita",
-    "openOne": "{{count}} otevřená",
-    "openMany": "{{count}} otevřených",
     "notifications": "Oznámení",
     "notificationsAll": "Všechna",
     "notificationsSome": "Některá",

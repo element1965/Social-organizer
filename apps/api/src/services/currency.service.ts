@@ -1,11 +1,4 @@
-import { Redis } from 'ioredis';
-
 const EXCHANGE_API_URL = 'https://api.exchangerate-api.com/v4/latest/USD';
-const CACHE_KEY = 'exchange_rates';
-const CACHE_TTL = 3600; // 1 hour
-
-let redis: Redis | null = null;
-
 // Default rates as fallback (approximate values)
 const DEFAULT_RATES: Record<string, number> = {
   USD: 1,
@@ -61,40 +54,13 @@ const DEFAULT_RATES: Record<string, number> = {
   PEN: 3.75,
 };
 
-export function initCurrencyService(redisClient: Redis) {
-  redis = redisClient;
-}
-
 export async function getExchangeRates(): Promise<Record<string, number>> {
-  // Try to get from Redis cache first
-  if (redis) {
-    try {
-      const cached = await redis.get(CACHE_KEY);
-      if (cached) {
-        return JSON.parse(cached);
-      }
-    } catch {
-      // Redis error, continue to fetch
-    }
-  }
-
   // Fetch from API
   try {
     const res = await fetch(EXCHANGE_API_URL);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = (await res.json()) as { rates: Record<string, number> };
-    const rates = data.rates;
-
-    // Cache in Redis
-    if (redis) {
-      try {
-        await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(rates));
-      } catch {
-        // Redis error, continue without caching
-      }
-    }
-
-    return rates;
+    return data.rates;
   } catch {
     // Return default rates if API fails
     return DEFAULT_RATES;
@@ -126,15 +92,4 @@ export async function convertFromUSD(amountUSD: number, toCurrency: string): Pro
   }
 
   return Math.round(amountUSD * rate);
-}
-
-export async function getExchangeRate(fromCurrency: string, toCurrency: string): Promise<number> {
-  if (fromCurrency === toCurrency) return 1;
-
-  const rates = await getExchangeRates();
-  const fromRate = rates[fromCurrency] ?? 1;
-  const toRate = rates[toCurrency] ?? 1;
-
-  // Convert through USD: from -> USD -> to
-  return toRate / fromRate;
 }

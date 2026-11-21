@@ -1,19 +1,4 @@
-import { WEB_APP_URL, TELEGRAM_MINI_APP_BOT } from './deployment';
-import { isTelegramWebApp } from '@so/tg-adapter';
-
-
-/**
- * Build invite URL based on current context.
- * In Telegram Mini App: https://t.me/BOTNAME?start=invite_TOKEN
- *   → Bot receives /start invite_TOKEN → replies with web_app button
- * In browser: https://origin/invite/TOKEN
- */
-export function buildInviteUrl(token: string): string {
-  if (isTelegramWebApp() && TELEGRAM_MINI_APP_BOT) {
-    return `https://t.me/${TELEGRAM_MINI_APP_BOT}?start=invite_${token}`;
-  }
-  return `${window.location.origin}/invite/${token}`;
-}
+import { WEB_APP_URL } from './deployment';
 
 /**
  * Build the short web invite URL, orginizer.com/i/<token>, for sharing outside Telegram.
@@ -21,16 +6,6 @@ export function buildInviteUrl(token: string): string {
  */
 export function buildWebInviteUrl(token: string): string {
   return `${WEB_APP_URL}/i/${encodeURIComponent(token)}`;
-}
-
-/**
- * Build Telegram bot invite URL (always points to bot).
- */
-export function buildBotInviteUrl(token: string): string {
-  if (TELEGRAM_MINI_APP_BOT) {
-    return `https://t.me/${TELEGRAM_MINI_APP_BOT}?start=invite_${token}`;
-  }
-  return `${window.location.origin}/invite/${token}`;
 }
 
 /**

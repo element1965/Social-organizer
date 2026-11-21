@@ -439,8 +439,6 @@
     "minimum": "自分の意向",
     "stakeEmpty": "未設定",
     "collections": "活動",
-    "openOne": "開いているニーズ {{count}}件",
-    "openMany": "開いているニーズ {{count}}件",
     "notifications": "通知",
     "notificationsAll": "すべて",
     "notificationsSome": "一部",

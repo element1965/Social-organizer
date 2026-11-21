@@ -6,6 +6,7 @@ import { syncCollectionGoal } from '../services/collection-amount.js';
 import { scheduleResponseDigest } from '../services/notification.service.js';
 import { recordResponded } from '../services/notify-routing.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
+import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
 
 export const obligationRouter = router({
   create: protectedProcedure
@@ -63,16 +64,7 @@ export const obligationRouter = router({
 
     // Get connection counts for all creators
     const creatorIds = [...new Set(obligations.map((o) => o.collection.creatorId))];
-    const connectionCounts = creatorIds.length > 0
-      ? await ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
-          SELECT u.id as user_id, COUNT(c.id)::bigint as count
-          FROM users u
-          LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
-          WHERE u.id = ANY(${creatorIds})
-          GROUP BY u.id
-        `
-      : [];
-    const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+    const countMap = await getDirectConnectionCounts(ctx.db, creatorIds);
 
     return obligations.map((o) => ({
       ...o,

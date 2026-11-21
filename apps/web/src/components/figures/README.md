@@ -4,11 +4,15 @@ Pure SVG/React ports of `docs/redesign/mockups/v2/figures.js`. Colors come from 
 themes switch by themselves. Under `prefers-reduced-motion` they render the final state (no transitions, no moving dot).
 
 ```tsx
-import { NetFigure, OrbitFigure, ChainFigure, JoinFigure, HuiFigure } from '@/components/figures';
-import { useScrollPlay } from '@/lib/scrollPlay';
+import { useState } from 'react';
+import { OrbitFigure } from './index';
+import { usePlayOnEnter } from '../site/hooks';
 
-const [ref, depth] = useScrollPlay<HTMLDivElement, 0 | 1 | 2>([0, 1, 2], { gap: 900 });
-<div ref={ref}><OrbitFigure depth={depth} /></div>
+function OrbitExample() {
+  const [depth, setDepth] = useState<0 | 1 | 2>(0);
+  const ref = usePlayOnEnter<0 | 1 | 2>(setDepth, [0, 1, 2], 900);
+  return <div ref={ref}><OrbitFigure depth={depth} /></div>;
+}
 ```
 
 - `NetFigure step={0|1|2}`: rings, request path with the amount tag, chat. viewBox 320x300.
@@ -18,4 +22,3 @@ const [ref, depth] = useScrollPlay<HTMLDivElement, 0 | 1 | 2>([0, 1, 2], { gap: 
 - Every figure takes `labels` (partial); defaults are Russian (`*_LABELS_RU`). Wire i18n by passing translated strings.
 
 Note: figures depend on the v2 token semantics (`--so-line` is the ink base color; hairlines are `rgb(var(--so-line) / .14|.24)`).
-`reveal()` from `lib/scrollPlay.ts` is for static markup only; in React use `useScrollPlay` / `onEnter`.

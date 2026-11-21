@@ -12,6 +12,7 @@ import { ADMIN_BLOCK_REASONS } from '../config/ask.js';
 import { activeObligationTotals, syncCollectionGoal } from '../services/collection-amount.js';
 import { settleOpenReviews } from '../services/moderation.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
+import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
 
 /** Chat links are shown as buttons: https only, never javascript: or http (SO-14). */
 const chatLinkSchema = z.string().max(MAX_CHAT_LINK_LENGTH).url().refine((u) => /^https:\/\//i.test(u), 'Link must start with https://');
@@ -200,14 +201,7 @@ export const collectionRouter = router({
 
       // Get connection counts for all participants and creator
       const userIds = [collection.creatorId, ...collection.obligations.map((o) => o.userId)];
-      const connectionCounts = await ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
-        SELECT u.id as user_id, COUNT(c.id)::bigint as count
-        FROM users u
-        LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
-        WHERE u.id = ANY(${userIds})
-        GROUP BY u.id
-      `;
-      const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+      const countMap = await getDirectConnectionCounts(ctx.db, userIds);
       const visible = collection.obligations.filter((o) => o.unsubscribedAt == null);
       const renewal = collection.type === 'REGULAR' && collection.cycleNumber > 1 && collection.currentCycleStart != null;
       const acked = new Set<string>();

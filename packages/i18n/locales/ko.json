@@ -439,8 +439,6 @@
     "minimum": "내 의향",
     "stakeEmpty": "아직 없어요",
     "collections": "활동",
-    "openOne": "열린 필요 {{count}}개",
-    "openMany": "열린 필요 {{count}}개",
     "notifications": "알림",
     "notificationsAll": "모두",
     "notificationsSome": "일부",

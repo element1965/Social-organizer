@@ -1,25 +1,6 @@
-import type { SVGProps } from 'react';
+import { Svg, type IconProps } from '../ui2/Svg';
 
 /* Circle-only icons from mockups/v2/circle-a.html. Candidates for ui2/icons (see WP2 report). */
-
-type IconProps = SVGProps<SVGSVGElement>;
-
-function Svg({ strokeWidth = 1.8, children, ...props }: IconProps) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={strokeWidth}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      {...props}
-    >
-      {children}
-    </svg>
-  );
-}
 
 export function IconRepeat(props: IconProps) {
   return (

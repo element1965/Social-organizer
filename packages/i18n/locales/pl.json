@@ -448,8 +448,6 @@
     "minimum": "Mój zamiar",
     "stakeEmpty": "Nie ustawiono",
     "collections": "Aktywność",
-    "openOne": "{{count}} otwarta",
-    "openMany": "{{count}} otwartych",
     "notifications": "Powiadomienia",
     "notificationsAll": "Wszystkie",
     "notificationsSome": "Część",

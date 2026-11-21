@@ -1,16 +1,6 @@
 // @so/tg-adapter — Telegram WebApp SDK
 /// <reference path="./telegram-webapp.d.ts" />
 
-export interface TGUser {
-  id: number;
-  firstName: string;
-  lastName?: string;
-  username?: string;
-  photoUrl?: string;
-  languageCode?: string;
-  isPremium?: boolean;
-}
-
 // ---- Detection ----
 
 export function isTelegramWebApp(): boolean {
@@ -35,20 +25,6 @@ export function initTelegramWebApp(): void {
 }
 
 // ---- User data ----
-
-export function getTGUser(): TGUser | null {
-  const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
-  if (!user) return null;
-  return {
-    id: user.id,
-    firstName: user.first_name,
-    lastName: user.last_name,
-    username: user.username,
-    photoUrl: user.photo_url,
-    languageCode: user.language_code,
-    isPremium: user.is_premium,
-  };
-}
 
 export function getTGInitData(): string | null {
   const data = window.Telegram?.WebApp?.initData;
@@ -78,26 +54,6 @@ export function getTGColorScheme(): 'light' | 'dark' {
   return window.Telegram?.WebApp?.colorScheme ?? 'light';
 }
 
-export function getTGThemeParams(): Record<string, string | undefined> {
-  const tp = window.Telegram?.WebApp?.themeParams;
-  if (!tp) return {};
-  return {
-    bgColor: tp.bg_color,
-    textColor: tp.text_color,
-    hintColor: tp.hint_color,
-    linkColor: tp.link_color,
-    buttonColor: tp.button_color,
-    buttonTextColor: tp.button_text_color,
-    secondaryBgColor: tp.secondary_bg_color,
-    headerBgColor: tp.header_bg_color,
-    accentTextColor: tp.accent_text_color,
-    sectionBgColor: tp.section_bg_color,
-    sectionHeaderTextColor: tp.section_header_text_color,
-    subtitleTextColor: tp.subtitle_text_color,
-    destructiveTextColor: tp.destructive_text_color,
-  };
-}
-
 // ---- BackButton ----
 
 export function showBackButton(callback: () => void): void {
@@ -109,23 +65,6 @@ export function showBackButton(callback: () => void): void {
 
 export function hideBackButton(callback?: () => void): void {
   const btn = window.Telegram?.WebApp?.BackButton;
-  if (!btn) return;
-  if (callback) btn.offClick(callback);
-  btn.hide();
-}
-
-// ---- MainButton ----
-
-export function showMainButton(text: string, callback: () => void): void {
-  const btn = window.Telegram?.WebApp?.MainButton;
-  if (!btn) return;
-  btn.setText(text);
-  btn.onClick(callback);
-  btn.show();
-}
-
-export function hideMainButton(callback?: () => void): void {
-  const btn = window.Telegram?.WebApp?.MainButton;
   if (!btn) return;
   if (callback) btn.offClick(callback);
   btn.hide();
@@ -143,28 +82,6 @@ export function hapticNotification(type: 'error' | 'success' | 'warning' = 'succ
 
 export function hapticSelection(): void {
   try { window.Telegram?.WebApp?.HapticFeedback?.selectionChanged(); } catch { /* noop */ }
-}
-
-// ---- Safe Area ----
-
-export function getSafeAreaInset(): { top: number; bottom: number; left: number; right: number } {
-  const inset = window.Telegram?.WebApp?.safeAreaInset;
-  return inset ?? { top: 0, bottom: 0, left: 0, right: 0 };
-}
-
-export function getContentSafeAreaInset(): { top: number; bottom: number; left: number; right: number } {
-  const inset = window.Telegram?.WebApp?.contentSafeAreaInset;
-  return inset ?? { top: 0, bottom: 0, left: 0, right: 0 };
-}
-
-export function onSafeAreaChanged(callback: () => void): () => void {
-  window.Telegram?.WebApp?.onEvent('safeAreaChanged', callback);
-  return () => window.Telegram?.WebApp?.offEvent('safeAreaChanged', callback);
-}
-
-export function onContentSafeAreaChanged(callback: () => void): () => void {
-  window.Telegram?.WebApp?.onEvent('contentSafeAreaChanged', callback);
-  return () => window.Telegram?.WebApp?.offEvent('contentSafeAreaChanged', callback);
 }
 
 // ---- Events ----

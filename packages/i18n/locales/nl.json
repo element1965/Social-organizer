@@ -442,8 +442,6 @@
     "minimum": "Mijn intentie",
     "stakeEmpty": "Niet ingesteld",
     "collections": "Activiteit",
-    "openOne": "{{count}} open",
-    "openMany": "{{count}} open",
     "notifications": "Meldingen",
     "notificationsAll": "Alles",
     "notificationsSome": "Deels",

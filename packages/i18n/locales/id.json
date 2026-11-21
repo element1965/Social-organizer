@@ -439,8 +439,6 @@
     "minimum": "Niat saya",
     "stakeEmpty": "Belum diatur",
     "collections": "Aktivitas",
-    "openOne": "{{count}} terbuka",
-    "openMany": "{{count}} terbuka",
     "notifications": "Notifikasi",
     "notificationsAll": "Semua",
     "notificationsSome": "Sebagian",

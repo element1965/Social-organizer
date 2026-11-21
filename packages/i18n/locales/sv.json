@@ -442,8 +442,6 @@
     "minimum": "Min avsikt",
     "stakeEmpty": "Inte angivet",
     "collections": "Aktivitet",
-    "openOne": "{{count}} öppen",
-    "openMany": "{{count}} öppna",
     "notifications": "Notiser",
     "notificationsAll": "Alla",
     "notificationsSome": "Vissa",

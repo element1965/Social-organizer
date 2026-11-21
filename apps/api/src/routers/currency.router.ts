@@ -3,9 +3,6 @@ import { router, publicProcedure } from '../trpc.js';
 import { SUPPORTED_CURRENCIES } from '@so/shared';
 import { convertToUSD, convertFromUSD, getExchangeRates } from '../services/currency.service.js';
 
-// Note: getCountryByIP and getCurrencyByCountry are available in geo.service.ts
-// for future IP-based currency detection implementation
-
 export const currencyRouter = router({
   // Get list of all supported currencies
   list: publicProcedure.query(() => {
@@ -19,7 +16,7 @@ export const currencyRouter = router({
     return { currency: 'USD', country: null };
   }),
 
-  // Get current exchange rates (cached)
+  // Get current exchange rates (fetched live, defaults on failure)
   rates: publicProcedure.query(async () => {
     const rates = await getExchangeRates();
     return rates;
