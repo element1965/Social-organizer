@@ -634,7 +634,7 @@
   },
   "invite": {
     "calls": "{{name}} sizi davet ediyor",
-    "say": "Birbirini yüz yüze tanıyan insanların ağı. Giriş yap, {{name}} birbirinizi tanıdığınızı onaylasın.",
+    "say": "Oturum açıp bir istek gönderin. {{name}}, birbirinizi tanıdığınızı doğrulayabilir.",
     "sayQr": "Birbirini yüz yüze tanıyan insanların ağı. QR kodunun süresi dolmadan giriş yaparak {{name}} ile tanışıklığını hemen onayla.",
     "known": "Birbirimizi tanıyoruz",
     "notNow": "Şimdi değil",
@@ -1076,7 +1076,7 @@
     "own": {
       "title": "Grubunuz kendi usulünü korur",
       "lead": "Grubunuzun adı ne olursa olsun (chama, paluwagan ya da bir cemaat grubu), kendi usulü kalır: toplantılarınız, kurallarınız, saymanınız.",
-      "text1": "Social Organizer para tutmaz, ortak kasası yoktur ve ücret almaz. Biri ihtiyaç bildirdiğinde, her biriniz katılıp katılmayacağına kendisi karar verir, 1 $'dan başlayarak. İhtiyaç açık kaldığı sürece tutarı değiştirebilir ya da vazgeçebilirsiniz.",
+      "text1": "Social Organizer para tutmaz, ortak kasası yoktur ve ücret almaz. Biri ihtiyaç bildirdiğinde, her biriniz katılıp katılmayacağına kendisi karar verir, en az {{min}} ile. İhtiyaç açık kaldığı sürece tutarı değiştirebilir ya da vazgeçebilirsiniz.",
       "text2": "İhtiyacı bildiren ve katılımcılar kendi sohbetlerinde, herhangi bir mesajlaşma uygulamasında anlaşır. Para, söz konusu olursa, doğrudan kişiler arasında el değiştirir."
     },
     "steps": {
@@ -1101,7 +1101,7 @@
       "explainLabel": "İki cümlede",
       "confirmLabel": "Birbirinizi onaylayın",
       "invite": "Social Organizer'a katıldım. Orada birbirini yüz yüze tanıyan insanlar bir ağ kuruyor. Birimiz işini kaybettiği veya acil ameliyat gerektiği için bir ihtiyaç bildirirse önce o kişiyi tanıyanlar, sonra onların tanıdıkları haber alır. Uygulamadan para geçmez. Bağlantımla katıl, birbirimizi tanıdığımızı onaylayayım: {{link}}",
-      "explain": "Social Organizer birbirini yüz yüze tanıyan insanları bir araya getirir. Birimiz ihtiyaç bildirdiğinde herkes katılıp katılmayacağına kendisi karar verir, 1 $'dan başlayarak; para da söz konusu olursa doğrudan kişiler arasında el değiştirir. {{link}}",
+      "explain": "Social Organizer birbirini yüz yüze tanıyan insanları bir araya getirir. Birimiz ihtiyaç bildirdiğinde herkes katılıp katılmayacağına kendisi karar verir, en az {{min}} ile; para da söz konusu olursa doğrudan kişiler arasında el değiştirir. {{link}}",
       "confirm": "Katılan herkese: ihtiyaç bildirebilmek için her birimizin onaylı 5 tanıdığı ve ağda 10 kişisi olmalı. Kendi bağlantınızı buraya atın (“{{add}}” → “{{share}}”). Yüz yüze tanıdığınız kişilerin bağlantılarını açın ve “{{known}}” düğmesine dokunun. Biri sizin bağlantınızla gelirse onaylayın. Bir sonraki buluşmada daha hızlı olur: “{{myQr}}” ve “{{scan}}”."
     },
     "honest": {

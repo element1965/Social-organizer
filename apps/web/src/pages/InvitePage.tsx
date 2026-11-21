@@ -165,7 +165,7 @@ export function InvitePage() {
       firstRun={firstRun || !me.data.onboardingCompleted}
       cameThroughInvite={cameThroughInvite}
       src={src}
-      hero={<InviteHero {...heroProps} signedIn />}
+      hero={(showInstruction) => <InviteHero {...heroProps} signedIn showInstruction={showInstruction} />}
     />
   );
 }
@@ -177,6 +177,7 @@ function InviteHero({
   token,
   addressee = null,
   signedIn = false,
+  showInstruction = true,
 }: {
   name: string;
   networkCount: number;
@@ -187,6 +188,7 @@ function InviteHero({
   addressee?: string | null;
   /** Signed-in variant: no "sign in" in the sentence. */
   signedIn?: boolean;
+  showInstruction?: boolean;
 }) {
   const { t } = useTranslation();
   const expiresAt = inPersonUntil ? new Date(inPersonUntil).getTime() : 0;
@@ -222,9 +224,11 @@ function InviteHero({
         {addressee ? <><bdi>{addressee}</bdi>{', '}</> : null}
         {t('invite.calls', { name: `\u2068${name}\u2069` })}
       </h1>
-      <p className="mt-2.5 max-w-[36ch] text-body-s text-ink-muted">
-        {t(message, { name: isolatedName, action: t('invite.known') })}
-      </p>
+      {showInstruction ? (
+        <p className="mt-2.5 max-w-[36ch] text-body-s text-ink-muted">
+          {t(message, { name: isolatedName, action: t('invite.known') })}
+        </p>
+      ) : null}
       {/* A guest through a link skips the landing: one tap to the explanation, and a way back to this invite */}
       <Link
         to={`/how?invite=${encodeURIComponent(token)}`}
@@ -259,7 +263,7 @@ function AcceptView({
   cameThroughInvite: boolean;
   /** Which way the link travelled, sent with the request (funnel only) */
   src?: InviteSrcParam;
-  hero: React.ReactNode;
+  hero: (showInstruction: boolean) => React.ReactNode;
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -412,7 +416,7 @@ function AcceptView({
 
   return (
     <OnboardingFrame top={<BrandLine />} corner={<LanguageCorner />} centre foot={foot}>
-      {hero}
+      {hero(!accept.isSuccess)}
     </OnboardingFrame>
   );
 }

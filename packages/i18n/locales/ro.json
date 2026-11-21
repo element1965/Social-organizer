@@ -637,7 +637,7 @@
   },
   "invite": {
     "calls": "{{name}} te invită",
-    "say": "O rețea de oameni care se cunosc personal. Autentifică-te, iar {{name}} va confirma că vă cunoașteți.",
+    "say": "Conectează-te pentru a-i cere lui {{name}} să confirme că vă cunoașteți.",
     "sayQr": "O rețea de oameni care se cunosc personal. Autentifică-te înainte să expire codul QR pentru a confirma imediat că îl cunoști pe {{name}}.",
     "known": "Ne cunoaștem",
     "notNow": "Nu acum",
@@ -1084,7 +1084,7 @@
     "own": {
       "title": "Grupul vostru își păstrează felul lui",
       "lead": "Oricum s-ar numi grupul vostru (chama, paluwagan sau grup de la biserică), păstrați întâlnirile, regulile și felul în care vă gestionați banii.",
-      "text1": "Social Organizer nu păstrează bani, nu are o casă comună și nu ia comision. Când cineva anunță o nevoie, participarea e o alegere personală. Poți participa de la 1 $. Cât timp nevoia e deschisă, poți schimba suma sau te poți retrage.",
+      "text1": "Social Organizer nu păstrează bani, nu are o casă comună și nu ia comision. Când cineva anunță o nevoie, participarea e o alegere personală. Poți participa de la {{min}}. Cât timp nevoia e deschisă, poți schimba suma sau te poți retrage.",
       "text2": "Persoana care a anunțat nevoia și persoanele care participă se înțeleg în propriul chat, în orice aplicație de mesagerie. Banii, dacă e cazul, merg direct de la om la om."
     },
     "steps": {
@@ -1109,7 +1109,7 @@
       "explainLabel": "În două fraze",
       "confirmLabel": "Confirmați că vă cunoașteți",
       "invite": "Acum sunt în Social Organizer. Acolo, oameni care se cunosc personal construiesc o rețea. Dacă cineva din grup anunță o nevoie din cauza unui necaz serios, cum ar fi pierderea locului de muncă sau o operație urgentă, află întâi persoanele care cunosc direct persoana care a făcut anunțul, apoi cunoscuții lor. Prin aplicație nu trec bani. Intră prin linkul meu și confirm că ne cunoaștem: {{link}}",
-      "explain": "Social Organizer adună oameni care se cunosc personal. Când cineva din grup anunță o nevoie, participarea e o alegere personală, de la 1 $. Banii, dacă e cazul, merg direct de la om la om. {{link}}",
+      "explain": "Social Organizer adună oameni care se cunosc personal. Când cineva din grup anunță o nevoie, participarea e o alegere personală, de la {{min}}. Banii, dacă e cazul, merg direct de la om la om. {{link}}",
       "confirm": "Pentru persoanele care s-au alăturat deja: ca să anunțăm o nevoie, avem nevoie de 5 cunoștințe confirmate și 10 persoane în rețea pentru fiecare cont. Puneți aici linkul vostru („{{add}}” → „{{share}}”). Deschideți linkurile persoanelor pe care le cunoașteți personal și atingeți „{{known}}”. Confirmați că vă cunoașteți cu persoanele care vin prin linkul vostru. La următoarea întâlnire merge mai repede: „{{myQr}}” și „{{scan}}”."
     },
     "honest": {

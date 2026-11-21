@@ -631,7 +631,7 @@
   },
   "invite": {
     "calls": "{{name}} mengundang Anda",
-    "say": "Jaringan orang-orang yang saling mengenal secara langsung. Masuk, lalu {{name}} akan mengonfirmasi bahwa kalian saling mengenal.",
+    "say": "Masuk untuk meminta {{name}} mengonfirmasi bahwa kalian saling kenal.",
     "sayQr": "Jaringan orang-orang yang saling mengenal secara langsung. Masuk sebelum kode QR kedaluwarsa untuk langsung mengonfirmasi bahwa kamu mengenal {{name}}.",
     "known": "Kami saling mengenal",
     "notNow": "Tidak sekarang",
@@ -1068,7 +1068,7 @@
     "own": {
       "title": "Kelompok Anda tetap dengan caranya sendiri",
       "lead": "Apa pun nama kelompok Anda (chama, paluwagan, atau kelompok gereja), caranya tetap: pertemuan Anda, aturan Anda, bendahara Anda.",
-      "text1": "Social Organizer tidak menyimpan uang, tidak punya kas bersama, dan tidak memungut biaya. Saat seseorang menyampaikan kebutuhan, setiap orang memutuskan sendiri apakah ikut, mulai $1. Selama kebutuhan masih terbuka, Anda bisa mengubah jumlahnya atau mundur.",
+      "text1": "Social Organizer tidak menyimpan uang, tidak punya kas bersama, dan tidak memungut biaya. Saat seseorang menyampaikan kebutuhan, setiap orang memutuskan sendiri apakah ikut, mulai {{min}}. Selama kebutuhan masih terbuka, Anda bisa mengubah jumlahnya atau mundur.",
       "text2": "Penyampai kebutuhan dan para peserta bersepakat di obrolan mereka sendiri, di aplikasi pesan apa pun. Uang, jika ada, berpindah langsung antarorang."
     },
     "steps": {
@@ -1093,7 +1093,7 @@
       "explainLabel": "Dalam dua kalimat",
       "confirmLabel": "Saling konfirmasi",
       "invite": "Saya sudah bergabung di Social Organizer. Di sana, orang-orang yang saling kenal secara langsung membangun jaringan. Kalau seseorang di kelompok kita menyampaikan kebutuhan karena kesulitan serius, seperti kehilangan pekerjaan atau perlu operasi mendesak, kenalan orang itu mendapat kabar lebih dulu, lalu kenalan mereka. Tidak ada uang yang lewat aplikasi. Bergabunglah lewat tautan saya, nanti saya konfirmasi bahwa kita saling kenal: {{link}}",
-      "explain": "Social Organizer mempertemukan orang-orang yang saling kenal secara langsung. Saat salah satu dari kita menyampaikan kebutuhan, setiap orang memutuskan sendiri apakah ikut, mulai $1, dan uang, jika ada, berpindah langsung antarorang. {{link}}",
+      "explain": "Social Organizer mempertemukan orang-orang yang saling kenal secara langsung. Saat salah satu dari kita menyampaikan kebutuhan, setiap orang memutuskan sendiri apakah ikut, mulai {{min}}, dan uang, jika ada, berpindah langsung antarorang. {{link}}",
       "confirm": "Untuk semua yang sudah bergabung: agar bisa menyampaikan kebutuhan, setiap orang perlu 5 kenalan yang terkonfirmasi dan 10 orang di jaringan. Kirim tautan Anda sendiri di sini (“{{add}}” → “{{share}}”). Buka tautan orang yang Anda kenal secara langsung dan ketuk “{{known}}”. Kalau ada yang datang lewat tautan Anda, konfirmasi dia. Di pertemuan berikutnya bisa lebih cepat: “{{myQr}}” dan “{{scan}}”."
     },
     "honest": {

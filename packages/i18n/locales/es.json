@@ -637,7 +637,7 @@
   },
   "invite": {
     "calls": "{{name}} le invita",
-    "say": "Una red de personas que se conocen en persona. Inicia sesión y {{name}} confirmará que se conocen.",
+    "say": "Inicia sesión para pedirle a {{name}} que confirme que se conocen.",
     "sayQr": "Una red de personas que se conocen en persona. Inicia sesión antes de que caduque el código QR para confirmar de inmediato que conoces a {{name}}.",
     "known": "Nos conocemos",
     "notNow": "Ahora no",
@@ -1084,7 +1084,7 @@
     "own": {
       "title": "Su grupo conserva su manera de hacer",
       "lead": "Se llame como se llame su grupo (chama, paluwagan o grupo de la parroquia), conserva su manera de hacer las cosas: sus reuniones, sus reglas y su forma de llevar las cuentas.",
-      "text1": "Social Organizer no guarda dinero, no tiene caja común ni cobra comisión. Cuando alguien comunica una necesidad, la decisión de participar es personal. Se puede participar desde 1 $. Mientras la necesidad está abierta, puede cambiar la cantidad o retirarse.",
+      "text1": "Social Organizer no guarda dinero, no tiene caja común ni cobra comisión. Cuando alguien comunica una necesidad, la decisión de participar es personal. Se puede participar desde {{min}}. Mientras la necesidad está abierta, puede cambiar la cantidad o retirarse.",
       "text2": "Quien comunicó la necesidad y quienes participan se ponen de acuerdo en su propio chat, en cualquier aplicación de mensajería. El dinero, si lo hay, pasa directamente entre las personas."
     },
     "steps": {
@@ -1109,7 +1109,7 @@
       "explainLabel": "En dos frases",
       "confirmLabel": "Confirmar que se conocen",
       "invite": "Me uní a Social Organizer. Ahí, personas que se conocen en persona construyen una red. Si alguien del grupo comunica una necesidad por un problema grave, como perder el trabajo o necesitar una operación urgente, se avisa primero a las personas que conoce y después a los contactos de estas. Por la aplicación no pasa dinero. Únete con mi enlace y confirmaré que nos conocemos: {{link}}",
-      "explain": "Social Organizer reúne a personas que se conocen en persona. Cuando alguien del grupo comunica una necesidad, cada persona decide si participa, desde 1 $, y el dinero, si lo hay, pasa directamente entre las personas. {{link}}",
+      "explain": "Social Organizer reúne a personas que se conocen en persona. Cuando alguien del grupo comunica una necesidad, cada persona decide si participa, desde {{min}}, y el dinero, si lo hay, pasa directamente entre las personas. {{link}}",
       "confirm": "Para quienes ya se unieron: para comunicar una necesidad hacen falta 5 contactos confirmados y 10 personas en la red por cuenta. Publiquen aquí su propio enlace («{{add}}» → «{{share}}»). Abran los enlaces de quienes conocen en persona y toquen «{{known}}». Confirmen que conocen a las personas que lleguen por su enlace. En la próxima reunión iremos más rápido: «{{myQr}}» y «{{scan}}»."
     },
     "honest": {

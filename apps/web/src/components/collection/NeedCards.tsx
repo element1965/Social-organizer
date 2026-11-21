@@ -85,7 +85,7 @@ export function MyParticipationCard({ amount, editor, onChange, onOpenChat, foot
       {editor ?? (
         <div className="flex items-center gap-3">
           <div className="min-w-0 flex-1">
-            <b className="block text-h3 font-extrabold tabular-nums">{formatMoney(amount)}</b>
+            <b className="block text-h3 font-extrabold tabular-nums"><bdi dir="ltr">{formatMoney(amount)}</bdi></b>
             <span className="text-label font-semibold text-ink-muted">{t('collection.youParticipate')}</span>
           </div>
           <Button variant="secondary" size="md" onClick={onChange}>

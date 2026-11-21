@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { formatMoney } from './format';
+import { formatIsolatedMoney, formatMoney } from './format';
 
 type MeterProps = {
   mine: number;
@@ -20,7 +20,7 @@ export function Meter({ mine, others, goal, showMine }: MeterProps) {
 
   return (
     <div>
-      <div className="mt-3 flex h-3 overflow-hidden rounded-sm bg-surface-2" role="img" aria-label={`${t('common.collected')} ${formatMoney(mine + others)}`}>
+      <div className="mt-3 flex h-3 overflow-hidden rounded-sm bg-surface-2" role="img" aria-label={`${t('common.collected')} ${formatIsolatedMoney(mine + others)}`}>
         {minePct > 0 ? <i className="block h-full bg-ink transition-[width] duration-screen ease-so motion-reduce:transition-none" style={{ width: `${minePct}%` }} /> : null}
         {othersPct > 0 ? <i className="block h-full bg-care transition-[width] duration-screen ease-so motion-reduce:transition-none" style={{ width: `${othersPct}%` }} /> : null}
       </div>
@@ -28,15 +28,15 @@ export function Meter({ mine, others, goal, showMine }: MeterProps) {
         {participate ? (
           <span className="inline-flex items-center gap-1.5">
             <i className="h-2 w-2 rounded-full bg-ink" />
-            {t('common.you')} {formatMoney(mine)}
+            <span>{t('common.you')} <bdi dir="ltr">{formatMoney(mine)}</bdi></span>
           </span>
         ) : null}
         <span className="inline-flex items-center gap-1.5">
           <i className="h-2 w-2 rounded-full bg-care" />
-          {restLabel} {formatMoney(restAmount)}
+          <span>{restLabel} <bdi dir="ltr">{formatMoney(restAmount)}</bdi></span>
         </span>
         <b className="ms-auto font-semibold text-ink">
-          {t('common.goal')} {formatMoney(goal)}
+          {t('common.goal')} <bdi dir="ltr">{formatMoney(goal)}</bdi>
         </b>
       </div>
     </div>

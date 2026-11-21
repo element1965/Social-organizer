@@ -1,5 +1,5 @@
 /*
- * Sign-in buttons in the device order from lib/device.ts (AUTH_ORDER), e-mail last as a text link,
+ * Sign-in buttons in the device order from lib/device.ts, e-mail last as a text link,
  * then the legal line. The logic lives in useSignIn; this file only draws it.
  */
 import type { ReactNode } from 'react';

@@ -634,7 +634,7 @@
   },
   "invite": {
     "calls": "{{name}} lädt Sie ein",
-    "say": "Ein Netzwerk von Menschen, die sich persönlich kennen. Melde dich an, damit {{name}} bestätigen kann, dass ihr euch kennt.",
+    "say": "Melden Sie sich an, um {{name}} zu bitten, zu bestätigen, dass Sie sich kennen.",
     "sayQr": "Ein Netzwerk von Menschen, die sich persönlich kennen. Melde dich an, solange der QR-Code gültig ist, um gleich zu bestätigen, dass du {{name}} kennst.",
     "known": "Wir kennen uns",
     "notNow": "Nicht jetzt",
@@ -1076,7 +1076,7 @@
     "own": {
       "title": "Ihre Gruppe bleibt bei ihrer Art",
       "lead": "Wie auch immer Ihre Gruppe heißt (Chama, Paluwagan oder Kirchengemeinde), Ihre Treffen, Ihre Regeln und Ihre Kassenführung bleiben wie gewohnt.",
-      "text1": "Social Organizer verwahrt kein Geld, hat keine gemeinsame Kasse und nimmt keine Gebühr. Wenn jemand einen Bedarf meldet, entscheiden Sie selbst, ob Sie sich beteiligen. Das geht ab 1 $. Solange der Bedarf offen ist, können Sie den Betrag ändern oder sich zurückziehen.",
+      "text1": "Social Organizer verwahrt kein Geld, hat keine gemeinsame Kasse und nimmt keine Gebühr. Wenn jemand einen Bedarf meldet, entscheiden Sie selbst, ob Sie sich beteiligen. Das geht ab {{min}}. Solange der Bedarf offen ist, können Sie den Betrag ändern oder sich zurückziehen.",
       "text2": "Wer den Bedarf gemeldet hat und die Teilnehmenden sprechen sich im eigenen Chat ab, in jedem Messenger. Geld, wenn überhaupt, geht direkt von Mensch zu Mensch."
     },
     "steps": {
@@ -1101,7 +1101,7 @@
       "explainLabel": "In zwei Sätzen",
       "confirmLabel": "Einander bestätigen",
       "invite": "Ich bin jetzt bei Social Organizer. Dort bauen Menschen, die sich persönlich kennen, ein Netzwerk auf. Wenn jemand von uns nach einem schweren Einschnitt wie einem Jobverlust oder einer dringenden OP einen Bedarf meldet, erfahren es zuerst Menschen, die diese Person kennen, dann deren Bekannte. Über die App läuft kein Geld. Komm über meinen Link dazu, dann bestätige ich, dass wir uns kennen: {{link}}",
-      "explain": "Social Organizer bringt Menschen zusammen, die sich persönlich kennen. Meldet jemand von uns einen Bedarf, entscheiden wir individuell, ob wir uns beteiligen. Das geht ab 1 $, und Geld geht, wenn überhaupt, direkt von Mensch zu Mensch. {{link}}",
+      "explain": "Social Organizer bringt Menschen zusammen, die sich persönlich kennen. Meldet jemand von uns einen Bedarf, entscheiden wir individuell, ob wir uns beteiligen. Das geht ab {{min}}, und Geld geht, wenn überhaupt, direkt von Mensch zu Mensch. {{link}}",
       "confirm": "An alle, die schon dabei sind: Um einen Bedarf zu melden, brauchen wir pro Person 5 bestätigte Bekanntschaften und 10 Personen im Netzwerk. Postet hier euren eigenen Link („{{add}}“ → „{{share}}“). Öffnet die Links der Leute, die ihr persönlich kennt, und tippt auf „{{known}}“. Bestätigt die Bekanntschaft mit den Personen, die über euren Link dazukommen. Beim nächsten Treffen geht es schneller: „{{myQr}}“ und „{{scan}}“."
     },
     "honest": {

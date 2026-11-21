@@ -637,7 +637,7 @@
   },
   "invite": {
     "calls": "{{name}} vous invite",
-    "say": "Un réseau de personnes qui se connaissent en personne. Connectez-vous et {{name}} confirmera que vous vous connaissez.",
+    "say": "Connectez-vous pour demander à {{name}} de confirmer que vous vous connaissez.",
     "sayQr": "Un réseau de personnes qui se connaissent en personne. Connectez-vous avant que le code QR expire pour confirmer tout de suite que vous connaissez {{name}}.",
     "known": "Nous nous connaissons",
     "notNow": "Pas maintenant",
@@ -1084,7 +1084,7 @@
     "own": {
       "title": "Votre groupe garde ses habitudes",
       "lead": "Quel que soit le nom de votre groupe (chama, paluwagan ou groupe paroissial), vous gardez vos habitudes : vos réunions, vos règles et la façon dont vous gérez vos comptes.",
-      "text1": "Social Organizer ne détient pas d’argent, n’a pas de caisse commune et ne prend aucune commission. Quand quelqu’un annonce un besoin, la décision de participer est individuelle. On peut participer à partir de 1 $. Tant que le besoin est ouvert, vous pouvez modifier le montant ou vous retirer.",
+      "text1": "Social Organizer ne détient pas d’argent, n’a pas de caisse commune et ne prend aucune commission. Quand quelqu’un annonce un besoin, la décision de participer est individuelle. On peut participer à partir de {{min}}. Tant que le besoin est ouvert, vous pouvez modifier le montant ou vous retirer.",
       "text2": "La personne qui a annoncé le besoin et les personnes qui y participent s’entendent dans leur propre discussion, sur n’importe quelle messagerie. L’argent, s’il y en a, passe directement de personne à personne."
     },
     "steps": {
@@ -1109,7 +1109,7 @@
       "explainLabel": "En deux phrases",
       "confirmLabel": "Confirmer que vous vous connaissez",
       "invite": "J’ai rejoint Social Organizer. Des gens qui se connaissent en personne y construisent un réseau. Si quelqu’un dans le groupe annonce un besoin après un vrai coup dur, comme la perte d’un emploi ou une opération urgente, ses connaissances sont averties en premier, puis les leurs. Aucun argent ne passe par l’application. Rejoins-moi par mon lien, et je confirmerai qu’on se connaît : {{link}}",
-      "explain": "Social Organizer réunit des gens qui se connaissent en personne. Quand quelqu’un du groupe annonce un besoin, chaque personne décide de participer ou non, à partir de 1 $. L’argent, s’il y en a, passe directement de personne à personne. {{link}}",
+      "explain": "Social Organizer réunit des gens qui se connaissent en personne. Quand quelqu’un du groupe annonce un besoin, chaque personne décide de participer ou non, à partir de {{min}}. L’argent, s’il y en a, passe directement de personne à personne. {{link}}",
       "confirm": "Pour les personnes déjà dans le réseau : pour annoncer un besoin, il nous faut 5 connaissances confirmées et 10 personnes dans le réseau par compte. Postez ici votre propre lien (« {{add}} » → « {{share}} »). Ouvrez les liens des personnes que vous connaissez en personne et touchez « {{known}} ». Confirmez que vous connaissez les personnes arrivées par votre lien. À la prochaine réunion, ça ira plus vite : « {{myQr}} » et « {{scan}} »."
     },
     "honest": {

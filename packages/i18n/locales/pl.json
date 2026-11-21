@@ -640,7 +640,7 @@
   },
   "invite": {
     "calls": "{{name}} zaprasza Cię",
-    "say": "Sieć osób, które znają się osobiście. Zaloguj się, a {{name}} potwierdzi, że się znacie.",
+    "say": "Zaloguj się, aby wysłać prośbę. {{name}} będzie mieć możliwość potwierdzenia, że się znacie.",
     "sayQr": "Sieć osób, które znają się osobiście. Zaloguj się, zanim kod QR wygaśnie, żeby od razu potwierdzić znajomość z {{name}}.",
     "known": "Znamy się",
     "notNow": "Nie teraz",
@@ -1092,7 +1092,7 @@
     "own": {
       "title": "Wasza grupa zostaje przy swoich zwyczajach",
       "lead": "Jakkolwiek nazywa się wasza grupa (chama, paluwagan czy wspólnota parafialna), zachowujecie swoje spotkania, zasady i sposób zarządzania pieniędzmi.",
-      "text1": "Social Organizer nie przechowuje pieniędzy, nie ma wspólnej kasy i nie pobiera prowizji. Gdy ktoś zgłasza potrzebę, każde z was samo decyduje, czy wziąć udział, od 1 $. Dopóki potrzeba jest otwarta, możesz zmienić kwotę albo się wycofać.",
+      "text1": "Social Organizer nie przechowuje pieniędzy, nie ma wspólnej kasy i nie pobiera prowizji. Gdy ktoś zgłasza potrzebę, każde z was samo decyduje, czy wziąć udział, od {{min}}. Dopóki potrzeba jest otwarta, możesz zmienić kwotę albo się wycofać.",
       "text2": "Osoby, które zgłosiły potrzebę lub biorą w niej udział, umawiają się na własnym czacie, w dowolnym komunikatorze. Pieniądze, jeśli w ogóle, idą bezpośrednio między ludźmi."
     },
     "steps": {
@@ -1117,7 +1117,7 @@
       "explainLabel": "W dwóch zdaniach",
       "confirmLabel": "Potwierdźcie się nawzajem",
       "invite": "Jestem teraz w Social Organizer. Ludzie, którzy znają się osobiście, budują tam sieć. Jeśli ktoś z naszej grupy zgłosi potrzebę z powodu utraty pracy czy pilnej operacji, jako pierwsze dowiedzą się o tym osoby, które znają tę osobę, a później ich znajomi. Przez aplikację nie przechodzą żadne pieniądze. Dołącz przez mój link, a potwierdzę, że się znamy: {{link}}",
-      "explain": "Social Organizer łączy ludzi, którzy znają się osobiście. Gdy ktoś z naszej grupy zgłasza potrzebę, udział jest indywidualną decyzją. Można wziąć udział od 1 $, a pieniądze, jeśli w ogóle, idą bezpośrednio między ludźmi. {{link}}",
+      "explain": "Social Organizer łączy ludzi, którzy znają się osobiście. Gdy ktoś z naszej grupy zgłasza potrzebę, udział jest indywidualną decyzją. Można wziąć udział od {{min}}, a pieniądze, jeśli w ogóle, idą bezpośrednio między ludźmi. {{link}}",
       "confirm": "Do osób, które już są w sieci: żeby zgłosić potrzebę, każda osoba potrzebuje 5 potwierdzonych znajomości i 10 osób w sieci. Wrzućcie tu swoje linki („{{add}}” → „{{share}}”). Otwierajcie linki osób, które znacie osobiście, i stukajcie „{{known}}”. Potwierdźcie znajomość z osobami, które dołączą przez wasz link. Na następnym spotkaniu pójdzie szybciej: „{{myQr}}” i „{{scan}}”."
     },
     "honest": {

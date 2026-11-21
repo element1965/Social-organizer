@@ -634,7 +634,7 @@
   },
   "invite": {
     "calls": "{{name}} inviterer deg",
-    "say": "Et nettverk av mennesker som kjenner hverandre personlig. Logg inn, så bekrefter {{name}} at dere kjenner hverandre.",
+    "say": "Logg inn for å be {{name}} bekrefte at dere kjenner hverandre.",
     "sayQr": "Et nettverk av mennesker som kjenner hverandre personlig. Logg inn før QR-koden utløper for å bekrefte med en gang at du kjenner {{name}}.",
     "known": "Vi kjenner hverandre",
     "notNow": "Ikke nå",
@@ -1076,7 +1076,7 @@
     "own": {
       "title": "Gruppen beholder sin egen måte",
       "lead": "Uansett hva gruppen kaller seg (en chama, en paluwagan eller en menighetsgruppe), består dens måte: møtene, reglene, kassereren deres.",
-      "text1": "Social Organizer oppbevarer ikke penger, har ingen felles kasse og tar ikke gebyr. Når noen melder om et behov, bestemmer hver av dere selv om dere vil delta, fra 1 $. Så lenge behovet er åpent, kan du endre beløpet eller trekke deg.",
+      "text1": "Social Organizer oppbevarer ikke penger, har ingen felles kasse og tar ikke gebyr. Når noen melder om et behov, bestemmer hver av dere selv om dere vil delta, fra {{min}}. Så lenge behovet er åpent, kan du endre beløpet eller trekke deg.",
       "text2": "Den som meldte behovet og deltakerne avtaler i sin egen chat, i hvilken som helst meldingsapp. Penger, hvis det blir aktuelt, går direkte mellom folk."
     },
     "steps": {
@@ -1101,7 +1101,7 @@
       "explainLabel": "Kort fortalt",
       "confirmLabel": "Bekreft hverandre",
       "invite": "Jeg er med i Social Organizer nå. Der bygger folk som kjenner hverandre personlig, et nettverk. Hvis en av oss melder om et behov etter å ha mistet jobben eller fordi en akutt operasjon trengs, får de som kjenner personen beskjed først, deretter deres bekjente. Ingen penger går gjennom appen. Bli med via lenken min, så bekrefter jeg at vi kjenner hverandre: {{link}}",
-      "explain": "Social Organizer samler folk som kjenner hverandre personlig. Når en av oss melder om et behov, bestemmer hver enkelt om de vil delta, fra 1 $, og penger går, hvis det blir aktuelt, direkte mellom folk. {{link}}",
+      "explain": "Social Organizer samler folk som kjenner hverandre personlig. Når en av oss melder om et behov, bestemmer hver enkelt om de vil delta, fra {{min}}, og penger går, hvis det blir aktuelt, direkte mellom folk. {{link}}",
       "confirm": "Til alle som har blitt med: for å melde om et behov trenger hver av oss 5 bekreftede bekjente og 10 personer i nettverket. Del lenken din her («{{add}}» → «{{share}}»). Åpne lenkene til folk dere kjenner personlig, og trykk «{{known}}». Kommer noen via lenken din, bekreft dem. På neste møte går det raskere: «{{myQr}}» og «{{scan}}»."
     },
     "honest": {

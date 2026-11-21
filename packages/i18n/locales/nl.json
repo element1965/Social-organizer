@@ -634,7 +634,7 @@
   },
   "invite": {
     "calls": "{{name}} nodigt je uit",
-    "say": "Een netwerk van mensen die elkaar persoonlijk kennen. Log in en {{name}} bevestigt dat jullie elkaar kennen.",
+    "say": "Log in om {{name}} te vragen te bevestigen dat jullie elkaar kennen.",
     "sayQr": "Een netwerk van mensen die elkaar persoonlijk kennen. Log in voordat de QR-code verloopt om meteen te bevestigen dat je {{name}} kent.",
     "known": "We kennen elkaar",
     "notNow": "Niet nu",
@@ -1076,7 +1076,7 @@
     "own": {
       "title": "Je groep houdt haar eigen manier",
       "lead": "Hoe je groep ook heet (een chama, een paluwagan of een kerkgroep), haar eigen manier blijft: jullie bijeenkomsten, jullie regels, jullie penningmeester.",
-      "text1": "Social Organizer bewaart geen geld, heeft geen gezamenlijke kas en rekent geen kosten. Als iemand een behoefte meldt, beslis je zelf of je meedoet. Dat kan vanaf $ 1. Zolang de behoefte open is, kun je het bedrag wijzigen of je terugtrekken.",
+      "text1": "Social Organizer bewaart geen geld, heeft geen gezamenlijke kas en rekent geen kosten. Als iemand een behoefte meldt, beslis je zelf of je meedoet. Dat kan vanaf {{min}}. Zolang de behoefte open is, kun je het bedrag wijzigen of je terugtrekken.",
       "text2": "Wie de behoefte meldde en de deelnemers spreken af in hun eigen chat, in elke messenger. Geld, als het zover komt, gaat rechtstreeks tussen mensen."
     },
     "steps": {
@@ -1101,7 +1101,7 @@
       "explainLabel": "In twee zinnen",
       "confirmLabel": "Elkaar bevestigen",
       "invite": "Ik zit nu op Social Organizer. Mensen die elkaar persoonlijk kennen bouwen daar een netwerk. Als iemand uit onze groep een behoefte meldt na baanverlies of voor een spoedoperatie, horen de kennissen van die persoon het eerst, daarna hun kennissen. Er gaat geen geld via de app. Doe mee via mijn link, dan bevestig ik dat we elkaar kennen: {{link}}",
-      "explain": "Social Organizer brengt mensen samen die elkaar persoonlijk kennen. Als een van ons een behoefte meldt, bepaal je zelf of je meedoet. Dat kan vanaf $ 1. Geld gaat, als het zover komt, rechtstreeks tussen mensen. {{link}}",
+      "explain": "Social Organizer brengt mensen samen die elkaar persoonlijk kennen. Als een van ons een behoefte meldt, bepaal je zelf of je meedoet. Dat kan vanaf {{min}}. Geld gaat, als het zover komt, rechtstreeks tussen mensen. {{link}}",
       "confirm": "Aan iedereen die al meedoet: om een behoefte te melden heeft ieder van ons 5 bevestigde kennissen en 10 mensen in het netwerk nodig. Zet hier je eigen link neer (‘{{add}}’ → ‘{{share}}’). Open de links van mensen die je persoonlijk kent en tik op ‘{{known}}’. Komt iemand via jouw link binnen, bevestig die dan. Bij de volgende bijeenkomst gaat het sneller: ‘{{myQr}}’ en ‘{{scan}}’."
     },
     "honest": {

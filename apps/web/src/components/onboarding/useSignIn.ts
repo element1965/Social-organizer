@@ -15,7 +15,7 @@ import { Browser } from '@capacitor/browser';
 import { isTelegramWebApp, getTGInitData } from '@so/tg-adapter';
 import { useAuth, markLoginMethod, type LoginMethod } from '../../hooks/useAuth';
 import { trpc } from '../../lib/trpc';
-import { AUTH_ORDER, detectDevice, type AuthProvider } from '../../lib/device';
+import { detectDevice, orderAuthProviders, type AuthProvider } from '../../lib/device';
 import {
   afterSignInPath, isOnboarded, newGoogleState, randomHex, readPendingInvite, safeInviteToken, safePath, savePendingSos,
   sosIdFromPath,
@@ -331,14 +331,13 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
 
   // ---- Which buttons, in which order ----
   const device = detectDevice();
-  // Inside Telegram the Google and Apple buttons are hidden: their OAuth pages do not work in the mini app
   const available: Record<AuthProvider, boolean> = {
-    google: !inTelegram && !!GOOGLE_CLIENT_ID && methods?.google !== false,
-    apple: !inTelegram && !!APPLE_SERVICE_ID && methods?.apple !== false,
+    google: !!GOOGLE_CLIENT_ID && methods?.google !== false,
+    apple: !!APPLE_SERVICE_ID && methods?.apple !== false,
     telegram: true,
     email: true,
   };
-  const providers = (inTelegram ? (['telegram', 'email'] as const) : AUTH_ORDER[device]).filter((p) => available[p]);
+  const providers = orderAuthProviders(device, available, inTelegram);
   /** E-mail codes can be switched off on the server; then the e-mail entry opens the password form. */
   const emailCodes = methods?.email !== false;
 

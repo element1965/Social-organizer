@@ -640,7 +640,7 @@
   },
   "invite": {
     "calls": "{{name}} vás zve",
-    "say": "Síť lidí, kteří se osobně znají. Přihlaste se a {{name}} potvrdí, že se znáte.",
+    "say": "Přihlaste se a požádejte o potvrzení, že se s {{name}} znáte.",
     "sayQr": "Síť lidí, kteří se osobně znají. Přihlaste se, dokud je QR kód platný, a potvrďte hned, že se s {{name}} znáte.",
     "known": "Známe se",
     "notNow": "Teď ne",
@@ -1092,7 +1092,7 @@
     "own": {
       "title": "Vaše skupina si ponechá své zvyky",
       "lead": "Ať už se vaše skupina jmenuje jakkoli (chama, paluwagan nebo farní společenství), její zvyky zůstávají: vaše schůzky, vaše pravidla i způsob, jakým spravujete peníze.",
-      "text1": "Social Organizer nedrží peníze, nemá společnou kasu a nebere poplatky. Když někdo oznámí potřebu, rozhodnutí o účasti je na vás. Zapojit se dá od 1 $. Dokud je potřeba otevřená, můžete částku změnit nebo účast zrušit.",
+      "text1": "Social Organizer nedrží peníze, nemá společnou kasu a nebere poplatky. Když někdo oznámí potřebu, rozhodnutí o účasti je na vás. Zapojit se dá od {{min}}. Dokud je potřeba otevřená, můžete částku změnit nebo účast zrušit.",
       "text2": "Lidé, kteří oznámili potřebu nebo se do ní zapojili, se domlouvají ve vlastním chatu, v jakékoli aplikaci pro zasílání zpráv. Peníze, pokud vůbec, jdou přímo mezi lidmi."
     },
     "steps": {
@@ -1117,7 +1117,7 @@
       "explainLabel": "Ve dvou větách",
       "confirmLabel": "Potvrďte se navzájem",
       "invite": "Jsem teď v Social Organizer. Lidé, kteří se znají osobně, tam staví síť. Když někdo z nás oznámí potřebu kvůli vážným potížím, třeba ztrátě práce nebo urgentní operaci, dozvědí se o ní nejdřív lidé, kteří danou osobu znají, pak jejich známí. Přes aplikaci nejdou žádné peníze. Přidej se přes můj odkaz a já potvrdím, že se známe: {{link}}",
-      "explain": "Social Organizer spojuje lidi, kteří se znají osobně. Když někdo z nás oznámí potřebu, účast je osobní rozhodnutí a zapojit se dá od 1 $. Peníze, pokud vůbec, jdou přímo mezi lidmi. {{link}}",
+      "explain": "Social Organizer spojuje lidi, kteří se znají osobně. Když někdo z nás oznámí potřebu, účast je osobní rozhodnutí a zapojit se dá od {{min}}. Peníze, pokud vůbec, jdou přímo mezi lidmi. {{link}}",
       "confirm": "Pro všechny v síti: k oznámení potřeby je zapotřebí 5 potvrzených známostí a 10 lidí v síti na osobu. Pošlete sem svůj odkaz („{{add}}“ → „{{share}}“). Otevírejte odkazy lidí, které znáte osobně, a klepněte na „{{known}}“. Potvrďte známost s lidmi, kteří přijdou přes váš odkaz. Na příští schůzce to půjde rychleji: „{{myQr}}“ a „{{scan}}“."
     },
     "honest": {
