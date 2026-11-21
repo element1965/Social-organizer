@@ -104,6 +104,8 @@ export interface NetworkGraphProps {
   insetTop?: number;
   /** Height in CSS px of the UI laid over the bottom of the canvas. */
   labelInsetBottom?: number;
+  /** Enforce label bounds and collisions between layout passes, for scenes with changing overlays. */
+  constrainLabelsDuringMotion?: boolean;
 }
 
 export interface NetworkGraphHandle {
@@ -1246,6 +1248,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   farRings,
   insetTop = 0,
   labelInsetBottom = 0,
+  constrainLabelsDuringMotion = false,
   sceneTheme = 'dark',
 }, ref) {
   const fgRef = useRef<FGRef>(null);
@@ -1297,6 +1300,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   insetTopRef.current = insetTop;
   const labelInsetRef = useRef(labelInsetBottom);
   labelInsetRef.current = labelInsetBottom;
+  const constrainLabelsRef = useRef(constrainLabelsDuringMotion);
+  constrainLabelsRef.current = constrainLabelsDuringMotion;
 
   /* ----- Stable graph data: node objects survive re-renders, layout is kept ----- */
 
@@ -2267,6 +2272,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const bodyBox = screenBox();
     const anchorBox = screenBox();
     const kept: ScreenBox[] = [];
+    const renderedBoxes: ScreenBox[] = [];
     // Nodes whose photo may show now (ranking pass)
     const photoAllowed = new Set<string>();
     // Last time each node was among the nearest few (label hold)
@@ -2286,7 +2292,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const debug = (globalThis as { __SO_GRAPH_DEBUG__?: { fg?: unknown; frameMs?: number } }).__SO_GRAPH_DEBUG__;
     if (debug) debug.fg = fg;
 
-    function projectBox(sprite: THREE.Sprite, scale: number, cam: THREE.Camera, w: number, h: number, box: ScreenBox): number {
+    function projectBox(sprite: THREE.Sprite, scale: number, cam: THREE.Camera, w: number, h: number, box: ScreenBox, anchored = false): number {
       sprite.getWorldPosition(worldV);
       cameraV.copy(worldV).applyMatrix4(cam.matrixWorldInverse);
       const depth = -cameraV.z;
@@ -2294,16 +2300,24 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       projV.copy(cameraV).applyMatrix4(cam.projectionMatrix);
       if (projV.z < -1 || projV.z > 1) return 0;
       const pxPerUnit = cam.projectionMatrix.elements[5]! * h / (2 * depth);
-      setBox(box, (projV.x + 1) * w / 2, (1 - projV.y) * h / 2,
-        sprite.scale.x * scale * pxPerUnit, sprite.scale.y * scale * pxPerUnit);
+      const boxWidth = sprite.scale.x * scale * pxPerUnit;
+      const boxHeight = sprite.scale.y * scale * pxPerUnit;
+      const x = (projV.x + 1) * w / 2 + (anchored ? (0.5 - sprite.center.x) * boxWidth : 0);
+      const y = (1 - projV.y) * h / 2 + (anchored ? (sprite.center.y - 0.5) * boxHeight : 0);
+      setBox(box, x, y, boxWidth, boxHeight);
       return depth;
+    }
+
+    function labelPriority(v: NodeVis) {
+      return v.node.isCenter ? 0 : v.node.id === selectedIdRef.current ? 1
+        : pathRef.current.set.has(v.node.id) && !v.node.isDeleted ? 2
+        : (v.node.depth ?? 1) === 1 ? 3 : 4;
     }
 
     function placeLabels(cam: THREE.Camera, width: number, height: number) {
       cam.updateMatrixWorld();
       const top = Math.max(0, insetTopRef.current);
       const bottom = height - Math.max(0, labelInsetRef.current);
-      const selectedId = selectedIdRef.current;
       candidates.length = 0;
       kept.length = 0;
       let faceCount = 0;
@@ -2336,9 +2350,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         }
         it.v = v;
         it.d2 = v.d2;
-        it.priority = v.node.isCenter ? 0 : v.node.id === selectedId ? 1
-          : pathRef.current.set.has(v.node.id) && !v.node.isDeleted ? 2
-          : (v.node.depth ?? 1) === 1 ? 3 : 4;
+        it.priority = labelPriority(v);
         candidates.push(it);
       }
       candidates.sort(compareLabels);
@@ -2606,9 +2618,10 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
 
       dotList.length = 0;
       labels.length = 0;
+      const canvas = (fg.renderer() as THREE.WebGLRenderer).domElement;
+      const labelHeight = canvas.clientHeight || 1;
       // CSS pixels per world unit at distance 1 (label sizing)
-      const pxPerUnit = ((cam as THREE.PerspectiveCamera).projectionMatrix.elements[5] ?? 1)
-        * ((fg.renderer() as THREE.WebGLRenderer).domElement.clientHeight || 1) * 0.5;
+      const pxPerUnit = ((cam as THREE.PerspectiveCamera).projectionMatrix.elements[5] ?? 1) * labelHeight * 0.5;
       for (const v of visRef.current.values()) {
         if (!v.outer.parent) continue;
         const p = v.outer.position;
@@ -2722,9 +2735,18 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         }
       }
 
+      const labelWidth = canvas.clientWidth || 1;
       if (labelFrame % 6 === 1) {
-        const el = (fg.renderer() as THREE.WebGLRenderer).domElement;
-        placeLabels(cam, el.clientWidth || 1, el.clientHeight || 1);
+        placeLabels(cam, labelWidth, labelHeight);
+      }
+      const labelTop = Math.max(0, insetTopRef.current);
+      const labelBottom = labelHeight - Math.max(0, labelInsetRef.current);
+      const constrained = constrainLabelsRef.current && labels.length > 0;
+      // Overlay bounds and collisions still apply while the camera moves and old labels fade between placement passes.
+      if (constrained) {
+        cam.updateMatrixWorld();
+        kept.length = 0;
+        labels.sort((a, b) => labelPriority(a) - labelPriority(b) || a.d2 - b.d2);
       }
       const path = pathRef.current;
       for (const v of labels) {
@@ -2737,6 +2759,12 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           v.labelShow = wantShown > v.labelShow ? Math.min(1, v.labelShow + step) : Math.max(0, v.labelShow - step);
         }
         label.visible = v.labelShow > 0.01;
+        if (constrained && label.visible) {
+          const box = renderedBoxes[kept.length] ??= screenBox();
+          const depth = projectBox(label, v.lastScale, cam, labelWidth, labelHeight, box, true);
+          label.visible = depth > 0 && fitsViewport(box, labelWidth, labelTop, labelBottom) && !hitsKept(box, kept, 0);
+          if (label.visible) kept.push(box);
+        }
         label.material.depthTest = !protectedLabel;
         // A protected label may be shifted into view from a node outside the frustum.
         label.frustumCulled = !protectedLabel;

@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
@@ -16,6 +16,7 @@ type RingChipsProps = {
   farLabel?: string;
   /** "Back to me" button at the end of the row. Omit to hide it. */
   onSelf?: () => void;
+  ref?: Ref<HTMLDivElement>;
   className?: string;
   style?: CSSProperties;
 };
@@ -26,13 +27,13 @@ type RingChipsProps = {
  * A tap opens People for the ring, over the feed and on the expanded graph alike; the switch that shows or
  * hides a ring on the graph is in that list.
  */
-export function RingChips({ counts, farLabel, hiddenRings, onSelf, className, style }: RingChipsProps) {
+export function RingChips({ counts, farLabel, hiddenRings, onSelf, ref, className, style }: RingChipsProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const rings: Ring[] = [1, 2, 3];
 
   return (
-    <div className={className} style={style}>
+    <div ref={ref} className={className} style={style}>
       <p className="mb-1 flex items-baseline justify-between gap-3 px-1 text-micro font-bold text-node-2">
         <span aria-hidden>{t('circle.rings.caption')}</span>
         {/* 4th to 6th rings: one rounded count only, nobody there is named */}

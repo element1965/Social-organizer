@@ -48,7 +48,7 @@ function FieldChrome({
   const hintId = `${id}-hint`;
   return (
     <label className="block" htmlFor={id}>
-      {label ? <span className="mb-1.5 block text-label font-semibold text-ink-muted">{label}</span> : null}
+      {label ? <span id={`${id}-label`} className="mb-1.5 block text-label font-semibold text-ink-muted">{label}</span> : null}
       {children}
       {error ? (
         // A new error fades in (keyed by its text), so it reads as a reaction to what was typed
@@ -125,6 +125,7 @@ function MoneyField({ label, hint, error, value, onValueChange, placeholder, id,
           inputMode="decimal"
           value={value}
           placeholder={placeholder ?? '0'}
+          aria-labelledby={label ? `${fieldId}-label` : undefined}
           aria-invalid={error ? true : undefined}
           aria-describedby={error || hint ? `${fieldId}-hint` : undefined}
           onChange={(event) => onValueChange?.(event.target.value.replace(/[^\d.,]/g, ''))}

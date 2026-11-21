@@ -138,6 +138,7 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
             farRings={farRings}
             insetTop={insetTop}
             labelInsetBottom={labelInsetBottom}
+            constrainLabelsDuringMotion
             showControls={false}
             theme={dark ? 'dark' : 'light'}
             sceneTheme={dark ? 'dark' : 'light'}

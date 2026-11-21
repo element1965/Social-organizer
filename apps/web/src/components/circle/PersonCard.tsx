@@ -10,7 +10,7 @@ import { Button } from '../ui2/Button';
 import { PathFigure } from '../ui2/PathFigure';
 import { Pill } from '../ui2/Pill';
 import { Sheet } from '../ui2/Sheet';
-import { formatMoney } from '../ui2/format';
+import { formatIsolatedMoney } from '../ui2/format';
 import { IconBack, IconChevron } from '../ui2/icons';
 import { IconClose } from './icons';
 import { ActionError } from '../errors/ActionError';
@@ -91,8 +91,8 @@ export function PersonCard({ person, variant, onClose, step }: Props) {
     actions.push({
       key: 'collection',
       label: person.collection.amount != null
-        ? t('person.collectionAmount', { amount: formatMoney(person.collection.amount) })
-        : t('person.openCollection'),
+        ? t('person.collectionAmount', { amount: formatIsolatedMoney(person.collection.amount) })
+        : t('person.openNeed'),
       primary: true,
       onClick: () => navigate(`/collection/${person.collection!.id}`, { state: { needOrigin: 'circle' } }),
     });
@@ -186,7 +186,13 @@ export function PersonCard({ person, variant, onClose, step }: Props) {
         ) : null}
         <div className={cn('mt-3.5 grid gap-2', actions.length === 1 ? 'grid-cols-1' : actions.length === 2 ? 'grid-cols-2' : 'grid-cols-3')}>
           {actions.map((a) => (
-            <Button key={a.key} size="md" variant={a.primary ? 'primary' : 'ghost'} onClick={a.onClick}>
+            <Button
+              key={a.key}
+              size="md"
+              variant={a.primary ? 'primary' : 'ghost'}
+              className={a.key === 'collection' ? 'h-auto min-h-[var(--h-secondary)] whitespace-normal break-words py-2' : undefined}
+              onClick={a.onClick}
+            >
               {a.label}
             </Button>
           ))}

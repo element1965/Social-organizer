@@ -45,7 +45,7 @@ export function SavedPeople({ title, home = false }: { title: string; home?: boo
         {home && figure ? <NetStats variant="card" people={figure.people} canHelp={figure.canHelp} /> : null}
         <div>
           <Button className="w-full" disabled aria-describedby="offline-need-hint">
-            {t('nav.ask')}
+            {t('ask.submit')}
           </Button>
           <OfflineHint id="offline-need-hint" />
         </div>

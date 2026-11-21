@@ -162,7 +162,7 @@ export function PathToRequestSheet({ open, onClose, children }: { open: boolean;
               navigate(data.allowed ? '/ask' : '/add');
             }}
           >
-            {data.allowed ? t('nav.ask') : t('nav.addPerson')}
+            {data.allowed ? t('ask.submit') : t('nav.addPerson')}
           </Button>
           <Button variant="text" onClick={onClose}>
             {t('path.later')}
