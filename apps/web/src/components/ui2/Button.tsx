@@ -39,8 +39,8 @@ export function Button({
   const box =
     variant === 'icon'
       ? resolved === 'md'
-        ? 'h-10 w-10 rounded-md'
-        : 'h-icon w-icon rounded-md'
+        ? 'h-10 w-10 shrink-0 rounded-md before:absolute before:-inset-[3px]'
+        : 'h-icon w-[var(--h-icon)] shrink-0 rounded-md before:absolute before:-inset-[5px]'
       : variant === 'text' || variant === 'textDanger'
         ? 'min-h-small rounded-md px-2 text-body-s font-bold'
         : resolved === 'md'

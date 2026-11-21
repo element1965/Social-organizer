@@ -105,7 +105,7 @@ export default {
       },
       // Text uses care-text: in dark it is lighter than the care fill. Deep-merges with colors.care.
       textColor: {
-        care: { DEFAULT: token('care-text') },
+        care: { DEFAULT: token('care-text'), 'on-ink': token('care-on-ink') },
         success: token('care-text'),
       },
       // Named scale, not `r-*`. `rounded-r-lg` is Tailwind's right-side utility.

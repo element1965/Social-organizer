@@ -7,8 +7,8 @@
  */
 import type { SVGProps } from 'react';
 
-/** Telegram brand blue (as in the mockup); text on it is white in both themes. */
-export const TELEGRAM_BG = '#229ED9';
+/** Telegram blue adjusted for white sign-in text in both themes. */
+export const TELEGRAM_BG = '#1877B0';
 export const TELEGRAM_FG = '#FFFFFF';
 
 type P = SVGProps<SVGSVGElement>;

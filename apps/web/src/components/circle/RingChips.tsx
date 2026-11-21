@@ -36,7 +36,7 @@ export function RingChips({ counts, farLabel, hiddenRings, onSelf, className, st
       <p className="mb-1 flex items-baseline justify-between gap-3 px-1 text-micro font-bold text-node-2">
         <span aria-hidden>{t('circle.rings.caption')}</span>
         {/* 4th to 6th rings: one rounded count only, nobody there is named */}
-        {farLabel ? <span className="truncate text-node-3">{farLabel}</span> : null}
+        {farLabel ? <span className="truncate">{farLabel}</span> : null}
       </p>
       <div className="flex items-center gap-2">
         {rings.map((ring) => {
@@ -47,12 +47,12 @@ export function RingChips({ counts, farLabel, hiddenRings, onSelf, className, st
               key={ring}
               variant="onscene"
               aria-label={t('circle.rings.open', { ring: t(`circle.rings.full${ring}`), count: counts[ring] })}
-              className={cn('backdrop-blur-md', hidden && 'opacity-40')}
+              className={cn('min-w-[46px] backdrop-blur-md', hidden && 'opacity-40')}
               onClick={() => navigate(`/people/${ring}`)}
             >
-              <i className={cn('h-2 w-2 rounded-full', DOT[ring])} aria-hidden />
-              <b className="text-caption font-extrabold tabular-nums tracking-tight text-node-1">{counts[ring]}</b>
-              {label}
+              <i className={cn('h-2 w-2 shrink-0 rounded-full', DOT[ring])} aria-hidden />
+              <b className="shrink-0 text-caption font-extrabold tabular-nums tracking-tight text-node-1">{counts[ring]}</b>
+              <span className="min-w-0 truncate">{label}</span>
             </Chip>
           );
         })}
@@ -62,7 +62,7 @@ export function RingChips({ counts, farLabel, hiddenRings, onSelf, className, st
             variant="onscene"
             aria-label={t('circle.toSelf')}
             title={t('circle.toSelf')}
-            className="ms-auto shrink-0 text-node-1 backdrop-blur-md max-sm:w-[34px] max-sm:px-0"
+            className="ms-auto shrink-0 text-node-1 backdrop-blur-md max-sm:w-[34px] max-sm:min-w-0 max-sm:px-0 max-sm:before:-start-1 max-sm:before:-end-2"
             onClick={onSelf}
           >
             <IconAim className="h-4 w-4" />

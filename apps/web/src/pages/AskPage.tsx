@@ -223,6 +223,7 @@ function AskBody() {
             value={chat}
             placeholder={t('ask.chatPlaceholder')}
             inputMode="url"
+            dir="ltr"
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck={false}
@@ -258,7 +259,13 @@ function AskBody() {
         }
       />
 
-      <Sheet open={howOpen} onClose={() => setHowOpen(false)} title={t('ask.chatSheetTitle')} description={t('ask.chatSheetLead')}>
+      <Sheet
+        open={howOpen}
+        onClose={() => setHowOpen(false)}
+        title={t('ask.chatSheetTitle')}
+        description={t('ask.chatSheetLead')}
+        footer={<Button className="w-full" onClick={() => setHowOpen(false)}>{t('ask.chatGotIt')}</Button>}
+      >
         <ol className="list-none p-0">
           {(['chatStep1', 'chatStep2', 'chatStep3'] as const).map((key, index) => (
             <li key={key} className="flex items-start gap-3 py-2 text-body-s font-semibold">
@@ -274,7 +281,6 @@ function AskBody() {
             </span>
           ))}
         </div>
-        <Button className="mt-4 w-full" onClick={() => setHowOpen(false)}>{t('ask.chatGotIt')}</Button>
       </Sheet>
     </>
   );

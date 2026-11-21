@@ -18,6 +18,8 @@ type NeedSummaryCardProps = {
   /** Names from me to the author ("You", …, the author). Not shown with fewer than two. */
   pathNames?: string[];
   creatorName: string;
+  /** Use the author's name as the page heading when the screen header has no title. */
+  pageHeading?: boolean;
   photoUrl?: string | null;
   /** Opens the author's page; without it the name is plain text. */
   onCreator?: () => void;
@@ -32,21 +34,24 @@ type NeedSummaryCardProps = {
 };
 
 /** The head of a Need: the chain to the author, the author, the amount reported and the stage. */
-export function NeedSummaryCard({ pathNames, creatorName, photoUrl, onCreator, subtitle, meter, stages, stageDone, note }: NeedSummaryCardProps) {
+export function NeedSummaryCard({ pathNames, creatorName, pageHeading, photoUrl, onCreator, subtitle, meter, stages, stageDone, note }: NeedSummaryCardProps) {
   const { t } = useTranslation();
+  const AuthorLine = pageHeading ? 'h1' : 'div';
   return (
     <Card className="mt-2">
       {pathNames && pathNames.length > 1 ? <div className="mb-4"><PathFigure names={pathNames} /></div> : null}
       <div className="flex items-center gap-3">
         <Avatar name={creatorName} src={photoUrl ?? null} size={48} />
         <div className="min-w-0">
-          {onCreator ? (
-            <button type="button" className="so-focus block truncate text-title font-extrabold" onClick={onCreator}>
-              {creatorName}
-            </button>
-          ) : (
-            <p className="block truncate text-title font-extrabold">{creatorName}</p>
-          )}
+          <AuthorLine className="text-title font-extrabold">
+            {onCreator ? (
+              <button type="button" className="so-focus block max-w-full truncate" onClick={onCreator}>
+                {creatorName}
+              </button>
+            ) : (
+              <span className="block truncate">{creatorName}</span>
+            )}
+          </AuthorLine>
           <p className="mt-0.5 text-label font-semibold text-ink-muted">{subtitle}</p>
         </div>
       </div>

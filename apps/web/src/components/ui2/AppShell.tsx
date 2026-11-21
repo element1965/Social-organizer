@@ -174,28 +174,27 @@ export function ShellChrome({
       );
       if (!interactive) {
         return (
-          <button key={to} type="button" role="tab" aria-selected={active} className={className}>
+          <button key={to} type="button" aria-current={active ? 'page' : undefined} className={className}>
             {inner}
           </button>
         );
       }
       return (
-        <Link key={to} to={to} state={to === '/ask' ? askState : undefined} role="tab" aria-selected={active} className={className} onClick={activate}>
+        <Link key={to} to={to} state={to === '/ask' ? askState : undefined} aria-current={active ? 'page' : undefined} className={className} onClick={activate}>
           {inner}
         </Link>
       );
     };
     return (
       <nav
-        role="tablist"
         aria-label={t('nav.main')}
         className={cn(
           'inset-x-0 bottom-0 z-40 border-t border-line-soft bg-surface/[0.96] backdrop-blur-md',
           contained ? 'absolute' : 'fixed',
         )}
-        style={{ height: 'calc(84px + var(--sa-bottom))', paddingBottom: 'var(--sa-bottom)' }}
+        style={{ height: 'var(--so-tab-bar-space)', paddingBottom: 'var(--sa-bottom)' }}
       >
-        <div className="flex h-[84px]">
+        <div className="flex h-[var(--so-tab-bar-height)]">
           {tab('/', t('nav.circle'), section === 'circle', <IconCircle className="h-[24px] w-[24px]" />, { count: badge })}
           {tab('/ask', t('nav.ask'), section === 'ask', <AskMark progress={ask} />)}
           {tab('/add', t('nav.add'), section === 'add', <IconAdd className="h-[24px] w-[24px]" />)}
@@ -306,7 +305,7 @@ function LiveShell({ children }: { children?: ReactNode }) {
   };
 
   return (
-    <div data-shell={mode} className="flex min-h-[calc(100dvh-var(--sa-top))] bg-canvas text-ink">
+    <div data-shell={mode} data-tab-bar={showTabs || undefined} className="flex min-h-[calc(100dvh-var(--sa-top))] bg-canvas text-ink">
       {/* The Need tab reads this on every screen, so the shell keeps it fresh, not only the Need pages. */}
       <AskProgressSync />
       {mode === 'tabs' ? null : (
@@ -323,7 +322,7 @@ function LiveShell({ children }: { children?: ReactNode }) {
       )}
       <div
         className="min-w-0 flex-1"
-        style={{ paddingBottom: showTabs ? 'calc(84px + var(--sa-bottom))' : 'var(--sa-bottom)' }}
+        style={{ paddingBottom: showTabs ? 'var(--so-tab-bar-space)' : 'var(--sa-bottom)' }}
       >
         {children ?? <Outlet />}
       </div>

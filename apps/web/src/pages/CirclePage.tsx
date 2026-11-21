@@ -983,7 +983,7 @@ function DesktopCircle({ sidebar, graph, graphRef, empty, counts, farLabel, hidd
             <>
               {stats}
               <div className="mx-1 mb-2 mt-5 flex items-baseline justify-between text-label font-bold text-ink-muted">
-                <span>{t('circle.feed.title')}</span>
+                <h2>{t('circle.feed.title')}</h2>
                 {newCount > 0 ? <span>{t('circle.feed.newCount', { count: newCount })}</span> : null}
               </div>
               {feed}
