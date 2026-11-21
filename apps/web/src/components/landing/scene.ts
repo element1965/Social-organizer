@@ -13,6 +13,8 @@ import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
 import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 
+import { canvasRgb, landingCanvasPalette } from './canvasPalette';
+
 export interface SceneElements {
   /** The landing root; gets `past` once the story has scrolled away and `graph` while the graph is shown. */
   root: HTMLElement;
@@ -88,6 +90,9 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   let opts = initial;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const small = innerWidth < 760;
+  const palette = landingCanvasPalette(els.root);
+  const white = palette('white');
+  const careBright = palette('care-bright');
   const lowEnd = (navigator.hardwareConcurrency || 8) <= 4;
   const N = small ? 2000 : lowEnd ? 4000 : 6500;
   const { canvas, sky: skyEl, night: nightEl, graphBg, beats, story } = els;
@@ -492,7 +497,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const glowTex = glow(255, 106, 92);
   const careTex = glow(95, 211, 198);
   const ringTex = spriteTex((x) => {
-    x.strokeStyle = 'rgba(255,255,255,.95)';
+    x.strokeStyle = canvasRgb(white, 0.95);
     x.lineWidth = 5;
     x.beginPath();
     x.arc(64, 64, 50, 0, 6.283);
@@ -507,7 +512,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     const x = tileCanvas.getContext('2d');
     if (!x) return;
     x.clearRect(0, 0, 128, 128);
-    x.fillStyle = 'rgb(13,148,136)';
+    x.fillStyle = canvasRgb(careBright);
     x.beginPath();
     if (typeof x.roundRect === 'function') x.roundRect(4, 4, 120, 120, 35);
     else x.rect(4, 4, 120, 120);
@@ -522,7 +527,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       if (mx) {
         mx.drawImage(img, 0, 0, w, h);
         mx.globalCompositeOperation = 'source-in';
-        mx.fillStyle = 'rgb(255,255,255)';
+        mx.fillStyle = canvasRgb(white);
         mx.fillRect(0, 0, w, h);
         x.drawImage(m, 64 - w / 2, 64 - h / 2);
       }

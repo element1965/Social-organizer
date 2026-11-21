@@ -1,3 +1,5 @@
+import { canvasRgb, landingCanvasPalette } from './canvasPalette';
+
 /**
  * The growth model: one person starts; each newcomer invites about R people (low spread: floor(R) plus one more
  * with the fraction's probability; the first person invites at least two). An invitation that reaches someone
@@ -42,9 +44,6 @@ interface Person {
 
 type GrowState = '' | 'grows' | 'dies' | 'full';
 
-const CARE = 'rgb(95,211,198)';
-const WARM = 'rgb(242,190,104)';
-
 export function initGrow(els: GrowElements, initial: GrowOptions): GrowHandle {
   let opts = initial;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -52,6 +51,18 @@ export function initGrow(els: GrowElements, initial: GrowOptions): GrowHandle {
   const cx = cv.getContext('2d');
   const gx = ch.getContext('2d');
   if (!cx || !gx) return { update() {}, destroy() {} };
+  const palette = landingCanvasPalette(cv);
+  const white = palette('white');
+  const warm = palette('warm');
+  const care = palette('care-scene');
+  const careFill = canvasRgb(care);
+  const careStroke = canvasRgb(care, 0.45);
+  const careHalo = canvasRgb(care, 0.18);
+  const olderEdge = canvasRgb(palette('node-mid'), 0.22);
+  const olderNode = canvasRgb(palette('network-node'), 0.78);
+  const warmFill = canvasRgb(warm);
+  const warmGlow = canvasRgb(warm, 0.9);
+  const warmFade = canvasRgb(warm, 0);
   let W = 0;
   let H = 0;
   let POP = 400;
@@ -132,20 +143,20 @@ export function initGrow(els: GrowElements, initial: GrowOptions): GrowHandle {
     gx.clearRect(0, 0, w, h);
     const n = Math.max(12, hist.length - 1);
     const top = POP;
-    gx.strokeStyle = 'rgba(255,255,255,.14)';
+    gx.strokeStyle = canvasRgb(white, 0.14);
     gx.lineWidth = 1;
     gx.beginPath();
     gx.moveTo(0, h - 12.5);
     gx.lineTo(w, h - 12.5);
     gx.stroke();
-    gx.fillStyle = 'rgba(255,255,255,.5)';
+    gx.fillStyle = canvasRgb(white, 0.5);
     gx.font = '600 9px Manrope, sans-serif';
     gx.direction = 'ltr';
     gx.textAlign = 'right';
     gx.fillText(opts.labels.axisX, w, h - 1);
     gx.textAlign = 'left';
     gx.fillText(opts.labels.axisY, 0, 9);
-    gx.strokeStyle = CARE;
+    gx.strokeStyle = careFill;
     gx.lineWidth = 2;
     gx.lineJoin = 'round';
     gx.beginPath();
@@ -158,7 +169,7 @@ export function initGrow(els: GrowElements, initial: GrowOptions): GrowHandle {
     gx.stroke();
     const lx = ((hist.length - 1) / n) * w;
     const ly = h - 13 - (hist[hist.length - 1]! / top) * (h - 26);
-    gx.fillStyle = CARE;
+    gx.fillStyle = careFill;
     gx.beginPath();
     gx.arc(lx, ly, 3, 0, 6.283);
     gx.fill();
@@ -256,7 +267,7 @@ export function initGrow(els: GrowElements, initial: GrowOptions): GrowHandle {
       const e = easeOut((now - n.born) / FLY);
       const x = par.x + (n.x - par.x) * e;
       const y = par.y + (n.y - par.y) * e;
-      cx.strokeStyle = n.g >= wave - 1 ? 'rgba(95,211,198,.45)' : 'rgba(159,176,170,.22)';
+      cx.strokeStyle = n.g >= wave - 1 ? careStroke : olderEdge;
       cx.beginPath();
       cx.moveTo(par.x, par.y);
       cx.lineTo(x, y);
@@ -270,7 +281,7 @@ export function initGrow(els: GrowElements, initial: GrowOptions): GrowHandle {
         flashes.splice(f, 1);
         continue;
       }
-      cx.strokeStyle = `rgba(242,190,104,${(a * 0.7).toFixed(3)})`;
+      cx.strokeStyle = canvasRgb(warm, (a * 0.7).toFixed(3));
       cx.setLineDash([3, 3]);
       cx.beginPath();
       cx.moveTo(fl.a.x, fl.a.y);
@@ -288,25 +299,25 @@ export function initGrow(els: GrowElements, initial: GrowOptions): GrowHandle {
       const fresh = m.g >= wave - 1 && running;
       if (m.g === 0) {
         const gr = cx.createRadialGradient(mx, my, 0, mx, my, 22);
-        gr.addColorStop(0, 'rgba(242,190,104,.9)');
-        gr.addColorStop(1, 'rgba(242,190,104,0)');
+        gr.addColorStop(0, warmGlow);
+        gr.addColorStop(1, warmFade);
         cx.fillStyle = gr;
         cx.beginPath();
         cx.arc(mx, my, 22, 0, 6.283);
         cx.fill();
-        cx.fillStyle = WARM;
+        cx.fillStyle = warmFill;
         cx.beginPath();
         cx.arc(mx, my, 4.5, 0, 6.283);
         cx.fill();
         continue;
       }
       if (fresh) {
-        cx.fillStyle = 'rgba(95,211,198,.18)';
+        cx.fillStyle = careHalo;
         cx.beginPath();
         cx.arc(mx, my, 7, 0, 6.283);
         cx.fill();
       }
-      cx.fillStyle = fresh ? CARE : 'rgba(207,222,217,.78)';
+      cx.fillStyle = fresh ? careFill : olderNode;
       cx.beginPath();
       cx.arc(mx, my, fresh ? 2.9 : 2.3, 0, 6.283);
       cx.fill();

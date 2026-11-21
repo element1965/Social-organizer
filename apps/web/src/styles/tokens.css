@@ -10,6 +10,8 @@
  * Scene colors stay dark in both themes.
  */
 :root {
+  --so-white-rgb: 255 255 255;
+  --so-black-rgb: 0 0 0;
   --so-telegram: 24 119 176;
   --so-on-telegram: 255 255 255;
 }
@@ -262,22 +264,30 @@ html.dark,
  */
 .lv {
   --lv-scene: #0b1513;
+  --lv-scene-rgb: 11 21 19;
   --lv-scene-2: #132420;
+  --lv-scene-2-rgb: 19 36 32;
   --lv-night: #050c0b;
+  --lv-night-rgb: 5 12 11;
   --lv-deep: #071210;
   --lv-foot: #070e0d;
   --lv-sky: #4f6470;
   --lv-white: #ffffff;
+  --lv-white-rgb: var(--so-white-rgb);
   --lv-black: #000000;
+  --lv-black-rgb: var(--so-black-rgb);
   --lv-ink: #14211e;
   --lv-muted: #5c6d68;
   --lv-paper: #ffffff;
   --lv-care: #087f71;
   --lv-care-hover: #08675c;
   --lv-care-scene: #5fd3c6;
+  --lv-care-scene-rgb: 95 211 198;
   --lv-sos: #c5342c;
   --lv-sos-scene: #ff6a5c;
+  --lv-sos-scene-rgb: 255 106 92;
   --lv-warm: #f2be68;
+  --lv-warm-rgb: 242 190 104;
   --lv-text-2: #b6c6c1;
   --lv-text-3: #82938e;
   --lv-foot-link: #cfdcd8;
@@ -285,5 +295,13 @@ html.dark,
   /* the app's graph (graph-3d palette): its names and the wash behind the ball */
   --lv-node: #e7eeeb;
   --lv-wash: #1b332e;
+  /* Translucent scene washes and Canvas paints that have no opaque CSS counterpart. */
+  --lv-grow-shade-rgb: 5 10 9;
+  --lv-hero-panel-rgb: 6 13 12;
+  --lv-canvas-rgb: 243 246 244;
+  --lv-care-bright-rgb: 13 148 136;
+  --lv-node-mid-rgb: 159 176 170;
+  --lv-network-node-rgb: 207 222 217;
+  --lv-joint-rgb: 173 190 255;
   color-scheme: dark;
 }

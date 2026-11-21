@@ -40,7 +40,8 @@
   height: calc(844px * var(--k) + 2 * var(--bezel));
   border-radius: calc(52px * var(--k) + var(--bezel));
   background: var(--lv-night);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, .16), 0 34px 70px rgba(0, 0, 0, .5);
+  /* Match the alpha bytes emitted by the original production CSS. */
+  box-shadow: 0 0 0 1px rgb(var(--lv-white-rgb) / calc(41 / 255)), 0 34px 70px rgb(var(--lv-black-rgb) / calc(128 / 255));
 }
 .lv .lvapp-empty { background: var(--lv-scene-2); }
 .lv .lvapp-screen {
