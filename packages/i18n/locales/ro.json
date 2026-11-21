@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Cod greșit. Încearcă din nou sau cere altul",
     "errExpired": "Codul a expirat. Cere unul nou",
     "errAttempts": "Prea multe încercări greșite. Cere un cod nou",
+    "errRateLimit": "Prea multe încercări de conectare. Încearcă din nou mai târziu",
     "errTooSoon": "Poți cere un cod nou în {{sec}} s",
     "errUnavailable": "Acum nu se pot trimite e-mailuri. Alege altă metodă",
     "errNetwork": "Trimiterea a eșuat. Verifică conexiunea și încearcă din nou",

@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Forkert kode. Prøv igen eller bed om en ny",
     "errExpired": "Koden er udløbet. Bed om en ny",
     "errAttempts": "For mange forkerte forsøg. Bed om en ny kode",
+    "errRateLimit": "For mange loginforsøg. Prøv igen senere",
     "errTooSoon": "Ny kode om {{sec}} s",
     "errUnavailable": "E-mails kan ikke sendes lige nu. Vælg en anden måde",
     "errNetwork": "Kunne ikke sende. Tjek forbindelsen og prøv igen",

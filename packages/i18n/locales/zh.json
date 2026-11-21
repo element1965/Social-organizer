@@ -34,6 +34,7 @@
     "errInvalidNoCount": "验证码错误。请重试或获取新的验证码",
     "errExpired": "验证码已过期，请获取新的",
     "errAttempts": "错误次数过多，请获取新的验证码",
+    "errRateLimit": "登录尝试次数过多，请稍后再试",
     "errTooSoon": "{{sec}} 秒后可获取新验证码",
     "errUnavailable": "暂时无法发送邮件，请选择其他登录方式",
     "errNetwork": "发送失败，请检查网络后重试",

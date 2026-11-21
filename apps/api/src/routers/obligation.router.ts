@@ -6,6 +6,7 @@ import { syncCollectionGoal } from '../services/collection-amount.js';
 import { scheduleResponseDigest } from '../services/notification.service.js';
 import { recordResponded } from '../services/notify-routing.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
+import { chatLinkFor, confirmedRenewals } from '../services/collection-view.js';
 
 export const obligationRouter = router({
   create: protectedProcedure
@@ -73,11 +74,20 @@ export const obligationRouter = router({
         `
       : [];
     const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+    const confirmed = await confirmedRenewals(ctx.db, ctx.userId, obligations.map((o) => o.collection));
 
     return obligations.map((o) => ({
       ...o,
       collection: {
         ...o.collection,
+        // The same rule as the Need page (SEC-6): a declined Participation, a closed or held Need and a cycle
+        // waiting for confirmation do not open the participants' chat
+        chatLink: chatLinkFor(
+          o.collection,
+          ctx.userId,
+          o.unsubscribedAt == null ? o : null,
+          confirmed.has(`${o.collection.id}:${o.collection.cycleNumber}`),
+        ),
         creator: {
           ...o.collection.creator,
           connectionCount: countMap.get(o.collection.creatorId) || 0,

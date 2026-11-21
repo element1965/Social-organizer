@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Onjuiste code. Probeer opnieuw of vraag een nieuwe aan",
     "errExpired": "De code is verlopen. Vraag een nieuwe aan",
     "errAttempts": "Te veel onjuiste pogingen. Vraag een nieuwe code aan",
+    "errRateLimit": "Te veel inlogpogingen. Probeer het later opnieuw",
     "errTooSoon": "Nieuwe code over {{sec}} s",
     "errUnavailable": "E-mails kunnen nu niet worden verstuurd. Kies een andere manier",
     "errNetwork": "Versturen mislukt. Controleer je verbinding en probeer opnieuw",

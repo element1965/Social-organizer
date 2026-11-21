@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Code incorrect. Réessayez ou demandez-en un nouveau",
     "errExpired": "Le code a expiré. Demandez-en un nouveau",
     "errAttempts": "Trop de tentatives incorrectes. Demandez un nouveau code",
+    "errRateLimit": "Trop de tentatives de connexion. Réessayez plus tard",
     "errTooSoon": "Nouveau code possible dans {{sec}} s",
     "errUnavailable": "Les e-mails ne peuvent pas être envoyés pour l'instant. Choisissez une autre méthode",
     "errNetwork": "Échec de l'envoi. Vérifiez la connexion et réessayez",

@@ -228,7 +228,7 @@ export function SignInFlow({
   if (step === 'email') {
     const code = signIn.errorCode;
     const blocked = signIn.blockedLeft > 0;
-    const cannotSend = code === 'TOO_MANY_CODES' || code === 'EMAIL_UNAVAILABLE' || code === 'NETWORK';
+    const cannotSend = code === 'TOO_MANY_CODES' || code === 'EMAIL_UNAVAILABLE' || code === 'NETWORK' || code === 'RATE_LIMITED';
     const fieldError = emailBad ? t('login.emailBad') : signIn.error || undefined;
     return (
       <OnboardingFrame top={<BackLink label={t('common.back')} onClick={back} />}>
