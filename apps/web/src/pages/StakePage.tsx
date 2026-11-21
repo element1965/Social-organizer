@@ -68,6 +68,7 @@ export function StakePage() {
             <Input
               variant="money"
               label={t('profile.stakeLabel')}
+              labelIncludesCurrency
               value={value}
               onValueChange={setRaw}
               error={showError ? t('profile.stakeMin') : undefined}

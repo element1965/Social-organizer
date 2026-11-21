@@ -1,5 +1,6 @@
 {
   "common": {
+    "usd": "美元",
     "appName": "Social Organizer",
     "loading": "加载中...",
     "stillLoading": "仍在加载…",
@@ -1729,7 +1730,7 @@
     "received": "在你的需求中",
     "reportedCount": "你报告的参与次数：{{n}}",
     "receivedCount": "其他人报告的参与次数：{{n}}",
-    "marked": "在已关闭的需求中，发布者将你报告的参与标记为已收到（{{reported}} 次中有 {{marked}} 次）。任何已登录的人都可以在你的个人资料中看到这两个数字。"
+    "marked": "在已关闭的需求中，发布者将你报告的参与标记为已收到（{{marked}} / {{reported}}）。任何已登录的人都可以在你的个人资料中看到这两个数字。"
   },
   "shake": {
     "title": "摇一摇配对",

@@ -1,5 +1,6 @@
 {
   "common": {
+    "usd": "US dollars",
     "appName": "Social Organizer",
     "loading": "Loading...",
     "stillLoading": "Still loading…",
@@ -1745,7 +1746,7 @@
     "received": "In your Needs",
     "reportedCount": "Your Participation reports: {{n}}",
     "receivedCount": "Others’ Participation reports: {{n}}",
-    "marked": "On closed Needs, authors marked your Participation as received in {{marked}} out of {{reported}} cases. Anyone signed in can see both counts on your profile."
+    "marked": "On closed Needs, authors marked your Participation as received ({{marked}} of {{reported}}). Anyone signed in can see both counts on your profile."
   },
   "shake": {
     "title": "Shake match",

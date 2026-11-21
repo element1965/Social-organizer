@@ -1,5 +1,6 @@
 {
   "common": {
+    "usd": "đô la Mỹ",
     "appName": "Social Organizer",
     "loading": "Đang tải...",
     "stillLoading": "Vẫn đang tải…",

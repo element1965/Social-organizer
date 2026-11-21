@@ -1,5 +1,6 @@
 {
   "common": {
+    "usd": "Yhdysvaltain dollarit",
     "appName": "Social Organizer",
     "loading": "Ladataan...",
     "stillLoading": "Latautuu vielä…",

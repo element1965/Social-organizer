@@ -1,5 +1,6 @@
 {
   "common": {
+    "usd": "dolar AS",
     "appName": "Social Organizer",
     "loading": "Memuat...",
     "stillLoading": "Masih memuat…",

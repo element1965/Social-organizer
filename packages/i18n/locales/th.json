@@ -1,5 +1,6 @@
 {
   "common": {
+    "usd": "ดอลลาร์สหรัฐ",
     "appName": "Social Organizer",
     "loading": "กำลังโหลด...",
     "stillLoading": "ยังคงโหลดอยู่…",

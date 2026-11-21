@@ -1,5 +1,6 @@
 {
   "common": {
+    "usd": "долары ЗША",
     "appName": "Social Organizer",
     "loading": "Загрузка...",
     "stillLoading": "Усё яшчэ загружаецца…",

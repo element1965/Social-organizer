@@ -1,5 +1,6 @@
 {
   "common": {
+    "usd": "ABD doları",
     "appName": "Social Organizer",
     "loading": "Yükleniyor...",
     "stillLoading": "Hâlâ yükleniyor…",
@@ -1745,7 +1746,7 @@
     "received": "İhtiyaçlarınıza",
     "reportedCount": "Bildirdiğiniz Katılımlar: {{n}}",
     "receivedCount": "Başkalarının bildirdiği Katılımlar: {{n}}",
-    "marked": "Kapanmış İhtiyaçlarda, İhtiyacı bildirenler Katılımınızı alındı olarak işaretledi ({{reported}} bildirimden {{marked}} tanesi). Oturum açan herkes profilinizde iki sayıyı da görebilir."
+    "marked": "Kapanmış İhtiyaçlarda, İhtiyacı bildirenler Katılımınızı alındı olarak işaretledi ({{marked}} / {{reported}}). Oturum açan herkes profilinizde iki sayıyı da görebilir."
   },
   "shake": {
     "title": "Sallama eşleşmesi",
