@@ -4,10 +4,12 @@ import type { Job } from 'bullmq';
 import { REGULAR_CYCLE_DAYS } from '@so/shared';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { appRouter } from '../src/routers/index.js';
-import { deleteUserAccount } from '../src/services/account-deletion.service.js';
+import { touchUserNow } from '../src/services/activity.service.js';
 import { getAskAccess } from '../src/services/ask-access.service.js';
 import { invalidateGraph } from '../src/services/graph-cache.service.js';
+import { runInactiveCleanup } from '../src/services/inactive-cleanup.service.js';
 import { sendCycleRenewalReminderTg, sendCycleRenewedTg } from '../src/services/notification.service.js';
+import * as notifications from '../src/services/notification.service.js';
 import * as telegram from '../src/services/telegram-bot.service.js';
 import { WEB_APP_URL } from '../src/deployment.js';
 import { processCycleClose } from '../src/workers/cycle-close.worker.js';
@@ -300,13 +302,104 @@ describe('Need participant visibility', () => {
       await db.$executeRaw`ALTER TABLE notifications DROP CONSTRAINT test_reject_cycle_ack`;
     }
 
+    // A failure applying the goal hold must also roll back the pledge and acknowledgement.
+    await db.$executeRaw`
+      ALTER TABLE collections ADD CONSTRAINT test_reject_goal_hold CHECK ("status" <> 'BLOCKED') NOT VALID
+    `;
+    try {
+      await expect(viewer.confirmCycle({ ...current, pledge })).rejects.toMatchObject({ code: 'INTERNAL_SERVER_ERROR' });
+      expect(await db.obligation.findUniqueOrThrow({ where: { id: row.id } })).toMatchObject({ amount: 7 });
+      expect(await db.notification.count({ where: acknowledgements })).toBe(0);
+    } finally {
+      await db.$executeRaw`ALTER TABLE collections DROP CONSTRAINT test_reject_goal_hold`;
+    }
+
     await expect(viewer.confirmCycle({ ...current, pledge })).resolves.toEqual({ ok: true });
     expect(await db.obligation.findUniqueOrThrow({ where: { id: row.id } })).toMatchObject({ amount: 11 });
     expect(await db.notification.findMany({ where: acknowledgements })).toMatchObject([{ userId: member, wave: 3 }]);
     expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({ status: 'BLOCKED' });
   });
 
-  it('waits for a mark on an author’s own obligation before deleting the account', async () => {
+  it('commits the cycle pledge and goal hold even when notification delivery fails', async () => {
+    const [author, member, observer] = ['goal-failure-author', 'goal-failure-member', 'goal-failure-observer'];
+    await db.user.createMany({ data: [author, member, observer].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({
+      data: {
+        creatorId: author, type: 'REGULAR', cycleNumber: 2, currentCycleStart: new Date(), amount: 10,
+        chatLink: 'https://example.com/chat',
+      },
+    });
+    const pledge = await db.obligation.create({ data: { collectionId: need.id, userId: member, amount: 7 } });
+    const notice = await db.notification.create({
+      data: { collectionId: need.id, userId: observer, type: 'NEW_COLLECTION', expiresAt: new Date(Date.now() + hour) },
+    });
+
+    const deliveryError = new Error('Forced notification delivery failure');
+    const batch = vi.spyOn(db, '$executeRaw').mockRejectedValueOnce(deliveryError);
+    const recipients = vi.spyOn(db.notification, 'findMany').mockRejectedValueOnce(deliveryError);
+    const send = vi.spyOn(notifications, 'sendGoalReachedToCreator').mockRejectedValueOnce(deliveryError);
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      await expect(caller(member).obligation.confirmCycle({
+        collectionId: need.id, cycleNumber: 2, pledge: { obligationId: pledge.id, amount: 10 },
+      })).resolves.toEqual({ ok: true });
+      await expect.poll(() => log.mock.calls.filter(([, error]) => error === deliveryError).length).toBe(3);
+      expect(send).toHaveBeenCalledTimes(1);
+      expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } }))
+        .toMatchObject({ status: 'BLOCKED', blockedAt: expect.any(Date) });
+      expect(await db.obligation.findUniqueOrThrow({ where: { id: pledge.id } })).toMatchObject({ amount: 10 });
+      expect(await db.notification.findUniqueOrThrow({ where: { id: notice.id } })).toMatchObject({ status: 'EXPIRED' });
+      expect(await db.notification.count({
+        where: { collectionId: need.id, userId: member, type: 'CYCLE_RENEWED', wave: 2, status: 'RESPONDED' },
+      })).toBe(1);
+    } finally {
+      batch.mockRestore();
+      recipients.mockRestore();
+      send.mockRestore();
+      log.mockRestore();
+    }
+  });
+
+  it('retries guarded inactivity deletion when an in-flight pledge needs the locked user', async () => {
+    const [author, peer] = ['delete-inactive-author', 'delete-inactive-peer'];
+    await db.user.createMany({ data: [author, peer].map((id) => ({ id, name: id })) });
+    await db.connection.create({ data: { userAId: author, userBId: peer } });
+    const data = { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat' } as const;
+    const need = await db.collection.create({ data });
+    // The request's heartbeat has already run and is throttled when the pledge reaches the router.
+    await touchUserNow(db, author);
+    const now = new Date();
+    await db.user.update({
+      where: { id: author },
+      data: {
+        lastSeen: new Date(now.getTime() - 731 * 24 * hour),
+        inactivityStage: 2,
+        inactivityWarnedAt: new Date(now.getTime() - 8 * 24 * hour),
+      },
+    });
+
+    const gate = pauseAfterNeedRead(db);
+    const pledging = caller(author).obligation.create({ collectionId: need.id, amount: 7 });
+    void pledging.catch(() => {});
+    let cleanup: ReturnType<typeof runInactiveCleanup> | undefined;
+    try {
+      const pid = await Promise.race([gate.read, pledging.then(() => { throw new Error('Pledge finished before locking the Need'); })]);
+      cleanup = runInactiveCleanup(db, { now, onlyUserIds: [author] });
+      await expect.poll(() => isBlockingTransaction(db, pid), { interval: 10 }).toBe(true);
+      gate.resume();
+      const [pledge, result] = await Promise.all([pledging, cleanup]);
+      expect(result).toMatchObject({ deleted: 1, deletedSoft: 1 });
+      expect(await db.user.findUniqueOrThrow({ where: { id: author } })).toMatchObject({ deletedAt: expect.any(Date) });
+      expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({ status: 'CANCELLED' });
+      expect(await db.obligation.findUnique({ where: { id: pledge.id } })).toBeNull();
+    } finally {
+      gate.resume();
+      await Promise.allSettled([pledging, cleanup]);
+      gate.restore();
+    }
+  });
+
+  it('retries user-initiated deletion when setPaid holds the Need and needs the obligation', async () => {
     const [author, peer] = ['delete-mark-author', 'delete-mark-peer'];
     await db.user.createMany({ data: [author, peer].map((id) => ({ id, name: id })) });
     await db.connection.create({ data: { userAId: author, userBId: peer } });
@@ -315,20 +408,52 @@ describe('Need participant visibility', () => {
     const gate = pauseAfterNeedRead(db);
     const mark = { collectionId: need.id, cycleNumber: need.cycleNumber, obligationIds: [row.id], paid: true };
     const marking = caller(author).obligation.setPaid(mark);
-    let deletion: ReturnType<typeof deleteUserAccount> | undefined;
+    void marking.catch(() => {});
+    let deletion: Promise<{ success: boolean }> | undefined;
     try {
       const pid = await Promise.race([gate.read, marking.then(() => { throw new Error('Mark finished before reading the Need'); })]);
-      deletion = deleteUserAccount(db, author);
+      deletion = caller(author).user.delete();
       void deletion.catch(() => {});
-      await expect.poll(() => isBlockingTransaction(db, pid)).toBe(true);
+      await expect.poll(() => isBlockingTransaction(db, pid), { interval: 10 }).toBe(true);
       gate.resume();
-      await expect(Promise.all([marking, deletion])).resolves.toEqual([{ changed: 1 }, { mode: 'soft' }]);
+      await expect(Promise.all([marking, deletion])).resolves.toEqual([{ changed: 1 }, { success: true }]);
+      expect(await db.user.findUniqueOrThrow({ where: { id: author } })).toMatchObject({ deletedAt: expect.any(Date) });
       expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({ status: 'CANCELLED' });
       expect(await db.obligation.findUnique({ where: { id: row.id } })).toBeNull();
     } finally {
       gate.resume();
       await Promise.allSettled([marking, deletion]);
       gate.restore();
+    }
+  });
+
+  it('cancels a Need created while account deletion waits on an older Need and obligation', async () => {
+    const [author, peer] = ['delete-new-need-author', 'delete-new-need-peer'];
+    await db.user.createMany({ data: [author, peer].map((id) => ({ id, name: id })) });
+    await db.connection.create({ data: { userAId: author, userBId: peer } });
+    const data = { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat' } as const;
+    const need = await db.collection.create({ data });
+    const row = await db.obligation.create({ data: { collectionId: need.id, userId: author, amount: 7 } });
+
+    let deletion: Promise<{ success: boolean }> | undefined;
+    try {
+      const lateNeed = await db.$transaction(async (tx) => {
+        const [backend] = await tx.$queryRaw<{ pid: number }[]>`SELECT pg_backend_pid() AS pid`;
+        await tx.$queryRaw`SELECT "id" FROM collections WHERE "id" = ${need.id} FOR UPDATE`;
+        await tx.obligation.update({ where: { id: row.id }, data: { confirmedAt: new Date() } });
+        deletion = caller(author).user.delete();
+        void deletion.catch(() => {});
+        await expect.poll(() => isBlockingTransaction(db, backend!.pid), { interval: 10 }).toBe(true);
+        return tx.collection.create({ data });
+      });
+      await expect(deletion).resolves.toEqual({ success: true });
+      expect(await db.collection.findMany({
+        where: { creatorId: author }, select: { id: true, status: true },
+      })).toEqual(expect.arrayContaining([
+        { id: need.id, status: 'CANCELLED' }, { id: lateNeed.id, status: 'CANCELLED' },
+      ]));
+    } finally {
+      await Promise.allSettled([deletion]);
     }
   });
 

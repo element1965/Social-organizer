@@ -1,6 +1,7 @@
 import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
 import { REGULAR_CYCLE_DAYS, NOTIFICATION_TTL_HOURS } from '@so/shared';
+import { transactionWithRetry } from '../lib/tx-retry.js';
 import { sendCycleRenewalReminderTg } from '../services/notification.service.js';
 import { insertCycleNotices } from '../services/cycle-notices.js';
 import { findNeedForUpdate } from '../services/collection-state.js';
@@ -43,7 +44,7 @@ export async function processCycleRenewalReminder(_job: Job): Promise<void> {
   const expiresAt = new Date(now + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
 
   for (const collection of dueCollections) {
-    const createdUserIds = await db.$transaction(async (tx) => {
+    const createdUserIds = await transactionWithRetry(db, async (tx) => {
       // Take the same lock as withdrawals before the insert takes its statement snapshot.
       if (!await findNeedForUpdate(tx, collection.id)) return [];
       return insertCycleNotices(

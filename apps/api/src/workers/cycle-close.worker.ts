@@ -1,6 +1,7 @@
 import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
 import { REGULAR_CYCLE_DAYS, NOTIFICATION_TTL_HOURS } from '@so/shared';
+import { transactionWithRetry } from '../lib/tx-retry.js';
 import { sendCycleRenewedTg } from '../services/notification.service.js';
 import { insertCycleNotices } from '../services/cycle-notices.js';
 
@@ -78,7 +79,7 @@ export async function processCycleClose(_job: Job): Promise<void> {
   for (const collection of expiredCycles) {
     const newCycleNumber = collection.cycleNumber + 1;
 
-    const renewedUserIds = await db.$transaction(async (tx) => {
+    const renewedUserIds = await transactionWithRetry(db, async (tx) => {
       const currentCycleStart = new Date();
       const result = await tx.collection.updateMany({
         where: {

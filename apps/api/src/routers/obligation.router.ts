@@ -2,7 +2,8 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
-import { syncCollectionGoal } from '../services/collection-amount.js';
+import { transactionWithRetry } from '../lib/tx-retry.js';
+import { applyCollectionGoal, dispatchCollectionGoalReached, syncCollectionGoal } from '../services/collection-amount.js';
 import { scheduleResponseDigest } from '../services/notification.service.js';
 import { recordResponded } from '../services/notify-routing.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
@@ -27,7 +28,7 @@ export const obligationRouter = router({
       isSubscription: z.boolean().default(false),
     }))
     .mutation(async ({ ctx, input }) => {
-      const { collection, obligation } = await ctx.db.$transaction(async (tx) => {
+      const { collection, obligation } = await transactionWithRetry(ctx.db, async (tx) => {
         const collection = await lockNeed(tx, input.collectionId);
         assertOpenNeed(collection);
         if (collection.status !== 'ACTIVE') {
@@ -118,7 +119,7 @@ export const obligationRouter = router({
       if (!obligation) throw new TRPCError({ code: 'NOT_FOUND' });
       if (obligation.userId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
 
-      const updated = await ctx.db.$transaction(async (tx) => {
+      const updated = await transactionWithRetry(ctx.db, async (tx) => {
         assertOpenNeed(await lockNeed(tx, obligation.collectionId));
         const [row] = await tx.obligation.updateManyAndReturn({
           where: { id: input.obligationId, unsubscribedAt: null },
@@ -140,7 +141,7 @@ export const obligationRouter = router({
   confirmPayment: protectedProcedure
     .input(displayedCycle.extend({ obligationId: z.string() }))
     .mutation(({ ctx, input }) =>
-      ctx.db.$transaction(async (tx) => {
+      transactionWithRetry(ctx.db, async (tx) => {
         const collection = await lockNeed(tx, input.collectionId);
         if (collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
         assertCurrentCycle(collection.cycleNumber, input.cycleNumber);
@@ -165,7 +166,7 @@ export const obligationRouter = router({
     .input(displayedCycle.extend({ obligationIds: z.array(z.string()).min(1).max(500), paid: z.boolean() }))
     .mutation(({ ctx, input }) => {
       const ids = [...new Set(input.obligationIds)];
-      return ctx.db.$transaction(async (tx) => {
+      return transactionWithRetry(ctx.db, async (tx) => {
         const collection = await lockNeed(tx, input.collectionId);
         if (collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
         assertCurrentCycle(collection.cycleNumber, input.cycleNumber);
@@ -258,7 +259,7 @@ export const obligationRouter = router({
       if (!obligation.isSubscription) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Not a subscription' });
       }
-      const updated = await ctx.db.$transaction(async (tx) => {
+      const updated = await transactionWithRetry(ctx.db, async (tx) => {
         assertOpenNeed(await lockNeed(tx, obligation.collectionId));
         return tx.obligation.updateMany({
           where: { id: input.obligationId, unsubscribedAt: null },
@@ -273,7 +274,7 @@ export const obligationRouter = router({
   unsubscribeFromCollection: protectedProcedure
     .input(z.object({ collectionId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const updated = await ctx.db.$transaction(async (tx) => {
+      const updated = await transactionWithRetry(ctx.db, async (tx) => {
         assertOpenNeed(await lockNeed(tx, input.collectionId));
         return tx.obligation.updateMany({
           where: { collectionId: input.collectionId, userId: ctx.userId, unsubscribedAt: null },
@@ -296,7 +297,7 @@ export const obligationRouter = router({
       pledge: z.object({ obligationId: z.string(), amount: z.number().int().min(MIN_OBLIGATION_AMOUNT) }).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.$transaction(async (tx) => {
+      const hold = await transactionWithRetry(ctx.db, async (tx) => {
         const collection = await lockNeed(tx, input.collectionId);
         assertCurrentCycle(collection.cycleNumber, input.cycleNumber);
         assertOpenNeed(collection);
@@ -346,8 +347,13 @@ export const obligationRouter = router({
           },
           update: { status: 'RESPONDED', expiresAt },
         });
+        if (input.pledge) return applyCollectionGoal(tx, input.collectionId, collection);
       });
-      if (input.pledge) await syncCollectionGoal(ctx.db, input.collectionId);
+      if (hold) {
+        await dispatchCollectionGoalReached(ctx.db, input.collectionId, hold).catch((err) =>
+          console.error('[obligation.confirmCycle] Goal notice dispatch failed:', err),
+        );
+      }
       return { ok: true as const };
     }),
 });

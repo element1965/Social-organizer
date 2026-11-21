@@ -2,7 +2,7 @@ import type { Collection, Prisma } from '@so/db';
 import { TRPCError } from '@trpc/server';
 import { isClosed } from './collection-view.js';
 
-type NeedState = Pick<Collection, 'creatorId' | 'status' | 'type' | 'cycleNumber' | 'currentCycleStart' | 'amount' | 'blockReason'>;
+export type NeedState = Pick<Collection, 'creatorId' | 'status' | 'type' | 'cycleNumber' | 'currentCycleStart' | 'amount' | 'blockReason'>;
 
 /** Lock the parent before touching obligations so marks and pledges serialize with closure and rollover. */
 export async function findNeedForUpdate(tx: Prisma.TransactionClient, id: string): Promise<NeedState | undefined> {

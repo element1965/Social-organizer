@@ -1,7 +1,8 @@
 import { Prisma, type PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS } from '@so/shared';
+import { transactionWithRetry } from '../lib/tx-retry.js';
 import { sendGoalReachedToCreator } from './notification.service.js';
-import { findNeedForUpdate } from './collection-state.js';
+import { findNeedForUpdate, type NeedState } from './collection-state.js';
 
 type Db = PrismaClient | Prisma.TransactionClient;
 
@@ -25,52 +26,64 @@ export async function activeObligationTotals(
   };
 }
 
-/**
- * Goal holds follow the active total. Read it under the same parent lock as pledge writes so
- * an in-flight change cannot leave the Need held at an obsolete total.
- */
-export async function syncCollectionGoal(db: PrismaClient, collectionId: string): Promise<void> {
-  const hold = await db.$transaction(async (tx) => {
-    const collection = await findNeedForUpdate(tx, collectionId);
-    if (!collection || collection.amount == null || collection.blockReason != null ||
-      (collection.status !== 'ACTIVE' && collection.status !== 'BLOCKED')) return;
+type GoalHold = { blockedAt: Date; creatorId: string };
 
-    const { amount: sum } = await activeObligationTotals(tx, collectionId);
-    if (sum >= collection.amount && collection.status === 'ACTIVE') {
-      const blockedAt = new Date();
-      await tx.collection.update({
-        where: { id: collectionId },
-        data: { status: 'BLOCKED', blockedAt },
-      });
-      await tx.notification.updateMany({
-        where: {
-          collectionId,
-          type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] },
-          status: { in: ['UNREAD', 'READ'] },
-        },
-        data: { status: 'EXPIRED' },
-      });
-      return { blockedAt, creatorId: collection.creatorId };
-    }
+/** Apply the goal state while the caller holds the Need lock, using the latest active total. */
+export async function applyCollectionGoal(
+  tx: Prisma.TransactionClient,
+  collectionId: string,
+  collection: NeedState,
+): Promise<GoalHold | undefined> {
+  if (collection.amount == null || collection.blockReason != null ||
+    (collection.status !== 'ACTIVE' && collection.status !== 'BLOCKED')) return;
 
-    if (sum < collection.amount && collection.status === 'BLOCKED') {
-      await tx.collection.update({
-        where: { id: collectionId },
-        data: { status: 'ACTIVE', blockedAt: null },
-      });
-      await tx.notification.updateMany({
-        where: { collectionId, type: 'COLLECTION_BLOCKED', status: { in: ['UNREAD', 'READ'] } },
-        data: { status: 'EXPIRED' },
-      });
-    }
-  });
-  if (!hold) return;
+  const { amount: sum } = await activeObligationTotals(tx, collectionId);
+  if (sum >= collection.amount && collection.status === 'ACTIVE') {
+    const blockedAt = new Date();
+    await tx.collection.update({
+      where: { id: collectionId },
+      data: { status: 'BLOCKED', blockedAt },
+    });
+    await tx.notification.updateMany({
+      where: {
+        collectionId,
+        type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] },
+        status: { in: ['UNREAD', 'READ'] },
+      },
+      data: { status: 'EXPIRED' },
+    });
+    return { blockedAt, creatorId: collection.creatorId };
+  }
 
+  if (sum < collection.amount && collection.status === 'BLOCKED') {
+    await tx.collection.update({
+      where: { id: collectionId },
+      data: { status: 'ACTIVE', blockedAt: null },
+    });
+    await tx.notification.updateMany({
+      where: { collectionId, type: 'COLLECTION_BLOCKED', status: { in: ['UNREAD', 'READ'] } },
+      data: { status: 'EXPIRED' },
+    });
+  }
+}
+
+export async function dispatchCollectionGoalReached(db: PrismaClient, collectionId: string, hold: GoalHold): Promise<void> {
   const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
-  await notifyGoalReached(db, collectionId, hold.creatorId, expiresAt, hold.blockedAt);
-  sendGoalReachedToCreator(db, collectionId, hold.creatorId, hold.blockedAt).catch((err) =>
-    console.error('[TG GoalReached] Failed:', err),
-  );
+  try {
+    await notifyGoalReached(db, collectionId, hold.creatorId, expiresAt, hold.blockedAt);
+  } finally {
+    sendGoalReachedToCreator(db, collectionId, hold.creatorId, hold.blockedAt).catch((err) =>
+      console.error('[GoalReached] Author delivery failed:', err),
+    );
+  }
+}
+
+export async function syncCollectionGoal(db: PrismaClient, collectionId: string): Promise<void> {
+  const hold = await transactionWithRetry(db, async (tx) => {
+    const collection = await findNeedForUpdate(tx, collectionId);
+    if (collection) return applyCollectionGoal(tx, collectionId, collection);
+  });
+  if (hold) await dispatchCollectionGoalReached(db, collectionId, hold);
 }
 
 /**
