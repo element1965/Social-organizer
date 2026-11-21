@@ -11,6 +11,8 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   /** Static pressed frame for the gallery. Pointer press still scales. */
   pressed?: boolean;
   icon?: ReactNode;
+  /** Visual overrides for the icon button face. */
+  iconFaceClassName?: string;
 };
 
 const tone: Record<ButtonVariant, string> = {
@@ -20,7 +22,7 @@ const tone: Record<ButtonVariant, string> = {
   danger: 'bg-sos text-sos-on hover:bg-sos-hover',
   text: 'bg-transparent text-ink-muted hover:text-ink',
   textDanger: 'bg-transparent text-sos',
-  icon: 'border border-line bg-surface text-ink hover:bg-surface-2',
+  icon: 'text-ink',
 };
 
 export function Button({
@@ -29,6 +31,7 @@ export function Button({
   loading = false,
   pressed = false,
   icon,
+  iconFaceClassName,
   className,
   children,
   disabled,
@@ -38,9 +41,11 @@ export function Button({
   const resolved = size ?? (variant === 'icon' || variant === 'text' || variant === 'textDanger' ? 'sm' : 'lg');
   const box =
     variant === 'icon'
-      ? resolved === 'md'
-        ? 'h-10 w-10 shrink-0 rounded-md before:absolute before:-inset-[3px]'
-        : 'h-icon w-[var(--h-icon)] shrink-0 rounded-md before:absolute before:-inset-[5px]'
+      ? cn(
+        // The absolutely positioned pseudo-element is centered by the button's flex alignment.
+        'group/icon-button shrink-0 rounded-md before:absolute before:h-11 before:w-11',
+        resolved === 'md' ? 'h-10 w-10' : 'h-[var(--h-icon)] w-[var(--h-icon)]',
+      )
       : variant === 'text' || variant === 'textDanger'
         ? 'min-h-small rounded-md px-2 text-body-s font-bold'
         : resolved === 'md'
@@ -48,6 +53,13 @@ export function Button({
           : resolved === 'sm'
             ? 'h-small rounded-md px-3 text-caption font-bold'
             : 'h-primary rounded-lg px-4 text-body-l font-bold';
+
+  const content = (
+    <span className={cn('inline-flex items-center justify-center gap-2', loading && 'invisible')}>
+      {icon ? <span className="inline-flex h-5 w-5 shrink-0">{icon}</span> : null}
+      {children}
+    </span>
+  );
 
   return (
     <button
@@ -67,10 +79,15 @@ export function Button({
       )}
       {...rest}
     >
-      <span className={cn('inline-flex items-center justify-center gap-2', loading && 'invisible')}>
-        {icon ? <span className="inline-flex h-5 w-5 shrink-0">{icon}</span> : null}
-        {children}
-      </span>
+      {variant === 'icon' ? (
+        <span className={cn(
+          'inline-flex h-full shrink-0 items-center justify-center rounded-md border border-line bg-surface transition-colors duration-fast ease-so group-hover/icon-button:bg-surface-2 motion-reduce:transition-none',
+          resolved === 'md' && 'w-full',
+          iconFaceClassName,
+        )}>
+          {content}
+        </span>
+      ) : content}
       {loading ? (
         <span className="so-spin absolute h-5 w-5 rounded-full border-2 border-current/40 border-t-current" />
       ) : null}

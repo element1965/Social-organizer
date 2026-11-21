@@ -160,9 +160,12 @@
       "empty": "Rețeaua ta începe cu o persoană pe care o cunoști"
     },
     "rings": {
-      "short1": "1.",
-      "short2": "2.",
-      "short3": "3.",
+      "short1": "prima",
+      "short2": "a doua",
+      "short3": "a treia",
+      "chip1": "1.",
+      "chip2": "2.",
+      "chip3": "3.",
       "full1": "prima strângere de mână",
       "full2": "a doua strângere de mână",
       "full3": "a treia strângere de mână",

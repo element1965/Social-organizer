@@ -162,9 +162,12 @@
       "empty": "Twoja sieć zaczyna się od jednej znajomej osoby"
     },
     "rings": {
-      "short1": "1.",
-      "short2": "2.",
-      "short3": "3.",
+      "short1": "1. uścisk dłoni",
+      "short2": "2. uścisk dłoni",
+      "short3": "3. uścisk dłoni",
+      "chip1": "1.",
+      "chip2": "2.",
+      "chip3": "3.",
       "full1": "1. uścisk dłoni",
       "full2": "2. uścisk dłoni",
       "full3": "3. uścisk dłoni",

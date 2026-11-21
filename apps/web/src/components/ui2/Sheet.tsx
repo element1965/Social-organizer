@@ -113,7 +113,7 @@ export function Sheet({
       )}
       onMouseDown={(event) => event.stopPropagation()}
     >
-      <div className="shrink-0" onPointerDown={startDrag} onPointerUp={finishDrag} onPointerCancel={() => { dragY.current = null; }}>
+      <div className={cn('shrink-0', !dialog && 'touch-none')} onPointerDown={startDrag} onPointerUp={finishDrag} onPointerCancel={() => { dragY.current = null; }}>
         {dialog ? null : <div className="mx-auto mb-3 h-1 w-9 rounded-pill bg-line-strong [@media(max-height:400px)]:mb-2" aria-hidden />}
         <div className={leading ? 'flex items-center gap-3.5' : undefined}>
           {leading ? <div className="shrink-0">{leading}</div> : null}

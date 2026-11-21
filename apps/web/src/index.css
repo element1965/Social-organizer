@@ -6,6 +6,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html[dir="rtl"] .so-url-placeholder:placeholder-shown {
+  direction: rtl;
+  text-align: start;
+}
+
 /* System bars (status bar / gesture bar).
    On Android 15+ the app is drawn edge-to-edge; Capacitor writes the bar sizes
    into --safe-area-inset-*, browsers and iOS give them via env(). */

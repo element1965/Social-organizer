@@ -434,7 +434,7 @@ export function PeoplePage() {
             placeholder={t('people.search')}
             aria-label={t('people.search')}
           />
-          <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label={t('people.sort')}>
+          <div className="flex flex-wrap items-center gap-x-1.5 gap-y-3" role="group" aria-label={t('people.sort')}>
             <span className="shrink-0 text-micro font-bold text-ink-muted">{t('people.sort')}</span>
             {sortOptions.map((option) => (
               <Chip

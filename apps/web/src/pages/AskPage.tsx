@@ -222,6 +222,7 @@ function AskBody() {
             label={t('ask.chatLabel')}
             value={chat}
             placeholder={t('ask.chatPlaceholder')}
+            className="so-url-placeholder"
             inputMode="url"
             dir="ltr"
             autoCapitalize="none"

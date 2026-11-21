@@ -233,6 +233,8 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                 />
                 <input
                   type="url"
+                  dir="ltr"
+                  inputMode="url"
                   value={linkUrl}
                   onChange={e => setLinkUrl(e.target.value)}
                   placeholder={t('faq.urlPlaceholder')}

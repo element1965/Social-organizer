@@ -100,6 +100,8 @@ export default {
         warm: { DEFAULT: token('warm'), soft: token('warm-soft'), ink: token('warm-ink') },
         scene: { DEFAULT: token('scene'), 2: token('scene-2'), 3: token('scene-3') },
         node: { 1: token('node-1'), 2: token('node-2'), 3: token('node-3') },
+        telegram: token('telegram'),
+        'on-telegram': token('on-telegram'),
         success: token('care'),
         warning: token('warm'),
       },

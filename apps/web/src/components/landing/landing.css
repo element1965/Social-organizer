@@ -170,7 +170,7 @@ html[dir="rtl"] .lv.graph .tag.t-maria.flip { transform: translate(18px, -50%); 
 .lv .state { display: flex; justify-content: space-between; align-items: baseline; margin-top: 16px; gap: 12px; }
 .lv .state b { font-weight: 400; font-size: 22px; letter-spacing: -.01em; min-height: 1.2em; }
 .lv .state button { position: relative; font: 500 13px/1 var(--sans); background: none; border: 0; padding: 0; color: var(--lv-care-scene); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
-.lv .state button::before { content: ""; position: absolute; inset-block: -21px -10px; inset-inline: 0; }
+.lv .state button::before { content: ""; position: absolute; inset-block: -21px -10px; inset-inline-end: 0; inline-size: 100%; min-inline-size: 44px; }
 .lv .note { font-size: 13px; color: var(--lv-text-3); margin-top: 12px; }
 .lv .grow .hint { margin-top: 14px; font: 500 12px/1.4 var(--mono); color: rgba(255, 255, 255, .5); letter-spacing: .03em; }
 

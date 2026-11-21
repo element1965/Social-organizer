@@ -13,7 +13,7 @@ import { PENDING_METHOD_KEY, type LoginMethod } from '../../hooks/useAuth';
 import { AuthButtons } from './AuthButtons';
 import { CodeCells } from './CodeCells';
 import { BackLink, BrandLine, LanguageCorner, OnboardingFrame, StepText } from './OnboardingFrame';
-import { MailMark, TELEGRAM_BG, TELEGRAM_FG, TelegramMark } from './brand';
+import { MailMark, TelegramMark } from './brand';
 import { readPendingInvite, safeMasked } from './flow';
 import { AlertGlyph, InfoGlyph, Note, Spinner, StateTile, TextButton, UndoGlyph } from './states';
 import { useSignIn } from './useSignIn';
@@ -199,8 +199,7 @@ export function SignInFlow({
             <button
               type="button"
               onClick={() => window.open(signIn.telegramBotUrl(), '_blank')}
-              style={{ background: TELEGRAM_BG, color: TELEGRAM_FG }}
-              className="so-focus mt-3 flex h-primary w-full items-center justify-center gap-2.5 rounded-lg text-body-l font-bold tracking-tight"
+              className="so-focus mt-3 flex h-primary w-full items-center justify-center gap-2.5 rounded-lg bg-telegram text-body-l font-bold tracking-tight text-on-telegram"
             >
               <span className="inline-flex h-5 w-5">
                 <TelegramMark />

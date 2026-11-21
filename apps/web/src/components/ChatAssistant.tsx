@@ -285,7 +285,8 @@ export function ChatAssistant() {
       <div className="flex items-end gap-2 border-t border-line py-2">
         <Button
           variant="icon"
-          className={cn('h-11 w-11 shrink-0 rounded-lg', isListening && 'border-transparent bg-sos-soft text-sos')}
+          className="h-11 w-11 rounded-lg"
+          iconFaceClassName={cn('w-full rounded-lg', isListening && 'border-transparent bg-sos-soft text-sos')}
           onClick={toggleListening}
           disabled={isLoading}
           aria-label={isListening ? t('chat.stopListening') : t('chat.startListening')}

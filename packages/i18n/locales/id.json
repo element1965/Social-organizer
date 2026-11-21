@@ -156,9 +156,12 @@
       "empty": "Jaringan Anda dimulai dari satu orang yang Anda kenal"
     },
     "rings": {
-      "short1": "ke-1",
-      "short2": "ke-2",
-      "short3": "ke-3",
+      "short1": "jabat tangan ke-1",
+      "short2": "jabat tangan ke-2",
+      "short3": "jabat tangan ke-3",
+      "chip1": "ke-1",
+      "chip2": "ke-2",
+      "chip3": "ke-3",
       "full1": "Jabat tangan ke-1",
       "full2": "Jabat tangan ke-2",
       "full3": "Jabat tangan ke-3",

@@ -9,6 +9,11 @@
  * Line colors are the ink triplet; Tailwind applies .14 / .08 / .24 alpha.
  * Scene colors stay dark in both themes.
  */
+:root {
+  --so-telegram: 24 119 176;
+  --so-on-telegram: 255 255 255;
+}
+
 :root,
 .light {
   --so-canvas: 243 246 244;

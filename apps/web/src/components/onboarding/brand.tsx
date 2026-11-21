@@ -1,15 +1,4 @@
-/*
- * Third-party brand marks for the sign-in buttons.
- *
- * This is the only file in the onboarding folder with raw colors: the Google "G" and the Telegram button
- * must keep their brand colors in both themes, and the token set has no brand slots. Everything else in
- * the flow uses the --so-* tokens. If a `--so-telegram` token is added later, swap TELEGRAM_BG for it.
- */
 import type { SVGProps } from 'react';
-
-/** Telegram blue adjusted for white sign-in text in both themes. */
-export const TELEGRAM_BG = '#1877B0';
-export const TELEGRAM_FG = '#FFFFFF';
 
 type P = SVGProps<SVGSVGElement>;
 

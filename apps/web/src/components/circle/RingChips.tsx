@@ -6,11 +6,11 @@ import { Chip } from '../ui2/Chip';
 import type { Ring } from './circle-store';
 import { IconAim } from './icons';
 
-const DOT: Record<Ring, string> = { 1: 'bg-node-1', 2: 'bg-node-2', 3: 'bg-node-3' };
+const DOT: Record<Ring, string> = { 1: 'text-node-1', 2: 'text-node-2', 3: 'text-node-3' };
 
 type RingChipsProps = {
   counts: Record<Ring, number>;
-  /** Rings hidden on the graph (switched in People) are drawn dimmed. */
+  /** Rings hidden on the graph (switched in People) are marked with a hollow dot. */
   hiddenRings: Ring[];
   /** The far chip ("4th–6th: ~N", useFarRings): the part of the header's people count beyond the 3rd ring */
   farLabel?: string;
@@ -41,16 +41,17 @@ export function RingChips({ counts, farLabel, hiddenRings, onSelf, className, st
       <div className="flex items-center gap-2">
         {rings.map((ring) => {
           const hidden = hiddenRings.includes(ring);
-          const label = t(`circle.rings.short${ring}`);
+          const label = t(`circle.rings.chip${ring}`);
           return (
             <Chip
               key={ring}
               variant="onscene"
               aria-label={t('circle.rings.open', { ring: t(`circle.rings.full${ring}`), count: counts[ring] })}
-              className={cn('min-w-[46px] backdrop-blur-md', hidden && 'opacity-40')}
+              aria-pressed={!hidden}
+              className="min-w-[46px] bg-scene-2/[0.86] backdrop-blur-md"
               onClick={() => navigate(`/people/${ring}`)}
             >
-              <i className={cn('h-2 w-2 shrink-0 rounded-full', DOT[ring])} aria-hidden />
+              <i className={cn('h-2 w-2 shrink-0 rounded-full', DOT[ring], hidden ? 'border border-current' : 'bg-current')} aria-hidden />
               <b className="shrink-0 text-caption font-extrabold tabular-nums tracking-tight text-node-1">{counts[ring]}</b>
               <span className="min-w-0 truncate">{label}</span>
             </Chip>

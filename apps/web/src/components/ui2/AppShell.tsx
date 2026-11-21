@@ -56,10 +56,12 @@ function badgeLabel(count: number): string | null {
   return count > 9 ? '9+' : String(count);
 }
 
+type NavCurrent = 'page' | 'location' | undefined;
+
 type ItemProps = {
   to: string;
   label: string;
-  active: boolean;
+  current: NavCurrent;
   rail: boolean;
   interactive: boolean;
   onActivate: () => void;
@@ -68,11 +70,11 @@ type ItemProps = {
   state?: { fromCircle: true };
 };
 
-function NavItem({ to, label, active, rail, interactive, onActivate, children, badge, state }: ItemProps) {
+function NavItem({ to, label, current, rail, interactive, onActivate, children, badge, state }: ItemProps) {
   const className = cn(
     'so-focus group relative flex items-center gap-3 rounded-md text-body-s font-bold transition-colors duration-base ease-so motion-reduce:transition-none',
     rail ? 'h-[52px] w-[52px] justify-center' : 'h-11 px-3',
-    active ? 'bg-care-soft text-care' : 'text-ink-muted hover:text-ink',
+    current ? 'bg-care-soft text-care' : 'text-ink-muted hover:text-ink',
   );
   const inner = (
     <>
@@ -92,13 +94,13 @@ function NavItem({ to, label, active, rail, interactive, onActivate, children, b
   );
   if (!interactive) {
     return (
-      <button type="button" className={className} aria-current={active ? 'page' : undefined} aria-label={rail ? label : undefined}>
+      <button type="button" className={className} aria-current={current} aria-label={rail ? label : undefined}>
         {inner}
       </button>
     );
   }
   return (
-    <Link to={to} state={state} className={className} aria-current={active ? 'page' : undefined} aria-label={rail ? label : undefined} onClick={onActivate}>
+    <Link to={to} state={state} className={className} aria-current={current} aria-label={rail ? label : undefined} onClick={onActivate}>
       {inner}
     </Link>
   );
@@ -124,32 +126,37 @@ export function ShellChrome({
   const compact = mode === 'rail';
   const rail = false;
   const badge = badgeLabel(unread);
-  const helpCurrent = pathname === '/me/help';
+  const navCurrent = (to: string, active: boolean): NavCurrent => {
+    if (!active) return undefined;
+    return pathname === to ? 'page' : 'location';
+  };
+  const helpCurrent = navCurrent('/me/help', pathname === '/me/help');
   const askState = pathname === '/' ? { fromCircle: true } as const : undefined;
 
   const circle = (
-    <NavItem to="/" label={t('nav.circle')} active={section === 'circle'} rail={rail} interactive={interactive} onActivate={activate} badge={badge}>
+    <NavItem to="/" label={t('nav.circle')} current={navCurrent('/', section === 'circle')} rail={rail} interactive={interactive} onActivate={activate} badge={badge}>
       <IconCircle className="h-[22px] w-[22px]" />
     </NavItem>
   );
   const people = (
-    <NavItem to="/people" label={t('nav.people')} active={section === 'people'} rail={rail} interactive={interactive} onActivate={activate}>
+    <NavItem to="/people" label={t('nav.people')} current={navCurrent('/people', section === 'people')} rail={rail} interactive={interactive} onActivate={activate}>
       <IconPeople className="h-[22px] w-[22px]" />
     </NavItem>
   );
   const askItem = (
-    <NavItem to="/ask" state={askState} label={t('nav.ask')} active={section === 'ask'} rail={rail} interactive={interactive} onActivate={activate}>
+    <NavItem to="/ask" state={askState} label={t('nav.ask')} current={navCurrent('/ask', section === 'ask')} rail={rail} interactive={interactive} onActivate={activate}>
       <AskMark progress={ask} />
     </NavItem>
   );
   const profile = (
-    <NavItem to="/me" label={t('nav.profile')} active={section === 'profile'} rail={rail} interactive={interactive} onActivate={activate}>
+    <NavItem to="/me" label={t('nav.profile')} current={navCurrent('/me', section === 'profile')} rail={rail} interactive={interactive} onActivate={activate}>
       <IconPerson className="h-[22px] w-[22px]" />
     </NavItem>
   );
 
   if (mode === 'tabs') {
     const tab = (to: string, label: string, active: boolean, icon: ReactNode, mark?: { count?: string | null }) => {
+      const current = navCurrent(to, active);
       const className = cn(
         'so-focus flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 pt-4 text-tab font-bold transition-colors duration-base ease-so motion-reduce:transition-none',
         active ? 'text-care' : 'text-ink-subtle',
@@ -174,13 +181,13 @@ export function ShellChrome({
       );
       if (!interactive) {
         return (
-          <button key={to} type="button" aria-current={active ? 'page' : undefined} className={className}>
+          <button key={to} type="button" aria-current={current} className={className}>
             {inner}
           </button>
         );
       }
       return (
-        <Link key={to} to={to} state={to === '/ask' ? askState : undefined} aria-current={active ? 'page' : undefined} className={className} onClick={activate}>
+        <Link key={to} to={to} state={to === '/ask' ? askState : undefined} aria-current={current} className={className} onClick={activate}>
           {inner}
         </Link>
       );
@@ -205,7 +212,7 @@ export function ShellChrome({
   }
 
   const addItem = (
-    <NavItem to="/add" label={t('nav.add')} active={section === 'add'} rail={rail} interactive={interactive} onActivate={activate}>
+    <NavItem to="/add" label={t('nav.add')} current={navCurrent('/add', section === 'add')} rail={rail} interactive={interactive} onActivate={activate}>
       <IconAdd className="h-[22px] w-[22px]" />
     </NavItem>
   );
@@ -239,7 +246,7 @@ export function ShellChrome({
         {profile}
       </nav>
       <div className="mt-auto flex shrink-0 flex-col gap-0.5 pt-4">
-        <NavItem to="/me/help" label={t('nav.help')} active={helpCurrent} rail={rail} interactive={interactive} onActivate={activate}>
+        <NavItem to="/me/help" label={t('nav.help')} current={helpCurrent} rail={rail} interactive={interactive} onActivate={activate}>
           <IconHelp className="h-[22px] w-[22px]" />
         </NavItem>
         {interactive ? (

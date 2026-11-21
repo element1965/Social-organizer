@@ -2,12 +2,12 @@
  * Sign-in buttons in the device order from lib/device.ts (AUTH_ORDER), e-mail last as a text link,
  * then the legal line. The logic lives in useSignIn; this file only draws it.
  */
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import type { LoginMethod } from '../../hooks/useAuth';
-import { AppleMark, GoogleMark, TELEGRAM_BG, TELEGRAM_FG, TelegramMark } from './brand';
+import { AppleMark, GoogleMark, TelegramMark } from './brand';
 import type { SignIn } from './useSignIn';
 
 /** The method used last time: a care ring on its own button (the order never changes). */
@@ -17,14 +17,12 @@ function AuthButton({
   children,
   icon,
   className,
-  style,
   onClick,
   disabled,
 }: {
   children: ReactNode;
   icon?: ReactNode;
   className?: string | false;
-  style?: CSSProperties;
   onClick: () => void;
   disabled?: boolean;
 }) {
@@ -33,7 +31,6 @@ function AuthButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      style={style}
       className={cn(
         'so-focus flex h-primary w-full items-center justify-center gap-2.5 rounded-lg text-body-l font-bold tracking-tight',
         'transition-transform duration-fast ease-so active:scale-[0.97] disabled:opacity-[0.45] motion-reduce:transition-none',
@@ -104,8 +101,7 @@ export function AuthButtons({
               <AuthButton
                 key={p}
                 icon={<TelegramMark />}
-                className={last === 'telegram' && LAST_RING}
-                style={{ background: TELEGRAM_BG, color: TELEGRAM_FG }}
+                className={cn('bg-telegram text-on-telegram', last === 'telegram' && LAST_RING)}
                 onClick={() => start('telegram')}
                 disabled={busy}
               >
