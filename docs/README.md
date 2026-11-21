@@ -5,6 +5,7 @@
 - [Application and Need protocol](application.md) covers screens, features, the redesign and the glossary.
 - [Deployment, security and recovery](operations.md) covers Railway, native releases, backups and incident notes.
 - [Licensing and assets](licensing.md) covers the AGPL, project marks and third-party notices.
+- [Product record](../PRODUCT.md) covers users, purpose, positioning, constraints and principles for design work.
 - [Narrative and sources](narrative/INDEX.md) covers theory, vocabulary, research and the evidence behind the project.
 - [Notification routing](notifications/behaviour-routing.md) and [launch readiness](release/launch-readiness.md) cover delivery behaviour and the release checklist.
 - [Redesign workspace](redesign/README.md) links to the mockups and local phone-testing notes. [Archive](archive/README.md) holds earlier specifications, plans and working drafts.
