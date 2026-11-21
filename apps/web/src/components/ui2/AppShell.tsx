@@ -130,6 +130,7 @@ export function ShellChrome({
     return pathname === to ? 'page' : 'location';
   };
   const helpCurrent = navCurrent('/me/help', pathname === '/me/help');
+  const askActive = section === 'ask';
   const askState = pathname === '/' ? { fromCircle: true } as const : undefined;
 
   const circle = (
@@ -143,8 +144,8 @@ export function ShellChrome({
     </NavItem>
   );
   const askItem = (
-    <NavItem to="/ask" state={askState} label={t('nav.ask')} current={navCurrent('/ask', section === 'ask')} rail={rail} interactive={interactive} onActivate={activate}>
-      <AskMark progress={ask} />
+    <NavItem to="/ask" state={askState} label={t('nav.ask')} current={navCurrent('/ask', askActive)} rail={rail} interactive={interactive} onActivate={activate}>
+      <AskMark progress={ask} active={askActive} />
     </NavItem>
   );
   const profile = (
@@ -202,7 +203,7 @@ export function ShellChrome({
       >
         <div className="flex h-[var(--so-tab-bar-height)]">
           {tab('/', t('nav.circle'), section === 'circle', <IconCircle className="h-[24px] w-[24px]" />, { count: badge })}
-          {tab('/ask', t('nav.ask'), section === 'ask', <AskMark progress={ask} />)}
+          {tab('/ask', t('nav.ask'), askActive, <AskMark progress={ask} active={askActive} />)}
           {tab('/add', t('nav.add'), section === 'add', <IconAdd className="h-[24px] w-[24px]" />)}
           {tab('/me', t('nav.profile'), section === 'profile', <IconPerson className="h-[24px] w-[24px]" />)}
         </div>
