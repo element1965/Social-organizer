@@ -127,5 +127,5 @@ export async function processCycleClose(_job: Job): Promise<void> {
       await insertCycleNotices(tx, collection.id, newCycleNumber, currentCycleStart, expiresAt, 'CYCLE_RENEWED');
     });
   }
-  await dispatchPendingNeedNotices(db, ['start', 'closed']);
+  await dispatchPendingNeedNotices(db, ['start', 'closed', 'new', 'repeat']);
 }

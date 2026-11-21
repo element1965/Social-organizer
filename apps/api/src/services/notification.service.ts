@@ -2,16 +2,17 @@ import { WEB_APP_URL } from '../deployment.js';
 import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
 import type { PrismaClient } from '@so/db';
-import { groupNumber, NOTIFICATION_TTL_HOURS, REGULAR_CYCLE_DAYS } from '@so/shared';
+import { groupNumber, NOTIFICATION_RATIO, NOTIFICATION_TTL_HOURS, REGULAR_CYCLE_DAYS } from '@so/shared';
 import { findRecipientsViaBfs, walkRings, type BfsRecipient } from './bfs.service.js';
-import { planWave, recordSent } from './notify-routing.service.js';
+import { planWave } from './notify-routing.service.js';
 import { timedWalk } from './runtime-metrics.service.js';
 import type { TgReplyMarkup } from './telegram-bot.service.js';
 import { deliver, deliverMany } from './delivery.service.js';
 import { tgEscape } from './tg-html.js';
 import { transactionWithRetry } from '../lib/tx-retry.js';
 import { findNeedForUpdate } from './collection-state.js';
-import { liveNeedRequests, openNeedForRequests } from './need-attention.js';
+import { activeObligationTotals } from './collection-amount.js';
+import { enqueueNeedNotice, pendingNoticeKey, retirePendingNotices, type NeedNotice } from './need-delivery-state.js';
 
 
 /** People written per insert when a wave is stored. */
@@ -95,7 +96,8 @@ export async function sendCollectionNotifications(
   const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
 
   const externalIds = new Set(external.map(({ userId }) => userId));
-  const externalNotices: { id: string; userId: string }[] = [];
+  const externalUsers: string[] = [];
+  const requestNotice: NeedNotice = { type: type === 'RE_NOTIFY' ? 'repeat' : 'new', collectionId, wave };
   let created = 0;
   for (let i = 0; i < recipients.length; i += INSERT_BATCH) {
     const batch = recipients.slice(i, i + INSERT_BATCH);
@@ -112,30 +114,46 @@ export async function sendCollectionNotifications(
         const need = await findNeedForUpdate(tx, collectionId);
         if (!need || need.status !== 'ACTIVE' || need.blockReason === 'COMMUNITY') return null;
 
+        let remaining = Infinity;
+        if (type === 'RE_NOTIFY' && need.amount != null) {
+          const { amount: pledged } = await activeObligationTotals(tx, collectionId);
+          const budget = Math.ceil((need.amount - pledged) / NOTIFICATION_RATIO);
+          if (budget <= 0) return null;
+          remaining = Math.max(0, budget - externalUsers.length);
+        }
+
         // Another wave can have told some of these people since the graph was read.
         const notified = await tx.notification.findMany({
           where: { collectionId, userId: { in: batch.map(({ userId }) => userId) } },
           select: { userId: true },
         });
         const seen = new Set(notified.map(({ userId }) => userId));
-        return tx.notification.createManyAndReturn({
-          data: data.filter(({ userId }) => !seen.has(userId)),
-          skipDuplicates: true,
-          select: { id: true, userId: true },
+        const selection = data.filter(({ userId }) => {
+          if (seen.has(userId)) return false;
+          if (!externalIds.has(userId)) return true;
+          if (remaining <= 0) return false;
+          remaining--;
+          return true;
         });
+        const inserted = await tx.notification.createManyAndReturn({
+          data: selection, skipDuplicates: true, select: { userId: true },
+        });
+        const insertedIds = new Set(inserted.map(({ userId }) => userId));
+        const dispatch = selection.filter(({ userId }) => externalIds.has(userId) && insertedIds.has(userId))
+          .map(({ userId }) => userId);
+        await enqueueNeedNotice(tx, requestNotice.type, collectionId, wave, dispatch);
+        return { count: inserted.length, dispatch };
       });
       if (!inserted) break;
-      created += inserted.length;
-      for (const row of inserted) {
-        if (externalIds.has(row.userId)) externalNotices.push(row);
-      }
+      created += inserted.count;
+      externalUsers.push(...inserted.dispatch);
     } catch (err) {
       console.error('[Notify] wave batch failed:', err);
     }
   }
 
-  if (isRequest && externalNotices.length > 0) {
-    dispatchNewCollection(db, collectionId, creatorId, externalNotices, type).catch((err) =>
+  if (isRequest && externalUsers.length > 0) {
+    sendNeedRequestNotices(db, requestNotice, creatorId, externalUsers).catch((err) =>
       console.error('[Notify] new collection dispatch failed:', err),
     );
   }
@@ -150,22 +168,17 @@ export async function sendCollectionClosedTg(
   db: PrismaClient,
   collectionId: string,
   creatorId: string,
-  recipientUserIds?: string[],
-  recordAfterDispatch = false,
+  recipientUserIds: string[],
 ): Promise<void> {
-  if (!recipientUserIds) {
-    const notified = await db.notification.findMany({
-      where: { collectionId, userId: { not: creatorId } },
-      select: { userId: true },
-      distinct: ['userId'],
-    });
-    recipientUserIds = notified.map(({ userId }) => userId);
-  }
   if (recipientUserIds.length === 0) return;
+  const needNotice: NeedNotice = { type: 'closed', collectionId, wave: 0 };
 
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
   const collection = await db.collection.findUnique({ where: { id: collectionId, status: 'CLOSED' }, select: { amount: true } });
-  if (!creator || !collection) return;
+  if (!creator || !collection) {
+    await retirePendingNotices(db, pendingNoticeKey(needNotice), recipientUserIds);
+    return;
+  }
 
   const amountStr = collection.amount != null ? `${groupNumber(collection.amount)}\u00a0USD` : ''; // 1 unit = 1 $ (SO-40)
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
@@ -178,7 +191,7 @@ export async function sendCollectionClosedTg(
       text: `✅ <b>${tg(lang, 'closed')}</b>\n\n${tg(lang, 'from')}: <b>${tgEscape(creator.name)}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'closedBody')}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]] },
     }),
-  }), { recordAfterDispatch });
+  }), needNotice);
 }
 
 /**
@@ -416,17 +429,19 @@ export async function sendCycleRenewalReminderTg(
   creatorId: string,
   recipientUserIds: string[],
   cycleNumber: number,
-  recordAfterDispatch = false,
 ): Promise<void> {
   if (recipientUserIds.length === 0) return;
+  const needNotice: NeedNotice = { type: 'reminder', collectionId, wave: cycleNumber };
 
   const collection = await db.collection.findUnique({
     where: { id: collectionId, type: 'REGULAR', cycleNumber, status: { in: ['ACTIVE', 'BLOCKED'] }, blockReason: null },
     select: { currentCycleStart: true },
   });
-  if (!collection?.currentCycleStart) return;
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
-  if (!creator) return;
+  if (!collection?.currentCycleStart || !creator) {
+    await retirePendingNotices(db, pendingNoticeKey(needNotice), recipientUserIds);
+    return;
+  }
 
   // The reminder is about the NEXT cycle: it starts when the current one ends.
   const cycleStart = collection.currentCycleStart;
@@ -437,7 +452,7 @@ export async function sendCycleRenewalReminderTg(
   const names = await userNames(db, activeUserIds);
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
-  await deliverMany(db, activeUserIds, (userId) => ({
+  await deliverMany(db, recipientUserIds, (userId) => contributions.has(userId) ? ({
     key: `cycle:${collectionId}:${cycleNumber}:reminder`,
     kind: 'cycle',
     push: { title: 'New cycle in 3 days', body: 'A Need you take part in (every 28 days) starts a new cycle in 3 days.', url: webAppLink },
@@ -445,7 +460,7 @@ export async function sendCycleRenewalReminderTg(
       text: `🔔 <b>${tg(lang, 'renewalReminderTitle')}</b>\n\n${tg(lang, 'renewalReminderBody').replace('{{name}}', tgEscape(names.get(userId))).replace('{{creator}}', tgEscape(creator.name))}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]] },
     }),
-  }), { recordAfterDispatch });
+  }) : null, needNotice);
 }
 
 /**
@@ -457,17 +472,19 @@ export async function sendCycleRenewedTg(
   creatorId: string,
   recipientUserIds: string[],
   cycleNumber: number,
-  recordAfterDispatch = false,
 ): Promise<void> {
   if (recipientUserIds.length === 0) return;
+  const needNotice: NeedNotice = { type: 'start', collectionId, wave: cycleNumber };
 
   const collection = await db.collection.findUnique({
     where: { id: collectionId, type: 'REGULAR', cycleNumber, status: { in: ['ACTIVE', 'BLOCKED'] }, blockReason: null },
     select: { currentCycleStart: true },
   });
-  if (!collection?.currentCycleStart) return;
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
-  if (!creator) return;
+  if (!collection?.currentCycleStart || !creator) {
+    await retirePendingNotices(db, pendingNoticeKey(needNotice), recipientUserIds);
+    return;
+  }
 
   // Called right after the cycle was rolled over, so currentCycleStart is the new cycle.
   const periodStart = collection.currentCycleStart;
@@ -477,7 +494,7 @@ export async function sendCycleRenewedTg(
   const contributions = await getUserContributions(db, collectionId, recipientUserIds, 'notifyRenewalStart');
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
-  await deliverMany(db, [...contributions.keys()], (userId) => ({
+  await deliverMany(db, recipientUserIds, (userId) => contributions.has(userId) ? ({
     key: `cycle:${collectionId}:${cycleNumber}:start`,
     kind: 'cycle',
     push: { title: 'New cycle started', body: 'A Need you take part in (every 28 days) has started a new cycle.', url: webAppLink },
@@ -485,7 +502,7 @@ export async function sendCycleRenewedTg(
       text: `🔁 <b>${tg(lang, 'renewalStartTitle')}</b>\n\n${tg(lang, 'renewalStartBody').replace('{{name}}', tgEscape(names.get(userId))).replace('{{creator}}', tgEscape(creator.name))}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]] },
     }),
-  }), { recordAfterDispatch });
+  }) : null, needNotice);
 }
 
 async function userNames(db: PrismaClient, ids: string[]): Promise<Map<string, string>> {
@@ -494,25 +511,31 @@ async function userNames(db: PrismaClient, ids: string[]): Promise<Map<string, s
 }
 
 /** New collection (or a later wave): one message per person, through their own channel */
-async function dispatchNewCollection(
+export async function sendNeedRequestNotices(
   db: PrismaClient,
-  collectionId: string,
+  notice: NeedNotice,
   creatorId: string,
-  notices: { id: string; userId: string }[],
-  type: 'NEW_COLLECTION' | 'RE_NOTIFY',
+  userIds: string[],
 ): Promise<void> {
-  const collection = await db.collection.findUnique({ where: { id: collectionId }, select: { type: true, amount: true } });
+  const { collectionId, type } = notice;
+  const collection = await db.collection.findUnique({
+    where: { id: collectionId, status: 'ACTIVE' },
+    select: { type: true, amount: true, blockReason: true },
+  });
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
-  if (!collection || !creator) return;
+  if (!collection || !creator || collection.blockReason === 'COMMUNITY') {
+    await retirePendingNotices(db, pendingNoticeKey(notice), userIds);
+    return;
+  }
 
   const isEmergency = collection.type === 'EMERGENCY';
   const amountStr = collection.amount != null ? `${groupNumber(collection.amount)}\u00a0USD` : '';
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
-  const push = type === 'RE_NOTIFY'
+  const push = type === 'repeat'
     ? { title: 'Reminder', body: 'A Need in your network is still open.', url: webAppLink }
     : { title: 'New Need', body: 'Someone in your network has reported a Need.', url: webAppLink };
 
-  const outcomes = await deliverMany(db, notices.map(({ userId }) => userId), () => ({
+  const outcomes = await deliverMany(db, userIds, () => ({
     key: `col:${collectionId}:new`, // one message per person per collection, whatever the wave
     kind: 'newCollection',
     push,
@@ -520,24 +543,8 @@ async function dispatchNewCollection(
       text: `${isEmergency ? '🚨' : '📢'} <b>${isEmergency ? tg(lang, 'newEmergency') : tg(lang, 'newRegular')}</b>\n\n${tg(lang, 'from')}: <b>${tgEscape(creator.name)}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'networkSupport')}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]] },
     }),
-  }), {
-    // The Need or the person's decision may have changed since the batch committed.
-    eligibleRecipients: async () => {
-      const eligible = await db.notification.findMany({
-        where: {
-          ...liveNeedRequests(new Date()),
-          id: { in: notices.map(({ id }) => id) },
-          collection: openNeedForRequests,
-          user: { deletedAt: null, obligations: { none: { collectionId, unsubscribedAt: null } } },
-        },
-        select: { userId: true },
-      });
-      return new Set(eligible.map(({ userId }) => userId));
-    },
-  });
+  }), notice);
   const counts: Record<string, number> = {};
   for (const o of outcomes.values()) counts[o] = (counts[o] ?? 0) + 1;
   console.log(`[Notify] collection ${collectionId} ${type}:`, counts);
-  const delivered = [...outcomes.entries()].filter(([, o]) => o === 'sent').map(([id]) => id);
-  await recordSent(db, delivered).catch((err) => console.error('[Notify] stats not recorded:', err));
 }

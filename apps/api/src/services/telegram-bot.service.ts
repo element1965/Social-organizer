@@ -9,6 +9,7 @@ import { isRetiredChainMessage } from './mvp-scope.js';
 import { touchTelegramUser } from './activity.service.js';
 import { networkReach } from './network.service.js';
 import { invalidateGraph } from './graph-cache.service.js';
+import type { DeliveryGate, ProviderOutcome } from './provider-outcome.js';
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 
@@ -348,52 +349,44 @@ export async function sendTelegramMessage(
   replyMarkup?: TgReplyMarkup,
   opts: { keepOnBlocked?: boolean } = {},
 ): Promise<boolean> {
-  if (!TELEGRAM_BOT_TOKEN) return false;
+  return (await sendTelegramMessageOutcome({ telegramId: chatId, text, replyMarkup }, undefined, opts)) === 'sent';
+}
 
-  const body: Record<string, unknown> = {
-    chat_id: chatId,
-    text,
-    parse_mode: 'HTML',
-  };
-  if (replyMarkup) body.reply_markup = replyMarkup;
+/** A guarded send makes one provider attempt. The pending delivery owns retries, including 429s. */
+export async function sendTelegramMessageOutcome(
+  { telegramId, text, replyMarkup }: { telegramId: string | number; text: string; replyMarkup?: TgReplyMarkup },
+  beforeHandoff?: DeliveryGate,
+  { keepOnBlocked }: { keepOnBlocked?: boolean } = {},
+): Promise<ProviderOutcome> {
+  if (!TELEGRAM_BOT_TOKEN) return 'retired';
 
-  const doSend = async (): Promise<boolean> => {
+  const body = JSON.stringify({ chat_id: telegramId, text, parse_mode: 'HTML', reply_markup: replyMarkup });
+  const post = async () => {
     const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      body,
+      signal: beforeHandoff ? AbortSignal.timeout(15_000) : undefined,
     });
-
-    const json = (await res.json()) as TgApiResponse;
-
-    if (json.ok) return true;
-
-    // User blocked the bot or account deactivated — remove from DB
-    if (!json.ok && (res.status === 403 || res.status === 400)) logSendFailure(chatId, res.status, json.description);
-    if (isBlockedError(res.status, json.description)) {
-      if (!opts.keepOnBlocked) await removeBlockedUser(chatId);
-      return false;
-    }
-
-    // Handle rate-limit: wait retry_after seconds and retry once
-    if (res.status === 429 && json.parameters?.retry_after) {
-      const waitMs = json.parameters.retry_after * 1000;
-      console.warn(`[TG Bot] 429 rate limited, waiting ${json.parameters.retry_after}s`);
-      await new Promise((r) => setTimeout(r, waitMs));
-      const retryRes = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const retryJson = (await retryRes.json()) as TgApiResponse;
-      return retryJson.ok;
-    }
-
-    console.error(`[TG Bot] sendMessage failed: ${json.description}`);
-    return false;
+    return { status: res.status, json: (await res.json()) as TgApiResponse };
   };
 
-  return doSend();
+  if (beforeHandoff && !(await beforeHandoff())) return 'retired';
+  let { status, json } = await post();
+  if (!json.ok && !beforeHandoff && status === 429 && json.parameters?.retry_after) {
+    const seconds = json.parameters.retry_after;
+    console.warn(`[TG Bot] 429 rate limited, waiting ${seconds}s`);
+    await new Promise((r) => setTimeout(r, seconds * 1000));
+    ({ status, json } = await post());
+  }
+
+  if (json.ok) return 'sent';
+  if (status === 403 || status === 400) logSendFailure(telegramId, status, json.description);
+  if (isBlockedError(status, json.description) && !keepOnBlocked) await removeBlockedUser(telegramId);
+  if (status >= 400 && status < 500 && status !== 408 && status !== 429) return 'retired';
+
+  console.error(`[TG Bot] sendMessage failed: ${json.description}`);
+  return 'retry';
 }
 
 /** Forward a message from one chat to another */

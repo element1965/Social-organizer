@@ -1,29 +1,10 @@
-import type { Prisma, PrismaClient } from '@so/db';
-import { sendCollectionClosedTg, sendCycleRenewalReminderTg, sendCycleRenewedTg } from './notification.service.js';
+import type { PrismaClient } from '@so/db';
+import {
+  sendCollectionClosedTg, sendCycleRenewalReminderTg, sendCycleRenewedTg, sendNeedRequestNotices,
+} from './notification.service.js';
+import { NEED_NOTICE_PREFIX, retirePendingNotices, type NoticeEvent } from './need-delivery-state.js';
 
-type NoticeEvent = 'closed' | 'start' | 'reminder';
-const prefix = 'need-notice:';
-const batchSize = 250;
-const leaseMs = 10 * 60 * 1000;
-
-/** Store a delivery intent in the same transaction as its in-app notice. */
-export async function enqueueNeedNotice(
-  tx: Prisma.TransactionClient,
-  event: NoticeEvent,
-  collectionId: string,
-  cycleNumber: number,
-  userIds: string[],
-): Promise<void> {
-  if (userIds.length === 0) return;
-  const eventKey = `${prefix}${event}:${collectionId}:${cycleNumber}`;
-  // Pending rows use their own key namespace. The actual channel is resolved at dispatch.
-  await tx.notificationDelivery.createMany({
-    data: userIds.map((userId) => ({ userId, eventKey, channel: 'APP' })),
-    skipDuplicates: true,
-  });
-}
-
-/** Drain committed notice intents, including events whose Need is no longer due for processing. */
+/** Page through due intents. Each sender claims its own recipient just before attempting delivery. */
 export async function dispatchPendingNeedNotices(
   db: PrismaClient,
   events: NoticeEvent[],
@@ -31,55 +12,45 @@ export async function dispatchPendingNeedNotices(
 ): Promise<void> {
   let afterId: string | undefined;
   for (;;) {
-    const now = new Date();
-    const candidates = await db.notificationDelivery.findMany({
+    const rows = await db.notificationDelivery.findMany({
       where: {
-        OR: events.map((event) => ({
-          eventKey: { startsWith: `${prefix}${event}:${collectionId == null ? '' : `${collectionId}:`}` },
+        OR: events.map((type) => ({
+          eventKey: { startsWith: `${NEED_NOTICE_PREFIX}${type}:${collectionId == null ? '' : `${collectionId}:`}` },
         })),
-        createdAt: { lte: now },
+        createdAt: { lte: new Date() },
         id: { gt: afterId },
       },
-      select: { id: true },
-      orderBy: { id: 'asc' },
-      take: batchSize,
-    });
-    if (candidates.length === 0) return;
-    afterId = candidates.at(-1)!.id;
-
-    // For pending rows only, createdAt doubles as the time the row may next be claimed.
-    // A stopped worker leaves an expiring lease. A competing worker can only claim unleased rows.
-    const leasedUntil = new Date(now.getTime() + leaseMs);
-    const leased = await db.notificationDelivery.updateManyAndReturn({
-      where: { id: { in: candidates.map(({ id }) => id) }, createdAt: { lte: now } },
-      data: { createdAt: leasedUntil },
       select: { id: true, userId: true, eventKey: true },
+      orderBy: { id: 'asc' },
+      take: 250,
     });
-    const groups = new Map<string, typeof leased>();
-    for (const row of leased) {
-      const group = groups.get(row.eventKey) ?? [];
-      group.push(row);
-      groups.set(row.eventKey, group);
+    if (rows.length === 0) return;
+    afterId = rows.at(-1)!.id;
+
+    const groups = new Map<string, string[]>();
+    for (const { eventKey, userId } of rows) {
+      const users = groups.get(eventKey) ?? [];
+      users.push(userId);
+      groups.set(eventKey, users);
     }
 
-    for (const [key, rows] of groups) {
-      const [, event, needId, cycle] = key.split(':') as [string, NoticeEvent, string, string];
-      const owned = { id: { in: rows.map(({ id }) => id) }, createdAt: leasedUntil };
+    for (const [key, userIds] of groups) {
+      const [, type, id, waveText] = key.split(':') as [string, NoticeEvent, string, string];
+      const notice = { type, collectionId: id, wave: Number(waveText) };
       try {
-        const need = await db.collection.findUnique({ where: { id: needId }, select: { creatorId: true } });
-        if (need) {
-          const userIds = rows.map(({ userId }) => userId);
-          if (event === 'closed') {
-            await sendCollectionClosedTg(db, needId, need.creatorId, userIds, true);
-          } else {
-            const send = event === 'start' ? sendCycleRenewedTg : sendCycleRenewalReminderTg;
-            await send(db, needId, need.creatorId, userIds, Number(cycle), true);
-          }
+        const need = await db.collection.findUnique({ where: { id }, select: { creatorId: true } });
+        if (!need) {
+          await retirePendingNotices(db, key, userIds);
+        } else if (type === 'closed') {
+          await sendCollectionClosedTg(db, id, need.creatorId, userIds);
+        } else if (type === 'new' || type === 'repeat') {
+          await sendNeedRequestNotices(db, notice, need.creatorId, userIds);
+        } else {
+          const send = type === 'start' ? sendCycleRenewedTg : sendCycleRenewalReminderTg;
+          await send(db, id, need.creatorId, userIds, notice.wave);
         }
-        await db.notificationDelivery.deleteMany({ where: owned });
       } catch (err) {
-        await db.notificationDelivery.updateMany({ where: owned, data: { createdAt: now } });
-        console.error('[NeedNotice] Dispatch failed and will be retried:', err);
+        console.error('[NeedNotice] Drain failed:', err instanceof Error ? err.name : 'unknown error');
       }
     }
   }

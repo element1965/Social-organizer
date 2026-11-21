@@ -1,14 +1,19 @@
-import type { Prisma, PrismaClient } from '@so/db';
-import { sendTgMessages, type TgReplyMarkup } from './telegram-bot.service.js';
+import type { PrismaClient } from '@so/db';
+import { sendTelegramMessageOutcome, sendTgMessages, type TgReplyMarkup } from './telegram-bot.service.js';
 import { sendPushNotification, type WebPushPayload } from './push.service.js';
+import {
+  NEED_NOTICE_PREFIX, pendingNoticeKey, retirePendingNotices, runNeedDelivery, type NeedNotice,
+} from './need-delivery-state.js';
+import type { ProviderOutcome } from './provider-outcome.js';
+import type { TgBroadcastMessage } from '../workers/tg-broadcast.worker.js';
 
 /**
  * One external notification per event (SO-45).
  *
  * Every event a person should hear about goes through `deliver`:
  * - the person's channel is resolved once: app push OR Telegram, never both;
- * - a NotificationDelivery row with a unique (userId, eventKey) is claimed first, so a repeat,
- *   a worker retry or two parallel calls send nothing a second time;
+ * - Need notices with durable intents write their receipt after handoff;
+ * - other events use a unique claim before best-effort dispatch;
  * - "new collection" messages respect the person's switch; requests, responses and
  *   collection updates always go through.
  * The in-app journal (Notification rows, pending requests) is separate and not affected.
@@ -32,7 +37,7 @@ export interface OutgoingEvent {
   telegram: (lang: string) => { text: string; replyMarkup?: TgReplyMarkup } | null;
 }
 
-export type DeliveryOutcome = 'sent' | 'duplicate' | 'muted' | 'noRecipient';
+export type DeliveryOutcome = ProviderOutcome | 'queued' | 'pending' | 'duplicate' | 'muted' | 'noRecipient';
 
 interface Target {
   userId: string;
@@ -122,71 +127,75 @@ export async function deliverMany(
   db: PrismaClient,
   userIds: string[],
   eventFor: (userId: string) => OutgoingEvent | null,
-  { recordAfterDispatch = false, eligibleRecipients }: {
-    recordAfterDispatch?: boolean;
-    eligibleRecipients?: () => Promise<Set<string>>;
-  } = {},
+  needNotice?: NeedNotice,
 ): Promise<Map<string, DeliveryOutcome>> {
   const outcomes = new Map<string, DeliveryOutcome>();
   if (userIds.length === 0) return outcomes;
   const targets = await loadTargets(db, userIds);
-  const eligible = await eligibleRecipients?.();
 
-  type Claim = Prisma.NotificationDeliveryCreateManyInput;
-  const pushByPayload = new Map<string, { payload: WebPushPayload; claims: Claim[] }>();
-  const tgMessages: Array<{ telegramId: string; text: string; replyMarkup?: TgReplyMarkup }> = [];
-  const tgClaims: Claim[] = [];
+  const pushByPayload = new Map<string, { payload: WebPushPayload; userIds: string[] }>();
+  const tgMessages: TgBroadcastMessage[] = [];
+  const retired: string[] = [];
 
   for (const userId of new Set(userIds)) {
     const target = targets.get(userId);
     const event = target ? eventFor(userId) : null;
-    if (!target || !event || (eligible && !eligible.has(userId))) { outcomes.set(userId, 'noRecipient'); continue; }
-    if (event.kind === 'newCollection' && !target.newCollections) { outcomes.set(userId, 'muted'); continue; }
+    if (!target || !event || (event.kind === 'newCollection' && !target.newCollections)) {
+      outcomes.set(userId, target && event ? 'muted' : 'noRecipient');
+      retired.push(userId);
+      continue;
+    }
 
-    let channel = target.channel;
-    let tgMessage = channel === 'TELEGRAM' ? event.telegram(target.lang) : null;
-    if (channel === 'TELEGRAM' && !tgMessage) channel = 'APP'; // nothing for Telegram → the same event in the app
+    const tgMessage = target.channel === 'TELEGRAM' ? event.telegram(target.lang) : null;
+    const channel = tgMessage ? 'TELEGRAM' : 'APP'; // no Telegram text: use the app
+    if (!needNotice && !(await claim(db, userId, event.key, channel))) {
+      outcomes.set(userId, 'duplicate');
+      continue;
+    }
 
-    // The pending notice already has an exclusive lease. Leave the final key free until handoff,
-    // so a restart between the lease and the transport call can still deliver the message.
-    const duplicate = recordAfterDispatch
-      ? await db.notificationDelivery.findUnique({
-        where: { userId_eventKey: { userId, eventKey: event.key } },
-        select: { id: true },
-      })
-      : !(await claim(db, userId, event.key, channel));
-    if (duplicate) { outcomes.set(userId, 'duplicate'); continue; }
-    outcomes.set(userId, 'sent');
-    const delivery = { userId, eventKey: event.key, channel };
-
-    if (channel === 'TELEGRAM' && tgMessage && target.telegramId) {
-      tgMessages.push({ telegramId: target.telegramId, ...tgMessage });
-      tgClaims.push(delivery);
+    const delivery = needNotice ? { userId, eventKey: event.key, notice: needNotice } : undefined;
+    if (tgMessage && target.telegramId) {
+      tgMessages.push({ telegramId: target.telegramId, ...tgMessage, delivery });
+    } else if (delivery) {
+      const result = await runNeedDelivery(db, delivery, 'APP', async (beforeHandoff) =>
+        (await sendPushNotification(db, [userId], event.push, beforeHandoff)).get(userId) ?? 'retired');
+      outcomes.set(userId, result);
     } else {
       const k = JSON.stringify(event.push);
-      const group = pushByPayload.get(k) ?? { payload: event.push, claims: [] };
-      group.claims.push(delivery);
+      const group = pushByPayload.get(k) ?? { payload: event.push, userIds: [] };
+      group.userIds.push(userId);
       pushByPayload.set(k, group);
     }
+    if (!delivery) outcomes.set(userId, 'sent');
   }
 
-  for (const { payload, claims } of pushByPayload.values()) {
-    const sending = sendPushNotification(db, claims.map(({ userId }) => userId), payload);
-    if (recordAfterDispatch) {
-      await sending;
-      await db.notificationDelivery.createMany({ data: claims, skipDuplicates: true });
-    } else {
-      await sending.catch((err) => console.error('[Delivery] push failed:', err));
+  for (const { payload, userIds: pushUsers } of pushByPayload.values()) {
+    await sendPushNotification(db, pushUsers, payload).catch((err) => console.error('[Delivery] push failed:', err));
+  }
+  if (!needNotice) {
+    await sendTgMessages(tgMessages).catch((err) => console.error('[Delivery] telegram failed:', err));
+    return outcomes;
+  }
+
+  if (retired.length) await retirePendingNotices(db, pendingNoticeKey(needNotice), retired);
+  if (tgMessages.length > 25 && process.env.REDIS_URL) {
+    try {
+      const { enqueueTgBroadcast } = await import('../workers/index.js');
+      // The worker claims each delivery and acknowledges handoff.
+      await enqueueTgBroadcast(tgMessages);
+      for (const msg of tgMessages) outcomes.set(msg.delivery!.userId, 'queued');
+      return outcomes;
+    } catch (err) {
+      // Redis might already have accepted these jobs. Both paths use the same SQL lease.
+      console.error('[NeedNotice] Telegram enqueue failed, trying direct delivery:', err instanceof Error ? err.name : 'unknown error');
     }
   }
-  if (tgMessages.length > 0) {
-    const sending = sendTgMessages(tgMessages);
-    if (recordAfterDispatch) {
-      await sending;
-      await db.notificationDelivery.createMany({ data: tgClaims, skipDuplicates: true });
-    } else {
-      await sending.catch((err) => console.error('[Delivery] telegram failed:', err));
-    }
+  for (const [i, msg] of tgMessages.entries()) {
+    const delivery = msg.delivery!;
+    outcomes.set(delivery.userId, await runNeedDelivery(
+      db, delivery, 'TELEGRAM', (beforeHandoff) => sendTelegramMessageOutcome(msg, beforeHandoff),
+    ));
+    if ((i + 1) % 25 === 0) await new Promise((r) => setTimeout(r, 1050));
   }
   return outcomes;
 }
@@ -200,7 +209,10 @@ export async function deliver(db: PrismaClient, userId: string, event: OutgoingE
 /** Drops delivery records older than 60 days (keys are only needed to stop repeats). */
 export async function pruneDeliveries(db: PrismaClient): Promise<number> {
   const res = await db.notificationDelivery.deleteMany({
-    where: { createdAt: { lt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) } },
+    where: {
+      createdAt: { lt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) },
+      NOT: { eventKey: { startsWith: NEED_NOTICE_PREFIX } },
+    },
   });
   return res.count;
 }

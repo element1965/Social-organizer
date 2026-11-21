@@ -1,4 +1,5 @@
-import { Queue, Worker } from 'bullmq';
+import { createHash } from 'node:crypto';
+import { Queue, Worker, type JobsOptions } from 'bullmq';
 import IORedis from 'ioredis';
 import { processCycleClose } from './cycle-close.worker.js';
 import { processCycleRenewalReminder } from './cycle-renewal-reminder.worker.js';
@@ -138,9 +139,8 @@ export const TG_JOB_SIZE = 250;
 export const TG_PRIORITY = { wave: 1, bulk: 10 } as const;
 
 /**
- * Enqueue Telegram messages. They are split into jobs of TG_JOB_SIZE: the worker sends one job at a
- * time, 25 messages a second, so one job of a hundred thousand messages would hold everything else for
- * over an hour. With small jobs and priorities a wave waits for the current chunk of a mailing at most.
+ * Enqueue Telegram messages. Durable Need deliveries get one job per recipient for independent
+ * acknowledgement. Other broadcasts are chunked so a wave can run between chunks of a large mailing.
  */
 export async function enqueueTgBroadcast(messages: TgBroadcastMessage[], kind: keyof typeof TG_PRIORITY = 'wave'): Promise<void> {
   if (messages.length === 0) return;
@@ -149,11 +149,26 @@ export async function enqueueTgBroadcast(messages: TgBroadcastMessage[], kind: k
   await queue.addBulk(tgJobs(messages, kind));
 }
 
-/** The jobs a list of messages becomes: chunks of TG_JOB_SIZE in the same order, each with the priority of its kind. */
+/** Build stable Need jobs and chunk ordinary broadcasts in order, with the priority of their kind. */
 export function tgJobs(messages: TgBroadcastMessage[], kind: keyof typeof TG_PRIORITY) {
-  const jobs: Array<{ name: string; data: { messages: TgBroadcastMessage[] }; opts: { priority: number } }> = [];
-  for (let from = 0; from < messages.length; from += TG_JOB_SIZE) {
-    jobs.push({ name: 'tg-broadcast', data: { messages: messages.slice(from, from + TG_JOB_SIZE) }, opts: { priority: TG_PRIORITY[kind] } });
+  const jobs: Array<{ name: string; data: { messages: TgBroadcastMessage[] }; opts: JobsOptions & { priority: number } }> = [];
+  const broadcast: TgBroadcastMessage[] = [];
+  for (const msg of messages) {
+    if (!msg.delivery) {
+      broadcast.push(msg);
+      continue;
+    }
+    const { userId, eventKey } = msg.delivery;
+    const id = createHash('sha256').update(JSON.stringify([userId, eventKey])).digest('hex');
+    jobs.push({
+      name: 'tg-broadcast',
+      data: { messages: [msg] },
+      // The SQL intent owns retry timing. A completed or failed job can be re-enqueued for a due intent.
+      opts: { priority: TG_PRIORITY[kind], jobId: `need-${id}`, removeOnComplete: true, removeOnFail: true },
+    });
+  }
+  for (let from = 0; from < broadcast.length; from += TG_JOB_SIZE) {
+    jobs.push({ name: 'tg-broadcast', data: { messages: broadcast.slice(from, from + TG_JOB_SIZE) }, opts: { priority: TG_PRIORITY[kind] } });
   }
   return jobs;
 }

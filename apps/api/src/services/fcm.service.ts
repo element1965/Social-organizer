@@ -1,6 +1,7 @@
 import { initializeApp, cert, type ServiceAccount, getApps } from 'firebase-admin/app';
 import { getMessaging } from 'firebase-admin/messaging';
 import type { PrismaClient } from '@so/db';
+import { recordProviderOutcome, type DeliveryGate, type ProviderOutcome } from './provider-outcome.js';
 import type { WebPushPayload } from './web-push.service.js';
 
 const FIREBASE_SERVICE_ACCOUNT = process.env.FIREBASE_SERVICE_ACCOUNT;
@@ -36,20 +37,29 @@ export async function sendFcmPush(
   db: PrismaClient,
   userIds: string[],
   payload: WebPushPayload,
-): Promise<void> {
-  if (!FIREBASE_SERVICE_ACCOUNT || getApps().length === 0) return;
-  if (userIds.length === 0) return;
+  beforeHandoff?: DeliveryGate,
+): Promise<Map<string, ProviderOutcome>> {
+  const outcomes = new Map<string, ProviderOutcome>();
+  if (!FIREBASE_SERVICE_ACCOUNT || getApps().length === 0) return outcomes;
+  if (userIds.length === 0) return outcomes;
 
   const tokens = await db.nativePushToken.findMany({
     // iOS tokens are APNs device tokens, sent by apns.service.ts
     where: { userId: { in: userIds }, platform: { not: 'ios' } },
   });
-  if (tokens.length === 0) return;
+  if (tokens.length === 0) return outcomes;
 
   const messaging = getMessaging();
   const expiredIds: string[] = [];
 
   for (const tokenRecord of tokens) {
+    if (beforeHandoff) {
+      const allowed = await beforeHandoff().catch(() => {
+        recordProviderOutcome(outcomes, tokenRecord.userId, 'retry');
+        return false;
+      });
+      if (!allowed) break;
+    }
     try {
       await messaging.send({
         token: tokenRecord.token,
@@ -67,6 +77,7 @@ export async function sendFcmPush(
           },
         },
       });
+      recordProviderOutcome(outcomes, tokenRecord.userId, 'sent');
     } catch (err: any) {
       const code = err?.code || err?.errorInfo?.code || '';
       if (
@@ -76,15 +87,16 @@ export async function sendFcmPush(
       ) {
         expiredIds.push(tokenRecord.id);
       } else {
+        recordProviderOutcome(outcomes, tokenRecord.userId, 'retry');
         console.error('[FCM] Send error:', code, err?.message);
       }
     }
   }
 
   if (expiredIds.length > 0) {
-    await db.nativePushToken.deleteMany({
-      where: { id: { in: expiredIds } },
-    });
+    await db.nativePushToken.deleteMany({ where: { id: { in: expiredIds } } })
+      .catch(() => console.error('[FCM] Could not clean up expired tokens'));
     console.log(`[FCM] Cleaned up ${expiredIds.length} expired tokens`);
   }
+  return outcomes;
 }

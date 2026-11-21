@@ -10,16 +10,21 @@ import { deleteUserAccount } from '../src/services/account-deletion.service.js';
 import { invalidateGraph } from '../src/services/graph-cache.service.js';
 import { runInactiveCleanup } from '../src/services/inactive-cleanup.service.js';
 import { sendCycleRenewalReminderTg, sendCycleRenewedTg } from '../src/services/notification.service.js';
+import { respondToConnectionRequest } from '../src/services/connection-request.service.js';
+import { pruneDeliveries } from '../src/services/delivery.service.js';
+import { dispatchPendingNeedNotices } from '../src/services/notice-delivery.js';
+import { enqueueNeedNotice } from '../src/services/need-delivery-state.js';
 import * as notifications from '../src/services/notification.service.js';
-import * as routing from '../src/services/notify-routing.service.js';
-import * as telegram from '../src/services/telegram-bot.service.js';
+import { planWave } from '../src/services/notify-routing.service.js';
 import { WEB_APP_URL } from '../src/deployment.js';
 import { processCycleClose } from '../src/workers/cycle-close.worker.js';
 import { processCycleRenewalReminder } from '../src/workers/cycle-renewal-reminder.worker.js';
+import * as workers from '../src/workers/index.js';
+import { processTgBroadcast } from '../src/workers/tg-broadcast.worker.js';
 import { runReNotify } from '../src/workers/re-notify.worker.js';
-import { createTestDatabase, isBlockingTransaction, pauseAfterNeedRead } from './test-database.js';
+import { createTestDatabase, isBlockingTransaction, pauseAfterLockedRead } from './test-database.js';
 
-vi.hoisted(() => {
+const { webPushTransport } = vi.hoisted(() => {
   // Enable only local behavior, even if a developer's shell exports integration settings.
   for (const key of [
     'ADMIN_IDS', 'TELEGRAM_BOT_TOKEN', 'REDIS_URL', 'FIREBASE_SERVICE_ACCOUNT',
@@ -27,15 +32,42 @@ vi.hoisted(() => {
   ]) delete process.env[key];
   process.env.JWT_SECRET = 'local-need-protocol-test-key';
   process.env.ADMIN_IDS = 'privacy-admin,sweep-admin';
+  process.env.TELEGRAM_BOT_TOKEN = 'test-bot-token';
+  process.env.VAPID_PUBLIC_KEY = 'test-public';
+  process.env.VAPID_PRIVATE_KEY = 'test-private';
+  return { webPushTransport: vi.fn(async () => ({})) };
 });
+
+vi.mock('web-push', () => ({
+  default: { setVapidDetails: vi.fn(), sendNotification: webPushTransport },
+}));
+
+const telegramOk = () => Response.json({ ok: true });
+const telegramFailure = (status: number, description = 'Provider failure') => Response.json({ ok: false, description }, { status });
+function telegramChat(init?: RequestInit): string | undefined {
+  return init?.body ? String(JSON.parse(String(init.body)).chat_id) : undefined;
+}
+const defaultTelegram = async (input: Parameters<typeof fetch>[0]) => {
+  if (new URL(String(input)).hostname !== 'api.telegram.org') throw new Error('Unexpected network request in Need tests');
+  return telegramOk();
+};
+const telegramFetch = vi.fn<typeof fetch>(defaultTelegram);
+
+function sendsTo(id: string) {
+  return telegramFetch.mock.calls.filter(([url, init]) => String(url).endsWith('/sendMessage') && telegramChat(init) === id);
+}
 
 let db: PrismaClient;
 let dispose: (() => Promise<void>) | undefined;
 
 beforeAll(async () => {
+  vi.stubGlobal('fetch', telegramFetch);
   ({ db, dispose } = await createTestDatabase());
 }, 60_000);
-afterAll(async () => dispose?.(), 30_000);
+afterAll(async () => {
+  vi.unstubAllGlobals();
+  await dispose?.();
+}, 30_000);
 afterEach(async () => {
   // Future-time worker runs should only see the Need from the current case.
   if (db) await db.collection.updateMany({ where: { status: 'ACTIVE' }, data: { status: 'CLOSED' } });
@@ -59,7 +91,7 @@ async function seedNetwork(author: string, direct: number, depth: number, extraA
   await db.user.createMany({
     data: [author, ...people].map((id) => ({ id, name: id, language: 'en', onboardingCompleted: true })),
   });
-  // A linked account makes a person eligible for delivery. The token is absent.
+  // The linked accounts receive messages through the Telegram stub.
   await db.platformAccount.createMany({
     data: people.map((userId) => ({ userId, platform: 'TELEGRAM', platformId: `test-${userId}` })),
   });
@@ -89,10 +121,18 @@ function recipients(collectionId: string, type: 'NEW_COLLECTION' | 'RE_NOTIFY') 
   });
 }
 
+async function waitForCloseDrain(collectionId: string) {
+  await expect.poll(() => db.notificationDelivery.count({
+    where: { eventKey: `need-notice:closed:${collectionId}:0` },
+  })).toBe(0);
+}
+
 async function waitForDispatch(people: string[]) {
   // Dispatch runs in the background. Wait for its final recorded side effect.
-  await expect.poll(() => db.notifyStats.count({ where: { userId: { in: people }, lastSentAt: { not: null } } }))
-    .toBe(people.length);
+  await expect.poll(
+    () => db.notifyStats.count({ where: { userId: { in: people }, lastSentAt: { not: null } } }),
+    { timeout: 4_000 },
+  ).toBe(people.length);
 }
 
 describe('Need concurrency regressions', () => {
@@ -219,48 +259,384 @@ describe('Need concurrency regressions', () => {
     }
   });
 
+  it.each(['SOS', 'repeat wave'] as const)('blocks a concurrent closure just after the %s Need read', async (action) => {
+    const author = action === 'SOS' ? 'locked-sos-author' : 'locked-wave-author';
+    const { circle: [member] } = await seedNetwork(author, 1, 1);
+    const need = await db.collection.create({ data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.test/chat' } });
+    if (action === 'SOS') {
+      await db.connection.deleteMany({ where: { OR: [{ userAId: member }, { userBId: member }] } });
+    }
+
+    const gate = pauseAfterLockedRead(db, need.id);
+    const first = action === 'SOS'
+      ? caller(member!).invite.acceptSos({ collectionId: need.id })
+      : notifications.sendCollectionNotifications(db, need.id, author, 'RE_NOTIFY', 2, 1);
+    let close: ReturnType<ReturnType<typeof caller>['collection']['close']> | undefined;
+    try {
+      const pid = await Promise.race([gate.read, first.then(() => { throw new Error('Operation did not read the locked Need'); })]);
+      close = caller(author).collection.close({ id: need.id });
+      await expect.poll(() => isBlockingTransaction(db, pid)).toBe(true);
+    } finally {
+      gate.resume();
+      gate.restore();
+      await first;
+      await close;
+      await waitForCloseDrain(need.id);
+    }
+    if (action === 'SOS') {
+      expect(await db.connection.count({ where: { viaCollectionId: need.id } })).toBe(1);
+    } else {
+      await expect.poll(() => db.notificationDelivery.count({
+        where: { eventKey: `need-notice:repeat:${need.id}:2` },
+      })).toBe(0);
+      expect(await db.notification.count({ where: { collectionId: need.id, type: 'COLLECTION_CLOSED' } })).toBe(1);
+    }
+  });
+
+  it('uses the user locks before the pending row for both ordinary and SOS acceptance', async () => {
+    const { author, member, need } = await setup('accept-order');
+    const pending = await db.pendingConnection.create({ data: { fromUserId: author, toUserId: member } });
+    const gate = pauseAfterLockedRead(db, member);
+    const ordinary = respondToConnectionRequest(db, pending.id, member, 'accept');
+    let sos: ReturnType<ReturnType<typeof caller>['invite']['acceptSos']> | undefined;
+    try {
+      const pid = await Promise.race([gate.read, ordinary.then(() => { throw new Error('Acceptance did not lock the pair'); })]);
+      sos = caller(member).invite.acceptSos({ collectionId: need.id });
+      await expect.poll(() => isBlockingTransaction(db, pid)).toBe(true);
+      // Ordinary acceptance holds the pair locks; the pending row must still be available.
+      await db.$queryRaw`SELECT id FROM pending_connections WHERE id = ${pending.id} FOR UPDATE NOWAIT`;
+    } finally {
+      gate.resume();
+      gate.restore();
+      await Promise.all([ordinary, sos]);
+    }
+    expect(await ordinary).toMatchObject({ outcome: 'accepted' });
+    expect(await sos).toMatchObject({ alreadyConnected: true });
+    expect(await db.connection.count({ where: { userAId: author, userBId: member } })).toBe(1);
+  });
+
+  it('trims a repeat wave nearest first after a pledge commits during planning', async () => {
+    const author = 'race-wave-budget';
+    const { circle: [nearest] } = await seedNetwork(author, 1, 10);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 10, chatLink: 'https://example.test/chat', createdAt: new Date(Date.now() - 13 * hour) },
+    });
+    const contributor = 'race-wave-budget-contributor';
+    await db.user.create({ data: { id: contributor, name: contributor } });
+    const find = db.notifyStats.findMany.bind(db.notifyStats);
+    const snapshot = vi.spyOn(db.notifyStats, 'findMany').mockImplementationOnce((args) =>
+      find(args).then(async (rows) => {
+        await caller(contributor).obligation.create({ collectionId: need.id, amount: 9 });
+        return rows;
+      }) as ReturnType<typeof find>,
+    );
+    try {
+      expect((await runReNotify(db)).get(need.id)).toBe(1);
+      expect(await recipients(need.id, 'RE_NOTIFY')).toEqual([{ userId: nearest, handshakePath: [author, nearest] }]);
+    } finally {
+      snapshot.mockRestore();
+    }
+  });
+
+  it('prunes old receipts but lets the drainer retire an obsolete pending notice', async () => {
+    const { member, need } = await setup('notice-retention', { status: 'CLOSED' });
+    const pending = `need-notice:reminder:${need.id}:1`;
+    const old = new Date(Date.now() - 90 * 24 * hour);
+    await db.notificationDelivery.createMany({ data: [pending, 'old-receipt'].map((eventKey) => ({
+      userId: member, eventKey, createdAt: old, channel: 'APP',
+    })) });
+    await pruneDeliveries(db);
+    expect(await db.notificationDelivery.findMany({ where: { userId: member }, select: { eventKey: true } }))
+      .toEqual([{ eventKey: pending }]);
+
+    await dispatchPendingNeedNotices(db, ['reminder'], need.id);
+    expect(await db.notificationDelivery.count({ where: { userId: member } })).toBe(0);
+  });
+
+  it('backs off transient Telegram failures, then receipts success or retires after three attempts', async () => {
+    const { member, need } = await setup('notice-failed', { status: 'CLOSED' });
+    const exhausted = 'notice-retry-exhausted';
+    await db.user.create({ data: { id: exhausted, name: exhausted } });
+    const users = [member, exhausted];
+    await db.platformAccount.createMany({ data: users.map((userId) => ({ userId, platform: 'TELEGRAM', platformId: userId })) });
+    await enqueueNeedNotice(db, 'closed', need.id, 0, users);
+    const pending = `need-notice:closed:${need.id}:0`;
+    const receipt = `col:${need.id}:closed`;
+    const drain = () => dispatchPendingNeedNotices(db, ['closed'], need.id);
+    const readKeys = (userId: string) => db.notificationDelivery.findMany({ where: { userId }, select: { eventKey: true } });
+    let recover = false;
+    telegramFetch.mockImplementation(async (url, init) => {
+      const chat = telegramChat(init);
+      if (chat === exhausted || (chat === member && !recover)) return telegramFailure(503);
+      return defaultTelegram(url);
+    });
+    try {
+      await drain();
+      expect(await readKeys(member)).toEqual([{ eventKey: pending }]);
+      expect(await readKeys(exhausted)).toEqual([{ eventKey: pending }]);
+      await drain();
+      expect(sendsTo(member)).toHaveLength(1);
+      const makeDue = () => db.notificationDelivery.updateMany({ where: { eventKey: pending }, data: { createdAt: new Date(0) } });
+      recover = true;
+      await makeDue();
+      await drain();
+      expect(await readKeys(member)).toEqual([{ eventKey: receipt }]);
+      expect(await readKeys(exhausted)).toEqual([{ eventKey: pending }]);
+      await makeDue();
+      await drain();
+      await drain();
+      expect(await readKeys(exhausted)).toEqual([]);
+      expect(sendsTo(exhausted)).toHaveLength(3);
+    } finally {
+      telegramFetch.mockImplementation(defaultTelegram);
+    }
+  });
+
+  it.each([401, 403])('retires a permanent Telegram failure (%s) without a receipt', async (status) => {
+    const { member, need } = await setup(`notice-retired-${status}`, { status: 'CLOSED' });
+    await db.platformAccount.create({ data: { userId: member, platform: 'TELEGRAM', platformId: member } });
+    await enqueueNeedNotice(db, 'closed', need.id, 0, [member]);
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    telegramFetch.mockImplementation(async (url, init) => telegramChat(init) === member
+      ? telegramFailure(status, status === 403 ? 'Forbidden: bot was blocked by the user' : 'Unauthorized')
+      : defaultTelegram(url));
+    try {
+      await dispatchPendingNeedNotices(db, ['closed'], need.id);
+      expect(await db.notificationDelivery.count({ where: { userId: member } })).toBe(0);
+      expect(sendsTo(member)).toHaveLength(1);
+    } finally {
+      getDb.mockRestore();
+      telegramFetch.mockImplementation(defaultTelegram);
+    }
+  });
+
+  it('records push delivery only when at least one device accepts the handoff', async () => {
+    const { member, need } = await setup('notice-push', { status: 'CLOSED' });
+    const endpoint = 'https://fcm.googleapis.com/fcm/send/test-notice';
+    await db.pushSubscription.createMany({ data: ['a', 'b'].map((suffix) => ({
+      userId: member, endpoint: endpoint + suffix, p256dh: 'test', auth: 'test',
+    })) });
+    await enqueueNeedNotice(db, 'closed', need.id, 0, [member]);
+    webPushTransport.mockRejectedValueOnce({ statusCode: 503 }).mockRejectedValueOnce({ statusCode: 503 });
+    await dispatchPendingNeedNotices(db, ['closed'], need.id);
+    const receipt = `col:${need.id}:closed`;
+    const pending = `need-notice:closed:${need.id}:0`;
+    expect(await db.notificationDelivery.findMany({ where: { userId: member }, select: { eventKey: true } }))
+      .toEqual([{ eventKey: pending }]);
+    await db.notificationDelivery.updateMany({ where: { eventKey: pending }, data: { createdAt: new Date(0) } });
+    webPushTransport.mockRejectedValueOnce({ statusCode: 410 });
+    await dispatchPendingNeedNotices(db, ['closed'], need.id);
+    expect(await db.notificationDelivery.findMany({ where: { userId: member }, select: { eventKey: true, channel: true } }))
+      .toEqual([{ eventKey: receipt, channel: 'APP' }]);
+    expect(await db.pushSubscription.count({ where: { userId: member } })).toBe(1);
+  });
+
+  it('fences out a sender whose lease expired before the provider call', async () => {
+    const { member, need } = await setup('notice-expired-lease', { status: 'CLOSED' });
+    await db.platformAccount.create({ data: { userId: member, platform: 'TELEGRAM', platformId: member } });
+    await enqueueNeedNotice(db, 'closed', need.id, 0, [member]);
+    const pending = `need-notice:closed:${need.id}:0`;
+    const receipt = `col:${need.id}:closed`;
+    const leased = deferred<void>();
+    const resume = deferred<void>();
+    const find = db.notificationDelivery.findUnique.bind(db.notificationDelivery);
+    let paused = false;
+    const query = vi.spyOn(db.notificationDelivery, 'findUnique').mockImplementation((args) =>
+      find(args).then(async (row) => {
+        if (!paused && args.where.userId_eventKey?.eventKey === receipt) {
+          paused = true;
+          leased.resolve();
+          await resume.promise;
+        }
+        return row;
+      }) as ReturnType<typeof find>,
+    );
+    const drain = () => dispatchPendingNeedNotices(db, ['closed'], need.id);
+    const original = drain();
+    try {
+      await leased.promise;
+      await db.notificationDelivery.updateMany({ where: { eventKey: pending }, data: { createdAt: new Date(0) } });
+      await drain();
+      expect(sendsTo(member)).toHaveLength(1);
+    } finally {
+      resume.resolve();
+      await original;
+      query.mockRestore();
+    }
+    expect(sendsTo(member)).toHaveLength(1);
+    expect(await db.notificationDelivery.findMany({ where: { userId: member }, select: { eventKey: true } }))
+      .toEqual([{ eventKey: receipt }]);
+  });
+
+  it('queues one stable job per recipient and only receipts eligible handoffs in the worker', async () => {
+    const author = 'queue-repeat-author';
+    const { circle } = await seedNetwork(author, 26, 1);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 26, chatLink: 'https://example.test/chat' },
+    });
+    const jobs: ReturnType<typeof workers.tgJobs>[] = [];
+    const enqueue = vi.spyOn(workers, 'enqueueTgBroadcast').mockImplementation(async (messages, kind = 'wave') => {
+      jobs.push(workers.tgJobs(messages, kind));
+    });
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    process.env.REDIS_URL = 'redis://unused-in-test';
+    const finalKey = `col:${need.id}:new`;
+    const pendingKey = `need-notice:repeat:${need.id}:2`;
+    try {
+      expect(await notifications.sendCollectionNotifications(db, need.id, author, 'RE_NOTIFY', 2, 26)).toBe(26);
+      await expect.poll(() => jobs.length).toBe(1);
+      await dispatchPendingNeedNotices(db, ['repeat'], need.id);
+      expect(jobs).toHaveLength(2);
+      const jobIds = (batch: typeof jobs[number]) => batch.map(({ opts }) => opts.jobId);
+      expect(new Set(jobIds(jobs[0]!)).size).toBe(26);
+      expect(jobIds(jobs[0]!).every(Boolean)).toBe(true);
+      expect(jobIds(jobs[0]!).sort()).toEqual(jobIds(jobs[1]!).sort());
+      expect(await db.notificationDelivery.count({ where: { eventKey: finalKey } })).toBe(0);
+      expect(await db.notifyStats.count({ where: { userId: { in: circle }, lastSentAt: { not: null } } })).toBe(0);
+
+      const run = (who: string) => processTgBroadcast(jobs[0]!.find(
+        ({ data }) => data.messages[0]?.delivery?.userId === who,
+      ) as unknown as Parameters<typeof processTgBroadcast>[0]);
+      const [sent, transient, reached, closed] = circle as [string, string, string, string, ...string[]];
+      await Promise.all([run(sent), run(sent)]);
+      await run(sent);
+      expect(sendsTo(`test-${sent}`)).toHaveLength(1);
+      expect(await db.notifyStats.findUnique({ where: { userId: sent } })).toMatchObject({ sent: 1 });
+      telegramFetch.mockImplementation(async (url, init) => telegramChat(init) === `test-${transient}`
+        ? telegramFailure(503) : defaultTelegram(url));
+      await run(transient);
+      expect(await db.notificationDelivery.count({ where: { eventKey: pendingKey, userId: transient } })).toBe(1);
+
+      // Exercise the goal check even when the stored status is still ACTIVE.
+      const pledge = await db.obligation.create({ data: { collectionId: need.id, userId: author, amount: 26 } });
+      await run(reached);
+      expect(sendsTo(`test-${reached}`)).toHaveLength(0);
+      expect(await db.notificationDelivery.count({ where: { eventKey: pendingKey, userId: reached } })).toBe(0);
+      await db.obligation.delete({ where: { id: pledge.id } });
+      await db.collection.update({ where: { id: need.id }, data: { status: 'CLOSED' } });
+      await run(closed);
+      expect(sendsTo(`test-${closed}`)).toHaveLength(0);
+      expect(await db.notificationDelivery.count({ where: { eventKey: pendingKey, userId: closed } })).toBe(0);
+      expect(await db.notificationDelivery.findMany({ where: { eventKey: finalKey }, select: { userId: true } }))
+        .toEqual([{ userId: sent }]);
+    } finally {
+      delete process.env.REDIS_URL;
+      enqueue.mockRestore();
+      getDb.mockRestore();
+      telegramFetch.mockImplementation(defaultTelegram);
+    }
+  });
+
+  it('uses guarded direct sends if a large Telegram enqueue returns an error', async () => {
+    const author = 'queue-error-author';
+    const { circle } = await seedNetwork(author, 26, 1);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 26, chatLink: 'https://example.test/chat' },
+    });
+    const enqueue = vi.spyOn(workers, 'enqueueTgBroadcast').mockRejectedValue(new Error('Queue response lost'));
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    process.env.REDIS_URL = 'redis://unused-in-test';
+    try {
+      expect(await notifications.sendCollectionNotifications(db, need.id, author, 'RE_NOTIFY', 2, 26)).toBe(26);
+      await waitForDispatch(circle);
+      const [message] = enqueue.mock.calls[0]![0];
+      // A Redis job may still run later if the server accepted the enqueue and the reply was lost.
+      await processTgBroadcast({ data: { messages: [message!] } } as Parameters<typeof processTgBroadcast>[0]);
+      expect(sendsTo(message!.telegramId)).toHaveLength(1);
+      expect(await db.notificationDelivery.count({ where: { eventKey: `col:${need.id}:new` } })).toBe(26);
+    } finally {
+      delete process.env.REDIS_URL;
+      enqueue.mockRestore();
+      getDb.mockRestore();
+    }
+  }, 10_000);
+
+  it('serializes request handoffs for one recipient and rechecks the cap as queued work drains', async () => {
+    const { author, member, need: first } = await setup('queued-request-cap');
+    await db.platformAccount.create({ data: { userId: member, platform: 'TELEGRAM', platformId: member } });
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    const sending = deferred<void>();
+    const resume = deferred<void>();
+    const makeJob = async (id: string) => {
+      await db.notification.create({ data: {
+        collectionId: id, userId: member, type: 'RE_NOTIFY', wave: 2, expiresAt: new Date(Date.now() + hour),
+      } });
+      await enqueueNeedNotice(db, 'repeat', id, 2, [member]);
+      return {
+        data: { messages: [{
+          telegramId: member, text: 'Test request',
+          delivery: { userId: member, eventKey: `col:${id}:new`, notice: { type: 'repeat', collectionId: id, wave: 2 } },
+        }] },
+      } as Parameters<typeof processTgBroadcast>[0];
+    };
+    const [second, third] = await Promise.all([1, 2].map(() => db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.test/chat' },
+    })));
+    const [one, two, three] = await Promise.all([first.id, second!.id, third!.id].map(makeJob));
+    let firstCall = true;
+    telegramFetch.mockImplementation(async (url, init) => {
+      if (telegramChat(init) === member && firstCall) {
+        firstCall = false;
+        sending.resolve();
+        await resume.promise;
+      }
+      return defaultTelegram(url);
+    });
+    const original = processTgBroadcast(one!);
+    try {
+      await Promise.race([sending.promise, original]);
+      await processTgBroadcast(two!);
+      expect(sendsTo(member)).toHaveLength(1);
+      resume.resolve();
+      await original;
+      await processTgBroadcast(two!);
+      await processTgBroadcast(three!);
+      expect(sendsTo(member)).toHaveLength(2);
+      expect(await db.notificationDelivery.count({ where: { userId: member, eventKey: { endsWith: ':new' } } })).toBe(2);
+      expect(await db.notificationDelivery.count({ where: { userId: member, eventKey: { startsWith: 'need-notice:' } } })).toBe(0);
+    } finally {
+      resume.resolve();
+      await original;
+      getDb.mockRestore();
+      telegramFetch.mockImplementation(defaultTelegram);
+    }
+  });
+
   it('suppresses the external request if the Need closes after the wave commits', async () => {
     const author = 'race-wave-delivery';
     const { circle: [member] } = await seedNetwork(author, 1, 1);
     const need = await db.collection.create({
       data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.com/chat' },
     });
-    const targetsLoaded = deferred<void>();
+    const claimed = deferred<void>();
     const resume = deferred<void>();
-    const finished = deferred<void>();
-    let targetReads = 0;
-    const findUsers = db.user.findMany.bind(db.user);
-    const targets = vi.spyOn(db.user, 'findMany').mockImplementation((args) =>
-      findUsers(args).then(async (rows) => {
-        // The first target lookup plans the wave. The second prepares external delivery.
-        if (args?.select?.notifyChannel && ++targetReads === 2) {
-          targetsLoaded.resolve();
+    const findReceipt = db.notificationDelivery.findUnique.bind(db.notificationDelivery);
+    const receipt = vi.spyOn(db.notificationDelivery, 'findUnique').mockImplementation((args) =>
+      findReceipt(args).then(async (row) => {
+        if (args.where.userId_eventKey?.eventKey === `col:${need.id}:new`) {
+          claimed.resolve();
           await resume.promise;
         }
-        return rows;
-      }) as ReturnType<typeof findUsers>,
+        return row;
+      }) as ReturnType<typeof findReceipt>,
     );
-    const recordSent = routing.recordSent;
-    const sent = vi.spyOn(routing, 'recordSent').mockImplementationOnce(async (...args) => {
-      try {
-        await recordSent(...args);
-      } finally {
-        finished.resolve();
-      }
-    });
     try {
       expect(await notifications.sendCollectionNotifications(db, need.id, author, 'RE_NOTIFY', 2, 1)).toBe(1);
-      await targetsLoaded.promise;
+      await claimed.promise;
       await caller(author).collection.close({ id: need.id });
       resume.resolve();
-      await finished.promise;
+      await expect.poll(() => db.notificationDelivery.count({
+        where: { eventKey: `need-notice:repeat:${need.id}:2` },
+      })).toBe(0);
+      await waitForCloseDrain(need.id);
+      expect(sendsTo(`test-${member}`).map(([, init]) => JSON.parse(String(init?.body)).text))
+        .toEqual([expect.stringContaining('Need closed')]);
       expect(await db.notificationDelivery.count({ where: { userId: member, eventKey: `col:${need.id}:new` } })).toBe(0);
       expect(await db.notification.count({ where: { collectionId: need.id, userId: member, type: 'COLLECTION_CLOSED' } }))
         .toBe(1);
     } finally {
       resume.resolve();
-      targets.mockRestore();
-      sent.mockRestore();
+      receipt.mockRestore();
     }
   });
 
@@ -278,7 +654,6 @@ describe('Need concurrency regressions', () => {
     }
     const run = event === 'reminder' ? processCycleRenewalReminder : processCycleClose;
     const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
-    const send = vi.spyOn(telegram, 'sendTgMessages').mockResolvedValue();
     const gate = pauseAfterCommit();
     const stopped = new Error('Stopped after commit');
     const interrupted = event === 'closed' ? caller(author).collection.close({ id: need.id }) : run({} as Job);
@@ -287,14 +662,17 @@ describe('Need concurrency regressions', () => {
       await gate.committed;
       const type = event === 'start' ? 'CYCLE_RENEWED' : event === 'reminder' ? 'CYCLE_RENEWAL_REMINDER' : 'COLLECTION_CLOSED';
       expect(await db.notification.count({ where: { collectionId: need.id, userId: member, type } })).toBe(1);
-      expect(send).not.toHaveBeenCalled();
+      expect(sendsTo(member)).toHaveLength(0);
       gate.resume.reject(stopped);
       await checked;
       const transport = deferred<void>();
       const sending = deferred<void>();
-      send.mockImplementationOnce(async () => {
-        sending.resolve();
-        await transport.promise;
+      telegramFetch.mockImplementation(async (url, init) => {
+        if (telegramChat(init) === member) {
+          sending.resolve();
+          await transport.promise;
+        }
+        return defaultTelegram(url);
       });
       const resumed = run({} as Job);
       try {
@@ -307,13 +685,13 @@ describe('Need concurrency regressions', () => {
       await run({} as Job);
       const key = event === 'closed' ? `col:${need.id}:closed` : `cycle:${need.id}:${event === 'start' ? 2 : 1}:${event}`;
       expect(await db.notificationDelivery.count({ where: { userId: member, eventKey: key } })).toBe(1);
-      expect(send.mock.calls.flatMap(([messages]) => messages.map(({ telegramId }) => telegramId))).toEqual([member]);
+      expect(sendsTo(member)).toHaveLength(1);
     } finally {
       gate.resume.reject(stopped);
       await interrupted.catch(() => {});
       gate.restore();
       getDb.mockRestore();
-      send.mockRestore();
+      telegramFetch.mockImplementation(defaultTelegram);
     }
   });
 
@@ -638,7 +1016,7 @@ describe('Need participant visibility', () => {
       },
     });
 
-    const gate = pauseAfterNeedRead(db);
+    const gate = pauseAfterLockedRead(db, need.id);
     const pledging = caller(author).obligation.create({ collectionId: need.id, amount: 7 });
     void pledging.catch(() => {});
     let cleanup: ReturnType<typeof runInactiveCleanup> | undefined;
@@ -670,7 +1048,7 @@ describe('Need participant visibility', () => {
     await db.connection.create({ data: { userAId: author, userBId: peer } });
     const need = await db.collection.create({ data: { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat' } });
     const row = await db.obligation.create({ data: { collectionId: need.id, userId: author, amount: 7 } });
-    const gate = pauseAfterNeedRead(db);
+    const gate = pauseAfterLockedRead(db, need.id);
     const mark = { collectionId: need.id, cycleNumber: need.cycleNumber, obligationIds: [row.id], paid: true };
     const marking = caller(author).obligation.setPaid(mark);
     void marking.catch(() => {});
@@ -941,6 +1319,7 @@ describe('Need participant visibility', () => {
         id, name: id, deletedAt: id === deleted ? new Date() : null,
       })),
     });
+    await db.platformAccount.create({ data: { userId: active, platform: 'TELEGRAM', platformId: active } });
     const need = await db.collection.create({
       data: { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat', currentCycleStart: new Date(Date.now() - daysOld * 24 * hour) },
     });
@@ -987,6 +1366,7 @@ describe('Need participant visibility', () => {
   it('excludes a person withdrawn after the cycle snapshot from rollover notices', async () => {
     const [author, active, withdrawn] = ['rollover-author', 'rollover-active', 'rollover-withdrawn'];
     await db.user.createMany({ data: [author, active, withdrawn].map((id) => ({ id, name: id })) });
+    await db.platformAccount.create({ data: { userId: active, platform: 'TELEGRAM', platformId: active } });
     const need = await db.collection.create({
       data: {
         creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat',
@@ -1037,7 +1417,9 @@ describe('Need participant visibility', () => {
       data: { creatorId: author, type: 'REGULAR', currentCycleStart: new Date(), chatLink: 'https://example.com/chat', ...state },
     });
     await db.obligation.create({ data: { collectionId: need.id, userId: member, amount: 4 } });
+    await enqueueNeedNotice(db, change === 'closed' ? 'reminder' : 'start', need.id, 2, [member]);
     await send(db, need.id, author, [member], 2);
+    expect(await db.notificationDelivery.count({ where: { userId: member } })).toBe(0);
     expect(await db.notificationDelivery.count({ where: { eventKey: { startsWith: 'cycle:' + need.id + ':' } } })).toBe(0);
   });
 
@@ -1049,7 +1431,7 @@ describe('Need participant visibility', () => {
     const active = `renewal-${event}-active`;
     const withdrawn = `renewal-${event}-withdrawn`;
     await db.user.createMany({ data: [author, active, withdrawn].map((id) => ({ id, name: id, language: 'ru' })) });
-    const currentCycleStart = new Date('2026-11-20T18:30:00Z');
+    const currentCycleStart = new Date(Date.now() - 4 * 24 * hour);
     const need = await db.collection.create({
       data: { creatorId: author, type: 'REGULAR', cycleNumber: 2, currentCycleStart, chatLink: 'https://example.com/private-chat' },
     });
@@ -1061,29 +1443,28 @@ describe('Need participant visibility', () => {
     await db.platformAccount.createMany({
       data: [active, withdrawn].map((userId) => ({ platform: 'TELEGRAM', platformId: userId, userId })),
     });
-    const send = vi.spyOn(telegram, 'sendTgMessages');
-    try {
-      await sendCycleNotice(db, need.id, author, [active, withdrawn], 2);
-      const deliveries = await db.notificationDelivery.findMany({ where: { eventKey: `cycle:${need.id}:2:${event}` } });
-      expect(deliveries.map((delivery) => delivery.userId)).toEqual([active]);
-      expect(send).toHaveBeenCalledTimes(1);
-      const messages = send.mock.calls[0]?.[0];
-      expect(messages).toHaveLength(1);
-      expect(messages?.[0]?.replyMarkup?.inline_keyboard.flat()).toEqual([
-        expect.objectContaining({ web_app: { url: `${WEB_APP_URL}/collection/${need.id}` } }),
-      ]);
-      const day = 24 * hour;
-      const period = new Intl.DateTimeFormat('ru', { dateStyle: 'medium', timeZone: 'UTC' }).formatRange(
-        new Date(currentCycleStart.getTime() + offsetDays * day),
-        new Date(currentCycleStart.getTime() + (offsetDays + REGULAR_CYCLE_DAYS - 1) * day),
-      );
-      expect(messages?.[0]?.text).toContain('Период: ' + period);
-      expect(messages?.[0]?.text).toContain('300\u00a0$');
-      expect(messages?.[0]?.text).not.toContain('—');
-      expect(JSON.stringify(messages)).not.toContain('https://example.com/private-chat');
-    } finally {
-      send.mockRestore();
-    }
+    await enqueueNeedNotice(db, event, need.id, 2, [active, withdrawn]);
+    await sendCycleNotice(db, need.id, author, [active, withdrawn], 2);
+    const deliveries = await db.notificationDelivery.findMany({ where: { eventKey: `cycle:${need.id}:2:${event}` } });
+    expect(deliveries.map((delivery) => delivery.userId)).toEqual([active]);
+    const messages = sendsTo(active).map(([, init]) => {
+      const { text, reply_markup } = JSON.parse(String(init?.body));
+      return { text, replyMarkup: reply_markup };
+    });
+    expect(sendsTo(withdrawn)).toHaveLength(0);
+    expect(messages).toHaveLength(1);
+    expect(messages?.[0]?.replyMarkup?.inline_keyboard.flat()).toEqual([
+      expect.objectContaining({ web_app: { url: `${WEB_APP_URL}/collection/${need.id}` } }),
+    ]);
+    const day = 24 * hour;
+    const period = new Intl.DateTimeFormat('ru', { dateStyle: 'medium', timeZone: 'UTC' }).formatRange(
+      new Date(currentCycleStart.getTime() + offsetDays * day),
+      new Date(currentCycleStart.getTime() + (offsetDays + REGULAR_CYCLE_DAYS - 1) * day),
+    );
+    expect(messages?.[0]?.text).toContain('Период: ' + period);
+    expect(messages?.[0]?.text).toContain('300\u00a0$');
+    expect(messages?.[0]?.text).not.toContain('—');
+    expect(JSON.stringify(messages)).not.toContain('https://example.com/private-chat');
   });
 
   it('tracks claims for the inviter’s requested QR tokens even after the connection is removed', async () => {
@@ -1356,6 +1737,29 @@ describe('Need participant visibility', () => {
 });
 
 describe('Need notification waves', () => {
+  it('uses provider receipts for the daily and weekly limits and keeps the 14-day ignore pause', async () => {
+    const author = 'routing-caps';
+    const { circle: people } = await seedNetwork(author, 5, 1);
+    const [pending, daily, weekly, ignoring, probe] = people as [string, string, string, string, string];
+    const daysAgo = (days: number) => new Date(Date.now() - days * 24 * hour);
+    await db.notificationDelivery.createMany({ data: [
+      ...[1, 2].map((wave) => ({ userId: pending, eventKey: `need-notice:new:n${wave}:1`, channel: 'APP' as const })),
+      ...[1, 2].map((wave) => ({
+        userId: daily, eventKey: `col:d${wave}:new`, channel: 'TELEGRAM' as const, createdAt: daysAgo(1 - 1 / 48),
+      })),
+      ...Array.from({ length: 6 }, (_, wave) => ({
+        userId: weekly, eventKey: `col:w${wave}:new`, channel: 'TELEGRAM' as const, createdAt: daysAgo(7 - 1 / 48),
+      })),
+    ] });
+    await db.notifyStats.createMany({ data: [
+      { userId: ignoring, ignoreStreak: 5, lastSentAt: daysAgo(13) },
+      { userId: probe, ignoreStreak: 5, lastSentAt: daysAgo(15) },
+    ] });
+    const plan = await planWave(db, [people.map((userId) => ({ userId, path: [author, userId], depth: 1, maxConnAt: null }))], 5);
+    expect(plan.external.map(({ userId }) => userId)).toEqual([pending, probe]);
+    expect(plan.inApp.map(({ userId }) => userId)).toEqual([daily, weekly, ignoring]);
+  });
+
   it('notifies the nearest people first, with one reachable recipient per dollar', async () => {
     const { circle, chain } = await seedNetwork('wave', 5, 6, 5);
     const need = await reportNeed('wave', 10);

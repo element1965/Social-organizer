@@ -1,5 +1,5 @@
 import { Prisma } from '@so/db';
-import { enqueueNeedNotice } from './notice-delivery.js';
+import { enqueueNeedNotice } from './need-delivery-state.js';
 
 type CycleNotice = 'CYCLE_RENEWED' | 'CYCLE_RENEWAL_REMINDER';
 

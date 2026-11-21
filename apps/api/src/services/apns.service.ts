@@ -16,6 +16,7 @@ import { DEFAULT_APPLE_BUNDLE_ID, DEFAULT_APPLE_TEAM_ID } from '@so/shared';
 import { connect, constants, type ClientHttp2Session } from 'node:http2';
 import { createPrivateKey, sign, type KeyObject } from 'node:crypto';
 import type { PrismaClient } from '@so/db';
+import { recordProviderOutcome, type DeliveryGate, type ProviderOutcome } from './provider-outcome.js';
 import type { WebPushPayload } from './web-push.service.js';
 
 const KEY_ID = process.env.APNS_KEY_ID?.trim() || '';
@@ -88,10 +89,16 @@ function post(session: ClientHttp2Session, deviceToken: string, body: string): P
 }
 
 /** Send to every iOS token of the given users; tokens Apple says are dead are removed. */
-export async function sendApnsPush(db: PrismaClient, userIds: string[], payload: WebPushPayload): Promise<void> {
-  if (!privateKey || userIds.length === 0) return;
+export async function sendApnsPush(
+  db: PrismaClient,
+  userIds: string[],
+  payload: WebPushPayload,
+  beforeHandoff?: DeliveryGate,
+): Promise<Map<string, ProviderOutcome>> {
+  const outcomes = new Map<string, ProviderOutcome>();
+  if (!privateKey || userIds.length === 0) return outcomes;
   const tokens = await db.nativePushToken.findMany({ where: { userId: { in: userIds }, platform: 'ios' } });
-  if (tokens.length === 0) return;
+  if (tokens.length === 0) return outcomes;
 
   const session = connect(HOST);
   session.on('error', (err) => console.error('[APNs] connection error:', err.message));
@@ -99,14 +106,25 @@ export async function sendApnsPush(db: PrismaClient, userIds: string[], payload:
   const expiredIds: string[] = [];
   try {
     for (const record of tokens) {
+      if (beforeHandoff) {
+        const allowed = await beforeHandoff().catch(() => {
+          recordProviderOutcome(outcomes, record.userId, 'retry');
+          return false;
+        });
+        if (!allowed) break;
+      }
       try {
         const res = await post(session, record.token, body);
         if (res.status === 410 || res.reason === 'BadDeviceToken' || res.reason === 'Unregistered' || res.reason === 'DeviceTokenNotForTopic') {
           expiredIds.push(record.id);
-        } else if (res.status !== 200) {
+        } else if (res.status === 200) {
+          recordProviderOutcome(outcomes, record.userId, 'sent');
+        } else {
+          recordProviderOutcome(outcomes, record.userId, 'retry');
           console.error('[APNs] send failed:', res.status, res.reason);
         }
       } catch (err) {
+        recordProviderOutcome(outcomes, record.userId, 'retry');
         console.error('[APNs] send error:', (err as Error).message);
       }
     }
@@ -114,7 +132,9 @@ export async function sendApnsPush(db: PrismaClient, userIds: string[], payload:
     session.close();
   }
   if (expiredIds.length > 0) {
-    await db.nativePushToken.deleteMany({ where: { id: { in: expiredIds } } });
+    await db.nativePushToken.deleteMany({ where: { id: { in: expiredIds } } })
+      .catch(() => console.error('[APNs] Could not clean up expired tokens'));
     console.log(`[APNs] Cleaned up ${expiredIds.length} expired tokens`);
   }
+  return outcomes;
 }

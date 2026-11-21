@@ -9,7 +9,7 @@ import { notifyGoalReached, syncCollectionGoal } from '../src/services/collectio
 import { createUserWithReferralSlug } from '../src/services/referral-slug.service.js';
 import { remainingBudgets } from '../src/services/network.service.js';
 import { touchUserNow } from '../src/services/activity.service.js';
-import { createTestDatabase, isBlockingTransaction, pauseAfterNeedRead } from './test-database.js';
+import { createTestDatabase, isBlockingTransaction, pauseAfterLockedRead } from './test-database.js';
 
 vi.hoisted(() => {
   // Enable only local behavior, even if a developer's shell exports integration settings.
@@ -152,7 +152,7 @@ describe('goal reached notices (PERF-1)', () => {
     const job = { data: { collectionId: need.id } } as Job<{ collectionId: string }>;
     const author = appRouter.createCaller({ db, userId: id('author'), ip: '127.0.0.1' });
     const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
-    const gate = pauseAfterNeedRead(db);
+    const gate = pauseAfterLockedRead(db, need.id);
     const worker = processCheckBlock(job);
     let closing: ReturnType<typeof author.collection.close> | undefined;
     try {
