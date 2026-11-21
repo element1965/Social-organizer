@@ -119,6 +119,7 @@ export async function deleteUserAccount(
           photoUrl: null,
           monthlyBudget: 0,
           remainingBudget: 0,
+          budgetUpdatedAt: new Date(),
         },
       });
       // Remove contacts, skills, needs so profile is clean

@@ -16,7 +16,7 @@ export const currencyRouter = router({
     return { currency: 'USD', country: null };
   }),
 
-  // Get current exchange rates (fetched live, defaults on failure)
+  // Current exchange rates (kept in memory for an hour; last good or default rates on failure)
   rates: publicProcedure.query(async () => {
     const rates = await getExchangeRates();
     return rates;

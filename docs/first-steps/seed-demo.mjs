@@ -19,7 +19,7 @@ const first = cyrillic
   ? ['Ольга', 'Игорь', 'Марта', 'Денис', 'Света', 'Павел', 'Нина', 'Артём']
   : ['Olga', 'Igor', 'Marta', 'Denis', 'Sara', 'Paul', 'Nina', 'Adam'];
 const initial = (i) => String.fromCharCode((cyrillic ? 1040 : 65) + i);
-const mk = (id, name, extra = {}) => db.user.create({ data: { id, name, language: lang, onboardingCompleted: true, skillsCompleted: true, preferredCurrency: 'USD', monthlyBudget: 50, remainingBudget: 50, lastSeen: new Date(), ...extra } });
+const mk = (id, name, extra = {}) => db.user.create({ data: { id, name, language: lang, onboardingCompleted: true, skillsCompleted: true, preferredCurrency: 'USD', monthlyBudget: 50, remainingBudget: 50, budgetUpdatedAt: new Date(), lastSeen: new Date(), ...extra } });
 const conn = (a, b) => { const [x, y] = [a, b].sort(); return db.connection.create({ data: { userAId: x, userBId: y } }); };
 
 // u_inviter: the person who sent the link (video "invite-link"); u_friend: the friend who opens

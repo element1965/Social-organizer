@@ -11,7 +11,8 @@ export type ParticipantRow = {
   userId: string;
   name: string;
   photoUrl: string | null;
-  amount: number;
+  /** null for a viewer who has not joined: they see who takes part, not how much (the server sends no amount). */
+  amount: number | null;
   paid: boolean;
   subtitle: string;
   mine: boolean;
@@ -48,8 +49,8 @@ export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove, 
 
   const paid = people.filter((row) => row.paid);
   const unpaidCount = people.length - paid.length;
-  const paidSum = paid.reduce((acc, row) => acc + row.amount, 0);
-  const allSum = people.reduce((acc, row) => acc + row.amount, 0);
+  const paidSum = paid.reduce((acc, row) => acc + (row.amount ?? 0), 0);
+  const allSum = people.reduce((acc, row) => acc + (row.amount ?? 0), 0);
 
   return (
     <section className="mt-4">
@@ -92,9 +93,11 @@ export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove, 
                   </button>
                 ) : null}
               </span>
-              <span className={cn('text-body font-extrabold tabular-nums', person.mine ? 'text-care' : 'text-ink')}>
-                {formatMoney(person.amount)}
-              </span>
+              {person.amount != null ? (
+                <span className={cn('text-body font-extrabold tabular-nums', person.mine ? 'text-care' : 'text-ink')}>
+                  {formatMoney(person.amount)}
+                </span>
+              ) : null}
               {showPaid ? (
                 <button
                   type="button"

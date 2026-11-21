@@ -56,6 +56,18 @@ function parseErr(message: string): [string, number | null] {
 
 type Tokens = { accessToken: string; refreshToken: string; userId: string; isNew?: boolean };
 
+/** Reasons of the e-mail code flow that the server also sends as TOO_MANY_REQUESTS, each with its own copy. */
+const CODE_LIMITS = ['RESEND_TOO_SOON', 'TOO_MANY_CODES', 'TOO_MANY_ATTEMPTS'];
+
+/**
+ * The per-IP sign-in limit (30 attempts in 15 minutes) or the server's general request limit: TOO_MANY_REQUESTS
+ * without one of the code reasons. Told as "too many attempts, try later", not as a network failure, and with no
+ * duration: the two limits clear at different times.
+ */
+function isRateLimited(err: { message: string; data?: { code?: unknown } | null }): boolean {
+  return err.data?.code === 'TOO_MANY_REQUESTS' && !CODE_LIMITS.includes(parseErr(err.message)[0]);
+}
+
 export interface UseSignInOptions {
   /** Where to go after sign-in (overrides the pending invite). */
   redirect?: string | null;
@@ -145,6 +157,10 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
       onCodeSent?.();
     },
     onError: (e) => {
+      if (isRateLimited(e)) {
+        setError(t('signin.errRateLimit'), 'RATE_LIMITED');
+        return;
+      }
       const [c, n] = parseErr(e.message);
       if (c === 'RESEND_TOO_SOON') {
         // A code is already on its way: go to the code screen with the timer
@@ -164,7 +180,9 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
   const verifyCode = trpc.auth.verifyEmailCode.useMutation({
     meta: { notifyOnError: false },
     onSuccess: onTokens('email'),
-    onError: (e) => setError(codeErrorText(e.message), knownCode(parseErr(e.message)[0])),
+    onError: (e) => (isRateLimited(e)
+      ? setError(t('signin.errRateLimit'), 'RATE_LIMITED')
+      : setError(codeErrorText(e.message), knownCode(parseErr(e.message)[0]))),
   });
 
   const sendCode = (email: string) => {
@@ -183,10 +201,11 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
   const loginEmailMutation = trpc.auth.loginWithEmail.useMutation({
     meta: { notifyOnError: false },
     onSuccess: onTokens('email'),
-    onError: (err) =>
-      err.data?.code === 'UNAUTHORIZED'
-        ? setError(t('login.pwWrong'), 'INVALID_CREDENTIALS')
-        : setError(t('signin.errNetwork'), 'NETWORK'),
+    onError: (err) => {
+      if (err.data?.code === 'UNAUTHORIZED') setError(t('login.pwWrong'), 'INVALID_CREDENTIALS');
+      else if (isRateLimited(err)) setError(t('signin.errRateLimit'), 'RATE_LIMITED');
+      else setError(t('signin.errNetwork'), 'NETWORK');
+    },
   });
 
   // ---- Telegram ----

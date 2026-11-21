@@ -3,6 +3,8 @@ import { createUserWithReferralSlug } from './referral-slug.service.js';
 import { Prisma, type PrismaClient } from '@so/db';
 import { DEFAULT_INTENTION_AMOUNT } from '@so/shared';
 import { restoreMutedAccount } from './account-restore.service.js';
+import { markEmailProvenFirstTime } from './email-proof.service.js';
+import { sessionClockDate } from './session-clock.js';
 
 /**
  * One person = one account across sign-in methods (SO-21).
@@ -78,13 +80,13 @@ async function resolveOnce(db: PrismaClient, id: ExternalIdentity): Promise<{ us
       await db.platformAccount.create({
         data: { userId: existing.id, platform: id.platform, platformId: id.platformId, accessToken: id.accessToken ?? null },
       });
-      await db.user.update({
-        where: { id: existing.id },
-        data: {
-          ...(existing.emailVerifiedAt ? {} : { emailVerifiedAt: new Date() }),
-          ...(id.photoUrl && !existing.photoUrl ? { photoUrl: id.photoUrl } : {}),
-        },
-      });
+      // The provider proves the mailbox. If nobody had proven it before, this is the first proof and the same
+      // rule applies as for the e-mail code: sessions issued before it end (SEC-1), since an unproven address
+      // on an existing account is exactly how an address gets reserved by someone else.
+      if (!existing.emailVerifiedAt) await markEmailProvenFirstTime(db, existing.id);
+      if (id.photoUrl && !existing.photoUrl) {
+        await db.user.update({ where: { id: existing.id }, data: { photoUrl: id.photoUrl } });
+      }
       return { userId: existing.id, isNew: false };
     }
   }
@@ -93,7 +95,7 @@ async function resolveOnce(db: PrismaClient, id: ExternalIdentity): Promise<{ us
   const user = await createUserWithReferralSlug(db, {
     name: id.name,
     email,
-    emailVerifiedAt: email ? new Date() : null,
+    emailVerifiedAt: email ? sessionClockDate() : null,
     photoUrl: id.photoUrl || null,
     monthlyBudget: DEFAULT_INTENTION_AMOUNT,
     remainingBudget: DEFAULT_INTENTION_AMOUNT,

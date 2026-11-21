@@ -13,6 +13,7 @@ import { activeObligationTotals, syncCollectionGoal } from '../services/collecti
 import { settleOpenReviews } from '../services/moderation.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
 import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
+import { needAudience, chatLinkFor, confirmedRenewals } from '../services/collection-view.js';
 
 /** Chat links are shown as buttons: https only, never javascript: or http (SO-14). */
 const chatLinkSchema = z.string().max(MAX_CHAT_LINK_LENGTH).url().refine((u) => /^https:\/\//i.test(u), 'Link must start with https://');
@@ -130,33 +131,37 @@ export const collectionRouter = router({
         assertAskAllowed(await getAskAccess(ctx.db, ctx.userId, { quick: true }));
       }
 
-      // Limit: max 1 emergency + 1 regular at the same time
-      const existingActive = await ctx.db.collection.count({
-        where: {
-          creatorId: ctx.userId,
-          type: input.type,
-          status: { in: ['ACTIVE', 'BLOCKED'] },
-        },
-      });
-      if (existingActive > 0) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: `You already have an active ${input.type.toLowerCase()} collection`,
-        });
-      }
-
       const amountUSD = input.amount;
 
-      const collection = await ctx.db.collection.create({
-        data: {
-          creatorId: ctx.userId,
-          type: input.type,
-          amount: amountUSD,
-          currency: 'USD',
-          chatLink: input.chatLink,
-          description: toDescription(input.description),
-          currentCycleStart: input.type === 'REGULAR' ? new Date() : null,
-        },
+      // Limit: max 1 emergency + 1 regular at the same time. The check and the insert run under a lock on
+      // creator + type (SEC-7), so concurrent requests cannot both see "none active" and both create.
+      const collection = await ctx.db.$transaction(async (tx) => {
+        // 64-bit key, domain-separated from the other advisory locks (e-mail codes, push subscriptions)
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${`need-create:${ctx.userId}:${input.type}`}, 0))`;
+        const existingActive = await tx.collection.count({
+          where: {
+            creatorId: ctx.userId,
+            type: input.type,
+            status: { in: ['ACTIVE', 'BLOCKED'] },
+          },
+        });
+        if (existingActive > 0) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: `You already have an active ${input.type.toLowerCase()} collection`,
+          });
+        }
+        return tx.collection.create({
+          data: {
+            creatorId: ctx.userId,
+            type: input.type,
+            amount: amountUSD,
+            currency: 'USD',
+            chatLink: input.chatLink,
+            description: toDescription(input.description),
+            currentCycleStart: input.type === 'REGULAR' ? new Date() : null,
+          },
+        });
       });
       await syncMilestonesQuietly(ctx.db, ctx.userId); // "first Need"
 
@@ -199,10 +204,14 @@ export const collectionRouter = router({
           .catch(() => {});
       }
 
-      // Get connection counts for all participants and creator
-      const userIds = [collection.creatorId, ...collection.obligations.map((o) => o.userId)];
+      // Amounts and chat link by viewer role (SEC-6): the author and active participants see who and how much,
+      // anyone else who takes part without amounts
+      const audience = needAudience(ctx.userId, collection.creatorId, collection.obligations);
+      const visible = audience.active;
+
+      // Connection counts: the creator's for everyone, the participants' only for those who see the full list
+      const userIds = [collection.creatorId, ...(audience.seesAmounts ? visible.map((o) => o.userId) : [])];
       const countMap = await getDirectConnectionCounts(ctx.db, userIds);
-      const visible = collection.obligations.filter((o) => o.unsubscribedAt == null);
       const renewal = collection.type === 'REGULAR' && collection.cycleNumber > 1 && collection.currentCycleStart != null;
       const acked = new Set<string>();
       if (renewal) {
@@ -234,20 +243,29 @@ export const collectionRouter = router({
       const cycleStart = collection.currentCycleStart?.getTime() ?? 0;
       const totals = await activeObligationTotals(ctx.db, collection.id);
       const currentAmount = totals.amount;
+      const ownConfirmed = renewal && acked.has(ctx.userId);
       return {
         ...collection,
+        // The participants' chat: the author, and a participant while the page offers the chat
+        chatLink: chatLinkFor(collection, ctx.userId, audience.own, ownConfirmed),
         currentAmount,
+        /** Active Participations in total. */
+        participantCount: totals.count,
         creator: {
           ...collection.creator,
           connectionCount: countMap.get(collection.creatorId) || 0,
         },
         obligations: visible.map((o) => ({
           ...o,
+          // Who gave how much is for the author and the participants; others see the people only
+          amount: audience.seesAmounts ? o.amount : null,
+          originalAmount: audience.seesAmounts ? o.originalAmount : null,
+          originalCurrency: audience.seesAmounts ? o.originalCurrency : null,
           // The received mark is the author's own record; other viewers never get it.
           confirmedAt: ctx.userId === collection.creatorId ? o.confirmedAt : null,
           user: {
             ...o.user,
-            connectionCount: countMap.get(o.userId) || 0,
+            connectionCount: audience.seesAmounts ? countMap.get(o.userId) || 0 : null,
           },
           /** null outside a renewal cycle; false until the person confirms the new cycle. */
           cycleConfirmed: renewal ? o.createdAt.getTime() >= cycleStart || acked.has(o.userId) : null,
@@ -424,6 +442,7 @@ export const collectionRouter = router({
       },
       orderBy: { createdAt: 'desc' },
     });
+    const confirmed = await confirmedRenewals(ctx.db, ctx.userId, rows.map((row) => row.collection));
     return rows.map((row) => {
       const { obligations, ...collection } = row.collection;
       const active = obligations.filter((o) => o.unsubscribedAt == null);
@@ -431,6 +450,8 @@ export const collectionRouter = router({
         ...row,
         collection: {
           ...collection,
+          // The same rule as the Need page (SEC-6): not while closed, held or waiting for a cycle confirmation
+          chatLink: chatLinkFor(collection, ctx.userId, row, confirmed.has(`${collection.id}:${collection.cycleNumber}`)),
           currentAmount: active.reduce((sum, o) => sum + o.amount, 0),
           participantCount: active.length,
         },

@@ -1211,6 +1211,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const v3 = new THREE.Vector3();
   /** Where Oleg's label was put this frame: Maria's goes to the side away from it. */
   let olegX = -1;
+  // Recheck edge placement when the tag's text, font, or graph styling changes its width.
   let mariaWidth = els.tags.maria.offsetWidth;
   const tagsObserver = new ResizeObserver(() => {
     mariaWidth = els.tags.maria.offsetWidth;
@@ -1218,6 +1219,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   });
   tagsObserver.observe(els.tags.maria, { box: 'border-box' });
   const supportsTagTranslate = typeof CSS !== 'undefined' && CSS.supports?.('translate', '1px 1px');
+  const tagPos = new Map<HTMLElement, string>();
   const tagAt = (el: HTMLElement, i: number, on: boolean | undefined) => {
     if (el === els.tags.oleg) olegX = -1;
     if (!on) {
@@ -1243,11 +1245,15 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       else if (!left && x + w > innerWidth - 8) left = true;
       el.classList.toggle('flip', left !== startLeft);
     }
-    // Composes with the label's CSS transform, which supplies its side and alignment.
-    if (supportsTagTranslate) el.style.translate = `${x}px ${y}px 0px`;
-    else {
-      el.style.left = `${x}px`;
-      el.style.top = `${y}px`;
+    const pos = `${x}px ${y}px`;
+    if (tagPos.get(el) !== pos) {
+      tagPos.set(el, pos);
+      // Individual translate composes with the label's CSS anchor transform.
+      if (supportsTagTranslate) el.style.translate = `${pos} 0px`;
+      else {
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+      }
     }
     el.classList.add('on');
   };
@@ -1288,7 +1294,10 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   };
   const onContextRestored = () => { sceneDirty = true; };
   resize();
-  addEventListener('resize', resize);
+  // Apply a burst of resize events once, just before drawing the next frame.
+  let resizePending = false;
+  const onResize = () => { resizePending = true; };
+  addEventListener('resize', onResize);
   document.addEventListener('visibilitychange', onVisibilityChange);
   canvas.addEventListener('webglcontextrestored', onContextRestored);
 
@@ -1503,6 +1512,10 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   let stillFrames = 0;
   const frame = (now: number) => {
     raf = requestAnimationFrame(frame);
+    if (resizePending) {
+      resizePending = false;
+      resize();
+    }
     // the first frame's timestamp can precede the end of the setup above: no negative step
     const elapsed = now - last;
     const dt = clamp(elapsed / 1000, 0, 0.05);
@@ -1582,7 +1595,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     },
     destroy() {
       cancelAnimationFrame(raf);
-      removeEventListener('resize', resize);
+      removeEventListener('resize', onResize);
       canvas.removeEventListener('webglcontextrestored', onContextRestored);
       document.removeEventListener('visibilitychange', onVisibilityChange);
       layoutObserver.disconnect();

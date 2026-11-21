@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Kode salah. Coba lagi atau minta kode baru",
     "errExpired": "Kode kedaluwarsa. Minta kode baru",
     "errAttempts": "Terlalu banyak percobaan salah. Minta kode baru",
+    "errRateLimit": "Terlalu banyak percobaan masuk. Coba lagi nanti",
     "errTooSoon": "Kode baru bisa diminta dalam {{sec}} dtk",
     "errUnavailable": "E-mail tidak bisa dikirim saat ini. Pilih cara masuk lain",
     "errNetwork": "Gagal mengirim. Periksa koneksi dan coba lagi",

@@ -68,7 +68,7 @@ async function cleanup() {
 try {
   await cleanup();
   const people = ['me', 'b', 'c', 'd', 'e'];
-  await db.user.createMany({ data: people.map((p) => ({ id: id(p), name: `PU ${p}`, monthlyBudget: 10, remainingBudget: 10 })) });
+  await db.user.createMany({ data: people.map((p) => ({ id: id(p), name: `PU ${p}`, monthlyBudget: 10, remainingBudget: 10, budgetUpdatedAt: new Date() })) });
   invalidateGraph();
 
   /* ---------- An unchanged state ---------- */

@@ -1,4 +1,4 @@
-import { findLinkingCode, LinkCodeRateLimitError } from './link-code.service.js';
+import { claimLinkingCode, LinkCodeRateLimitError } from './link-code.service.js';
 import { restoreMutedAccount } from './account-restore.service.js';
 import { invalidateGraph } from './graph-cache.service.js';
 import type { PrismaClient } from '@so/db';
@@ -15,6 +15,22 @@ export async function isEmptyAccount(db: PrismaClient, userId: string): Promise<
   return connections + collections + obligations === 0;
 }
 
+// Margin below the kept account's creation for the moved proof; see mergeEmptyAccountInto
+const MOVED_PROOF_MARGIN_MS = 60_000;
+
+/**
+ * The `emailVerifiedAt` a proof gets when it moves to the kept account in an authorized merge. The column is
+ * also the session cutoff (SEC-1), and every session of the kept account belongs to the person who made the
+ * merge, so none may end here: the value is earlier than any token the kept account can hold. Its tokens were
+ * issued no earlier than its creation, but `createdAt` comes from the database clock and legacy tokens carry a
+ * whole-second `iat`, so the start of the creation second less a minute is used. No session of the kept
+ * account can predate that, and the removed account's sessions end with the account itself.
+ */
+function movedProofDate(provenAt: Date, keptCreatedAt: Date): Date {
+  const floor = Math.floor(keptCreatedAt.getTime() / 1000) * 1000 - MOVED_PROOF_MARGIN_MS;
+  return new Date(Math.min(provenAt.getTime(), floor));
+}
+
 /**
  * Move the sign-in methods of an empty account (Google, Apple, a proven e-mail) and its open invite
  * requests to the account that keeps the person's network, then delete the empty one. Afterwards every
@@ -25,7 +41,7 @@ export async function mergeEmptyAccountInto(db: PrismaClient, emptyId: string, k
   await db.$transaction(async (tx) => {
     const [empty, keep] = await Promise.all([
       tx.user.findUnique({ where: { id: emptyId }, select: { email: true, emailVerifiedAt: true, photoUrl: true } }),
-      tx.user.findUnique({ where: { id: keepId }, select: { email: true, photoUrl: true } }),
+      tx.user.findUnique({ where: { id: keepId }, select: { email: true, emailVerifiedAt: true, photoUrl: true, createdAt: true } }),
     ]);
     if (!empty || !keep) return;
 
@@ -54,7 +70,12 @@ export async function mergeEmptyAccountInto(db: PrismaClient, emptyId: string, k
       await tx.user.update({
         where: { id: keepId },
         data: {
-          ...(moveEmail ? { email: empty.email, emailVerifiedAt: empty.emailVerifiedAt } : {}),
+          // The proof moves with the address, dated before any session of the kept account (movedProofDate). A
+          // cutoff the kept account already has is left as it is: moving it earlier would revive sessions it ended
+          ...(moveEmail ? {
+            email: empty.email,
+            ...(keep.emailVerifiedAt ? {} : { emailVerifiedAt: movedProofDate(empty.emailVerifiedAt!, keep.createdAt) }),
+          } : {}),
           ...(empty.photoUrl && !keep.photoUrl ? { photoUrl: empty.photoUrl } : {}),
         },
       });
@@ -89,7 +110,9 @@ export async function linkTelegramByCode(
   initData: string,
   callerKeys: string[],
 ): Promise<TelegramLinkResult> {
-  const linkingCode = await findLinkingCode(db, code, callerKeys).catch((err) => {
+  // Spent before anything is written (SEC-4): a second redemption running at once gets 'invalid'. A code
+  // that ends in 'conflict' is spent too; the person makes a new one after sorting the accounts out.
+  const linkingCode = await claimLinkingCode(db, code, callerKeys).catch((err) => {
     if (err instanceof LinkCodeRateLimitError) return null;
     throw err;
   });
@@ -102,10 +125,7 @@ export async function linkTelegramByCode(
     where: { platform_platformId: { platform: 'TELEGRAM', platformId } },
   });
 
-  if (existing?.userId === target.id) {
-    await db.linkingCode.delete({ where: { id: linkingCode.id } }).catch(() => {});
-    return 'already';
-  }
+  if (existing?.userId === target.id) return 'already';
 
   // The target already has a different Telegram attached — do not replace it silently
   const targetTelegram = await db.platformAccount.findFirst({
@@ -125,7 +145,6 @@ export async function linkTelegramByCode(
       // account made by a second sign-in method (Google, Apple, e-mail): fold the empty one into it
       if (await isEmptyAccount(db, target.id)) {
         await mergeEmptyAccountInto(db, target.id, duplicateId);
-        await db.linkingCode.deleteMany({ where: { userId: target.id } }).catch(() => {});
         return 'merged';
       }
       return 'conflict';
@@ -149,7 +168,7 @@ export async function linkTelegramByCode(
       data: { userId: target.id, accessToken: initData },
     });
     await db.user.delete({ where: { id: duplicateId } }).catch(async () => {
-      await db.user.update({ where: { id: duplicateId }, data: { deletedAt: new Date() } }).catch(() => {});
+      await db.user.update({ where: { id: duplicateId }, data: { deletedAt: new Date(), budgetUpdatedAt: new Date() } }).catch(() => {});
     });
     invalidateGraph([duplicateId]);
     console.log('[telegram-link] merged empty duplicate', duplicateId, 'into', target.id);
@@ -160,6 +179,5 @@ export async function linkTelegramByCode(
     console.log('[telegram-link] telegram attached to', target.id);
   }
 
-  await db.linkingCode.delete({ where: { id: linkingCode.id } }).catch(() => {});
   return 'linked';
 }

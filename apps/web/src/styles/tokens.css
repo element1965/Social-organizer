@@ -51,7 +51,7 @@
   --surface-2: #e9eeec;
   --ink: #14211e;
   --muted: #5c6d68;
-  --subtle: #8a9a95;
+  --subtle: #5e6d68;
   --line: rgba(20, 33, 30, 0.14);
   --line-soft: rgba(20, 33, 30, 0.08);
   --line-strong: rgba(20, 33, 30, 0.24);
@@ -184,7 +184,7 @@ html.dark,
   --surface-2: #24302b;
   --ink: #e7eeeb;
   --muted: #93a59f;
-  --subtle: #6f817b;
+  --subtle: #8fa19a;
   --line: rgba(231, 238, 235, 0.14);
   --line-soft: rgba(231, 238, 235, 0.08);
   --line-strong: rgba(231, 238, 235, 0.24);
