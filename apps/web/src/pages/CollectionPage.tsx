@@ -138,7 +138,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
     onError: (error: unknown) => {
       const kind = errorKind(error);
       // Only this Need's own data: nothing else was written (the broader refresh is for successful writes)
-      if ((kind === 'changed' || kind === 'notFound') && id) void utils.collection.getById.invalidate({ id });
+      if ((kind === 'changed' || kind === 'notFound' || kind === 'needClosed') && id) void utils.collection.getById.invalidate({ id });
     },
     meta: { notifyOnError: false },
   } as const;

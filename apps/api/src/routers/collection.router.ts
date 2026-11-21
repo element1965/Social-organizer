@@ -22,6 +22,14 @@ const chatLinkSchema = z.string().max(MAX_CHAT_LINK_LENGTH).url().refine((u) => 
 const descriptionSchema = z.string().trim().max(300);
 const toDescription = (value: string | undefined) => (value ? value : null);
 
+const OPEN_STATUSES = ['ACTIVE', 'BLOCKED'] as const;
+
+function requireUpdated<T>(rows: T[]): T {
+  const [row] = rows;
+  if (!row) throw new TRPCError({ code: 'CONFLICT', message: 'Collection changed before the action could be saved' });
+  return row;
+}
+
 function assertAdmin(userId: string) {
   if (!isAdmin(userId)) throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can block collections' });
 }
@@ -45,17 +53,19 @@ export const collectionRouter = router({
       if (collection.status !== 'ACTIVE') {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Only active collections can be blocked' });
       }
-      const blocked = await ctx.db.collection.update({
-        where: { id: input.id },
-        data: { status: 'BLOCKED', blockedAt: new Date(), blockReason: input.reason },
-        omit: { chatLink: true },
+      return ctx.db.$transaction(async (tx) => {
+        const blocked = requireUpdated(await tx.collection.updateManyAndReturn({
+          where: { id: input.id, status: 'ACTIVE', blockReason: collection.blockReason },
+          data: { status: 'BLOCKED', blockedAt: new Date(), blockReason: input.reason },
+          omit: { chatLink: true },
+        }));
+        // Pending requests are no longer actionable.
+        await tx.notification.updateMany({
+          where: { collectionId: input.id, type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] }, status: { in: ['UNREAD', 'READ'] } },
+          data: { status: 'EXPIRED' },
+        });
+        return blocked;
       });
-      // Stop the request from circulating: pending "new request" notifications are no longer actionable
-      await ctx.db.notification.updateMany({
-        where: { collectionId: input.id, type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] }, status: { in: ['UNREAD', 'READ'] } },
-        data: { status: 'EXPIRED' },
-      });
-      return blocked;
     }),
 
   /** Admin-only: lift an admin block. */
@@ -68,10 +78,10 @@ export const collectionRouter = router({
       if (collection.status !== 'BLOCKED' || collection.blockReason == null) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not blocked by an admin' });
       }
-      await ctx.db.collection.update({
-        where: { id: input.id },
+      requireUpdated(await ctx.db.collection.updateManyAndReturn({
+        where: { id: input.id, status: 'BLOCKED', blockReason: collection.blockReason },
         data: { status: 'ACTIVE', blockedAt: null, blockReason: null },
-      });
+      }));
       // A goal hold must come back if the circle (or an admin) lift was the only reason it stayed paused.
       await syncCollectionGoal(ctx.db, input.id);
       return ctx.db.collection.findUniqueOrThrow({ where: { id: input.id }, omit: { chatLink: true } });
@@ -99,7 +109,8 @@ export const collectionRouter = router({
       if (!connection || connection.viaCollectionId !== input.collectionId) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'This person did not join from this collection link' });
       }
-      await ctx.db.connection.delete({ where: { id: connection.id } });
+      const removed = await ctx.db.connection.deleteMany({ where: { id: connection.id, viaCollectionId: input.collectionId } });
+      if (removed.count === 0) throw new TRPCError({ code: 'CONFLICT', message: 'The connection changed before it could be removed' });
       invalidateGraph([userAId!, userBId!]);
       return { ok: true as const };
     }),
@@ -295,14 +306,14 @@ export const collectionRouter = router({
 
       const amountUSD = input.amount;
 
-      const updated = await ctx.db.collection.update({
-        where: { id: input.id },
+      const updated = requireUpdated(await ctx.db.collection.updateManyAndReturn({
+        where: { id: input.id, status: { in: [...OPEN_STATUSES] }, blockReason: null, amount: collection.amount },
         data: {
           amount: amountUSD,
           originalAmount: null, // clear goals typed in other currencies before SO-40
           originalCurrency: null,
         },
-      });
+      }));
 
       // If new goal is larger — notify additional recipients for the difference
       const oldAmount = collection.amount;
@@ -341,10 +352,10 @@ export const collectionRouter = router({
       if (collection.status !== 'ACTIVE' && collection.status !== 'BLOCKED') {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Can only update active collections' });
       }
-      return ctx.db.collection.update({
-        where: { id: input.id },
+      return requireUpdated(await ctx.db.collection.updateManyAndReturn({
+        where: { id: input.id, status: { in: [...OPEN_STATUSES] } },
         data: { description: toDescription(input.description) },
-      });
+      }));
     }),
 
   close: protectedProcedure
@@ -356,33 +367,28 @@ export const collectionRouter = router({
       if (collection.status !== 'ACTIVE' && collection.status !== 'BLOCKED') {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection not active' });
       }
-      const updated = await ctx.db.collection.update({
-        where: { id: input.id },
-        data: { status: 'CLOSED', closedAt: new Date() },
-      });
+      const updated = await ctx.db.$transaction(async (tx) => {
+        const closed = requireUpdated(await tx.collection.updateManyAndReturn({
+          where: { id: input.id, status: { in: [...OPEN_STATUSES] } },
+          data: { status: 'CLOSED', closedAt: new Date() },
+        }));
+        await tx.notification.updateMany({
+          where: { collectionId: input.id, type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] }, status: 'UNREAD' },
+          data: { status: 'READ' },
+        });
 
-      // Mark all NEW_COLLECTION and RE_NOTIFY notifications as read so they disappear from dashboards
-      await ctx.db.notification.updateMany({
-        where: { collectionId: input.id, type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] }, status: 'UNREAD' },
-        data: { status: 'READ' },
+        // Everyone previously notified gets a single closure notice.
+        const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+        await tx.$executeRaw`
+          INSERT INTO notifications ("id", "userId", "collectionId", "type", "expiresAt", "wave", "updatedAt")
+          SELECT gen_random_uuid()::text, notified."userId", ${input.id}, 'COLLECTION_CLOSED'::"NotificationType",
+            ${expiresAt.toISOString()}::timestamptz AT TIME ZONE 'UTC', 0, CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
+          FROM (SELECT DISTINCT "userId" FROM notifications WHERE "collectionId" = ${input.id}) notified
+          ON CONFLICT ("userId", "collectionId", "type", "wave") DO UPDATE
+            SET "status" = 'UNREAD', "expiresAt" = EXCLUDED."expiresAt", "updatedAt" = EXCLUDED."updatedAt"
+        `;
+        return closed;
       });
-
-      // Send COLLECTION_CLOSED to all previously notified
-      const notifiedUsers = await ctx.db.notification.findMany({
-        where: { collectionId: input.id },
-        select: { userId: true },
-        distinct: ['userId'],
-      });
-      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
-      for (const { userId } of notifiedUsers) {
-        try {
-          await ctx.db.notification.upsert({
-            where: { userId_collectionId_type_wave: { userId, collectionId: input.id, type: 'COLLECTION_CLOSED', wave: 0 } },
-            create: { userId, collectionId: input.id, type: 'COLLECTION_CLOSED', handshakePath: [], expiresAt, wave: 0 },
-            update: { type: 'COLLECTION_CLOSED', status: 'UNREAD', expiresAt },
-          });
-        } catch { /* skip */ }
-      }
 
       // Send Telegram notification about closure
       sendCollectionClosedTg(ctx.db, input.id, ctx.userId).catch((err) =>
@@ -401,13 +407,16 @@ export const collectionRouter = router({
       if (collection.status !== 'ACTIVE') {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Can only cancel active collections' });
       }
-      // Mark all NEW_COLLECTION and RE_NOTIFY notifications as read
-      await ctx.db.notification.updateMany({
-        where: { collectionId: input.id, type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] }, status: 'UNREAD' },
-        data: { status: 'READ' },
-      });
-      return ctx.db.collection.update({
-        where: { id: input.id }, data: { status: 'CANCELLED' },
+      return ctx.db.$transaction(async (tx) => {
+        const cancelled = requireUpdated(await tx.collection.updateManyAndReturn({
+          where: { id: input.id, status: 'ACTIVE' },
+          data: { status: 'CANCELLED' },
+        }));
+        await tx.notification.updateMany({
+          where: { collectionId: input.id, type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] }, status: 'UNREAD' },
+          data: { status: 'READ' },
+        });
+        return cancelled;
       });
     }),
 

@@ -10,6 +10,7 @@ import { sendCycleRenewalReminderTg, sendCycleRenewedTg } from '../src/services/
 import * as telegram from '../src/services/telegram-bot.service.js';
 import { WEB_APP_URL } from '../src/deployment.js';
 import { processCycleClose } from '../src/workers/cycle-close.worker.js';
+import { processCycleRenewalReminder } from '../src/workers/cycle-renewal-reminder.worker.js';
 import { runReNotify } from '../src/workers/re-notify.worker.js';
 import { createTestDatabase } from './test-database.js';
 
@@ -20,7 +21,7 @@ vi.hoisted(() => {
     'VAPID_PUBLIC_KEY', 'VAPID_PRIVATE_KEY', 'APNS_KEY', 'RESEND_API_KEY',
   ]) delete process.env[key];
   process.env.JWT_SECRET = 'local-need-protocol-test-key';
-  process.env.ADMIN_IDS = 'privacy-admin';
+  process.env.ADMIN_IDS = 'privacy-admin,sweep-admin';
 });
 
 let db: PrismaClient;
@@ -197,6 +198,185 @@ describe('Need participant visibility', () => {
     expect(await db.obligation.findUniqueOrThrow({ where: { id: row.id } })).toEqual(withdrawn);
   });
 
+  it('keeps marked participants in the closed summary through both withdrawal procedures', async () => {
+    const [author, member] = ['closed-withdraw-author', 'closed-withdraw-member'];
+    await db.user.createMany({ data: [author, member].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({ data: { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat' } });
+    const row = await db.obligation.create({
+      data: { collectionId: need.id, userId: member, amount: 7, isSubscription: true },
+    });
+    const owner = caller(author);
+    const viewer = caller(member);
+    await owner.obligation.setPaid({ obligationIds: [row.id], paid: true });
+    await owner.collection.close({ id: need.id });
+    const closed = { code: 'BAD_REQUEST', message: 'Collection is not open' };
+    const summary = { status: 'CLOSED', currentAmount: 7, participantCount: 1, obligations: [
+      expect.objectContaining({ id: row.id, amount: 7, confirmedAt: expect.any(Date) }),
+    ] };
+    for (const withdraw of [
+      () => viewer.obligation.unsubscribe({ obligationId: row.id }),
+      () => viewer.obligation.unsubscribeFromCollection({ collectionId: need.id }),
+    ]) {
+      await expect(withdraw()).rejects.toMatchObject(closed);
+      expect(await owner.collection.getById({ id: need.id })).toMatchObject(summary);
+    }
+  });
+
+  it('rejects a paid write when closure commits after the transfer lookup', async () => {
+    const [author, member] = ['paid-race-author', 'paid-race-member'];
+    await db.user.createMany({ data: [author, member].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({ data: { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat' } });
+    const row = await db.obligation.create({ data: { collectionId: need.id, userId: member, amount: 7 } });
+    const owner = caller(author);
+    expect(await owner.obligation.setPaid({ obligationIds: [row.id], paid: false })).toEqual({ changed: 0 });
+
+    const findTransfers = db.obligation.findMany.bind(db.obligation);
+    const lookup = vi.spyOn(db.obligation, 'findMany').mockImplementationOnce((args) =>
+      findTransfers(args).then(async (transfers) => {
+        await owner.collection.close({ id: need.id });
+        return transfers;
+      }) as ReturnType<typeof findTransfers>,
+    );
+    try {
+      await expect(owner.obligation.setPaid({ obligationIds: [row.id], paid: true }))
+        .rejects.toMatchObject({ code: 'BAD_REQUEST', message: 'Collection is not open' });
+    } finally {
+      lookup.mockRestore();
+    }
+    expect(await db.obligation.findUniqueOrThrow({ where: { id: row.id } })).toMatchObject({ confirmedAt: null });
+  });
+
+  it.each(['create', 'updateAmount', 'confirmCycle'] as const)('rejects a late %s after the Need closes', async (action) => {
+    const author = 'closed-pledge-author-' + action;
+    const member = 'closed-pledge-member-' + action;
+    await db.user.createMany({ data: [author, member].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'REGULAR', cycleNumber: 2, currentCycleStart: new Date(), chatLink: 'https://example.com/chat' },
+    });
+    const row = await db.obligation.create({ data: { collectionId: need.id, userId: member, amount: 7 } });
+    const viewer = caller(member);
+    let closureStarted = false;
+    const close = () => {
+      closureStarted = true;
+      return caller(author).collection.close({ id: need.id });
+    };
+    let restore: () => void;
+    if (action === 'updateAmount') {
+      const find = db.obligation.findUnique.bind(db.obligation);
+      restore = vi.spyOn(db.obligation, 'findUnique').mockImplementationOnce((args) =>
+        find(args).then(async (value) => { await close(); return value; }) as ReturnType<typeof find>,
+      ).mockRestore;
+    } else {
+      const find = db.collection.findUnique.bind(db.collection);
+      restore = vi.spyOn(db.collection, 'findUnique').mockImplementationOnce((args) =>
+        find(args).then(async (value) => { await close(); return value; }) as ReturnType<typeof find>,
+      ).mockRestore;
+    }
+    // This keeps the competing closure outside a transaction even if the mutation now locks first.
+    const tx = db.$transaction.bind(db);
+    const startTransaction = vi.spyOn(db, '$transaction').mockImplementationOnce(((operation: Parameters<typeof tx>[0]) => {
+      if (closureStarted) return tx(operation);
+      restore();
+      return close().then(() => tx(operation));
+    }) as typeof db.$transaction);
+    try {
+      const actions = {
+        create: () => viewer.obligation.create({ collectionId: need.id, amount: 12 }),
+        updateAmount: () => viewer.obligation.updateAmount({ obligationId: row.id, amount: 12 }),
+        confirmCycle: () => viewer.obligation.confirmCycle({ collectionId: need.id }),
+      };
+      await expect(actions[action]()).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+      expect(await db.obligation.findMany({ where: { collectionId: need.id }, select: { id: true, amount: true } }))
+        .toEqual([{ id: row.id, amount: 7 }]);
+      expect(await db.notification.count({ where: { collectionId: need.id, type: 'CYCLE_RENEWED' } })).toBe(0);
+    } finally {
+      startTransaction.mockRestore();
+      restore();
+    }
+  });
+
+  it.each(['block', 'unblock', 'updateAmount', 'updateDescription', 'close', 'cancel'] as const)(
+    'refuses a stale Need %s after another closure commits',
+    async (action) => {
+      const author = 'stale-need-author-' + action;
+      await db.user.create({ data: { id: author, name: author } });
+      await db.user.upsert({ where: { id: 'sweep-admin' }, create: { id: 'sweep-admin', name: 'admin' }, update: {} });
+      const need = await db.collection.create({
+        data: {
+          creatorId: author, type: 'EMERGENCY', chatLink: 'https://example.com/chat', amount: 10,
+          status: action === 'unblock' ? 'BLOCKED' : 'ACTIVE', blockReason: action === 'unblock' ? 'AUTHOR_REQUEST' : null,
+        },
+      });
+      const closedAt = new Date(Date.now() - hour);
+      const find = db.collection.findUnique.bind(db.collection);
+      const snapshot = vi.spyOn(db.collection, 'findUnique').mockImplementationOnce((args) =>
+        find(args).then(async (value) => {
+          await db.collection.update({ where: { id: need.id }, data: { status: 'CLOSED', closedAt } });
+          return value;
+        }) as ReturnType<typeof find>,
+      );
+      try {
+        const owner = caller(author).collection;
+        const admin = caller('sweep-admin').collection;
+        const actions = {
+          block: () => admin.block({ id: need.id, reason: 'AUTHOR_REQUEST' }),
+          unblock: () => admin.unblock({ id: need.id }),
+          updateAmount: () => owner.updateAmount({ id: need.id, amount: 20 }),
+          updateDescription: () => owner.updateDescription({ id: need.id, description: 'Changed' }),
+          close: () => owner.close({ id: need.id }),
+          cancel: () => owner.cancel({ id: need.id }),
+        };
+        await expect(actions[action]()).rejects.toMatchObject({ code: 'CONFLICT' });
+        expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({
+          status: 'CLOSED', closedAt, amount: 10, description: null, blockReason: need.blockReason,
+        });
+      } finally {
+        snapshot.mockRestore();
+      }
+    },
+  );
+
+  it('reports that a connection changed when a joiner is already gone', async () => {
+    const [author, member] = ['remove-race-author', 'remove-race-member'];
+    await db.user.createMany({ data: [author, member].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({ data: { creatorId: author, type: 'EMERGENCY', chatLink: 'https://example.com/chat' } });
+    const connection = await db.connection.create({ data: { userAId: author, userBId: member, viaCollectionId: need.id } });
+    const find = db.connection.findUnique.bind(db.connection);
+    const snapshot = vi.spyOn(db.connection, 'findUnique').mockImplementationOnce((args) =>
+      find(args).then(async (value) => {
+        await db.connection.delete({ where: { id: connection.id } });
+        return value;
+      }) as ReturnType<typeof find>,
+    );
+    try {
+      await expect(caller(author).collection.removeJoiner({ collectionId: need.id, userId: member }))
+        .rejects.toMatchObject({ code: 'CONFLICT' });
+    } finally {
+      snapshot.mockRestore();
+    }
+  });
+
+  it('creates one closure notice per person even if they received multiple waves', async () => {
+    const [author, member, other] = ['close-notices-author', 'close-notices-member', 'close-notices-other'];
+    await db.user.createMany({ data: [author, member, other].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({ data: { creatorId: author, type: 'EMERGENCY', chatLink: 'https://example.com/chat' } });
+    const expiresAt = new Date(Date.now() + hour);
+    await db.notification.createMany({ data: [
+      { collectionId: need.id, userId: member, type: 'NEW_COLLECTION', wave: 1, expiresAt },
+      { collectionId: need.id, userId: member, type: 'RE_NOTIFY', wave: 1, expiresAt },
+      { collectionId: need.id, userId: other, type: 'NEW_COLLECTION', wave: 1, expiresAt },
+    ] });
+    await caller(author).collection.close({ id: need.id });
+    expect(await db.notification.findMany({
+      where: { collectionId: need.id, status: 'UNREAD' },
+      select: { userId: true, wave: true, type: true },
+      orderBy: { userId: 'asc' },
+    })).toEqual([
+      { userId: member, wave: 0, type: 'COLLECTION_CLOSED' },
+      { userId: other, wave: 0, type: 'COLLECTION_CLOSED' },
+    ]);
+  });
+
   it('preserves the received summary when either mark procedure runs after closure', async () => {
     const [author, participant] = ['close-marks-author', 'close-marks-member'];
     await db.user.createMany({ data: [author, participant].map((id) => ({ id, name: id })) });
@@ -220,6 +400,105 @@ describe('Need participant visibility', () => {
     expect(await summary()).toEqual(before);
     const rejected = { status: 'rejected', reason: expect.objectContaining({ code: 'BAD_REQUEST' }) };
     expect(results).toEqual([rejected, rejected]);
+  });
+
+  it.each(['close', 'hold', 'reschedule', 'advance'] as const)('skips rollover when a %s commits after the due-cycle lookup', async (change) => {
+    const author = 'rollover-race-author-' + change;
+    const member = 'rollover-race-member-' + change;
+    await db.user.createMany({ data: [author, member].map((id) => ({ id, name: id })) });
+    const due = new Date(Date.now() - (REGULAR_CYCLE_DAYS + 1) * 24 * hour);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat', currentCycleStart: due },
+    });
+    const confirmedAt = new Date();
+    const mark = await db.obligation.create({ data: { collectionId: need.id, userId: member, amount: 7, confirmedAt } });
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    const findCycles = db.collection.findMany.bind(db.collection);
+    const rescheduled = new Date();
+    const expected = {
+      close: { status: 'CLOSED', cycleNumber: 1, currentCycleStart: due, blockReason: null },
+      hold: { status: 'BLOCKED', cycleNumber: 1, currentCycleStart: due, blockReason: 'AUTHOR_REQUEST' },
+      reschedule: { status: 'ACTIVE', cycleNumber: 1, currentCycleStart: rescheduled, blockReason: null },
+      advance: { status: 'ACTIVE', cycleNumber: 2, currentCycleStart: due, blockReason: null },
+    } as const;
+    const lookup = vi.spyOn(db.collection, 'findMany').mockImplementationOnce((args) =>
+      findCycles(args).then(async (rows) => {
+        if (change === 'close') await caller(author).collection.close({ id: need.id });
+        else await db.collection.update({ where: { id: need.id }, data: expected[change] });
+        return rows;
+      }) as ReturnType<typeof findCycles>,
+    );
+    try {
+      await processCycleClose({} as Job);
+      expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject(expected[change]);
+      expect(await db.obligation.findUniqueOrThrow({ where: { id: mark.id } })).toMatchObject({ confirmedAt });
+      expect(await db.obligationReceipt.count({ where: { collectionId: need.id } })).toBe(0);
+      expect(await db.notification.count({ where: { collectionId: need.id } })).toBe(0);
+    } finally {
+      lookup.mockRestore();
+      getDb.mockRestore();
+      // An overdue held fixture should not be eligible in subsequent worker runs.
+      await db.collection.update({ where: { id: need.id }, data: { status: 'CLOSED' } });
+    }
+  });
+
+  it.each([
+    ['start', 'CYCLE_RENEWED', processCycleClose, REGULAR_CYCLE_DAYS + 1, 2],
+    ['reminder', 'CYCLE_RENEWAL_REMINDER', processCycleRenewalReminder, REGULAR_CYCLE_DAYS - 2.5, 1],
+  ] as const)('inserts %s notices for current eligible participants and dispatches only fresh inserts', async (event, type, run, daysOld, wave) => {
+    const id = (role: string) => 'current-' + event + '-' + role;
+    const author = id('author');
+    const active = id('active');
+    const withdrawn = id('withdrawn');
+    const muted = id('muted');
+    const duplicate = id('duplicate');
+    const deleted = id('deleted');
+    await db.user.createMany({
+      data: [author, active, withdrawn, muted, duplicate, deleted].map((id) => ({
+        id, name: id, deletedAt: id === deleted ? new Date() : null,
+      })),
+    });
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat', currentCycleStart: new Date(Date.now() - daysOld * 24 * hour) },
+    });
+    await db.obligation.createMany({
+      data: [author, active, active, withdrawn, muted, duplicate, deleted].map((userId) => ({
+        collectionId: need.id, userId, amount: 7,
+      })),
+    });
+    await db.notification.create({
+      data: { collectionId: need.id, userId: duplicate, type, wave, expiresAt: new Date(Date.now() + hour) },
+    });
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    const findCycles = db.collection.findMany.bind(db.collection);
+    const changeEligibility = async () => {
+      await caller(withdrawn).obligation.unsubscribeFromCollection({ collectionId: need.id });
+      await db.user.update({
+        where: { id: muted }, data: event === 'start' ? { notifyRenewalStart: false } : { notifyRenewalReminder: false },
+      });
+    };
+    const lookup = vi.spyOn(db.collection, 'findMany').mockImplementationOnce((args) =>
+      findCycles(args).then(async (rows) => {
+        await changeEligibility();
+        return rows;
+      }) as ReturnType<typeof findCycles>,
+    );
+    try {
+      await run({} as Job);
+      if (event === 'reminder') await run({} as Job);
+      const notices = await db.notification.findMany({
+        where: { collectionId: need.id, type }, select: { userId: true, wave: true }, orderBy: { userId: 'asc' },
+      });
+      expect(notices).toEqual([{ userId: active, wave }, { userId: duplicate, wave }]);
+      const deliveries = () => db.notificationDelivery.findMany({
+        where: { eventKey: 'cycle:' + need.id + ':' + wave + ':' + event }, select: { userId: true },
+        orderBy: { userId: 'asc' },
+      });
+      await expect.poll(deliveries).toEqual([{ userId: active }]);
+    } finally {
+      lookup.mockRestore();
+      getDb.mockRestore();
+    }
   });
 
   it('excludes a person withdrawn after the cycle snapshot from rollover notices', async () => {
@@ -265,6 +544,21 @@ describe('Need participant visibility', () => {
   });
 
   it.each([
+    ['closed', sendCycleRenewalReminderTg, { status: 'CLOSED', cycleNumber: 2 }],
+    ['advanced', sendCycleRenewedTg, { status: 'ACTIVE', cycleNumber: 3 }],
+  ] as const)('skips cycle delivery when the Need has %s since its notice was inserted', async (change, send, state) => {
+    const author = 'late-delivery-author-' + change;
+    const member = 'late-delivery-member-' + change;
+    await db.user.createMany({ data: [author, member].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'REGULAR', currentCycleStart: new Date(), chatLink: 'https://example.com/chat', ...state },
+    });
+    await db.obligation.create({ data: { collectionId: need.id, userId: member, amount: 4 } });
+    await send(db, need.id, author, [member], 2);
+    expect(await db.notificationDelivery.count({ where: { eventKey: { startsWith: 'cycle:' + need.id + ':' } } })).toBe(0);
+  });
+
+  it.each([
     ['reminder', sendCycleRenewalReminderTg, REGULAR_CYCLE_DAYS],
     ['start', sendCycleRenewedTg, 0],
   ] as const)('sends the %s message only to active participants', async (event, sendCycleNotice, offsetDays) => {
@@ -286,7 +580,7 @@ describe('Need participant visibility', () => {
     });
     const send = vi.spyOn(telegram, 'sendTgMessages');
     try {
-      await sendCycleNotice(db, need.id, author, [active, withdrawn]);
+      await sendCycleNotice(db, need.id, author, [active, withdrawn], 2);
       const deliveries = await db.notificationDelivery.findMany({ where: { eventKey: `cycle:${need.id}:2:${event}` } });
       expect(deliveries.map((delivery) => delivery.userId)).toEqual([active]);
       expect(send).toHaveBeenCalledTimes(1);

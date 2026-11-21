@@ -162,16 +162,17 @@ export async function sendGoalReachedToCreator(
   db: PrismaClient,
   collectionId: string,
   creatorId: string,
+  blockedAt: Date,
 ): Promise<void> {
   const collection = await db.collection.findUnique({
-    where: { id: collectionId },
-    select: { amount: true, chatLink: true, blockedAt: true, cycleNumber: true },
+    where: { id: collectionId, status: 'BLOCKED', blockReason: null, blockedAt },
+    select: { amount: true, chatLink: true },
   });
   if (!collection) return;
 
-  const amountStr = collection.amount != null ? `${groupNumber(collection.amount)}\u00a0USD` : '';
+  const amountStr = collection.amount != null ? `${groupNumber(collection.amount)}\u00a0USD` : ''; // 1 unit = 1 $
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
-  const stamp = collection.blockedAt ? collection.blockedAt.getTime() : `c${collection.cycleNumber}`;
+  const stamp = blockedAt.getTime();
 
   await deliver(db, creatorId, {
     key: `goal:${collectionId}:${stamp}`,
@@ -357,9 +358,10 @@ async function getUserContributions(
   db: PrismaClient,
   collectionId: string,
   userIds: string[],
+  preference: 'notifyRenewalReminder' | 'notifyRenewalStart',
 ): Promise<Map<string, string>> {
   const obligations = await db.obligation.findMany({
-    where: { collectionId, userId: { in: userIds }, unsubscribedAt: null },
+    where: { collectionId, userId: { in: userIds }, unsubscribedAt: null, user: { deletedAt: null, [preference]: true } },
     select: { userId: true, amount: true },
   });
   const sums = new Map<string, number>();
@@ -386,27 +388,29 @@ export async function sendCycleRenewalReminderTg(
   collectionId: string,
   creatorId: string,
   recipientUserIds: string[],
+  cycleNumber: number,
 ): Promise<void> {
   if (recipientUserIds.length === 0) return;
 
   const collection = await db.collection.findUnique({
-    where: { id: collectionId },
-    select: { currentCycleStart: true, cycleNumber: true },
+    where: { id: collectionId, type: 'REGULAR', cycleNumber, status: { in: ['ACTIVE', 'BLOCKED'] }, blockReason: null },
+    select: { currentCycleStart: true },
   });
+  if (!collection?.currentCycleStart) return;
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
-  if (!collection || !creator) return;
+  if (!creator) return;
 
   // The reminder is about the NEXT cycle: it starts when the current one ends.
-  const cycleStart = collection.currentCycleStart ?? new Date();
+  const cycleStart = collection.currentCycleStart;
   const periodStart = new Date(cycleStart.getTime() + REGULAR_CYCLE_DAYS * DAY_MS);
   const periodEnd = new Date(periodStart.getTime() + (REGULAR_CYCLE_DAYS - 1) * DAY_MS); // last day of the cycle
-  const contributions = await getUserContributions(db, collectionId, recipientUserIds);
+  const contributions = await getUserContributions(db, collectionId, recipientUserIds, 'notifyRenewalReminder');
   const activeUserIds = [...contributions.keys()];
   const names = await userNames(db, activeUserIds);
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
   await deliverMany(db, activeUserIds, (userId) => ({
-    key: `cycle:${collectionId}:${collection.cycleNumber}:reminder`,
+    key: `cycle:${collectionId}:${cycleNumber}:reminder`,
     kind: 'cycle',
     push: { title: 'New cycle in 3 days', body: 'A Need you take part in (every 28 days) starts a new cycle in 3 days.', url: webAppLink },
     telegram: (lang) => ({
@@ -424,26 +428,28 @@ export async function sendCycleRenewedTg(
   collectionId: string,
   creatorId: string,
   recipientUserIds: string[],
+  cycleNumber: number,
 ): Promise<void> {
   if (recipientUserIds.length === 0) return;
 
   const collection = await db.collection.findUnique({
-    where: { id: collectionId },
-    select: { currentCycleStart: true, cycleNumber: true },
+    where: { id: collectionId, type: 'REGULAR', cycleNumber, status: { in: ['ACTIVE', 'BLOCKED'] }, blockReason: null },
+    select: { currentCycleStart: true },
   });
+  if (!collection?.currentCycleStart) return;
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
-  if (!collection || !creator) return;
+  if (!creator) return;
 
   // Called right after the cycle was rolled over, so currentCycleStart is the new cycle.
-  const periodStart = collection.currentCycleStart ?? new Date();
+  const periodStart = collection.currentCycleStart;
   const periodEnd = new Date(periodStart.getTime() + (REGULAR_CYCLE_DAYS - 1) * DAY_MS); // last day of the cycle
   const names = await userNames(db, recipientUserIds);
   // Read active Participation again at dispatch, after the worker's candidate list was made.
-  const contributions = await getUserContributions(db, collectionId, recipientUserIds);
+  const contributions = await getUserContributions(db, collectionId, recipientUserIds, 'notifyRenewalStart');
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
   await deliverMany(db, [...contributions.keys()], (userId) => ({
-    key: `cycle:${collectionId}:${collection.cycleNumber}:start`,
+    key: `cycle:${collectionId}:${cycleNumber}:start`,
     kind: 'cycle',
     push: { title: 'New cycle started', body: 'A Need you take part in (every 28 days) has started a new cycle.', url: webAppLink },
     telegram: (lang) => ({

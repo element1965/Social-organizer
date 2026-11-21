@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { Prisma } from '@so/db';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
@@ -8,9 +7,8 @@ import { scheduleResponseDigest } from '../services/notification.service.js';
 import { recordResponded } from '../services/notify-routing.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
 import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
-import { chatLinkFor, confirmedRenewals, isClosed } from '../services/collection-view.js';
-
-const openNeed = { status: { in: ['ACTIVE', 'BLOCKED'] } } satisfies Prisma.CollectionWhereInput;
+import { chatLinkFor, confirmedRenewals } from '../services/collection-view.js';
+import { assertOpenNeed, lockNeed } from '../services/collection-state.js';
 
 export const obligationRouter = router({
   create: protectedProcedure
@@ -21,23 +19,21 @@ export const obligationRouter = router({
       isSubscription: z.boolean().default(false),
     }))
     .mutation(async ({ ctx, input }) => {
-      const collection = await ctx.db.collection.findUnique({
-        where: { id: input.collectionId },
-      });
-      if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
-      if (collection.status !== 'ACTIVE') {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
-      }
-
-      const amountUSD = input.amount;
-
-      const obligation = await ctx.db.obligation.create({
-        data: {
-          collectionId: input.collectionId,
-          userId: ctx.userId,
-          amount: amountUSD,
-          isSubscription: input.isSubscription,
-        },
+      const { collection, obligation } = await ctx.db.$transaction(async (tx) => {
+        const collection = await lockNeed(tx, input.collectionId);
+        assertOpenNeed(collection);
+        if (collection.status !== 'ACTIVE') {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
+        }
+        const obligation = await tx.obligation.create({
+          data: {
+            collectionId: input.collectionId,
+            userId: ctx.userId,
+            amount: input.amount,
+            isSubscription: input.isSubscription,
+          },
+        });
+        return { collection, obligation };
       });
 
       // The author hears about responses as one grouped message, not one per person (SO-45)
@@ -109,30 +105,24 @@ export const obligationRouter = router({
     .mutation(async ({ ctx, input }) => {
       const obligation = await ctx.db.obligation.findUnique({
         where: { id: input.obligationId },
-        include: { collection: true },
+        select: { userId: true, collectionId: true },
       });
       if (!obligation) throw new TRPCError({ code: 'NOT_FOUND' });
       if (obligation.userId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
-      if (obligation.collection.status !== 'ACTIVE' && obligation.collection.status !== 'BLOCKED') {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
-      }
 
-      const newAmountUSD = input.amount;
-
-      // Update obligation
-      const updated = await ctx.db.obligation.update({
-        where: { id: input.obligationId, unsubscribedAt: null },
-        data: {
-          amount: newAmountUSD,
-          originalAmount: null, // clear amounts typed in other currencies before SO-40
-          originalCurrency: null,
-        },
-        omit: { confirmedAt: true },
-      }).catch((err: unknown) => {
-        if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
-          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Participation is no longer active' });
-        }
-        throw err;
+      const updated = await ctx.db.$transaction(async (tx) => {
+        assertOpenNeed(await lockNeed(tx, obligation.collectionId));
+        const [row] = await tx.obligation.updateManyAndReturn({
+          where: { id: input.obligationId, unsubscribedAt: null },
+          data: {
+            amount: input.amount,
+            originalAmount: null, // clear amounts typed in other currencies before SO-40
+            originalCurrency: null,
+          },
+          omit: { confirmedAt: true },
+        });
+        if (!row) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Participation is no longer active' });
+        return row;
       });
 
       await syncCollectionGoal(ctx.db, obligation.collectionId);
@@ -144,17 +134,19 @@ export const obligationRouter = router({
     .mutation(async ({ ctx, input }) => {
       const obligation = await ctx.db.obligation.findUnique({
         where: { id: input.obligationId },
-        include: { collection: true },
+        select: { collectionId: true, collection: { select: { creatorId: true } } },
       });
       if (!obligation) throw new TRPCError({ code: 'NOT_FOUND' });
       if (obligation.collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
-      // Check the Need's status in the write as well, in case it closed since the read.
-      const [updated] = await ctx.db.obligation.updateManyAndReturn({
-        where: { id: input.obligationId, collection: openNeed },
-        data: { confirmedAt: obligation.confirmedAt ? null : new Date() },
+      return ctx.db.$transaction(async (tx) => {
+        assertOpenNeed(await lockNeed(tx, obligation.collectionId));
+        const current = await tx.obligation.findUnique({ where: { id: input.obligationId }, select: { confirmedAt: true } });
+        if (!current) throw new TRPCError({ code: 'NOT_FOUND' });
+        return tx.obligation.update({
+          where: { id: input.obligationId },
+          data: { confirmedAt: current.confirmedAt ? null : new Date() },
+        });
       });
-      if (!updated) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not open' });
-      return updated;
     }),
 
   /**
@@ -167,21 +159,26 @@ export const obligationRouter = router({
       const ids = [...new Set(input.obligationIds)];
       const rows = await ctx.db.obligation.findMany({
         where: { id: { in: ids } },
-        select: { id: true, collectionId: true, collection: { select: { creatorId: true, status: true } } },
+        select: { collectionId: true, collection: { select: { creatorId: true } } },
       });
       if (rows.length !== ids.length) throw new TRPCError({ code: 'NOT_FOUND' });
       if (rows.some((row) => row.collection.creatorId !== ctx.userId)) throw new TRPCError({ code: 'FORBIDDEN' });
-      if (new Set(rows.map((row) => row.collectionId)).size > 1) {
+      const collectionId = rows[0]!.collectionId;
+      if (rows.some((row) => row.collectionId !== collectionId)) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Transfers must belong to one collection' });
       }
-      if (rows.some((row) => isClosed(row.collection))) {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not open' });
-      }
-      const result = await ctx.db.obligation.updateMany({
-        where: { id: { in: ids }, collection: openNeed, confirmedAt: input.paid ? null : { not: null } },
-        data: { confirmedAt: input.paid ? new Date() : null },
+      return ctx.db.$transaction(async (tx) => {
+        assertOpenNeed(await lockNeed(tx, collectionId));
+        const result = await tx.obligation.updateMany({
+          where: { id: { in: ids }, confirmedAt: input.paid ? null : { not: null } },
+          data: { confirmedAt: input.paid ? new Date() : null },
+        });
+        // Rollover may have deleted withdrawn obligations while this request waited for the lock.
+        if (await tx.obligation.count({ where: { id: { in: ids } } }) !== ids.length) {
+          throw new TRPCError({ code: 'NOT_FOUND' });
+        }
+        return { changed: result.count };
       });
-      return { changed: result.count };
     }),
 
   /**
@@ -255,11 +252,14 @@ export const obligationRouter = router({
       if (!obligation.isSubscription) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Not a subscription' });
       }
-      await ctx.db.obligation.updateMany({
-        where: { id: input.obligationId, unsubscribedAt: null },
-        data: { unsubscribedAt: new Date() },
+      const updated = await ctx.db.$transaction(async (tx) => {
+        assertOpenNeed(await lockNeed(tx, obligation.collectionId));
+        return tx.obligation.updateMany({
+          where: { id: input.obligationId, unsubscribedAt: null },
+          data: { unsubscribedAt: new Date() },
+        });
       });
-      await syncCollectionGoal(ctx.db, obligation.collectionId);
+      if (updated.count > 0) await syncCollectionGoal(ctx.db, obligation.collectionId);
       return { ok: true as const };
     }),
 
@@ -267,9 +267,12 @@ export const obligationRouter = router({
   unsubscribeFromCollection: protectedProcedure
     .input(z.object({ collectionId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const updated = await ctx.db.obligation.updateMany({
-        where: { collectionId: input.collectionId, userId: ctx.userId, unsubscribedAt: null },
-        data: { unsubscribedAt: new Date() },
+      const updated = await ctx.db.$transaction(async (tx) => {
+        assertOpenNeed(await lockNeed(tx, input.collectionId));
+        return tx.obligation.updateMany({
+          where: { collectionId: input.collectionId, userId: ctx.userId, unsubscribedAt: null },
+          data: { unsubscribedAt: new Date() },
+        });
       });
       // A goal-reached hold (blockReason null) opens again when the active total drops below the goal.
       if (updated.count > 0) await syncCollectionGoal(ctx.db, input.collectionId);
@@ -285,40 +288,43 @@ export const obligationRouter = router({
   confirmCycle: protectedProcedure
     .input(z.object({ collectionId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const collection = await ctx.db.collection.findUnique({ where: { id: input.collectionId } });
-      if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
-      if (collection.type !== 'REGULAR' || collection.cycleNumber < 2 || collection.currentCycleStart == null) {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not waiting for a cycle confirmation' });
-      }
-      if (collection.status !== 'ACTIVE') {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
-      }
-      const obligation = await ctx.db.obligation.findFirst({
-        where: { collectionId: input.collectionId, userId: ctx.userId, unsubscribedAt: null },
-      });
-      if (!obligation) throw new TRPCError({ code: 'NOT_FOUND', message: 'Active intention not found' });
+      await ctx.db.$transaction(async (tx) => {
+        const collection = await lockNeed(tx, input.collectionId);
+        assertOpenNeed(collection);
+        if (collection.type !== 'REGULAR' || collection.cycleNumber < 2 || collection.currentCycleStart == null) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not waiting for a cycle confirmation' });
+        }
+        if (collection.status !== 'ACTIVE') {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
+        }
+        const obligation = await tx.obligation.findFirst({
+          where: { collectionId: input.collectionId, userId: ctx.userId, unsubscribedAt: null },
+          select: { id: true },
+        });
+        if (!obligation) throw new TRPCError({ code: 'NOT_FOUND', message: 'Active intention not found' });
 
-      const cycleEnd = collection.currentCycleStart.getTime() + REGULAR_CYCLE_DAYS * 24 * 60 * 60 * 1000;
-      const expiresAt = new Date(cycleEnd + 8 * 24 * 60 * 60 * 1000);
-      await ctx.db.notification.upsert({
-        where: {
-          userId_collectionId_type_wave: {
+        const cycleEnd = collection.currentCycleStart.getTime() + REGULAR_CYCLE_DAYS * 24 * 60 * 60 * 1000;
+        const expiresAt = new Date(cycleEnd + 8 * 24 * 60 * 60 * 1000);
+        await tx.notification.upsert({
+          where: {
+            userId_collectionId_type_wave: {
+              userId: ctx.userId,
+              collectionId: input.collectionId,
+              type: 'CYCLE_RENEWED',
+              wave: collection.cycleNumber,
+            },
+          },
+          create: {
             userId: ctx.userId,
             collectionId: input.collectionId,
             type: 'CYCLE_RENEWED',
+            handshakePath: [],
+            expiresAt,
             wave: collection.cycleNumber,
+            status: 'RESPONDED',
           },
-        },
-        create: {
-          userId: ctx.userId,
-          collectionId: input.collectionId,
-          type: 'CYCLE_RENEWED',
-          handshakePath: [],
-          expiresAt,
-          wave: collection.cycleNumber,
-          status: 'RESPONDED',
-        },
-        update: { status: 'RESPONDED', expiresAt },
+          update: { status: 'RESPONDED', expiresAt },
+        });
       });
       return { ok: true as const };
     }),

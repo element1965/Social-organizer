@@ -24,6 +24,8 @@ export type ErrorKind =
    * BAD_REQUEST refusals that are not schema errors ("Collection is not active").
    */
   | 'changed'
+  /** The Need closed before the action reached it. */
+  | 'needClosed'
   /** The request was cancelled, or refused as made for another account (ACCOUNT_CHANGED): never told to anyone. */
   | 'aborted'
   /** Everything else: a 5xx, a broken answer, an unknown failure. */
@@ -31,7 +33,7 @@ export type ErrorKind =
 
 type ErrorLike = {
   name?: unknown;
-  data?: { code?: unknown; httpStatus?: unknown; invalidFields?: unknown } | null;
+  data?: { code?: unknown; httpStatus?: unknown; invalidFields?: unknown; needClosed?: unknown } | null;
   meta?: { response?: { status?: unknown } } | null;
   cause?: unknown;
 };
@@ -85,7 +87,10 @@ export function errorKind(error: unknown): ErrorKind {
   if (code === 'TOO_MANY_REQUESTS' || status === 429) return 'rateLimit';
   if (code === 'NOT_FOUND') return 'notFound';
   if (code && INVALID.has(code)) return 'invalid';
-  if (code === 'BAD_REQUEST') return invalidFields(error) ? 'invalid' : 'changed';
+  if (code === 'BAD_REQUEST') {
+    if (like?.data?.needClosed === true) return 'needClosed';
+    return invalidFields(error) ? 'invalid' : 'changed';
+  }
   if (code && CHANGED.has(code)) return 'changed';
   if (!code && status === undefined) {
     // fetch() throws a TypeError without a network; tRPC keeps it as the cause
@@ -107,6 +112,8 @@ export function actionErrorKey(kind: ErrorKind): string {
       return 'errors.rateLimit';
     case 'invalid':
       return 'errors.invalid';
+    case 'needClosed':
+      return 'sos.closedLine';
     case 'notFound':
     case 'changed':
       return 'errors.changed';

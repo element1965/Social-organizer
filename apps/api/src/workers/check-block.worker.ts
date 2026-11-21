@@ -1,36 +1,8 @@
 import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
-import { sendGoalReachedToCreator } from '../services/notification.service.js';
+import { syncCollectionGoal } from '../services/collection-amount.js';
 
-/**
- * On event: check if obligation total reached collection goal -> BLOCKED.
- */
+/** On an obligation event, bring a goal hold into line with active participation. */
 export async function processCheckBlock(job: Job<{ collectionId: string }>): Promise<void> {
-  const db = getDb();
-  const { collectionId } = job.data;
-
-  const collection = await db.collection.findUnique({
-    where: { id: collectionId },
-    select: { id: true, amount: true, status: true, creatorId: true },
-  });
-
-  if (!collection || collection.status !== 'ACTIVE') return;
-
-  // Special profile collections (without target amount) are not blocked
-  if (collection.amount == null) return;
-
-  const totalAmount = await db.obligation.aggregate({
-    where: { collectionId },
-    _sum: { amount: true },
-  });
-
-  if ((totalAmount._sum.amount ?? 0) >= collection.amount) {
-    await db.collection.update({
-      where: { id: collectionId },
-      data: { status: 'BLOCKED', blockedAt: new Date() },
-    });
-    sendGoalReachedToCreator(db, collectionId, collection.creatorId).catch((err) =>
-      console.error('[TG GoalReached] Failed:', err),
-    );
-  }
+  await syncCollectionGoal(getDb(), job.data.collectionId);
 }
