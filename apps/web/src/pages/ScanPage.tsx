@@ -250,10 +250,17 @@ function ScannerChrome({
         <i className="absolute bottom-0 right-0 h-10 w-10 rounded-br-[18px] border-b-[3px] border-r-[3px] border-care" />
         <span className="add-scan-line absolute left-3.5 right-3.5 h-0.5 bg-care opacity-70" style={{ animation: 'add-scan-line 2.4s ease-in-out infinite alternate' }} />
       </div>
-      <p className="absolute inset-x-5 top-[70%] text-center text-body-s font-semibold text-node-1">
-        {t('add.aim')}
-        <small className="mt-1.5 block text-label font-semibold text-node-2">{notice || t('add.aimHint')}</small>
-      </p>
+      <div className="absolute inset-x-5 top-[70%] text-center text-body-s font-semibold text-node-1">
+        {!notice ? (
+          <p>
+            {t('add.aim')}
+            <small className="mt-1.5 block text-label font-semibold text-node-2">{t('add.aimHint')}</small>
+          </p>
+        ) : null}
+        <div role="status">
+          {notice ? <p className="mx-auto w-fit rounded-lg bg-scene px-3 py-2">{notice}</p> : null}
+        </div>
+      </div>
       <div className="absolute inset-x-4 bottom-[calc(16px+var(--sa-bottom))]">
         <Button
           className="w-full border-node-1/20 bg-node-1/10 text-node-1 hover:bg-node-1/15"
