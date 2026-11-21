@@ -14,6 +14,7 @@ type RowProps = {
   checked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
   to?: string;
+  state?: unknown;
   onClick?: () => void;
   trailing?: ReactNode;
   /** Long titles and subtitles wrap instead of ending in an ellipsis */
@@ -50,6 +51,7 @@ export function Row({
   checked = false,
   onCheckedChange,
   to,
+  state,
   onClick,
   trailing,
   wrap = false,
@@ -93,7 +95,7 @@ export function Row({
 
   if (to) {
     return (
-      <Link to={to} className={pressable} onClick={onClick}>
+      <Link to={to} state={state} className={pressable} onClick={onClick}>
         {body}
       </Link>
     );

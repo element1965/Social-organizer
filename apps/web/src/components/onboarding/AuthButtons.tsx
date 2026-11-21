@@ -1,5 +1,5 @@
 /*
- * Sign-in buttons in the device order from lib/device.ts (AUTH_ORDER), e-mail last as a text link,
+ * Sign-in buttons in the device order from lib/device.ts, e-mail last as a text link,
  * then the legal line. The logic lives in useSignIn; this file only draws it.
  */
 import type { ReactNode } from 'react';
@@ -12,6 +12,9 @@ import type { SignIn } from './useSignIn';
 
 /** The method used last time: a care ring on its own button (the order never changes). */
 const LAST_RING = 'ring-2 ring-inset ring-care';
+const OUTLINE = 'border border-line bg-surface text-ink hover:bg-surface-2';
+const PRIMARY = 'bg-care text-care-on hover:bg-care-hover';
+const MARKS = { apple: AppleMark, google: GoogleMark, telegram: TelegramMark };
 
 function AuthButton({
   children,
@@ -33,7 +36,7 @@ function AuthButton({
       disabled={disabled}
       className={cn(
         'so-focus flex h-primary w-full items-center justify-center gap-2.5 rounded-lg text-body-l font-bold tracking-tight',
-        'transition-transform duration-fast ease-so active:scale-[0.97] disabled:opacity-[0.45] motion-reduce:transition-none',
+        'transition-[transform,background-color] duration-fast ease-so active:scale-[0.97] disabled:opacity-[0.45] motion-reduce:transition-none',
         className,
       )}
     >
@@ -62,54 +65,30 @@ export function AuthButtons({
   legal?: boolean;
 }) {
   const { t } = useTranslation();
-  const { providers, start, busy } = signIn;
+  const { providers, start, busy, inTelegram } = signIn;
 
   return (
     <div className="w-full text-start">
       {notice ? <div className="mb-3">{notice}</div> : null}
       <div className="flex flex-col gap-2.5">
-        {providers.map((p) => {
-          if (p === 'apple') {
-            return (
-              <AuthButton
-                key={p}
-                icon={<AppleMark />}
-                className={cn('bg-ink text-canvas', last === 'apple' && LAST_RING)}
-                onClick={() => start('apple')}
-                disabled={busy}
-              >
-                {t('login.apple')}
-              </AuthButton>
-            );
-          }
-          if (p === 'google') {
-            return (
-              <AuthButton
-                key={p}
-                icon={<GoogleMark />}
-                className={cn('border border-line bg-surface text-ink', last === 'google' && LAST_RING)}
-                onClick={() => start('google')}
-                disabled={busy}
-              >
-                {t('login.google')}
-              </AuthButton>
-            );
-          }
-          if (p === 'telegram') {
-            // Always our button: on the website it opens Telegram's login popup, elsewhere the bot or the mini app
-            return (
-              <AuthButton
-                key={p}
-                icon={<TelegramMark />}
-                className={cn('bg-telegram text-on-telegram', last === 'telegram' && LAST_RING)}
-                onClick={() => start('telegram')}
-                disabled={busy}
-              >
-                {t('login.telegram')}
-              </AuthButton>
-            );
-          }
-          return null;
+        {providers.map((provider, index) => {
+          if (provider === 'email') return null;
+          const Mark = MARKS[provider];
+          const telegram = provider === 'telegram';
+          const tone = telegram
+            ? inTelegram ? 'bg-telegram text-on-telegram' : cn(OUTLINE, 'border-telegram')
+            : index === 0 ? PRIMARY : OUTLINE;
+          return (
+            <AuthButton
+              key={provider}
+              icon={<Mark className={telegram && !inTelegram ? 'text-telegram' : undefined} />}
+              className={cn(tone, last === provider && LAST_RING, last === provider && tone === PRIMARY && 'ring-care-on')}
+              onClick={() => start(provider)}
+              disabled={busy}
+            >
+              {t(`login.${provider}`)}
+            </AuthButton>
+          );
         })}
       </div>
 

@@ -229,8 +229,8 @@
       "step2Sub": "Bağlantınızı gönderin veya QR gösterin",
       "step2Waiting": "İstek gönderildi, onay bekleniyor",
       "intention": "Niyetim",
-      "intentionIs": "Niyetim: {{amount}}",
-      "intentionSub": "Tanıdığınız biri ihtiyaç bildirdiğinde söylemeye hazır olduğunuz tutar."
+      "intentionSub": "Tanıdığınız biri ihtiyaç bildirdiğinde söylemeye hazır olduğunuz tutar.",
+      "setIntention": "Tutarı belirle"
     },
     "acquaint": {
       "sub": "Birbirinizi tanıdığınızı onaylamanızı istiyor",
@@ -634,7 +634,8 @@
   },
   "invite": {
     "calls": "{{name}} sizi davet ediyor",
-    "say": "Birbirini tanıyan kişiler arasında karşılıklı destek. Giriş yapın; {{name}}, birbirinizi tanıdığınızı onaylar.",
+    "say": "Oturum açıp bir istek gönderin. {{name}}, birbirinizi tanıdığınızı doğrulayabilir.",
+    "sayQr": "Birbirini yüz yüze tanıyan insanların ağı. QR kodunun süresi dolmadan giriş yaparak {{name}} ile tanışıklığını hemen onayla.",
     "known": "Birbirimizi tanıyoruz",
     "notNow": "Şimdi değil",
     "toCircle": "Çevreye",
@@ -648,7 +649,8 @@
     "ownTitle": "Bu sizin bağlantınız",
     "ownText": "Tanıdıklarınız bununla size katılır. Kişisel olarak tanıdığınız birine gönderin.",
     "shareOwn": "Bağlantıyı paylaş",
-    "sayKnown": "Birbirini tanıyan kişiler arasında karşılıklı destek. «Birbirimizi tanıyoruz»a dokunun; {{name}} isteğinizi alır.",
+    "sayKnown": "“{{action}}”a dokunarak {{name}} adlı kişiden onay iste.",
+    "sayKnownQr": "QR kodunun süresi dolmadan “{{action}}”a dokunarak {{name}} ile tanışıklığını hemen onayla.",
     "loadFailedTitle": "Davet açılamadı",
     "loadFailedText": "Bağlantı yok gibi görünüyor. Bağlantı kaydedildi; lütfen yeniden deneyin.",
     "waiting": "Onay bekleniyor.",
@@ -819,7 +821,7 @@
       },
       "next": {
         "label": "Sonrası",
-        "title": "Bir dolarlık yardım yalnızca başlangıç",
+        "title": "{{min}} ile yardım etmek yalnızca başlangıç",
         "text": "Zamanla insanların tanıdık ağı üzerinden birinin tavsiye ettiği bir usta, bir proje için ortaklar, kendi girişimleri için fikirdaşlar bulmalarını istiyoruz. Ve bunu, bugün olduğu gibi, doğrudan aralarında kararlaştırmalarını.",
         "now": "Şimdi",
         "later": "Sonra",
@@ -941,7 +943,6 @@
         ],
         "you": "Siz",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Katılımcı sohbeti",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Çevreniz"
@@ -965,12 +966,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "300 $ gerekiyor",
+        "askerSub": "{{amount}} gerekiyor",
         "mediator": "Oleg",
         "mediatorSub": "kardeşiniz",
         "you": "Siz",
         "youSub": "siz karar verirsiniz",
-        "amount": "300 $",
         "aria": "Bildirimin yolu"
       },
       "join": {
@@ -1076,7 +1076,7 @@
     "own": {
       "title": "Grubunuz kendi usulünü korur",
       "lead": "Grubunuzun adı ne olursa olsun (chama, paluwagan ya da bir cemaat grubu), kendi usulü kalır: toplantılarınız, kurallarınız, saymanınız.",
-      "text1": "Social Organizer para tutmaz, ortak kasası yoktur ve ücret almaz. Biri ihtiyaç bildirdiğinde, her biriniz katılıp katılmayacağına kendisi karar verir, 1 $'dan başlayarak. İhtiyaç açık kaldığı sürece tutarı değiştirebilir ya da vazgeçebilirsiniz.",
+      "text1": "Social Organizer para tutmaz, ortak kasası yoktur ve ücret almaz. Biri ihtiyaç bildirdiğinde, her biriniz katılıp katılmayacağına kendisi karar verir, en az {{min}} ile. İhtiyaç açık kaldığı sürece tutarı değiştirebilir ya da vazgeçebilirsiniz.",
       "text2": "İhtiyacı bildiren ve katılımcılar kendi sohbetlerinde, herhangi bir mesajlaşma uygulamasında anlaşır. Para, söz konusu olursa, doğrudan kişiler arasında el değiştirir."
     },
     "steps": {
@@ -1101,7 +1101,7 @@
       "explainLabel": "İki cümlede",
       "confirmLabel": "Birbirinizi onaylayın",
       "invite": "Social Organizer'a katıldım. Orada birbirini yüz yüze tanıyan insanlar bir ağ kuruyor. Birimiz işini kaybettiği veya acil ameliyat gerektiği için bir ihtiyaç bildirirse önce o kişiyi tanıyanlar, sonra onların tanıdıkları haber alır. Uygulamadan para geçmez. Bağlantımla katıl, birbirimizi tanıdığımızı onaylayayım: {{link}}",
-      "explain": "Social Organizer birbirini yüz yüze tanıyan insanları bir araya getirir. Birimiz ihtiyaç bildirdiğinde herkes katılıp katılmayacağına kendisi karar verir, 1 $'dan başlayarak; para da söz konusu olursa doğrudan kişiler arasında el değiştirir. {{link}}",
+      "explain": "Social Organizer birbirini yüz yüze tanıyan insanları bir araya getirir. Birimiz ihtiyaç bildirdiğinde herkes katılıp katılmayacağına kendisi karar verir, en az {{min}} ile; para da söz konusu olursa doğrudan kişiler arasında el değiştirir. {{link}}",
       "confirm": "Katılan herkese: ihtiyaç bildirebilmek için her birimizin onaylı 5 tanıdığı ve ağda 10 kişisi olmalı. Kendi bağlantınızı buraya atın (“{{add}}” → “{{share}}”). Yüz yüze tanıdığınız kişilerin bağlantılarını açın ve “{{known}}” düğmesine dokunun. Biri sizin bağlantınızla gelirse onaylayın. Bir sonraki buluşmada daha hızlı olur: “{{myQr}}” ve “{{scan}}”."
     },
     "honest": {
@@ -1494,6 +1494,7 @@
   },
   "add": {
     "linkLabel": "Bağlantınız",
+    "inPerson": "Yüz yüze",
     "share": "Paylaş",
     "shareText": "{{name}} sizi çevresine davet ediyor.",
     "shareError": "Paylaşılamadı. Yeniden deneyin.",
@@ -1629,6 +1630,7 @@
     "removeConfirm": "Çıkar",
     "keep": "Kalsın",
     "openCollection": "İhtiyaç",
+    "openNeed": "İhtiyacı aç",
     "shared": "Ortak katılım",
     "noShared": "Henüz ortak katılım yok",
     "moreContacts": "{{count}} tane daha",

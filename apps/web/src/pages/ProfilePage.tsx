@@ -25,7 +25,7 @@ import { LanguageSheet } from '../components/profile/LanguageSheet';
 import { QueryState } from '../components/profile/QueryState';
 import { countForm } from '../components/profile/collections';
 import { useNeedCounts } from '../components/profile/useNeedCounts';
-import { ACCOUNT_NOTICE_KEY, publicHost } from '../components/profile/constants';
+import { ACCOUNT_NOTICE_KEY } from '../components/profile/constants';
 import { formatLongDate } from '../components/profile/dates';
 import { applyFontScale, storedFontScale } from '../components/profile/fontScale';
 import { hasPendingSetting, saveDisplaySetting } from '../lib/pendingSettings';
@@ -55,7 +55,6 @@ export function ProfilePage() {
   const push = usePushNotifications();
 
   const me = trpc.user.me.useQuery();
-  const invite = trpc.user.inviteSlug.useQuery();
   const settings = trpc.settings.get.useQuery();
   const { figure } = useNetworkFigure();
   const needCounts = useNeedCounts();
@@ -148,8 +147,6 @@ export function ProfilePage() {
     : onCount === flags.length
       ? t('profile.notificationsAll')
       : t('profile.notificationsSome');
-  const slug = invite.data?.referralSlug ?? profile.referralSlug;
-  const slugLine = slug ? `${publicHost()}/i/${slug}` : publicHost();
   const since = t('profile.memberSince', { date: formatLongDate(profile.createdAt, i18n.language) });
   const supportCount = conversations.data?.length ?? 0;
 
@@ -172,7 +169,7 @@ export function ProfilePage() {
         <Avatar name={profile.name} src={profile.photoUrl} size={64} />
         <span className="min-w-0 flex-1">
           <span className="block truncate text-title font-bold text-ink">{profile.name}</span>
-          <span className="mt-0.5 block truncate text-label font-semibold text-ink-muted">{`${slugLine} · ${since}`}</span>
+          <span className="mt-0.5 block text-label font-semibold text-ink-muted">{since}</span>
         </span>
         <span className="text-body-s font-bold text-care">{t('profile.editCard')}</span>
       </Link>

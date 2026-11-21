@@ -8,6 +8,7 @@ import { trpc } from '../lib/trpc';
 import { getLastLoginMethod, useAuth, type LoginMethod } from '../hooks/useAuth';
 import { Avatar, Button, Pill } from '../components/ui2';
 import { NetFigure } from '../components/figures';
+import { PathFigure } from '../components/ui2/PathFigure';
 import { BrandLine, LanguageCorner, OnboardingFrame, StepText } from '../components/onboarding/OnboardingFrame';
 import { SignInFlow } from '../components/onboarding/SignInFlow';
 import {
@@ -147,11 +148,11 @@ export function InvitePage() {
   if (!invite.data) return <DeadLink signedIn={isRealUser} reason="notFound" />;
 
   const inviter = invite.data.inviter;
-  const { networkCount } = invite.data;
-  const hero = <InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} token={token} addressee={addressee} />;
+  const { networkCount, inPersonUntil } = invite.data;
+  const heroProps = { name: inviter.name, networkCount, inPersonUntil, token, addressee };
 
   if (!isRealUser || sessionDead || !me.data) {
-    return <SignInFlow top={<BrandLine />} centre redirect={`/invite/${token}`} hero={hero} />;
+    return <SignInFlow top={<BrandLine />} centre redirect={`/invite/${token}`} hero={<InviteHero {...heroProps} />} />;
   }
 
   return (
@@ -164,42 +165,74 @@ export function InvitePage() {
       firstRun={firstRun || !me.data.onboardingCompleted}
       cameThroughInvite={cameThroughInvite}
       src={src}
-      hero={<InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} token={token} addressee={addressee} signedIn />}
+      hero={(showInstruction) => <InviteHero {...heroProps} signedIn showInstruction={showInstruction} />}
     />
   );
 }
 
 function InviteHero({
   name,
-  photoUrl,
   networkCount,
+  inPersonUntil,
   token,
   addressee = null,
   signedIn = false,
+  showInstruction = true,
 }: {
   name: string;
-  photoUrl?: string | null;
   networkCount: number;
+  inPersonUntil: string | Date | null;
   /** For the way back from "How it works" */
   token: string;
   /** The invited person's name from `?to=`, put before the sentence. */
   addressee?: string | null;
   /** Signed-in variant: no "sign in" in the sentence. */
   signedIn?: boolean;
+  showInstruction?: boolean;
 }) {
   const { t } = useTranslation();
+  const expiresAt = inPersonUntil ? new Date(inPersonUntil).getTime() : 0;
+  const [expiredAt, setExpiredAt] = useState(0);
+  const liveQr = expiresAt > Date.now() && expiredAt !== expiresAt;
+  useEffect(() => {
+    if (!liveQr) return;
+    const timer = window.setTimeout(() => setExpiredAt(expiresAt), Math.max(0, expiresAt - Date.now()));
+    return () => window.clearTimeout(timer);
+  }, [expiresAt, liveQr]);
+  const message = signedIn
+    ? liveQr ? 'invite.sayKnownQr' : 'invite.sayKnown'
+    : liveQr ? 'invite.sayQr' : 'invite.say';
+  const isolatedName = `\u2068${firstName(name)}\u2069`;
   return (
     <>
-      <Avatar name={name} src={photoUrl} size={88} className="mt-10" />
-      <h1 className="mt-4 text-h2 font-bold [text-wrap:balance]">{addressee ? `${addressee}, ` : ''}{t('invite.calls', { name })}</h1>
-      <p className="mt-2.5 max-w-[30ch] text-body-s text-ink-muted">{t(signedIn ? 'invite.sayKnown' : 'invite.say', { name: firstName(name) })}</p>
-      <div className="mt-4 flex flex-wrap justify-center gap-2">
-        <Pill className="whitespace-nowrap">{t('invite.network', { count: networkCount, n: num(networkCount) })}</Pill>
+      <div className="relative mt-6 w-full overflow-hidden rounded-xl bg-scene px-4 pb-4 pt-8">
+        {networkCount > 0 && (
+          <svg aria-hidden viewBox="0 0 110 100" className="pointer-events-none absolute -top-3 start-[calc(25%_-_47px)] h-[100px] w-[110px]" fill="none">
+            <circle cx="55" cy="49" r="19" className="stroke-node-2/60" />
+            {networkCount > 5 && <circle cx="55" cy="49" r="33" className="stroke-node-2/40" />}
+            {networkCount > 20 && <circle cx="55" cy="49" r="48" className="stroke-node-2/25" />}
+          </svg>
+        )}
+        <PathFigure names={[name, t('common.you')]} scene />
+        {networkCount > 0 && (
+          <p className="relative mt-2 text-label font-semibold tabular-nums text-node-2">
+            {t('invite.network', { count: networkCount, n: num(networkCount) })}
+          </p>
+        )}
       </div>
+      <h1 className="mt-4 max-w-full break-words text-h2 font-bold [text-wrap:balance]">
+        {addressee ? <><bdi>{addressee}</bdi>{', '}</> : null}
+        {t('invite.calls', { name: `\u2068${name}\u2069` })}
+      </h1>
+      {showInstruction ? (
+        <p className="mt-2.5 max-w-[36ch] text-body-s text-ink-muted">
+          {t(message, { name: isolatedName, action: t('invite.known') })}
+        </p>
+      ) : null}
       {/* A guest through a link skips the landing: one tap to the explanation, and a way back to this invite */}
       <Link
         to={`/how?invite=${encodeURIComponent(token)}`}
-        className="so-focus mt-4 inline-flex min-h-11 items-center gap-1 text-body-s font-bold text-care"
+        className="so-focus mt-1 inline-flex min-h-11 items-center gap-1 text-body-s font-bold text-care"
       >
         {t('invite.howItWorks')}
         <span aria-hidden className="inline-block rtl:-scale-x-100">→</span>
@@ -230,7 +263,7 @@ function AcceptView({
   cameThroughInvite: boolean;
   /** Which way the link travelled, sent with the request (funnel only) */
   src?: InviteSrcParam;
-  hero: React.ReactNode;
+  hero: (showInstruction: boolean) => React.ReactNode;
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -383,7 +416,7 @@ function AcceptView({
 
   return (
     <OnboardingFrame top={<BrandLine />} corner={<LanguageCorner />} centre foot={foot}>
-      {hero}
+      {hero(!accept.isSuccess)}
     </OnboardingFrame>
   );
 }

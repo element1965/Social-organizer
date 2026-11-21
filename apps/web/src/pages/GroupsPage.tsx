@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
-import { ASK_MIN_DIRECT, ASK_MIN_NETWORK } from '@so/shared';
+import { ASK_MIN_DIRECT, ASK_MIN_NETWORK, MIN_OBLIGATION_AMOUNT } from '@so/shared';
 import { TELEGRAM_BOT_URL, TELEGRAM_BOT_USERNAME } from '../lib/deployment';
 import { heroCta, useDevice } from '../lib/device';
 import { trpc } from '../lib/trpc';
@@ -12,6 +12,7 @@ import { useStoreLinks } from '../components/site/DeviceEntry';
 import { Reveal } from '../components/site/hooks';
 import { useLoginHref } from '../components/site/SiteHeader';
 import { SitePage } from '../components/site/SitePage';
+import { formatIsolatedMoney } from '../components/ui2/format';
 
 const B = { b: <b /> };
 const TEAM_URL = `${TELEGRAM_BOT_URL}?start=team`;
@@ -38,7 +39,7 @@ const EXTRA_TEXTS: Record<'sw' | 'tl', { name: string; texts: Record<TextId, str
       invite:
         'Nimejiunga na Social Organizer. Huko, watu wanaofahamiana ana kwa ana hujenga mtandao. Mmoja wetu akiripoti Need kutokana na shida kubwa, kama kupoteza kazi au kuhitaji upasuaji wa haraka, taarifa huanza kuwafikia watu wanaomfahamu aliyeripoti, kisha watu wanaofahamiana nao. Hakuna pesa inayopita kwenye programu. Jiunge kupitia kiungo changu, nami nitathibitisha kwamba tunafahamiana: {{link}}',
       explain:
-        'Social Organizer inaunganisha watu wanaofahamiana ana kwa ana. Mmoja wetu akiripoti Need, kila mtu anaamua mwenyewe kama atashiriki, kuanzia $1, na pesa yoyote hupita moja kwa moja kati ya watu. {{link}}',
+        'Social Organizer inaunganisha watu wanaofahamiana ana kwa ana. Mmoja wetu akiripoti Need, kila mtu anaamua mwenyewe kama atashiriki, kuanzia {{min}}, na pesa yoyote hupita moja kwa moja kati ya watu. {{link}}',
       confirm:
         'Kwa wote waliojiunga: ili kuripoti Need, kila mmoja wetu anahitaji watu 5 wanaotufahamu waliothibitisha, na watu 10 kwenye mtandao. Weka kiungo chako hapa (“{{add}}” → “{{share}}”). Fungua viungo vya watu unaowafahamu ana kwa ana na ubonyeze “{{known}}”. Mtu akija kupitia kiungo chako, mthibitishe. Kwenye mkutano ujao tutafanya haraka zaidi: “{{myQr}}” na “{{scan}}”.',
     },
@@ -49,7 +50,7 @@ const EXTRA_TEXTS: Record<'sw' | 'tl', { name: string; texts: Record<TextId, str
       invite:
         'Sumali ako sa Social Organizer. Doon, bumubuo ng network ang mga taong personal na magkakakilala. Kapag may nag-ulat ng Need dahil sa matinding problema, gaya ng pagkawala ng trabaho o pangangailangan ng agarang operasyon, unang makakatanggap ng abiso ang mga kakilala ng nag-ulat, saka ang mga kakilala nila. Walang perang dumadaan sa app. Sumali ka gamit ang link ko, at kukumpirmahin kong magkakilala tayo: {{link}}',
       explain:
-        'Pinagsasama ng Social Organizer ang mga taong personal na magkakakilala. Kapag may nag-ulat ng Need sa atin, bawat isa ang magpapasya kung sasali, mula $1, at ang anumang pera ay direktang dumadaan sa pagitan ng mga tao. {{link}}',
+        'Pinagsasama ng Social Organizer ang mga taong personal na magkakakilala. Kapag may nag-ulat ng Need sa atin, bawat isa ang magpapasya kung sasali, mula {{min}}, at ang anumang pera ay direktang dumadaan sa pagitan ng mga tao. {{link}}',
       confirm:
         'Sa lahat ng sumali na: para makapag-ulat ng Need, kailangan ng bawat isa sa atin ng 5 kumpirmadong kakilala at 10 tao sa network. I-post dito ang sarili mong link (“{{add}}” → “{{share}}”). Buksan ang mga link ng mga taong personal mong kilala at pindutin ang “{{known}}”. Kapag may dumating sa link mo, kumpirmahin sila. Sa susunod nating pagkikita, mas mabilis na: “{{myQr}}” at “{{scan}}”.',
     },
@@ -104,11 +105,12 @@ export function GroupsPage() {
   const arr = (key: string) => t(key, { returnObjects: true }) as unknown as string[];
 
   const pageButtons = buttonNames(t);
+  const min = formatIsolatedMoney(MIN_OBLIGATION_AMOUNT);
   const link = ownLink ?? t('groups.texts.placeholder');
   const textFor = (id: TextId): string => {
-    if (lang === 'page') return t(`groups.texts.${id}`, { ...pageButtons, link });
+    if (lang === 'page') return t(`groups.texts.${id}`, { ...pageButtons, link, min });
     // The extra languages are not app locales: their readers see the English buttons
-    return fill(EXTRA_TEXTS[lang].texts[id], { ...buttonNames(i18n.getFixedT('en')), link });
+    return fill(EXTRA_TEXTS[lang].texts[id], { ...buttonNames(i18n.getFixedT('en')), link, min });
   };
 
   const copy = async (id: TextId) => {
@@ -166,7 +168,7 @@ export function GroupsPage() {
       <Reveal as="section" className="site-sec" aria-labelledby="groups-own">
         <h2 id="groups-own">{t('groups.own.title')}</h2>
         <p className="lead">{t('groups.own.lead')}</p>
-        <p className="gr-p">{t('groups.own.text1')}</p>
+        <p className="gr-p">{t('groups.own.text1', { min })}</p>
         <p className="gr-p">{t('groups.own.text2')}</p>
       </Reveal>
 

@@ -4,7 +4,7 @@
  * shortfall follows the price level of the reader's country (the region of the
  * browser language; without one, the page language), in whole hundreds so "up to N people" reads the same in
  * every grammar. A Need reaches up to one person per dollar, so the reach is the same number. The smallest share
- * stays $1 and yours $5.
+ * stays 1 $ and yours 5 $.
  */
 export interface StoryMoney {
   shortfall: number;
@@ -51,14 +51,4 @@ export function storyMoney(lang: string): StoryMoney {
   const region = browserRegion(lang);
   const shortfall = (region ? BY_REGION.get(region) : undefined) ?? BY_LANGUAGE[lang] ?? 300;
   return { shortfall, min: 1, mine: 5 };
-}
-
-/** "$500", "500 $": dollars the way the locale writes them, no cents. */
-export function dollarFormat(lang: string): Intl.NumberFormat {
-  const base = { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 } as const;
-  try {
-    return new Intl.NumberFormat(lang, { ...base, currencyDisplay: 'narrowSymbol' });
-  } catch {
-    return new Intl.NumberFormat(lang, base);
-  }
 }

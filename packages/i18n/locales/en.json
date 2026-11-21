@@ -229,8 +229,8 @@
       "step2Sub": "Send your link or show the QR",
       "step2Waiting": "Request sent, waiting for confirmation",
       "intention": "My intention",
-      "intentionIs": "My intention: {{amount}}",
-      "intentionSub": "The amount you are ready to name when someone you know reports a Need."
+      "intentionSub": "The amount you are ready to name when someone you know reports a Need.",
+      "setIntention": "Set amount"
     },
     "acquaint": {
       "sub": "Asks you to confirm you know each other",
@@ -634,7 +634,8 @@
   },
   "invite": {
     "calls": "{{name}} invites you",
-    "say": "Mutual assistance between people who know each other. Sign in, and {{name}} will confirm that you know each other.",
+    "say": "Sign in to ask {{name}} to confirm that you know each other.",
+    "sayQr": "A network of people who know each other in person. Sign in before the QR code expires to confirm that you know {{name}} right away.",
     "network_one": "{{n}} person in the network",
     "network_other": "{{n}} people in the network",
     "known": "We know each other",
@@ -650,7 +651,8 @@
     "ownTitle": "This is your link",
     "ownText": "People you know join you through it. Send it to someone you know personally.",
     "shareOwn": "Share the link",
-    "sayKnown": "Mutual assistance between people who know each other. Tap “We know each other”, and {{name}} gets your request.",
+    "sayKnown": "Tap “{{action}}” to ask {{name}} to confirm.",
+    "sayKnownQr": "Tap “{{action}}” before the QR code expires to confirm your connection with {{name}} right away.",
     "loadFailedTitle": "Could not open the invite",
     "loadFailedText": "It looks like there is no connection. The link is saved; please try again.",
     "waiting": "Waiting for confirmation.",
@@ -819,7 +821,7 @@
       },
       "next": {
         "label": "Next",
-        "title": "A dollar of help is only the beginning",
+        "title": "Helping with {{min}} is only the beginning",
         "text": "Over time, we want people to use their network of acquaintances to find a tradesperson someone vouches for, partners for a shared project, like-minded people for an initiative of their own. And to agree on it directly, as they do now.",
         "now": "Now",
         "later": "Later",
@@ -941,7 +943,6 @@
         ],
         "you": "You",
         "asker": "Maria",
-        "amount": "$300",
         "chatTitle": "Participants’ chat",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Your circle"
@@ -965,12 +966,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "needs $300",
+        "askerSub": "needs {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "your brother",
         "you": "You",
         "youSub": "you decide",
-        "amount": "$300",
         "aria": "Path of a message"
       },
       "join": {
@@ -1076,7 +1076,7 @@
     "own": {
       "title": "Your group keeps its own way",
       "lead": "Whatever your group calls itself, a chama, a paluwagan or a church group, its own way stays: your meetings, your rules, your treasurer.",
-      "text1": "Social Organizer holds no money, has no pot and takes no fee. When someone reports a Need, each of you decides alone whether to take part, from $1. While the Need is open, you can change the amount or withdraw.",
+      "text1": "Social Organizer holds no money, has no pot and takes no fee. When someone reports a Need, each of you decides alone whether to take part, from {{min}}. While the Need is open, you can change the amount or withdraw.",
       "text2": "The author of the Need and the participants agree in their own chat, in any messenger. Money, if any, goes directly between people."
     },
     "steps": {
@@ -1101,7 +1101,7 @@
       "explainLabel": "In two lines",
       "confirmLabel": "Confirm each other",
       "invite": "I've joined Social Organizer. People who know each other in person build a network there. If one of us reports a Need because of a job loss or urgent surgery, the people who know that person hear first, then the people they know. No money goes through the app. Join through my link, and I'll confirm that we know each other: {{link}}",
-      "explain": "Social Organizer brings together people who know each other in person. When one of us reports a Need, each person decides whether to take part, from $1, and any money goes directly between people. {{link}}",
+      "explain": "Social Organizer brings together people who know each other in person. When one of us reports a Need, each person decides whether to take part, from {{min}}, and any money goes directly between people. {{link}}",
       "confirm": "To everyone who has joined: to report a Need, each of us needs 5 confirmed acquaintances and 10 people in the network. Post your own link here (“{{add}}” → “{{share}}”). Open the links of people you know in person and tap “{{known}}”. When someone comes through your link, confirm them. At our next meeting we can do it faster: “{{myQr}}” and “{{scan}}”."
     },
     "honest": {
@@ -1494,6 +1494,7 @@
   },
   "add": {
     "linkLabel": "Your link",
+    "inPerson": "In person",
     "share": "Share",
     "shareText": "{{name}} is inviting you into their circle.",
     "shareError": "Could not share. Try again.",
@@ -1629,6 +1630,7 @@
     "removeConfirm": "Remove",
     "keep": "Keep",
     "openCollection": "Need",
+    "openNeed": "Open Need",
     "shared": "Participation together",
     "noShared": "No Participation together yet",
     "moreContacts": "{{count}} more",

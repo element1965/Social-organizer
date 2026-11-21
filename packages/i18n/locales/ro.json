@@ -232,8 +232,8 @@
       "step2Sub": "Trimite linkul sau arată codul QR",
       "step2Waiting": "Cerere trimisă, se așteaptă confirmarea",
       "intention": "Intenția mea",
-      "intentionIs": "Intenția mea: {{amount}}",
-      "intentionSub": "Suma pe care ești gata să o spui când cineva cunoscut anunță o nevoie."
+      "intentionSub": "Suma pe care ești gata să o spui când cineva cunoscut anunță o nevoie.",
+      "setIntention": "Setează suma"
     },
     "acquaint": {
       "sub": "Îți cere să confirmi că vă cunoașteți",
@@ -637,7 +637,8 @@
   },
   "invite": {
     "calls": "{{name}} te invită",
-    "say": "Ajutor reciproc între oameni care se cunosc. Conectează-te, iar {{name}} va confirma că vă cunoașteți.",
+    "say": "Conectează-te pentru a-i cere lui {{name}} să confirme că vă cunoașteți.",
+    "sayQr": "O rețea de oameni care se cunosc personal. Autentifică-te înainte să expire codul QR pentru a confirma imediat că îl cunoști pe {{name}}.",
     "known": "Ne cunoaștem",
     "notNow": "Nu acum",
     "toCircle": "În cerc",
@@ -651,7 +652,8 @@
     "ownTitle": "Acesta e linkul tău",
     "ownText": "Prin el vin la tine oameni cunoscuți. Trimite-l cuiva pe care îl cunoști personal.",
     "shareOwn": "Distribuie linkul",
-    "sayKnown": "Ajutor reciproc între oameni care se cunosc. Apasă „Ne cunoaștem”, iar {{name}} primește cererea ta.",
+    "sayKnown": "Apasă „{{action}}” pentru a-i cere lui {{name}} să confirme.",
+    "sayKnownQr": "Apasă „{{action}}” înainte să expire codul QR pentru a confirma imediat legătura cu {{name}}.",
     "loadFailedTitle": "Nu am putut deschide invitația",
     "loadFailedText": "Pare că nu ai conexiune. Linkul e salvat; încearcă din nou.",
     "waiting": "Se așteaptă confirmarea.",
@@ -827,7 +829,7 @@
       },
       "next": {
         "label": "Mai departe",
-        "title": "Un dolar de ajutor e doar începutul",
+        "title": "Ajutorul de {{min}} e doar începutul",
         "text": "Ne dorim ca, în timp, oamenii să găsească prin rețeaua de cunoscuți un meșter recomandat de cineva, parteneri pentru un proiect comun, oameni cu aceleași idei pentru propria inițiativă. Și să se înțeleagă direct, ca acum.",
         "now": "Acum",
         "later": "Mai târziu",
@@ -949,7 +951,6 @@
         ],
         "you": "Tu",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Chatul participanților",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Cercul tău"
@@ -973,12 +974,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "are nevoie de 300 $",
+        "askerSub": "are nevoie de {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "fratele tău",
         "you": "Tu",
         "youSub": "decizi tu",
-        "amount": "300 $",
         "aria": "Drumul unui mesaj"
       },
       "join": {
@@ -1084,7 +1084,7 @@
     "own": {
       "title": "Grupul vostru își păstrează felul lui",
       "lead": "Oricum s-ar numi grupul vostru (chama, paluwagan sau grup de la biserică), păstrați întâlnirile, regulile și felul în care vă gestionați banii.",
-      "text1": "Social Organizer nu păstrează bani, nu are o casă comună și nu ia comision. Când cineva anunță o nevoie, participarea e o alegere personală. Poți participa de la 1 $. Cât timp nevoia e deschisă, poți schimba suma sau te poți retrage.",
+      "text1": "Social Organizer nu păstrează bani, nu are o casă comună și nu ia comision. Când cineva anunță o nevoie, participarea e o alegere personală. Poți participa de la {{min}}. Cât timp nevoia e deschisă, poți schimba suma sau te poți retrage.",
       "text2": "Persoana care a anunțat nevoia și persoanele care participă se înțeleg în propriul chat, în orice aplicație de mesagerie. Banii, dacă e cazul, merg direct de la om la om."
     },
     "steps": {
@@ -1109,7 +1109,7 @@
       "explainLabel": "În două fraze",
       "confirmLabel": "Confirmați că vă cunoașteți",
       "invite": "Acum sunt în Social Organizer. Acolo, oameni care se cunosc personal construiesc o rețea. Dacă cineva din grup anunță o nevoie din cauza unui necaz serios, cum ar fi pierderea locului de muncă sau o operație urgentă, află întâi persoanele care cunosc direct persoana care a făcut anunțul, apoi cunoscuții lor. Prin aplicație nu trec bani. Intră prin linkul meu și confirm că ne cunoaștem: {{link}}",
-      "explain": "Social Organizer adună oameni care se cunosc personal. Când cineva din grup anunță o nevoie, participarea e o alegere personală, de la 1 $. Banii, dacă e cazul, merg direct de la om la om. {{link}}",
+      "explain": "Social Organizer adună oameni care se cunosc personal. Când cineva din grup anunță o nevoie, participarea e o alegere personală, de la {{min}}. Banii, dacă e cazul, merg direct de la om la om. {{link}}",
       "confirm": "Pentru persoanele care s-au alăturat deja: ca să anunțăm o nevoie, avem nevoie de 5 cunoștințe confirmate și 10 persoane în rețea pentru fiecare cont. Puneți aici linkul vostru („{{add}}” → „{{share}}”). Deschideți linkurile persoanelor pe care le cunoașteți personal și atingeți „{{known}}”. Confirmați că vă cunoașteți cu persoanele care vin prin linkul vostru. La următoarea întâlnire merge mai repede: „{{myQr}}” și „{{scan}}”."
     },
     "honest": {
@@ -1505,6 +1505,7 @@
   },
   "add": {
     "linkLabel": "Linkul tău",
+    "inPerson": "Față în față",
     "share": "Distribuie",
     "shareText": "{{name}} te invită în cercul său.",
     "shareError": "Nu s-a putut distribui. Încearcă din nou.",
@@ -1645,6 +1646,7 @@
     "removeConfirm": "Scoate",
     "keep": "Păstrează",
     "openCollection": "Nevoie",
+    "openNeed": "Deschide nevoia",
     "shared": "Participare comună",
     "noShared": "Încă nu există participare comună",
     "moreContacts": "încă {{count}}",

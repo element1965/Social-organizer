@@ -229,8 +229,8 @@
       "step2Sub": "Lähetä linkkisi tai näytä QR",
       "step2Waiting": "Pyyntö lähetetty, odotetaan vahvistusta",
       "intention": "Aikomukseni",
-      "intentionIs": "Aikomukseni: {{amount}}",
-      "intentionSub": "Summa, jonka olet valmis kertomaan, kun joku tuttusi ilmoittaa tarpeesta."
+      "intentionSub": "Summa, jonka olet valmis kertomaan, kun joku tuttusi ilmoittaa tarpeesta.",
+      "setIntention": "Aseta summa"
     },
     "acquaint": {
       "sub": "Pyytää sinua vahvistamaan, että tunnette toisenne",
@@ -634,7 +634,8 @@
   },
   "invite": {
     "calls": "{{name}} kutsuu sinut",
-    "say": "Keskinäistä apua ihmisten välillä, jotka tuntevat toisensa. Kirjaudu, niin {{name}} vahvistaa, että tunnette toisenne.",
+    "say": "Kirjaudu sisään ja pyydä henkilöä {{name}} vahvistamaan, että tunnette toisenne.",
+    "sayQr": "Verkosto ihmisistä, jotka tuntevat toisensa henkilökohtaisesti. Kirjaudu sisään ennen QR-koodin vanhenemista ja vahvista heti, että tunnette toisenne ({{name}}).",
     "known": "Tunnemme toisemme",
     "notNow": "Ei nyt",
     "toCircle": "Piiriin",
@@ -648,7 +649,8 @@
     "ownTitle": "Tämä on sinun linkkisi",
     "ownText": "Tuttavasi liittyvät sen kautta. Lähetä se jollekulle, jonka tunnet henkilökohtaisesti.",
     "shareOwn": "Jaa linkki",
-    "sayKnown": "Keskinäistä apua ihmisten välillä, jotka tuntevat toisensa. Napauta ”Tunnemme toisemme”, niin {{name}} saa pyyntösi.",
+    "sayKnown": "Pyydä vahvistus henkilöltä {{name}} napauttamalla ”{{action}}”.",
+    "sayKnownQr": "Vahvista yhteys henkilöön {{name}} heti napauttamalla ”{{action}}”, kun QR-koodi on vielä voimassa.",
     "loadFailedTitle": "Kutsua ei voitu avata",
     "loadFailedText": "Yhteyttä ei näytä olevan. Linkki on tallessa. Yritä uudelleen.",
     "waiting": "Odotetaan vahvistusta.",
@@ -819,7 +821,7 @@
       },
       "next": {
         "label": "Seuraavaksi",
-        "title": "Dollarin apu on vasta alkua",
+        "title": "{{min}} apua on vasta alkua",
         "text": "Ajan mittaan haluamme, että ihmiset löytävät tuttavaverkostonsa kautta myös suositellun ammattilaisen, kumppaneita yhteiseen hankkeeseen ja samanhenkisiä omaan aloitteeseensa. Ja sopivat asioista, kuten nytkin, suoraan.",
         "now": "Nyt",
         "later": "Myöhemmin",
@@ -941,7 +943,6 @@
         ],
         "you": "Sinä",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Osallistujien keskustelu",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Piirisi"
@@ -965,12 +966,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "tarvitsee 300 $",
+        "askerSub": "tarvitsee {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "veljesi",
         "you": "Sinä",
         "youSub": "sinä päätät",
-        "amount": "300 $",
         "aria": "Viestin polku"
       },
       "join": {
@@ -1076,7 +1076,7 @@
     "own": {
       "title": "Ryhmänne pitää omat tapansa",
       "lead": "Olipa ryhmänne nimi mikä tahansa (chama, paluwagan tai seurakuntapiiri), sen tavat pysyvät: tapaamisenne, sääntönne, rahastonhoitajanne.",
-      "text1": "Social Organizer ei säilytä rahaa, sillä ei ole yhteistä kassaa eikä se peri maksuja. Kun joku ilmoittaa tarpeesta, jokainen teistä päättää itse, osallistuuko, alkaen 1 $. Niin kauan kuin tarve on auki, voit muuttaa summaa tai vetäytyä.",
+      "text1": "Social Organizer ei säilytä rahaa, sillä ei ole yhteistä kassaa eikä se peri maksuja. Kun joku ilmoittaa tarpeesta, jokainen teistä päättää itse, osallistuuko, alkaen {{min}}. Niin kauan kuin tarve on auki, voit muuttaa summaa tai vetäytyä.",
       "text2": "Tarpeesta ilmoittanut ja osallistujat sopivat asioista omassa chatissaan, missä tahansa viestisovelluksessa. Raha, jos sitä liikkuu, kulkee suoraan ihmisten välillä."
     },
     "steps": {
@@ -1101,7 +1101,7 @@
       "explainLabel": "Kahdella lauseella",
       "confirmLabel": "Vahvistakaa toisenne",
       "invite": "Olen nyt mukana Social Organizerissa. Siellä ihmiset, jotka tuntevat toisensa henkilökohtaisesti, rakentavat verkoston. Jos joku meistä ilmoittaa tarpeesta esimerkiksi työpaikan menetyksen tai kiireellisen leikkauksen vuoksi, siitä kuulevat ensin hänet tuntevat ihmiset, sitten heidän tuttavansa. Sovelluksen kautta ei kulje rahaa. Liity linkkini kautta, niin vahvistan, että tunnemme toisemme: {{link}}",
-      "explain": "Social Organizer kokoaa yhteen ihmiset, jotka tuntevat toisensa henkilökohtaisesti. Kun joku meistä ilmoittaa tarpeesta, jokainen päättää itse, osallistuuko, alkaen 1 $, ja raha, jos sitä liikkuu, kulkee suoraan ihmisten välillä. {{link}}",
+      "explain": "Social Organizer kokoaa yhteen ihmiset, jotka tuntevat toisensa henkilökohtaisesti. Kun joku meistä ilmoittaa tarpeesta, jokainen päättää itse, osallistuuko, alkaen {{min}}, ja raha, jos sitä liikkuu, kulkee suoraan ihmisten välillä. {{link}}",
       "confirm": "Kaikille, jotka ovat liittyneet: jotta voimme ilmoittaa tarpeesta, jokainen meistä tarvitsee 5 vahvistettua tuttavaa ja 10 ihmistä verkostoon. Jakakaa tänne oma linkkinne (”{{add}}” → ”{{share}}”). Avatkaa niiden linkit, jotka tunnette henkilökohtaisesti, ja napauttakaa ”{{known}}”. Kun joku tulee linkkinne kautta, vahvistakaa hänet. Seuraavassa tapaamisessa se käy nopeammin: ”{{myQr}}” ja ”{{scan}}”."
     },
     "honest": {
@@ -1494,6 +1494,7 @@
   },
   "add": {
     "linkLabel": "Linkkisi",
+    "inPerson": "Kasvotusten",
     "share": "Jaa",
     "shareText": "{{name}} kutsuu sinut piiriinsä.",
     "shareError": "Jakaminen ei onnistunut. Yritä uudelleen.",
@@ -1629,6 +1630,7 @@
     "removeConfirm": "Poista",
     "keep": "Pidä",
     "openCollection": "Tarve",
+    "openNeed": "Avaa tarve",
     "shared": "Yhteinen osallistuminen",
     "noShared": "Ei vielä yhteistä osallistumista",
     "moreContacts": "vielä {{count}}",

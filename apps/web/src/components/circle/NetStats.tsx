@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
-import { formatMoney } from '../ui2/format';
+import { formatIsolatedMoney, formatMoney } from '../ui2/format';
 import { IconInfo } from './icons';
 import { NetFigureSheet } from './NetFigureSheet';
 
@@ -25,7 +25,7 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
   const pending = (
     <span className="inline-block h-4 w-16 animate-pulse rounded-sm bg-line align-middle motion-reduce:animate-none" aria-hidden />
   );
-  const delta = weekDelta && weekDelta > 0 ? t('circle.stats.weekDelta', { amount: formatMoney(weekDelta) }) : null;
+  const delta = weekDelta && weekDelta > 0 ? t('circle.stats.weekDelta', { amount: formatIsolatedMoney(weekDelta) }) : null;
 
   // Nobody yet: "0 people · 0 $" tells nothing, so the header says where the network starts instead (audit A2)
   if (people === 0) {
@@ -50,7 +50,7 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
           <b className="block min-w-0 truncate text-[17px] font-extrabold tracking-tight text-node-1">
             {waiting ? pending : t('circle.stats.people', { count: people ?? 0 })}
           </b>
-          <b className="block shrink-0 text-h3 font-extrabold tabular-nums text-node-1">{waiting ? pending : formatMoney(canHelp ?? 0)}</b>
+          <b className="block shrink-0 text-h3 font-extrabold tabular-nums text-node-1">{waiting ? pending : <bdi dir="ltr">{formatMoney(canHelp ?? 0)}</bdi>}</b>
         </span>
         <span className="mt-0.5 flex items-center justify-between gap-3">
           <span className="flex min-w-0 items-center gap-1 text-label font-semibold text-node-2">
@@ -67,7 +67,7 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
           <IconInfo className="h-3.5 w-3.5 shrink-0" />
         </span>
         <span className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <b className="text-h2 font-extrabold tabular-nums text-ink">{waiting ? pending : formatMoney(canHelp ?? 0)}</b>
+          <b className="text-h2 font-extrabold tabular-nums text-ink">{waiting ? pending : <bdi dir="ltr">{formatMoney(canHelp ?? 0)}</bdi>}</b>
           {waiting ? null : (
             <span className="text-caption font-semibold text-ink-muted">{t('circle.stats.peopleShort', { count: people ?? 0 })}</span>
           )}

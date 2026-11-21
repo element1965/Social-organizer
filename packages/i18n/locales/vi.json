@@ -226,8 +226,8 @@
       "step2Sub": "Gửi liên kết hoặc hiện QR",
       "step2Waiting": "Đã gửi yêu cầu, đang chờ xác nhận",
       "intention": "Dự định của tôi",
-      "intentionIs": "Dự định của tôi: {{amount}}",
-      "intentionSub": "Số tiền bạn sẵn sàng nêu khi một người quen thông báo nhu cầu."
+      "intentionSub": "Số tiền bạn sẵn sàng nêu khi một người quen thông báo nhu cầu.",
+      "setIntention": "Đặt số tiền"
     },
     "acquaint": {
       "sub": "Nhờ bạn xác nhận là quen nhau",
@@ -631,7 +631,8 @@
   },
   "invite": {
     "calls": "{{name}} mời bạn",
-    "say": "Hỗ trợ lẫn nhau giữa những người quen biết nhau. Hãy đăng nhập, và {{name}} sẽ xác nhận là quen nhau.",
+    "say": "Đăng nhập để đề nghị {{name}} xác nhận hai bạn quen nhau.",
+    "sayQr": "Một mạng lưới những người quen biết nhau ngoài đời. Hãy đăng nhập trước khi mã QR hết hạn để xác nhận ngay rằng bạn quen {{name}}.",
     "known": "Chúng tôi quen nhau",
     "notNow": "Để sau",
     "toCircle": "Vào vòng tròn",
@@ -645,7 +646,8 @@
     "ownTitle": "Đây là liên kết của bạn",
     "ownText": "Người bạn quen sẽ vào qua liên kết này. Hãy gửi cho người bạn quen trực tiếp.",
     "shareOwn": "Chia sẻ liên kết",
-    "sayKnown": "Hỗ trợ lẫn nhau giữa những người quen biết nhau. Nhấn «Chúng tôi quen nhau», và {{name}} sẽ nhận yêu cầu của bạn.",
+    "sayKnown": "Chạm vào “{{action}}” để nhờ {{name}} xác nhận.",
+    "sayKnownQr": "Chạm vào “{{action}}” trước khi mã QR hết hạn để xác nhận ngay kết nối với {{name}}.",
     "loadFailedTitle": "Không mở được lời mời",
     "loadFailedText": "Có vẻ mất kết nối. Liên kết đã được lưu; vui lòng thử lại.",
     "waiting": "Đang chờ xác nhận.",
@@ -811,7 +813,7 @@
       },
       "next": {
         "label": "Tiếp theo",
-        "title": "Giúp nhau 1 $ mới chỉ là khởi đầu",
+        "title": "Giúp nhau {{min}} mới chỉ là khởi đầu",
         "text": "Về sau, chúng tôi muốn mọi người dùng mạng lưới người quen để tìm thợ có người giới thiệu, đối tác cho một dự án chung, người cùng chí hướng cho sáng kiến của mình, rồi thỏa thuận trực tiếp với nhau như bây giờ.",
         "now": "Bây giờ",
         "later": "Sau này",
@@ -933,7 +935,6 @@
         ],
         "you": "Bạn",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Chat của người tham gia",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Vòng tròn của bạn"
@@ -957,12 +958,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "cần 300 $",
+        "askerSub": "cần {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "anh trai bạn",
         "you": "Bạn",
         "youSub": "bạn quyết định",
-        "amount": "300 $",
         "aria": "Đường đi của thông báo"
       },
       "join": {
@@ -1068,7 +1068,7 @@
     "own": {
       "title": "Nhóm vẫn giữ cách của mình",
       "lead": "Dù nhóm của bạn gọi là gì (chama, paluwagan hay nhóm nhà thờ), cách làm của nhóm vẫn giữ nguyên: các buổi họp, quy tắc và thủ quỹ của nhóm.",
-      "text1": "Social Organizer không giữ tiền, không có két chung và không thu phí. Khi có người thông báo nhu cầu, mỗi người tự quyết định có tham gia hay không, từ $1. Khi nhu cầu còn mở, bạn có thể đổi số tiền hoặc rút lại.",
+      "text1": "Social Organizer không giữ tiền, không có két chung và không thu phí. Khi có người thông báo nhu cầu, mỗi người tự quyết định có tham gia hay không, từ {{min}}. Khi nhu cầu còn mở, bạn có thể đổi số tiền hoặc rút lại.",
       "text2": "Người thông báo nhu cầu và những người tham gia tự thỏa thuận trong nhóm chat riêng, trên bất kỳ ứng dụng nhắn tin nào. Tiền, nếu có, chuyển trực tiếp giữa người với người."
     },
     "steps": {
@@ -1093,7 +1093,7 @@
       "explainLabel": "Trong hai câu",
       "confirmLabel": "Xác nhận lẫn nhau",
       "invite": "Mình đã tham gia Social Organizer. Ở đó, những người quen nhau ngoài đời cùng xây một mạng lưới. Nếu ai trong nhóm mình thông báo nhu cầu vì gặp chuyện khó khăn như mất việc hoặc cần phẫu thuật gấp, người quen của người đó biết trước, rồi đến người quen của họ. Không có tiền nào đi qua ứng dụng. Tham gia qua link của mình nhé, mình sẽ xác nhận là chúng ta quen nhau: {{link}}",
-      "explain": "Social Organizer kết nối những người quen nhau ngoài đời. Khi ai trong chúng ta thông báo nhu cầu, mỗi người tự quyết định có tham gia hay không, từ $1, và tiền, nếu có, chuyển trực tiếp giữa người với người. {{link}}",
+      "explain": "Social Organizer kết nối những người quen nhau ngoài đời. Khi ai trong chúng ta thông báo nhu cầu, mỗi người tự quyết định có tham gia hay không, từ {{min}}, và tiền, nếu có, chuyển trực tiếp giữa người với người. {{link}}",
       "confirm": "Gửi mọi người đã tham gia: để thông báo nhu cầu, mỗi chúng ta cần 5 người quen đã xác nhận và 10 người trong mạng lưới. Hãy gửi link của mình vào đây (“{{add}}” → “{{share}}”). Mở link của những người bạn quen ngoài đời và chạm “{{known}}”. Ai đến qua link của bạn thì xác nhận họ. Buổi gặp tới sẽ nhanh hơn: “{{myQr}}” và “{{scan}}”."
     },
     "honest": {
@@ -1483,6 +1483,7 @@
   },
   "add": {
     "linkLabel": "Liên kết của bạn",
+    "inPerson": "Khi gặp trực tiếp",
     "share": "Chia sẻ",
     "shareText": "{{name}} mời bạn vào vòng tròn của họ.",
     "shareError": "Không chia sẻ được. Hãy thử lại.",
@@ -1613,6 +1614,7 @@
     "removeConfirm": "Gỡ",
     "keep": "Giữ",
     "openCollection": "Nhu cầu",
+    "openNeed": "Mở nhu cầu",
     "shared": "Cùng tham gia",
     "noShared": "Chưa có sự cùng tham gia",
     "moreContacts": "thêm {{count}}",

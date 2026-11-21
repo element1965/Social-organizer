@@ -15,7 +15,8 @@ import { initGlide } from '../components/landing/glide';
 import { initGrow, type GrowHandle, type GrowOptions } from '../components/landing/grow';
 import { initNextNet, type NextNetHandle } from '../components/landing/nextNet';
 import type { SceneHandle, SceneOptions } from '../components/landing/scene';
-import { dollarFormat, storyMoney } from '../components/landing/money';
+import { storyMoney } from '../components/landing/money';
+import { formatIsolatedMoney } from '../components/ui2/format';
 import { AppChapter } from '../components/landing/AppChapter';
 import '../components/landing/landing.css';
 
@@ -120,10 +121,12 @@ export function LandingPage() {
   // the story's sums in dollars: the shortfall at the price level of the reader's country, up to one person
   // reached per dollar, the smallest share and yours
   const money = useMemo(() => storyMoney(lang), [lang]);
-  const sums = useMemo(() => {
-    const usd = dollarFormat(lang);
-    return { shortfall: usd.format(money.shortfall), reach: nf.format(money.shortfall), min: usd.format(money.min), mine: usd.format(money.mine) };
-  }, [lang, money, nf]);
+  const sums = {
+    shortfall: formatIsolatedMoney(money.shortfall),
+    reach: nf.format(money.shortfall),
+    min: formatIsolatedMoney(money.min),
+    mine: formatIsolatedMoney(money.mine),
+  };
   /** A story line with the sums filled in. */
   const tm = (key: string) => t(key, sums);
   // Maria's tag is "name · sum"; the graph's labels show the name alone, as the app does
@@ -587,7 +590,7 @@ export function LandingPage() {
           <div className="wrap">
             <div className="copy">
               <span className="mono">{t('landing.v2.next.label')}</span>
-              <h2 id="lv-next-title">{t('landing.v2.next.title')}</h2>
+              <h2 id="lv-next-title">{tm('landing.v2.next.title')}</h2>
               <p>{t('landing.v2.next.text')}</p>
               <div className="legend">
                 <div>

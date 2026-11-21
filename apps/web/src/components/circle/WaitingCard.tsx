@@ -36,7 +36,7 @@ export function WaitingCard({ person }: { person: WaitingPerson }) {
   };
 
   return (
-    <div className="mb-3 rounded-xl bg-surface p-4 shadow-card">
+    <div className="mt-3 rounded-xl bg-surface p-4 shadow-card">
       <div className="flex items-center gap-3">
         <span className="relative shrink-0">
           <Avatar name={person.name} src={person.photoUrl} size={48} />

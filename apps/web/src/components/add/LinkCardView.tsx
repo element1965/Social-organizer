@@ -35,34 +35,36 @@ export function LinkCardView({ slug, shareText, urlFor, editor, onEdit, onShare,
   const pretty = prettyInvite(slug);
   return (
     <Card className="mt-4">
-      <p className="text-label font-semibold text-ink-muted">{t('add.linkLabel')}</p>
+      {!editor && (
+        <div className="mb-4 border-b border-line-soft pb-4">
+          <p className="mb-2 text-label font-bold text-ink-muted">{t('add.inPerson')}</p>
+          <div className="grid grid-cols-2 gap-2.5">
+            <Button className="w-full whitespace-normal" variant="secondary" size="md" icon={<IconQr />} onClick={onQr}>
+              {t('add.myQr')}
+            </Button>
+            <Button className="w-full whitespace-normal" variant="secondary" size="md" icon={<IconScan />} onClick={onScan}>
+              {t('add.scan')}
+            </Button>
+          </div>
+        </div>
+      )}
+      <p className="text-label font-bold text-ink-muted">{t('add.linkLabel')}</p>
       {editor ?? (
         <>
           <p className="mt-1 break-all text-title font-extrabold leading-tight text-ink">
-            <span className="text-ink-muted">{pretty.host}/</span>
-            {pretty.slug}
+            <bdi dir="ltr"><span className="text-ink-muted">{pretty.host}/</span>{pretty.slug}</bdi>
           </p>
-          <Button className="mt-1 -ms-2" variant="text" onClick={onEdit}>
-            {t('add.editLink')}
-          </Button>
           <Button className="mt-3 w-full" icon={<IconShare />} loading={shareBusy} onClick={onShare}>
             {copied ? t('common.copied') : t('add.share')}
           </Button>
           {failed ? <p className="mt-2 text-label font-semibold text-sos">{t('add.shareError')}</p> : null}
           {/* One tap into the messenger most people use; the link says which one it went through */}
           <MessengerButtons className="mt-2.5" text={shareText} urlFor={urlFor} />
-          <div className="mt-2.5 grid grid-cols-2 gap-2.5">
-            <Button className="w-full" variant="secondary" icon={<IconQr />} onClick={onQr}>
-              {t('add.myQr')}
-            </Button>
-            <Button className="w-full" variant="secondary" icon={<IconScan />} onClick={onScan}>
-              {t('add.scan')}
-            </Button>
-          </div>
           <p className="mt-3 text-caption font-semibold text-ink-muted">{t('add.rules')}</p>
-          <Button className="mt-1 -ms-2" variant="text" onClick={onNamed}>
-            {t('add.named.title')}
-          </Button>
+          <div className="mt-3 flex flex-wrap gap-2.5 border-t border-line-soft pt-3">
+            <Button className="min-h-11" variant="ghost" size="sm" onClick={onEdit}>{t('add.editLink')}</Button>
+            <Button className="min-h-11" variant="ghost" size="sm" onClick={onNamed}>{t('add.named.title')}</Button>
+          </div>
           {children}
         </>
       )}

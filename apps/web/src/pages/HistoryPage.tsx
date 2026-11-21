@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useAskAccess } from '../hooks/useAskAccess';
@@ -76,7 +76,8 @@ function useWhenVisible<T extends Element>(): [(node: T | null) => void, boolean
 
 export function HistoryPage() {
   const { t, i18n } = useTranslation();
-  const back = useSmartBack(t('common.back'), '/me');
+  const fromNeedTab = (useLocation().state as { fromNeedTab?: boolean } | null)?.fromNeedTab === true;
+  const back = useSmartBack(fromNeedTab ? t('nav.ask') : t('common.back'), fromNeedTab ? '/ask' : '/me');
   const navigate = useNavigate();
   const askAccess = useAskAccess();
   const me = trpc.user.me.useQuery();
@@ -217,7 +218,7 @@ function OwnCard({
     .filter(Boolean)
     .join(' · ');
   return (
-    <Link to={`/collection/${row.id}`} className="so-focus block rounded-lg bg-surface p-4 shadow-card">
+    <Link to={`/collection/${row.id}`} state={{ needOrigin: 'history' }} className="so-focus block rounded-lg bg-surface p-4 shadow-card">
       <CardHead
         name={meName}
         photo={mePhoto}
@@ -243,7 +244,7 @@ function JoinCard({ row, lang, past = false }: { row: JoinRow; lang: string; pas
   const role = past && row.unsubscribedAt ? t('profile.left') : t('profile.participating');
   return (
     <div ref={ref}>
-      <Link to={`/collection/${row.collection.id}`} className="so-focus block rounded-lg bg-surface p-4 shadow-card">
+      <Link to={`/collection/${row.collection.id}`} state={{ needOrigin: 'history' }} className="so-focus block rounded-lg bg-surface p-4 shadow-card">
         <CardHead
           name={creator.name}
           photo={creator.photoUrl}

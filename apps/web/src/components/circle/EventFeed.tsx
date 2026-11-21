@@ -80,6 +80,7 @@ const ICONS: Record<FeedKind, ReactNode> = {
 type EventFeedProps = {
   myId: string | null;
   events: FeedEvent[];
+  waitingCount: number | undefined;
   loading?: boolean;
   onOpen: (event: FeedEvent) => void;
   /** May resolve to false when the dismissal failed: the row then comes back. */
@@ -97,7 +98,7 @@ const GROUP_TITLE: Record<FeedGroup, string> = {
  * The Circle feed in sections by meaning (what waits for me, my Needs, Needs I am in, people), newest first inside
  * each. Rows of my own Needs carry the flag, rows of Needs I take part in the hand.
  */
-export function EventFeed({ myId, events, loading, onOpen, onDismiss }: EventFeedProps) {
+export function EventFeed({ myId, events, waitingCount, loading, onOpen, onDismiss }: EventFeedProps) {
   const { t } = useTranslation();
   const swipedAt = useRef(0);
   // Open stacks and "N more" lists, by key; closed by default
@@ -143,7 +144,7 @@ export function EventFeed({ myId, events, loading, onOpen, onDismiss }: EventFee
         <section key={group.key} aria-label={group.label}>
           <h3 className="mx-1 mb-2 mt-1 flex items-baseline justify-between text-label font-bold text-ink-muted">
             <span>{group.label}</span>
-            <span className="tabular-nums text-ink-subtle">{group.rows.length}</span>
+            <span className="tabular-nums">{group.key === 'needs' ? waitingCount : group.rows.length}</span>
           </h3>
           <ul className="flex flex-col gap-2 pb-2">
             {feedItems(group.key, group.rows).flatMap((item) => {

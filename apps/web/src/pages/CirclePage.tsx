@@ -7,6 +7,7 @@ import { currentNavigation, raiseActionError } from '../lib/errors';
 import { cn } from '../lib/utils';
 import { useAuth } from '../hooks/useAuth';
 import { useNetworkFigure } from '../hooks/useNetworkFigure';
+import { useCircleAttention } from '../hooks/useCircleAttention';
 import { useAskAccess } from '../hooks/useAskAccess';
 import { MILESTONE_KEYS, useDeclineNeed, useEvents, useNewEvents, type FeedEvent, type MilestoneKind } from '../hooks/useEvents';
 import { useBanner } from '../components/ui2/Banner';
@@ -84,6 +85,7 @@ export function CirclePage() {
   const gate = useAskAccess();
   const me = trpc.user.me.useQuery();
   const { events, impulses, loading, markAcceptedSeen, dismissAccepted } = useEvents({ displayName: net.displayName });
+  const waitingCount = useCircleAttention();
 
   const hiddenRings = useCircleStore((s) => s.hiddenRings);
   const setSelected = useCircleStore((s) => s.setSelected);
@@ -94,7 +96,7 @@ export function CirclePage() {
   // The graph layer exists only on the phone; tablet and desktop always show scene and feed.
   const layer: Layer = selectedId ? 'person' : params.get('graph') && phone ? 'graph' : 'feed';
 
-  // Confirmations of my requests count in the navigation badge until the feed has shown them
+  // Confirmations are highlighted until they have appeared in the feed.
   const unseenAccepted = events.some((e) => e.kind === 'accepted' && e.hot);
   const feedVisible = !phone || layer === 'feed';
   useEffect(() => {
@@ -313,7 +315,10 @@ export function CirclePage() {
 
   const openEvent = useCallback(
     (event: FeedEvent) => {
-      for (const id of event.notificationIds ?? []) markRead.mutate({ id });
+      // The Need page marks all its request waves read in one update.
+      if (event.kind !== 'request' && event.kind !== 'participating') {
+        for (const id of event.notificationIds ?? []) markRead.mutate({ id });
+      }
       switch (event.kind) {
         case 'incoming':
           if (event.pendingId && event.personId) {
@@ -336,7 +341,7 @@ export function CirclePage() {
         case 'blocked':
           return;
         default:
-          if (event.collectionId) navigate(`/collection/${event.collectionId}`);
+          if (event.collectionId) navigate(`/collection/${event.collectionId}`, { state: { needOrigin: 'circle' } });
       }
     },
     [markRead, navigate, net.people, openLayer, phone, dismissAccepted],
@@ -399,6 +404,7 @@ export function CirclePage() {
 
   const feedBody = empty ? (
     <>
+      <Button className="mb-3 w-full" onClick={() => navigate('/add')}>{t('nav.addPerson')}</Button>
       <ReviewFeedRows />
       {/* The first person who comes by the link is an incoming request: it must show here, above the start steps.
           A sent request ("waiting") is already told by the start card itself. */}
@@ -406,17 +412,18 @@ export function CirclePage() {
         <EventFeed
           myId={myId}
           events={events.filter((e) => e.kind !== 'waiting')}
+          waitingCount={waitingCount}
           loading={loading}
           onOpen={openEvent}
           onDismiss={dismissEvent}
         />
       ) : null}
-      {waitingFor ? <WaitingCard person={waitingFor} /> : null}
       <StartCard
         intention={me.data?.monthlyBudget ?? null}
         direct={direct}
         waiting={waitingFor != null || events.some((e) => e.kind === 'waiting')}
       />
+      {waitingFor ? <WaitingCard person={waitingFor} /> : null}
       <GetAppCard />
     </>
   ) : (
@@ -428,6 +435,7 @@ export function CirclePage() {
       <EventFeed
         myId={myId}
         events={events}
+        waitingCount={waitingCount}
         loading={loading}
         onOpen={openEvent}
         onDismiss={dismissEvent}
@@ -481,7 +489,6 @@ export function CirclePage() {
       hiddenRings={hiddenRings}
       stats={<NetStats variant="scene" people={peopleCount} canHelp={canHelp} />}
       feed={feedBody}
-      eventsCount={events.length}
       hint={hint}
       person={cardPerson ? <PersonCard person={cardPerson} variant="floating" onClose={closeCard} step={step} /> : null}
       onOpenGraph={() => openLayer('graph')}
@@ -511,7 +518,6 @@ type PhoneProps = {
   hiddenRings: Ring[];
   stats: React.ReactNode;
   feed: React.ReactNode;
-  eventsCount: number;
   hint: boolean;
   person: React.ReactNode;
   onOpenGraph: () => void;
@@ -530,7 +536,6 @@ function PhoneCircle({
   hiddenRings,
   stats,
   feed,
-  eventsCount,
   hint,
   person,
   onOpenGraph,
@@ -689,7 +694,7 @@ function PhoneCircle({
     <div
       className={cn('scene-follows-theme relative overflow-hidden', SCENE_BG)}
       // Runs up under the status bar for looks only; everything is laid out in the area below it.
-      style={{ marginTop: 'calc(-1 * var(--sa-top))', height: 'calc(100dvh - 84px - var(--sa-bottom))' }}
+      style={{ marginTop: 'calc(-1 * var(--sa-top))', height: 'calc(100dvh - var(--so-tab-bar-space))' }}
     >
       {/* The usable area under the status bar: sheet sizes are measured from it, as before. */}
       <div ref={rootRef} aria-hidden className="pointer-events-none invisible absolute inset-x-0 bottom-0 top-[var(--sa-top)]" />
@@ -844,9 +849,6 @@ function PhoneCircle({
         style={pull != null ? { transform: `translate(-50%, ${pull}px)`, opacity: Math.max(0, 1 + pull / 120) } : undefined}
         inert={layer !== 'graph'}
       >
-        <i className="grid h-[22px] min-w-[22px] place-items-center rounded-[7px] bg-care px-1 text-micro font-bold not-italic text-care-on">
-          {eventsCount}
-        </i>
         {empty ? t('circle.startPill') : t('circle.eventsPill')}
         <IconUp className="h-4 w-4 text-ink-subtle" />
       </button>

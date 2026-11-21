@@ -354,6 +354,7 @@ export const inviteRouter = router({
           usedAt: invite.usedAt,
           createdAt: invite.createdAt,
           expired,
+          inPersonUntil: invite.expiresAt,
           inviter: { id: invite.inviter.id, name: invite.inviter.name, photoUrl: invite.inviter.photoUrl },
           networkCount: await getNetworkCount(invite.inviterId),
         };
@@ -379,6 +380,7 @@ export const inviteRouter = router({
           usedById: null,
           usedAt: null,
           createdAt: new Date(),
+          inPersonUntil: null,
           inviter: { id: user.id, name: user.name, photoUrl: user.photoUrl },
           networkCount: await getNetworkCount(user.id),
         };

@@ -5,7 +5,7 @@ import { MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
 import { transactionWithRetry } from '../lib/tx-retry.js';
 import { applyCollectionGoal, dispatchCollectionGoalReached, syncCollectionGoal } from '../services/collection-amount.js';
 import { scheduleResponseDigest } from '../services/notification.service.js';
-import { recordResponded } from '../services/notify-routing.service.js';
+import { dismissNeedRequests, recordResponded } from '../services/notify-routing.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
 import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
 import { chatLinkFor, confirmedRenewals } from '../services/collection-view.js';
@@ -261,10 +261,18 @@ export const obligationRouter = router({
       }
       const updated = await transactionWithRetry(ctx.db, async (tx) => {
         assertOpenNeed(await lockNeed(tx, obligation.collectionId));
-        return tx.obligation.updateMany({
+        const result = await tx.obligation.updateMany({
           where: { id: input.obligationId, unsubscribedAt: null },
           data: { unsubscribedAt: new Date() },
         });
+        if (result.count > 0) {
+          const remaining = await tx.obligation.findFirst({
+            where: { collectionId: obligation.collectionId, userId: ctx.userId, unsubscribedAt: null },
+            select: { id: true },
+          });
+          if (!remaining) await dismissNeedRequests(tx, ctx.userId, obligation.collectionId);
+        }
+        return result;
       });
       if (updated.count > 0) await syncCollectionGoal(ctx.db, obligation.collectionId);
       return { ok: true as const };
@@ -276,10 +284,12 @@ export const obligationRouter = router({
     .mutation(async ({ ctx, input }) => {
       const updated = await transactionWithRetry(ctx.db, async (tx) => {
         assertOpenNeed(await lockNeed(tx, input.collectionId));
-        return tx.obligation.updateMany({
+        const result = await tx.obligation.updateMany({
           where: { collectionId: input.collectionId, userId: ctx.userId, unsubscribedAt: null },
           data: { unsubscribedAt: new Date() },
         });
+        if (result.count > 0) await dismissNeedRequests(tx, ctx.userId, input.collectionId);
+        return result;
       });
       // A goal-reached hold (blockReason null) opens again when the active total drops below the goal.
       if (updated.count > 0) await syncCollectionGoal(ctx.db, input.collectionId);

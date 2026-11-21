@@ -232,8 +232,8 @@
       "step2Sub": "Envie seu link ou mostre o QR",
       "step2Waiting": "Pedido enviado, aguardando confirmação",
       "intention": "Minha intenção",
-      "intentionIs": "Minha intenção: {{amount}}",
-      "intentionSub": "O valor que você está disposto a informar quando alguém que você conhece informa uma necessidade."
+      "intentionSub": "O valor que você está disposto a informar quando alguém que você conhece informa uma necessidade.",
+      "setIntention": "Definir valor"
     },
     "acquaint": {
       "sub": "Pede que você confirme que se conhecem",
@@ -637,7 +637,8 @@
   },
   "invite": {
     "calls": "{{name}} convida você",
-    "say": "Assistência mútua entre pessoas que se conhecem. Entre, e {{name}} vai confirmar que vocês se conhecem.",
+    "say": "Entre para pedir a {{name}} que confirme que vocês se conhecem.",
+    "sayQr": "Uma rede de pessoas que se conhecem pessoalmente. Entre antes que o código QR expire para confirmar na hora que conhece {{name}}.",
     "known": "Conhecemo-nos",
     "notNow": "Agora não",
     "toCircle": "Ir ao círculo",
@@ -651,7 +652,8 @@
     "ownTitle": "Este é o seu link",
     "ownText": "Pessoas que você conhece entram por ele. Envie para alguém que você conhece pessoalmente.",
     "shareOwn": "Compartilhar o link",
-    "sayKnown": "Assistência mútua entre pessoas que se conhecem. Toque em «Conhecemo-nos» e {{name}} recebe sua solicitação.",
+    "sayKnown": "Toque em “{{action}}” para pedir a confirmação de {{name}}.",
+    "sayKnownQr": "Toque em “{{action}}” antes que o código QR expire para confirmar na hora sua conexão com {{name}}.",
     "loadFailedTitle": "Não foi possível abrir o convite",
     "loadFailedText": "Parece que não há conexão. O link foi salvo; tente de novo.",
     "waiting": "Aguardando confirmação.",
@@ -827,7 +829,7 @@
       },
       "next": {
         "label": "Próximos passos",
-        "title": "Ajudar com um dólar é só o começo",
+        "title": "Ajudar com {{min}} é só o começo",
         "text": "Com o tempo, queremos que as pessoas usem a rede de conhecidos para encontrar um profissional indicado por alguém, parceiros para um projeto em comum, pessoas com as mesmas ideias para uma iniciativa própria. E que combinem tudo diretamente, como hoje.",
         "now": "Agora",
         "later": "Depois",
@@ -949,7 +951,6 @@
         ],
         "you": "Você",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Chat dos participantes",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Seu círculo"
@@ -973,12 +974,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "precisa de 300 $",
+        "askerSub": "precisa de {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "seu irmão",
         "you": "Você",
         "youSub": "você decide",
-        "amount": "300 $",
         "aria": "Caminho de uma mensagem"
       },
       "join": {
@@ -1084,7 +1084,7 @@
     "own": {
       "title": "Seu grupo mantém o seu jeito",
       "lead": "Seja qual for o nome do seu grupo (chama, paluwagan ou grupo da igreja), vocês mantêm suas reuniões, suas regras e seu jeito de cuidar das contas.",
-      "text1": "O Social Organizer não guarda dinheiro, não tem caixa comum e não cobra taxa. Quando alguém informa uma necessidade, participar é uma escolha pessoal, a partir de US$ 1. Enquanto a necessidade estiver aberta, você pode mudar o valor ou desistir.",
+      "text1": "O Social Organizer não guarda dinheiro, não tem caixa comum e não cobra taxa. Quando alguém informa uma necessidade, participar é uma escolha pessoal, a partir de {{min}}. Enquanto a necessidade estiver aberta, você pode mudar o valor ou desistir.",
       "text2": "Quem informou a necessidade e quem participa combinam no próprio chat, em qualquer mensageiro. O dinheiro, se houver, passa direto entre as pessoas."
     },
     "steps": {
@@ -1109,7 +1109,7 @@
       "explainLabel": "Em duas frases",
       "confirmLabel": "Confirmar que vocês se conhecem",
       "invite": "Entrei no Social Organizer. Lá, pessoas que se conhecem pessoalmente constroem uma rede. Se alguém do grupo informar uma necessidade por um aperto sério, como perder o emprego ou precisar de uma cirurgia urgente, as pessoas que conhecem quem informou a necessidade ficam sabendo primeiro, e depois os contatos delas. Nenhum dinheiro passa pelo app. Entre pelo meu link, e eu confirmo que a gente se conhece: {{link}}",
-      "explain": "O Social Organizer reúne pessoas que se conhecem pessoalmente. Quando alguém do grupo informa uma necessidade, participar é uma escolha pessoal, a partir de US$ 1. O dinheiro, se houver, passa direto entre as pessoas. {{link}}",
+      "explain": "O Social Organizer reúne pessoas que se conhecem pessoalmente. Quando alguém do grupo informa uma necessidade, participar é uma escolha pessoal, a partir de {{min}}. O dinheiro, se houver, passa direto entre as pessoas. {{link}}",
       "confirm": "Para quem já entrou: para informar uma necessidade, é preciso ter 5 contatos confirmados e 10 pessoas na rede por conta. Postem aqui o próprio link (“{{add}}” → “{{share}}”). Abram os links de quem vocês conhecem pessoalmente e toquem em “{{known}}”. Confirmem que conhecem as pessoas que chegarem pelo seu link. No próximo encontro vai ser mais rápido: “{{myQr}}” e “{{scan}}”."
     },
     "honest": {
@@ -1505,6 +1505,7 @@
   },
   "add": {
     "linkLabel": "Seu link",
+    "inPerson": "Presencialmente",
     "share": "Compartilhar",
     "shareText": "{{name}} está convidando você para o círculo.",
     "shareError": "Não foi possível compartilhar. Tente de novo.",
@@ -1645,6 +1646,7 @@
     "removeConfirm": "Remover",
     "keep": "Manter",
     "openCollection": "Necessidade",
+    "openNeed": "Abrir a necessidade",
     "shared": "Participação conjunta",
     "noShared": "Ainda não há participação conjunta",
     "moreContacts": "mais {{count}}",

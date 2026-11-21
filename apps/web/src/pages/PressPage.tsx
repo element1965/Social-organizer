@@ -4,7 +4,8 @@ import { Trans, useTranslation } from 'react-i18next';
 import { SUPPORTED_LANGUAGES } from '@so/i18n/languages';
 import { MIN_OBLIGATION_AMOUNT } from '@so/shared';
 import { STORE_URL } from '../lib/device';
-import { Avatar, formatMoney } from '../components/ui2';
+import { Avatar } from '../components/ui2';
+import { formatIsolatedMoney as pressAmount } from '../components/ui2/format';
 import { Reveal, useLivePeopleCount } from '../components/site/hooks';
 import { GITHUB_URL } from '../components/site/SiteHeader';
 import { SitePage } from '../components/site/SitePage';
@@ -31,11 +32,6 @@ const SHOTS = [
 
 function size(w: number, h: number): string {
   return `${w} × ${h} PNG`;
-}
-
-/** Preserve the currency suffix when interpolating the amount into RTL text. */
-function pressAmount(amount: number): string {
-  return `\u2066${formatMoney(amount)}\u2069`;
 }
 
 function Download({ href, file, label, children }: { href: string; file: string; label: string; children: ReactNode }) {

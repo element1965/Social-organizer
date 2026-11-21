@@ -235,8 +235,8 @@
       "step2Sub": "Pošlete odkaz, nebo ukažte QR",
       "step2Waiting": "Žádost odeslána, čekáme na potvrzení",
       "intention": "Můj záměr",
-      "intentionIs": "Můj záměr: {{amount}}",
-      "intentionSub": "Částka, kterou jste ochotni uvést, když někdo ze známých oznámí potřebu."
+      "intentionSub": "Částka, kterou jste ochotni uvést, když někdo ze známých oznámí potřebu.",
+      "setIntention": "Nastavit částku"
     },
     "acquaint": {
       "sub": "Žádá vás, abyste potvrdili, že se znáte",
@@ -640,7 +640,8 @@
   },
   "invite": {
     "calls": "{{name}} vás zve",
-    "say": "Vzájemná pomoc mezi lidmi, kteří se znají. Přihlaste se a {{name}} potvrdí, že se znáte.",
+    "say": "Přihlaste se a požádejte o potvrzení, že se s {{name}} znáte.",
+    "sayQr": "Síť lidí, kteří se osobně znají. Přihlaste se, dokud je QR kód platný, a potvrďte hned, že se s {{name}} znáte.",
     "known": "Známe se",
     "notNow": "Teď ne",
     "toCircle": "Do kruhu",
@@ -654,7 +655,8 @@
     "ownTitle": "Tohle je váš odkaz",
     "ownText": "Přes něj k vám přijdou lidé, které znáte. Pošlete ho někomu, koho znáte osobně.",
     "shareOwn": "Sdílet odkaz",
-    "sayKnown": "Vzájemná pomoc mezi lidmi, kteří se znají. Klepněte na „Známe se“ a {{name}} dostane vaši žádost.",
+    "sayKnown": "Klepněte na „{{action}}“ a požádejte {{name}} o potvrzení.",
+    "sayKnownQr": "Klepněte na „{{action}}“, dokud je QR kód platný, a potvrďte hned spojení s {{name}}.",
     "loadFailedTitle": "Pozvánku se nepodařilo otevřít",
     "loadFailedText": "Vypadá to, že nejste připojeni. Odkaz je uložený, zkuste to znovu.",
     "waiting": "Čekáme na potvrzení.",
@@ -835,7 +837,7 @@
       },
       "next": {
         "label": "Dál",
-        "title": "Pomoc po dolaru je teprve začátek",
+        "title": "Pomoc po {{min}} je teprve začátek",
         "text": "Chceme, aby lidé časem přes síť známých našli řemeslníka na doporučení, partnery pro společný projekt nebo stejně smýšlející lidi pro vlastní iniciativu. A domlouvali se, stejně jako teď, přímo.",
         "now": "Teď",
         "later": "Později",
@@ -957,7 +959,6 @@
         ],
         "you": "Vy",
         "asker": "Maria",
-        "amount": "300 $",
         "chatTitle": "Chat účastníků",
         "chatMembers": "Maria · Oleg · Lena",
         "aria": "Váš kruh"
@@ -981,12 +982,11 @@
       },
       "chain": {
         "asker": "Maria",
-        "askerSub": "potřeba 300 $",
+        "askerSub": "potřeba {{amount}}",
         "mediator": "Oleg",
         "mediatorSub": "váš bratr",
         "you": "Vy",
         "youSub": "rozhodujete vy",
-        "amount": "300 $",
         "aria": "Cesta oznámení"
       },
       "join": {
@@ -1092,7 +1092,7 @@
     "own": {
       "title": "Vaše skupina si ponechá své zvyky",
       "lead": "Ať už se vaše skupina jmenuje jakkoli (chama, paluwagan nebo farní společenství), její zvyky zůstávají: vaše schůzky, vaše pravidla i způsob, jakým spravujete peníze.",
-      "text1": "Social Organizer nedrží peníze, nemá společnou kasu a nebere poplatky. Když někdo oznámí potřebu, rozhodnutí o účasti je na vás. Zapojit se dá od 1 $. Dokud je potřeba otevřená, můžete částku změnit nebo účast zrušit.",
+      "text1": "Social Organizer nedrží peníze, nemá společnou kasu a nebere poplatky. Když někdo oznámí potřebu, rozhodnutí o účasti je na vás. Zapojit se dá od {{min}}. Dokud je potřeba otevřená, můžete částku změnit nebo účast zrušit.",
       "text2": "Lidé, kteří oznámili potřebu nebo se do ní zapojili, se domlouvají ve vlastním chatu, v jakékoli aplikaci pro zasílání zpráv. Peníze, pokud vůbec, jdou přímo mezi lidmi."
     },
     "steps": {
@@ -1117,7 +1117,7 @@
       "explainLabel": "Ve dvou větách",
       "confirmLabel": "Potvrďte se navzájem",
       "invite": "Jsem teď v Social Organizer. Lidé, kteří se znají osobně, tam staví síť. Když někdo z nás oznámí potřebu kvůli vážným potížím, třeba ztrátě práce nebo urgentní operaci, dozvědí se o ní nejdřív lidé, kteří danou osobu znají, pak jejich známí. Přes aplikaci nejdou žádné peníze. Přidej se přes můj odkaz a já potvrdím, že se známe: {{link}}",
-      "explain": "Social Organizer spojuje lidi, kteří se znají osobně. Když někdo z nás oznámí potřebu, účast je osobní rozhodnutí a zapojit se dá od 1 $. Peníze, pokud vůbec, jdou přímo mezi lidmi. {{link}}",
+      "explain": "Social Organizer spojuje lidi, kteří se znají osobně. Když někdo z nás oznámí potřebu, účast je osobní rozhodnutí a zapojit se dá od {{min}}. Peníze, pokud vůbec, jdou přímo mezi lidmi. {{link}}",
       "confirm": "Pro všechny v síti: k oznámení potřeby je zapotřebí 5 potvrzených známostí a 10 lidí v síti na osobu. Pošlete sem svůj odkaz („{{add}}“ → „{{share}}“). Otevírejte odkazy lidí, které znáte osobně, a klepněte na „{{known}}“. Potvrďte známost s lidmi, kteří přijdou přes váš odkaz. Na příští schůzce to půjde rychleji: „{{myQr}}“ a „{{scan}}“."
     },
     "honest": {
@@ -1516,6 +1516,7 @@
   },
   "add": {
     "linkLabel": "Váš odkaz",
+    "inPerson": "Osobně",
     "share": "Sdílet",
     "shareText": "{{name}} vás zve do svého kruhu.",
     "shareError": "Nepodařilo se sdílet. Zkuste to znovu.",
@@ -1661,6 +1662,7 @@
     "removeConfirm": "Odebrat",
     "keep": "Ponechat",
     "openCollection": "Potřeba",
+    "openNeed": "Otevřít potřebu",
     "shared": "Společná účast",
     "noShared": "Zatím žádná společná účast",
     "moreContacts": "ještě {{count}}",

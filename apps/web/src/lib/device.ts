@@ -50,20 +50,18 @@ export function heroCta(dev: Device): HeroCta {
 
 export type AuthProvider = 'google' | 'apple' | 'telegram' | 'email';
 
-/** Sign-in options per device, in display order (product decision 2026-11-09). E-mail is always last. */
-export const AUTH_ORDER: Record<Device, AuthProvider[]> = {
-  android: ['google', 'telegram', 'email'],
-  ios: ['apple', 'google', 'telegram', 'email'],
-  desktop: ['google', 'apple', 'telegram', 'email'],
-};
+const AUTH_PROVIDERS: AuthProvider[] = ['google', 'apple', 'telegram', 'email'];
 
-export interface AuthButtons {
-  /** Sign-in options in display order; the last one is always e-mail. */
-  order: AuthProvider[];
-}
-
-export function authButtons(dev: Device): AuthButtons {
-  return { order: AUTH_ORDER[dev] };
+/** Put the device's preferred option first when configured. The Mini App offers Telegram and e-mail. */
+export function orderAuthProviders(
+  device: Device,
+  available: Record<AuthProvider, boolean>,
+  inTelegram: boolean,
+): AuthProvider[] {
+  const visible = AUTH_PROVIDERS.filter((provider) => available[provider]
+    && (!inTelegram || provider === 'telegram' || provider === 'email'));
+  const preferred = inTelegram ? 'telegram' : device === 'ios' ? 'apple' : 'google';
+  return visible.includes(preferred) ? [preferred, ...visible.filter((provider) => provider !== preferred)] : visible;
 }
 
 /** Canonical public origin: the QR on the desktop site must open production, not the host it was shown on. */

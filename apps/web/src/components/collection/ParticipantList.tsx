@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 import { Avatar } from '../ui2/Avatar';
 import { EmptyState } from '../ui2/EmptyState';
-import { formatMoney } from '../ui2/format';
+import { formatIsolatedMoney, formatMoney } from '../ui2/format';
 import { IconCheck } from './icons';
 
 export type ParticipantRow = {
@@ -64,8 +64,8 @@ export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove, 
             {t('collection.receivedSummary', {
               paid: paid.length,
               total: people.length,
-              sum: formatMoney(paidSum),
-              all: formatMoney(allSum),
+              sum: formatIsolatedMoney(paidSum),
+              all: formatIsolatedMoney(allSum),
             })}
           </p>
           {onMarkMany && unpaidCount >= 2 ? (
@@ -94,9 +94,9 @@ export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove, 
                 ) : null}
               </span>
               {person.amount != null ? (
-                <span className={cn('shrink-0 text-body font-extrabold tabular-nums', person.mine ? 'text-care' : 'text-ink')}>
+                <bdi dir="ltr" className={cn('shrink-0 text-body font-extrabold tabular-nums', person.mine ? 'text-care' : 'text-ink')}>
                   {formatMoney(person.amount)}
-                </span>
+                </bdi>
               ) : null}
               {showPaid && onPaid ? (
                 <button
