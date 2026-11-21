@@ -454,8 +454,6 @@
     "minimum": "نيّتي",
     "stakeEmpty": "غير محدد",
     "collections": "النشاط",
-    "openOne": "{{count}} جمع مفتوح",
-    "openMany": "{{count}} جموع مفتوحة",
     "notifications": "الإشعارات",
     "notificationsAll": "الكل",
     "notificationsSome": "بعضها",

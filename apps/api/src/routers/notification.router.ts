@@ -5,6 +5,7 @@ import type { PrismaClient } from '@so/db';
 import { dismissRequestEntries, recordOpenedById } from '../services/notify-routing.service.js';
 import { VISIBLE_RINGS } from '../services/network.service.js';
 import { getPulse } from '../services/pulse.service.js';
+import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
 
 /** Opening or dismissing a notice must not wipe a cycle acknowledgement (RESPONDED). */
 async function setNotificationStatus(
@@ -53,16 +54,7 @@ export const notificationRouter = router({
 
       // Get connection counts for all creators
       const creatorIds = [...new Set(notifications.map((n) => n.collection?.creatorId).filter(Boolean))] as string[];
-      const connectionCounts = creatorIds.length > 0
-        ? await ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
-            SELECT u.id as user_id, COUNT(c.id)::bigint as count
-            FROM users u
-            LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
-            WHERE u.id = ANY(${creatorIds})
-            GROUP BY u.id
-          `
-        : [];
-      const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+      const countMap = await getDirectConnectionCounts(ctx.db, creatorIds);
 
       // A stored path runs from the author of the Need to me. People in it further than my visible rings
       // (counted from my end) leave the server only as a place in the chain: no id and no name.

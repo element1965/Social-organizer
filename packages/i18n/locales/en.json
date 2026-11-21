@@ -442,8 +442,6 @@
     "minimum": "My intention",
     "stakeEmpty": "Not set",
     "collections": "Activity",
-    "openOne": "{{count}} open",
-    "openMany": "{{count}} open",
     "notifications": "Notifications",
     "notificationsAll": "All",
     "notificationsSome": "Some",

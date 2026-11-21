@@ -445,8 +445,6 @@
     "minimum": "Моја намера",
     "stakeEmpty": "Није задато",
     "collections": "Активност",
-    "openOne": "{{count}} отворен",
-    "openMany": "{{count}} отворених",
     "notifications": "Обавештења",
     "notificationsAll": "Сва",
     "notificationsSome": "Нека",

@@ -21,13 +21,6 @@ export function countForm(count: number, lang?: string): 'one' | 'few' | 'many' 
   return 'many';
 }
 
-export function openCountKey(count: number): 'profile.openOne' | 'profile.openMany' {
-  const mod10 = count % 10;
-  const mod100 = count % 100;
-  if (mod10 === 1 && mod100 !== 11) return 'profile.openOne';
-  return 'profile.openMany';
-}
-
 type Participation = {
   unsubscribedAt: Date | string | null;
   collection: { status: string; creator: { id: string } };

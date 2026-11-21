@@ -445,8 +445,6 @@
     "minimum": "Mon intention",
     "stakeEmpty": "Non défini",
     "collections": "Activité",
-    "openOne": "{{count}} ouverte",
-    "openMany": "{{count}} ouvertes",
     "notifications": "Notifications",
     "notificationsAll": "Toutes",
     "notificationsSome": "Certaines",

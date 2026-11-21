@@ -48,9 +48,9 @@ UI: `apps/web/src/pages/CreateCollectionPage.tsx`. API: `collection.create` in `
 | Description / purpose | **There is no such field** | `Collection` model in `packages/db/prisma/schema.prisma` |
 
 Restrictions on creation (`collection.router.ts`, `create`):
-- A regular user must have **at least 10 accepted invitations** (`MIN_CONNECTIONS_TO_CREATE = 10`).
-  Only people who came through their invite links (`inviteLink.usedById`) count; direct friend requests
-  do not. Otherwise a "Not enough connections" dialog appears.
+- A regular user needs **at least 5 direct connections and at least 10 people in the network** (up to the 6th handshake):
+  `ASK_MIN_DIRECT = 5` and `ASK_MIN_NETWORK = 10` in `packages/shared/src/constants.ts`, checked by
+  `getAskAccess` in `apps/api/src/services/ask-access.service.ts`. Authors, developers and admins are exempt.
 - Only **one regular and one emergency** collection can be open at the same time.
 - If the amount is above $10,000, an extra checkbox "I confirm the amount is correct" is required.
 - Before creation two dialogs are shown: "This is a real help signal" and "Confirm collection creation"

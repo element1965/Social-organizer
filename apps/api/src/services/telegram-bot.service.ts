@@ -581,30 +581,6 @@ export async function sendTelegramDocument(
   return false;
 }
 
-/** Send a collection notification to a Telegram user with an inline "Open" button */
-export async function sendCollectionNotificationTg(
-  telegramId: string,
-  creatorName: string,
-  type: 'EMERGENCY' | 'REGULAR',
-  amount: number | null,
-  currency: string,
-  collectionId: string,
-): Promise<boolean> {
-  const emoji = type === 'EMERGENCY' ? '🚨' : '📢';
-  const typeLabel = type === 'EMERGENCY' ? 'one time' : 'every 28 days';
-
-  const amountStr = amount != null ? `${groupNumber(amount)}\u00a0${currency}` : 'open';
-  const text = `${emoji} <b>New Need · ${typeLabel}</b>\n\nFrom: <b>${creatorName}</b>\nAmount: ${amountStr}\n\nSomeone in your network has reported a Need.`;
-
-  const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
-
-  const replyMarkup: TgReplyMarkup = {
-    inline_keyboard: [[{ text: '📱 Open', web_app: { url: webAppLink } }]],
-  };
-
-  return sendTelegramMessage(telegramId, text, replyMarkup);
-}
-
 // Bot /start message translations for all 27 supported languages
 const SITE = WEB_APP_URL.replace(/\/$/, '') + '/';
 /**

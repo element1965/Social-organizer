@@ -442,8 +442,6 @@
     "minimum": "Min intensjon",
     "stakeEmpty": "Ikke satt",
     "collections": "Aktivitet",
-    "openOne": "{{count}} åpen",
-    "openMany": "{{count}} åpne",
     "notifications": "Varsler",
     "notificationsAll": "Alle",
     "notificationsSome": "Noen",

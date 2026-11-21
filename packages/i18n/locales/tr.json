@@ -442,8 +442,6 @@
     "minimum": "Niyetim",
     "stakeEmpty": "Belirtilmedi",
     "collections": "Etkinlik",
-    "openOne": "{{count}} açık",
-    "openMany": "{{count}} açık",
     "notifications": "Bildirimler",
     "notificationsAll": "Tümü",
     "notificationsSome": "Bir kısmı",

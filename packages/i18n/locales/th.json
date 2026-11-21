@@ -439,8 +439,6 @@
     "minimum": "ความตั้งใจของฉัน",
     "stakeEmpty": "ยังไม่ได้ตั้ง",
     "collections": "กิจกรรม",
-    "openOne": "{{count}} รายการที่เปิดอยู่",
-    "openMany": "{{count}} รายการที่เปิดอยู่",
     "notifications": "การแจ้งเตือน",
     "notificationsAll": "ทั้งหมด",
     "notificationsSome": "บางส่วน",

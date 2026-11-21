@@ -1,24 +1,5 @@
-import type { SVGProps } from 'react';
+import { Svg, type IconProps } from './Svg';
 import { cn } from '../../lib/utils';
-
-type IconProps = SVGProps<SVGSVGElement>;
-
-function Svg({ strokeWidth = 1.8, children, ...props }: IconProps) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={strokeWidth}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      {...props}
-    >
-      {children}
-    </svg>
-  );
-}
 
 export function IconCircle(props: IconProps) {
   return (

@@ -132,13 +132,6 @@ export function setupQueues(): void {
   console.log('BullMQ: all queues and workers initialized');
 }
 
-/** Enqueue collection block check */
-export async function enqueueCheckBlock(collectionId: string): Promise<void> {
-  const redis = getRedisConnection();
-  const queue = new Queue('collection-check-block', queueOpts(redis));
-  await queue.add('check-block', { collectionId });
-}
-
 /** Messages per queue job: 250 take about ten seconds to send, so that is the longest a wave waits behind one. */
 export const TG_JOB_SIZE = 250;
 /** BullMQ priorities (1 is first): a Need's wave goes before a mailing to everyone. */
