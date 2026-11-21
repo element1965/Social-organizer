@@ -404,6 +404,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   // ---- rendering ----
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
+  let sceneDirty = true;
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const fog = new THREE.Fog(0x6c7f86, 40, 200);
@@ -529,7 +530,10 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   };
   drawTile(null);
   const logo = new Image();
-  logo.onload = () => drawTile(logo);
+  logo.onload = () => {
+    drawTile(logo);
+    sceneDirty = true;
+  };
   logo.src = '/logo.png';
 
   const haloMat = new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false });
@@ -829,13 +833,40 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   };
 
   // ---- scroll → page time (beat index + progress) → scene time (phase index + progress) ----
+  let beatBounds: { top: number; height: number }[] = [];
+  let layoutDirty = true;
+  let mariaWidth = els.tags.maria.offsetWidth;
+  const invalidateLayout = () => {
+    layoutDirty = sceneDirty = true;
+  };
+  const canObserveLayout = typeof ResizeObserver !== 'undefined';
+  const layoutObserver = canObserveLayout ? new ResizeObserver(invalidateLayout) : null;
+  if (layoutObserver) {
+    layoutObserver.observe(story);
+    for (const beat of beats) layoutObserver.observe(beat);
+  }
+  // Recheck edge placement when the tag's text, font, or graph styling changes its width.
+  const tagsObserver = canObserveLayout ? new ResizeObserver(() => {
+    mariaWidth = els.tags.maria.offsetWidth;
+    sceneDirty = true;
+  }) : null;
+  tagsObserver?.observe(els.tags.maria, { box: 'border-box' });
   const storyT = () => {
+    const y = scrollY;
+    if (layoutDirty) {
+      beatBounds = beats.map((el) => {
+        const { top, height } = el.getBoundingClientRect();
+        return { top: top + y, height };
+      });
+      if (!tagsObserver) mariaWidth = els.tags.maria.offsetWidth;
+      layoutDirty = false;
+    }
     const mid = innerHeight * 0.5;
     let t = 0;
-    beats.forEach((el, k) => {
-      const r = el.getBoundingClientRect();
-      if (k === 0) t = clamp((mid - r.top) / (r.height * 0.5) - 1, 0, 1);
-      else if (r.top <= mid) t = k + clamp((mid - r.top) / r.height);
+    beatBounds.forEach(({ top, height }, k) => {
+      const dy = mid - (top - y);
+      if (k === 0) t = clamp(dy / (height * 0.5) - 1, 0, 1);
+      else if (dy >= 0) t = k + clamp(dy / height);
     });
     return t;
   };
@@ -1177,23 +1208,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const v3 = new THREE.Vector3();
   /** Where Oleg's label was put this frame: Maria's goes to the side away from it. */
   let olegX = -1;
-  /**
-   * Maria's label width (offsetWidth + 20), read once and then only when the label's box changes: its text or
-   * the language, the graph's own type, a font that finished loading, a new viewport. Reading it in the frame
-   * would force a layout every frame. The observer runs right after layout, so a frame sees the width the
-   * previous frame laid out, as the in-frame read did for a class switched after the tags.
-   */
-  let mariaW = els.tags.maria.offsetWidth + 20;
-  const mariaRO = typeof ResizeObserver === 'undefined'
-    ? null
-    : new ResizeObserver(() => { mariaW = els.tags.maria.offsetWidth + 20; });
-  mariaRO?.observe(els.tags.maria);
-  /**
-   * Tags are placed with the `translate` property, which adds to the anchor each tag's class sets in
-   * `transform` (landing.css), so the placement is the same as with left/top, without a layout per frame.
-   * Older engines without it keep left/top. A tag that did not move is not written again.
-   */
-  const useTranslate = typeof CSS !== 'undefined' && CSS.supports('translate', '1px 1px');
+  const supportsTagTranslate = typeof CSS !== 'undefined' && CSS.supports?.('translate', '1px 1px');
   const tagPos = new Map<HTMLElement, string>();
   const tagAt = (el: HTMLElement, i: number, on: boolean | undefined) => {
     if (el === els.tags.oleg) olegX = -1;
@@ -1213,7 +1228,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       // her label sits beside the dot: in the graph on the side away from Oleg's, and wherever it would leave
       // the screen, on the other side (the story's pill is on the right; the graph's label starts on the left in
       // a right-to-left page)
-      const w = mariaRO ? mariaW : el.offsetWidth + 20;
+      const w = mariaWidth + 20;
       const startLeft = opts.rtl && graphOn;
       let left = graphOn && olegX >= 0 ? x < olegX : startLeft;
       if (left && x - w < 8) left = false;
@@ -1223,7 +1238,8 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     const pos = `${x}px ${y}px`;
     if (tagPos.get(el) !== pos) {
       tagPos.set(el, pos);
-      if (useTranslate) el.style.translate = pos;
+      // Individual translate composes with the label's CSS anchor transform.
+      if (supportsTagTranslate) el.style.translate = `${pos} 0px`;
       else {
         el.style.left = `${x}px`;
         el.style.top = `${y}px`;
@@ -1242,20 +1258,28 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     dotMat.uniforms.uScale!.value = (innerHeight * pr * 0.5) / Math.tan((camera.fov * Math.PI) / 360);
     dotMat.uniforms.uMax!.value = 12 * pr;
     dotMat.uniforms.uMin!.value = 1.6 * pr;
+    invalidateLayout();
   };
+  const onContextRestored = () => { sceneDirty = true; };
   resize();
-  /** A resize is applied once, at the start of the next frame, before that frame is drawn. */
+  // Apply a burst of resize events once, just before drawing the next frame.
   let resizePending = false;
-  const onResize = () => {
-    resizePending = true;
+  const onResize = () => { resizePending = true; };
+  let layoutSettle = 0;
+  const onScroll = () => {
+    clearTimeout(layoutSettle);
+    layoutSettle = window.setTimeout(invalidateLayout, 150);
   };
   addEventListener('resize', onResize);
+  if (!layoutObserver) addEventListener('scroll', onScroll, { passive: true });
+  canvas.addEventListener('webglcontextrestored', onContextRestored);
 
   let visible = true;
   const io = new IntersectionObserver((entries) => {
     const e = entries[0];
     if (!e) return;
     visible = e.isIntersecting;
+    if (visible) sceneDirty = true;
     els.root.classList.toggle('past', !e.isIntersecting && e.boundingClientRect.top < 0);
   });
   io.observe(story);
@@ -1406,6 +1430,8 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     if (nowGraph !== graphOn) {
       graphOn = nowGraph;
       els.root.classList.toggle('graph', graphOn);
+      // The graph changes the label styling. Refresh its width for the next placement.
+      if (!tagsObserver) mariaWidth = els.tags.maria.offsetWidth;
     }
     // the evening darkens as the story goes on; then the app's scene takes over, its wash centred on you
     const nt = clamp((tS - 2.6) / 5);
@@ -1438,6 +1464,8 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   };
 
   let raf = 0;
+  let stillTime = 0;
+  let stillFrames = 0;
   const frame = (now: number) => {
     raf = requestAnimationFrame(frame);
     if (resizePending) {
@@ -1448,7 +1476,19 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     const dt = clamp((now - last) / 1000, 0, 0.05);
     last = now;
     if (!visible || document.hidden) return;
-    tick(dt, storyT());
+    const target = storyT();
+    if (reduce) {
+      if (!introDone || sceneDirty || target !== tD) {
+        stillTime = stillFrames = 0;
+      } else {
+        // The camera damps by elapsed time, colours and sizes by frame count.
+        if (stillTime >= 4 && stillFrames >= 60) return;
+        stillTime += dt;
+        stillFrames++;
+      }
+    }
+    sceneDirty = false;
+    tick(dt, target);
   };
   raf = requestAnimationFrame(frame);
   // the late words take their state now, before the page marks the scene ready, not a frame later
@@ -1498,12 +1538,19 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       if (next.money.shortfall !== opts.money.shortfall || next.money.mine !== opts.money.mine) setMoney(next.money);
       opts = next;
       lastHud = '';
+      invalidateLayout();
     },
     destroy() {
       cancelAnimationFrame(raf);
       removeEventListener('resize', onResize);
+      canvas.removeEventListener('webglcontextrestored', onContextRestored);
+      if (!layoutObserver) {
+        removeEventListener('scroll', onScroll);
+        clearTimeout(layoutSettle);
+      }
+      layoutObserver?.disconnect();
+      tagsObserver?.disconnect();
       io.disconnect();
-      mariaRO?.disconnect();
       logo.onload = null;
       els.root.classList.remove('past', 'graph');
       canvas.style.opacity = '';

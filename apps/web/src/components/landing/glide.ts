@@ -73,6 +73,7 @@ export function initGlide(beats: HTMLElement[], main: HTMLElement, root: HTMLEle
       cancelAnimationFrame(anim);
       anim = 0;
       anchorY = scrollY;
+      html.style.scrollBehavior = '';
     }
   };
   const finish = () => {
@@ -140,10 +141,14 @@ export function initGlide(beats: HTMLElement[], main: HTMLElement, root: HTMLEle
     x0: number;
     y0: number;
     s0: number;
-    lock: 0 | 1 | 2; // undecided, vertical, horizontal
+    vertical: boolean;
     samples: [number, number][];
   }
   let track: Track | null = null;
+  let dragFrame = 0;
+  let dragY: number | null = null;
+  let scrollContainers = new WeakMap<Element, boolean>();
+  const onResize = () => { scrollContainers = new WeakMap(); };
   const NATIVE = 'input, textarea, select, [contenteditable="true"], [contenteditable=""], [role="dialog"], [aria-modal="true"], [data-native-scroll]';
   const keepsNative = (target: EventTarget | null) => {
     if ((window.visualViewport?.scale ?? 1) > 1.01) return true; // zoomed in: one finger pans the zoom
@@ -151,59 +156,78 @@ export function initGlide(beats: HTMLElement[], main: HTMLElement, root: HTMLEle
     if (!n || !root.contains(n)) return true;
     for (; n && n !== root; n = n.parentElement) {
       if (n.matches(NATIVE)) return true;
-      const oy = getComputedStyle(n).overflowY;
-      if ((oy === 'auto' || oy === 'scroll') && n.scrollHeight > n.clientHeight + 1) return true;
+      let scrollable = scrollContainers.get(n);
+      if (scrollable === undefined) {
+        const overflow = getComputedStyle(n).overflowY;
+        scrollable = overflow === 'auto' || overflow === 'scroll';
+        scrollContainers.set(n, scrollable);
+      }
+      if (scrollable && n.scrollHeight > n.clientHeight + 1) return true;
     }
     return false;
   };
-  const onTouchStart = (e: TouchEvent) => {
+  const cancelTouch = () => {
+    if (dragFrame) cancelAnimationFrame(dragFrame);
+    dragFrame = 0;
+    dragY = null;
     track = null;
+    if (touching) finish();
+  };
+  const flushDrag = () => {
+    dragFrame = 0;
+    if (dragY !== null) setScroll(dragY);
+    dragY = null;
+  };
+  const onTouchStart = (e: TouchEvent) => {
+    cancelTouch();
     if (e.touches.length !== 1 || keepsNative(e.target)) return;
     stop();
     clearTimeout(idle);
     const t = e.touches[0]!;
-    track = { x0: t.clientX, y0: t.clientY, s0: scrollY, lock: 0, samples: [[e.timeStamp, t.clientY]] };
+    track = { x0: t.clientX, y0: t.clientY, s0: scrollY, vertical: false, samples: [[e.timeStamp, t.clientY]] };
     touching = true;
     anchorY = scrollY;
   };
   const onTouchMove = (e: TouchEvent) => {
     const tr = track;
     if (!tr) return;
-    if (e.touches.length !== 1) {
-      // a second finger: a pinch is the browser's
-      track = null;
-      touching = false;
+    if (e.touches.length !== 1 || !e.cancelable) {
+      cancelTouch();
       return;
     }
     const t = e.touches[0]!;
     const dx = t.clientX - tr.x0;
     const dy = t.clientY - tr.y0;
-    if (!tr.lock) {
+    if (!tr.vertical) {
       if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
-      tr.lock = Math.abs(dy) >= Math.abs(dx) ? 1 : 2;
+      if (Math.abs(dx) > Math.abs(dy)) {
+        cancelTouch();
+        return;
+      }
+      tr.vertical = true;
+      html.style.scrollBehavior = 'auto';
     }
-    if (tr.lock !== 1) return;
-    if (e.cancelable) e.preventDefault();
-    html.style.scrollBehavior = 'auto';
-    setScroll(tr.s0 - dy);
+    e.preventDefault();
+    dragY = tr.s0 - dy;
+    if (!dragFrame) dragFrame = requestAnimationFrame(flushDrag);
     tr.samples.push([e.timeStamp, t.clientY]);
     while (tr.samples.length > 2 && e.timeStamp - tr.samples[0]![0] > 100) tr.samples.shift();
   };
   const onTouchEnd = (e: TouchEvent) => {
     const tr = track;
+    if (!tr?.vertical) return cancelTouch();
     track = null;
-    if (!tr || tr.lock !== 1) {
-      touching = false;
-      return;
-    }
     // the speed of the last 100 ms of the gesture; a finger that rested before lifting has none
     let v = 0;
     const s = tr.samples;
     const lastS = s[s.length - 1]!;
-    if (e.type === 'touchend' && s.length >= 2 && e.timeStamp - lastS[0] < 60) {
+    if (s.length >= 2 && e.timeStamp - lastS[0] < 60) {
       const firstS = s[0]!;
       v = -(lastS[1] - firstS[1]) / Math.max(16, lastS[0] - firstS[0]);
     }
+    if (dragFrame) cancelAnimationFrame(dragFrame);
+    flushDrag();
+    touching = false;
     release(tr.s0, v);
   };
   const release = (from: number, v: number) => {
@@ -230,21 +254,25 @@ export function initGlide(beats: HTMLElement[], main: HTMLElement, root: HTMLEle
   const cancelEvents = ['wheel', 'keydown', 'mousedown'] as const;
   for (const ev of cancelEvents) addEventListener(ev, stop, { passive: true });
   addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onResize, { passive: true });
   addEventListener('touchstart', onTouchStart, { passive: true });
-  addEventListener('touchmove', onTouchMove, { passive: false });
+  // The browser must see the blocking listener before a gesture starts, even during a busy touch-down.
+  root.addEventListener('touchmove', onTouchMove, { passive: false });
   addEventListener('touchend', onTouchEnd, { passive: true });
-  addEventListener('touchcancel', onTouchEnd, { passive: true });
+  addEventListener('touchcancel', cancelTouch, { passive: true });
   if (import.meta.env.DEV) (window as unknown as { __lvRest?: () => number[] }).__lvRest = () => restPoints().map(Math.round);
   return () => {
     stop();
+    cancelTouch();
     clearTimeout(idle);
     html.style.scrollBehavior = '';
     for (const ev of cancelEvents) removeEventListener(ev, stop);
     removeEventListener('scroll', onScroll);
+    removeEventListener('resize', onResize);
     removeEventListener('touchstart', onTouchStart);
-    removeEventListener('touchmove', onTouchMove);
+    root.removeEventListener('touchmove', onTouchMove);
     removeEventListener('touchend', onTouchEnd);
-    removeEventListener('touchcancel', onTouchEnd);
+    removeEventListener('touchcancel', cancelTouch);
     if (import.meta.env.DEV) delete (window as unknown as { __lvRest?: unknown }).__lvRest;
   };
 }

@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
-import { defineConfig, loadEnv, type Plugin } from 'vite';
+import { fileURLToPath } from 'node:url';
+import { defineConfig, loadEnv, normalizePath, type HtmlTagDescriptor, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { SUPPORTED_LANGUAGES } from '../../packages/i18n/src/languages';
 import { renderPublicSitemap } from '../../packages/shared/src/web-routes';
@@ -78,12 +79,44 @@ function siteMetadata(siteUrl: string): Plugin {
   };
 }
 
+function firstPaintPreloads(): Plugin {
+  const englishLocale = normalizePath(fileURLToPath(new URL('../../packages/i18n/locales/en.json', import.meta.url)));
+  return {
+    name: 'first-paint-preloads',
+    transformIndexHtml(_html, { bundle }) {
+      // Discover both assets in the HTML, after the entry and render-blocking stylesheet.
+      const tags: HtmlTagDescriptor[] = [{
+        tag: 'link',
+        attrs: { rel: 'preload', href: '/fonts/manrope-latin.woff2', as: 'font', type: 'font/woff2', crossorigin: '' },
+        injectTo: 'head',
+      }];
+      const english = bundle && Object.values(bundle).find((entry) =>
+        entry.type === 'chunk' && entry.facadeModuleId && normalizePath(entry.facadeModuleId) === englishLocale,
+      );
+      if (english) {
+        tags.push({
+          tag: 'link',
+          attrs: { rel: 'modulepreload', href: `/${english.fileName}`, crossorigin: '' },
+          injectTo: 'head',
+        });
+      }
+      return tags;
+    },
+  };
+}
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), ['DEV_', 'VITE_']);
   const apiTarget = env.DEV_API_TARGET || 'http://localhost:3001';
   const siteUrl = (env.VITE_WEB_APP_URL || DEFAULT_WEB_APP_URL).replace(/\/$/, '');
   return {
-    plugins: [react(), siteMetadata(siteUrl)],
+    plugins: [react(), siteMetadata(siteUrl), firstPaintPreloads()],
+    resolve: {
+      alias: [{
+        find: /^three\/webgpu$/,
+        replacement: fileURLToPath(new URL('./build/webgpu-shim.ts', import.meta.url)),
+      }],
+    },
     server: {
       port: Number(env.DEV_WEB_PORT) || 3000,
       strictPort: true,
