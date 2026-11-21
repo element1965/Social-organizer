@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@so/db';
+import type { Prisma, PrismaClient } from '@so/db';
 import { sendTgMessages, type TgReplyMarkup } from './telegram-bot.service.js';
 import { sendPushNotification, type WebPushPayload } from './push.service.js';
 
@@ -122,42 +122,71 @@ export async function deliverMany(
   db: PrismaClient,
   userIds: string[],
   eventFor: (userId: string) => OutgoingEvent | null,
+  { recordAfterDispatch = false, eligibleRecipients }: {
+    recordAfterDispatch?: boolean;
+    eligibleRecipients?: () => Promise<Set<string>>;
+  } = {},
 ): Promise<Map<string, DeliveryOutcome>> {
   const outcomes = new Map<string, DeliveryOutcome>();
   if (userIds.length === 0) return outcomes;
   const targets = await loadTargets(db, userIds);
+  const eligible = await eligibleRecipients?.();
 
-  const pushByPayload = new Map<string, { payload: WebPushPayload; userIds: string[] }>();
+  type Claim = Prisma.NotificationDeliveryCreateManyInput;
+  const pushByPayload = new Map<string, { payload: WebPushPayload; claims: Claim[] }>();
   const tgMessages: Array<{ telegramId: string; text: string; replyMarkup?: TgReplyMarkup }> = [];
+  const tgClaims: Claim[] = [];
 
   for (const userId of new Set(userIds)) {
     const target = targets.get(userId);
     const event = target ? eventFor(userId) : null;
-    if (!target || !event) { outcomes.set(userId, 'noRecipient'); continue; }
+    if (!target || !event || (eligible && !eligible.has(userId))) { outcomes.set(userId, 'noRecipient'); continue; }
     if (event.kind === 'newCollection' && !target.newCollections) { outcomes.set(userId, 'muted'); continue; }
 
     let channel = target.channel;
     let tgMessage = channel === 'TELEGRAM' ? event.telegram(target.lang) : null;
     if (channel === 'TELEGRAM' && !tgMessage) channel = 'APP'; // nothing for Telegram → the same event in the app
 
-    if (!(await claim(db, userId, event.key, channel))) { outcomes.set(userId, 'duplicate'); continue; }
+    // The pending notice already has an exclusive lease. Leave the final key free until handoff,
+    // so a restart between the lease and the transport call can still deliver the message.
+    const duplicate = recordAfterDispatch
+      ? await db.notificationDelivery.findUnique({
+        where: { userId_eventKey: { userId, eventKey: event.key } },
+        select: { id: true },
+      })
+      : !(await claim(db, userId, event.key, channel));
+    if (duplicate) { outcomes.set(userId, 'duplicate'); continue; }
     outcomes.set(userId, 'sent');
+    const delivery = { userId, eventKey: event.key, channel };
 
     if (channel === 'TELEGRAM' && tgMessage && target.telegramId) {
       tgMessages.push({ telegramId: target.telegramId, ...tgMessage });
+      tgClaims.push(delivery);
     } else {
       const k = JSON.stringify(event.push);
-      const group = pushByPayload.get(k) ?? { payload: event.push, userIds: [] };
-      group.userIds.push(userId);
+      const group = pushByPayload.get(k) ?? { payload: event.push, claims: [] };
+      group.claims.push(delivery);
       pushByPayload.set(k, group);
     }
   }
 
-  for (const { payload, userIds: ids } of pushByPayload.values()) {
-    await sendPushNotification(db, ids, payload).catch((err) => console.error('[Delivery] push failed:', err));
+  for (const { payload, claims } of pushByPayload.values()) {
+    const sending = sendPushNotification(db, claims.map(({ userId }) => userId), payload);
+    if (recordAfterDispatch) {
+      await sending;
+      await db.notificationDelivery.createMany({ data: claims, skipDuplicates: true });
+    } else {
+      await sending.catch((err) => console.error('[Delivery] push failed:', err));
+    }
   }
   if (tgMessages.length > 0) {
-    await sendTgMessages(tgMessages).catch((err) => console.error('[Delivery] telegram failed:', err));
+    const sending = sendTgMessages(tgMessages);
+    if (recordAfterDispatch) {
+      await sending;
+      await db.notificationDelivery.createMany({ data: tgClaims, skipDuplicates: true });
+    } else {
+      await sending.catch((err) => console.error('[Delivery] telegram failed:', err));
+    }
   }
   return outcomes;
 }

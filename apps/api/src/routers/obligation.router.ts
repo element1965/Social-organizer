@@ -3,13 +3,13 @@ import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
 import { transactionWithRetry } from '../lib/tx-retry.js';
-import { applyCollectionGoal, dispatchCollectionGoalReached, syncCollectionGoal } from '../services/collection-amount.js';
+import { applyCollectionGoal, dispatchCollectionGoalReached } from '../services/collection-amount.js';
 import { scheduleResponseDigest } from '../services/notification.service.js';
 import { dismissNeedRequests, recordResponded } from '../services/notify-routing.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
 import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
 import { chatLinkFor, confirmedRenewals } from '../services/collection-view.js';
-import { assertOpenNeed, lockNeed } from '../services/collection-state.js';
+import { assertOpenNeed, lockActiveNeedAccount, lockNeed } from '../services/collection-state.js';
 
 const displayedCycle = z.object({ collectionId: z.string(), cycleNumber: z.number().int().positive() });
 
@@ -28,7 +28,8 @@ export const obligationRouter = router({
       isSubscription: z.boolean().default(false),
     }))
     .mutation(async ({ ctx, input }) => {
-      const { collection, obligation } = await transactionWithRetry(ctx.db, async (tx) => {
+      const { collection, obligation, hold } = await transactionWithRetry(ctx.db, async (tx) => {
+        await lockActiveNeedAccount(tx, ctx.userId);
         const collection = await lockNeed(tx, input.collectionId);
         assertOpenNeed(collection);
         if (collection.status !== 'ACTIVE') {
@@ -42,8 +43,13 @@ export const obligationRouter = router({
             isSubscription: input.isSubscription,
           },
         });
-        return { collection, obligation };
+        const hold = await applyCollectionGoal(tx, input.collectionId, collection);
+        return { collection, obligation, hold };
       });
+
+      if (hold) await dispatchCollectionGoalReached(ctx.db, input.collectionId, hold).catch((err) =>
+        console.error('[obligation.create] Goal notice dispatch failed:', err),
+      );
 
       // The author hears about responses as one grouped message, not one per person (SO-45)
       if (collection.creatorId !== ctx.userId) {
@@ -56,7 +62,6 @@ export const obligationRouter = router({
       const earned = await syncMilestonesQuietly(ctx.db, ctx.userId);
       const firstParticipation = earned.some((m) =>
         m.kind === 'FIRST_PARTICIPATION' && m.obligationId === obligation.id);
-      await syncCollectionGoal(ctx.db, input.collectionId);
       return { ...obligation, firstParticipation };
     }),
 
@@ -119,8 +124,9 @@ export const obligationRouter = router({
       if (!obligation) throw new TRPCError({ code: 'NOT_FOUND' });
       if (obligation.userId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
 
-      const updated = await transactionWithRetry(ctx.db, async (tx) => {
-        assertOpenNeed(await lockNeed(tx, obligation.collectionId));
+      const { updated, hold } = await transactionWithRetry(ctx.db, async (tx) => {
+        const collection = await lockNeed(tx, obligation.collectionId);
+        assertOpenNeed(collection);
         const [row] = await tx.obligation.updateManyAndReturn({
           where: { id: input.obligationId, unsubscribedAt: null },
           data: {
@@ -131,10 +137,13 @@ export const obligationRouter = router({
           omit: { confirmedAt: true },
         });
         if (!row) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Participation is no longer active' });
-        return row;
+        const hold = await applyCollectionGoal(tx, obligation.collectionId, collection);
+        return { updated: row, hold };
       });
 
-      await syncCollectionGoal(ctx.db, obligation.collectionId);
+      if (hold) await dispatchCollectionGoalReached(ctx.db, obligation.collectionId, hold).catch((err) =>
+        console.error('[obligation.updateAmount] Goal notice dispatch failed:', err),
+      );
       return updated;
     }),
 
@@ -259,8 +268,9 @@ export const obligationRouter = router({
       if (!obligation.isSubscription) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Not a subscription' });
       }
-      const updated = await transactionWithRetry(ctx.db, async (tx) => {
-        assertOpenNeed(await lockNeed(tx, obligation.collectionId));
+      const hold = await transactionWithRetry(ctx.db, async (tx) => {
+        const collection = await lockNeed(tx, obligation.collectionId);
+        assertOpenNeed(collection);
         const result = await tx.obligation.updateMany({
           where: { id: input.obligationId, unsubscribedAt: null },
           data: { unsubscribedAt: new Date() },
@@ -271,10 +281,12 @@ export const obligationRouter = router({
             select: { id: true },
           });
           if (!remaining) await dismissNeedRequests(tx, ctx.userId, obligation.collectionId);
+          return applyCollectionGoal(tx, obligation.collectionId, collection);
         }
-        return result;
       });
-      if (updated.count > 0) await syncCollectionGoal(ctx.db, obligation.collectionId);
+      if (hold) await dispatchCollectionGoalReached(ctx.db, obligation.collectionId, hold).catch((err) =>
+        console.error('[obligation.unsubscribe] Goal notice dispatch failed:', err),
+      );
       return { ok: true as const };
     }),
 
@@ -282,17 +294,21 @@ export const obligationRouter = router({
   unsubscribeFromCollection: protectedProcedure
     .input(z.object({ collectionId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const updated = await transactionWithRetry(ctx.db, async (tx) => {
-        assertOpenNeed(await lockNeed(tx, input.collectionId));
+      const hold = await transactionWithRetry(ctx.db, async (tx) => {
+        const collection = await lockNeed(tx, input.collectionId);
+        assertOpenNeed(collection);
         const result = await tx.obligation.updateMany({
           where: { collectionId: input.collectionId, userId: ctx.userId, unsubscribedAt: null },
           data: { unsubscribedAt: new Date() },
         });
-        if (result.count > 0) await dismissNeedRequests(tx, ctx.userId, input.collectionId);
-        return result;
+        if (result.count > 0) {
+          await dismissNeedRequests(tx, ctx.userId, input.collectionId);
+          return applyCollectionGoal(tx, input.collectionId, collection);
+        }
       });
-      // A goal-reached hold (blockReason null) opens again when the active total drops below the goal.
-      if (updated.count > 0) await syncCollectionGoal(ctx.db, input.collectionId);
+      if (hold) await dispatchCollectionGoalReached(ctx.db, input.collectionId, hold).catch((err) =>
+        console.error('[obligation.unsubscribeFromCollection] Goal notice dispatch failed:', err),
+      );
       return { ok: true as const };
     }),
 

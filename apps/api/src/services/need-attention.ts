@@ -2,19 +2,25 @@ import type { Prisma, PrismaClient } from '@so/db';
 import { confirmedRenewals, needsCycleConfirmation } from './collection-view.js';
 import { NEED_REQUEST_TYPES } from './notify-routing.service.js';
 
-const openNeed = {
+export const openNeedForRequests = {
   status: 'ACTIVE',
   OR: [{ blockReason: null }, { blockReason: { not: 'COMMUNITY' } }],
 } satisfies Prisma.CollectionWhereInput;
 
-export function waitingNeedRequests(userId: string, now: Date): Prisma.NotificationWhereInput {
+export function liveNeedRequests(now: Date): Prisma.NotificationWhereInput {
   return {
-    userId,
     status: { in: ['UNREAD', 'READ'] },
     type: { in: [...NEED_REQUEST_TYPES] },
     expiresAt: { gt: now },
+  };
+}
+
+export function waitingNeedRequests(userId: string, now: Date): Prisma.NotificationWhereInput {
+  return {
+    ...liveNeedRequests(now),
+    userId,
     collection: {
-      ...openNeed,
+      ...openNeedForRequests,
       creatorId: { not: userId },
       obligations: { none: { userId, unsubscribedAt: null } },
     },
@@ -25,7 +31,7 @@ export async function waitingNeedRenewals(db: PrismaClient, userId: string) {
   const activeParticipation = { userId, unsubscribedAt: null };
   const candidates = await db.collection.findMany({
     where: {
-      ...openNeed,
+      ...openNeedForRequests,
       creatorId: { not: userId },
       type: 'REGULAR',
       cycleNumber: { gt: 1 },

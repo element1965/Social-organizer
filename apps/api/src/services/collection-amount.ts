@@ -34,11 +34,11 @@ export async function applyCollectionGoal(
   collectionId: string,
   collection: NeedState,
 ): Promise<GoalHold | undefined> {
-  if (collection.amount == null || collection.blockReason != null ||
+  if (collection.blockReason != null ||
     (collection.status !== 'ACTIVE' && collection.status !== 'BLOCKED')) return;
 
-  const { amount: sum } = await activeObligationTotals(tx, collectionId);
-  if (sum >= collection.amount && collection.status === 'ACTIVE') {
+  const reached = collection.amount != null && (await activeObligationTotals(tx, collectionId)).amount >= collection.amount;
+  if (reached && collection.status === 'ACTIVE') {
     const blockedAt = new Date();
     await tx.collection.update({
       where: { id: collectionId },
@@ -55,7 +55,7 @@ export async function applyCollectionGoal(
     return { blockedAt, creatorId: collection.creatorId };
   }
 
-  if (sum < collection.amount && collection.status === 'BLOCKED') {
+  if (!reached && collection.status === 'BLOCKED') {
     await tx.collection.update({
       where: { id: collectionId },
       data: { status: 'ACTIVE', blockedAt: null },

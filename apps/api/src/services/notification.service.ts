@@ -9,6 +9,9 @@ import { timedWalk } from './runtime-metrics.service.js';
 import type { TgReplyMarkup } from './telegram-bot.service.js';
 import { deliver, deliverMany } from './delivery.service.js';
 import { tgEscape } from './tg-html.js';
+import { transactionWithRetry } from '../lib/tx-retry.js';
+import { findNeedForUpdate } from './collection-state.js';
+import { liveNeedRequests, openNeedForRequests } from './need-attention.js';
 
 
 /** People written per insert when a wave is stored. */
@@ -74,7 +77,7 @@ export async function sendCollectionNotifications(
   // Other types keep the plain nearest-first walk.
   const isRequest = type === 'NEW_COLLECTION' || type === 'RE_NOTIFY';
   let recipients: BfsRecipient[];
-  let external: BfsRecipient[];
+  let external: BfsRecipient[] = [];
   if (isRequest) {
     // Rings are walked one at a time and only while the budget lasts: a $300 Need in a network of a
     // million people stops in the 2nd–3rd ring instead of walking everyone up to the 6th handshake
@@ -86,33 +89,53 @@ export async function sendCollectionNotifications(
     external = plan.external;
   } else {
     recipients = await findRecipientsViaBfs(db, creatorId, undefined, maxRecipients, [...ignoredUserIds]);
-    external = recipients;
   }
   if (recipients.length === 0) return 0;
 
   const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
 
-  // One insert per batch instead of one round trip per person: a wave can reach thousands of people.
-  // Rows that already exist (a retried wave) are skipped by the unique key and still count as told.
+  const externalIds = new Set(external.map(({ userId }) => userId));
+  const externalNotices: { id: string; userId: string }[] = [];
   let created = 0;
   for (let i = 0; i < recipients.length; i += INSERT_BATCH) {
     const batch = recipients.slice(i, i + INSERT_BATCH);
     try {
-      await db.notification.createMany({
-        data: batch.map((recipient) => ({
-          userId: recipient.userId, collectionId, type,
-          handshakePath: recipient.path, expiresAt, wave,
-        })),
-        skipDuplicates: true,
+      const data = batch.map(({ userId, path }) => ({
+        userId, collectionId, type, handshakePath: path, expiresAt, wave,
+      }));
+      if (!isRequest) {
+        created += (await db.notification.createMany({ data, skipDuplicates: true })).count;
+        continue;
+      }
+
+      const inserted = await transactionWithRetry(db, async (tx) => {
+        const need = await findNeedForUpdate(tx, collectionId);
+        if (!need || need.status !== 'ACTIVE' || need.blockReason === 'COMMUNITY') return null;
+
+        // Another wave can have told some of these people since the graph was read.
+        const notified = await tx.notification.findMany({
+          where: { collectionId, userId: { in: batch.map(({ userId }) => userId) } },
+          select: { userId: true },
+        });
+        const seen = new Set(notified.map(({ userId }) => userId));
+        return tx.notification.createManyAndReturn({
+          data: data.filter(({ userId }) => !seen.has(userId)),
+          skipDuplicates: true,
+          select: { id: true, userId: true },
+        });
       });
-      created += batch.length;
+      if (!inserted) break;
+      created += inserted.length;
+      for (const row of inserted) {
+        if (externalIds.has(row.userId)) externalNotices.push(row);
+      }
     } catch (err) {
       console.error('[Notify] wave batch failed:', err);
     }
   }
 
-  if (created > 0 && isRequest && external.length > 0) {
-    dispatchNewCollection(db, collectionId, creatorId, external.map((r) => r.userId), type).catch((err) =>
+  if (isRequest && externalNotices.length > 0) {
+    dispatchNewCollection(db, collectionId, creatorId, externalNotices, type).catch((err) =>
       console.error('[Notify] new collection dispatch failed:', err),
     );
   }
@@ -127,17 +150,21 @@ export async function sendCollectionClosedTg(
   db: PrismaClient,
   collectionId: string,
   creatorId: string,
+  recipientUserIds?: string[],
+  recordAfterDispatch = false,
 ): Promise<void> {
-  const notifiedUsers = await db.notification.findMany({
-    where: { collectionId },
-    select: { userId: true },
-    distinct: ['userId'],
-  });
-  const recipientUserIds = notifiedUsers.map((n) => n.userId).filter((id) => id !== creatorId);
+  if (!recipientUserIds) {
+    const notified = await db.notification.findMany({
+      where: { collectionId, userId: { not: creatorId } },
+      select: { userId: true },
+      distinct: ['userId'],
+    });
+    recipientUserIds = notified.map(({ userId }) => userId);
+  }
   if (recipientUserIds.length === 0) return;
 
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
-  const collection = await db.collection.findUnique({ where: { id: collectionId }, select: { amount: true } });
+  const collection = await db.collection.findUnique({ where: { id: collectionId, status: 'CLOSED' }, select: { amount: true } });
   if (!creator || !collection) return;
 
   const amountStr = collection.amount != null ? `${groupNumber(collection.amount)}\u00a0USD` : ''; // 1 unit = 1 $ (SO-40)
@@ -151,7 +178,7 @@ export async function sendCollectionClosedTg(
       text: `✅ <b>${tg(lang, 'closed')}</b>\n\n${tg(lang, 'from')}: <b>${tgEscape(creator.name)}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'closedBody')}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]] },
     }),
-  }));
+  }), { recordAfterDispatch });
 }
 
 /**
@@ -389,6 +416,7 @@ export async function sendCycleRenewalReminderTg(
   creatorId: string,
   recipientUserIds: string[],
   cycleNumber: number,
+  recordAfterDispatch = false,
 ): Promise<void> {
   if (recipientUserIds.length === 0) return;
 
@@ -417,7 +445,7 @@ export async function sendCycleRenewalReminderTg(
       text: `🔔 <b>${tg(lang, 'renewalReminderTitle')}</b>\n\n${tg(lang, 'renewalReminderBody').replace('{{name}}', tgEscape(names.get(userId))).replace('{{creator}}', tgEscape(creator.name))}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]] },
     }),
-  }));
+  }), { recordAfterDispatch });
 }
 
 /**
@@ -429,6 +457,7 @@ export async function sendCycleRenewedTg(
   creatorId: string,
   recipientUserIds: string[],
   cycleNumber: number,
+  recordAfterDispatch = false,
 ): Promise<void> {
   if (recipientUserIds.length === 0) return;
 
@@ -456,7 +485,7 @@ export async function sendCycleRenewedTg(
       text: `🔁 <b>${tg(lang, 'renewalStartTitle')}</b>\n\n${tg(lang, 'renewalStartBody').replace('{{name}}', tgEscape(names.get(userId))).replace('{{creator}}', tgEscape(creator.name))}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]] },
     }),
-  }));
+  }), { recordAfterDispatch });
 }
 
 async function userNames(db: PrismaClient, ids: string[]): Promise<Map<string, string>> {
@@ -469,7 +498,7 @@ async function dispatchNewCollection(
   db: PrismaClient,
   collectionId: string,
   creatorId: string,
-  recipientUserIds: string[],
+  notices: { id: string; userId: string }[],
   type: 'NEW_COLLECTION' | 'RE_NOTIFY',
 ): Promise<void> {
   const collection = await db.collection.findUnique({ where: { id: collectionId }, select: { type: true, amount: true } });
@@ -483,7 +512,7 @@ async function dispatchNewCollection(
     ? { title: 'Reminder', body: 'A Need in your network is still open.', url: webAppLink }
     : { title: 'New Need', body: 'Someone in your network has reported a Need.', url: webAppLink };
 
-  const outcomes = await deliverMany(db, recipientUserIds, () => ({
+  const outcomes = await deliverMany(db, notices.map(({ userId }) => userId), () => ({
     key: `col:${collectionId}:new`, // one message per person per collection, whatever the wave
     kind: 'newCollection',
     push,
@@ -491,7 +520,21 @@ async function dispatchNewCollection(
       text: `${isEmergency ? '🚨' : '📢'} <b>${isEmergency ? tg(lang, 'newEmergency') : tg(lang, 'newRegular')}</b>\n\n${tg(lang, 'from')}: <b>${tgEscape(creator.name)}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'networkSupport')}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]] },
     }),
-  }));
+  }), {
+    // The Need or the person's decision may have changed since the batch committed.
+    eligibleRecipients: async () => {
+      const eligible = await db.notification.findMany({
+        where: {
+          ...liveNeedRequests(new Date()),
+          id: { in: notices.map(({ id }) => id) },
+          collection: openNeedForRequests,
+          user: { deletedAt: null, obligations: { none: { collectionId, unsubscribedAt: null } } },
+        },
+        select: { userId: true },
+      });
+      return new Set(eligible.map(({ userId }) => userId));
+    },
+  });
   const counts: Record<string, number> = {};
   for (const o of outcomes.values()) counts[o] = (counts[o] ?? 0) + 1;
   console.log(`[Notify] collection ${collectionId} ${type}:`, counts);

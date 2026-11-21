@@ -2,7 +2,8 @@ import { z } from 'zod';
 import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MAX_CHAT_LINK_LENGTH, MIN_COLLECTION_AMOUNT, NOTIFICATION_RATIO } from '@so/shared';
-import { sendCollectionNotifications, sendCollectionClosedTg } from '../services/notification.service.js';
+import { sendCollectionNotifications } from '../services/notification.service.js';
+import { dispatchPendingNeedNotices, enqueueNeedNotice } from '../services/notice-delivery.js';
 import { isAdmin } from '../admin.js';
 import { invalidateGraph } from '../services/graph-cache.service.js';
 import { recordOpened } from '../services/notify-routing.service.js';
@@ -10,7 +11,9 @@ import { waitingNeedRequests } from '../services/need-attention.js';
 import { getAskAccess, assertAskAllowed, isSpecialAsker } from '../services/ask-access.service.js';
 import { accountScope, assertAccount } from '../services/account-scope.js';
 import { ADMIN_BLOCK_REASONS } from '../config/ask.js';
-import { activeObligationTotals, syncCollectionGoal } from '../services/collection-amount.js';
+import { activeObligationTotals, applyCollectionGoal, dispatchCollectionGoalReached, syncCollectionGoal } from '../services/collection-amount.js';
+import { lockActiveNeedAccount, lockNeed } from '../services/collection-state.js';
+import { transactionWithRetry } from '../lib/tx-retry.js';
 import { settleOpenReviews } from '../services/moderation.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
 import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
@@ -148,7 +151,8 @@ export const collectionRouter = router({
 
       // Limit: max 1 emergency + 1 regular at the same time. The check and the insert run under a lock on
       // creator + type (SEC-7), so concurrent requests cannot both see "none active" and both create.
-      const collection = await ctx.db.$transaction(async (tx) => {
+      const collection = await transactionWithRetry(ctx.db, async (tx) => {
+        await lockActiveNeedAccount(tx, ctx.userId);
         // 64-bit key, domain-separated from the other advisory locks (e-mail codes, push subscriptions)
         await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${`need-create:${ctx.userId}:${input.type}`}, 0))`;
         const existingActive = await tx.collection.count({
@@ -314,18 +318,31 @@ export const collectionRouter = router({
 
       const amountUSD = input.amount;
 
-      const updated = requireUpdated(await ctx.db.collection.updateManyAndReturn({
-        where: { id: input.id, status: { in: [...OPEN_STATUSES] }, blockReason: null, amount: collection.amount },
-        data: {
-          amount: amountUSD,
-          originalAmount: null, // clear goals typed in other currencies before SO-40
-          originalCurrency: null,
-        },
-      }));
+      const { updated, hold } = await transactionWithRetry(ctx.db, async (tx) => {
+        const locked = await lockNeed(tx, input.id);
+        if ((locked.status !== 'ACTIVE' && locked.status !== 'BLOCKED') ||
+          locked.blockReason != null || locked.amount !== collection.amount) {
+          throw new TRPCError({ code: 'CONFLICT', message: 'Collection changed before the action could be saved' });
+        }
+        const hold = await applyCollectionGoal(tx, input.id, { ...locked, amount: amountUSD });
+        const updated = await tx.collection.update({
+          where: { id: input.id },
+          data: {
+            amount: amountUSD,
+            originalAmount: null, // Clear goals entered in other currencies before SO-40.
+            originalCurrency: null,
+          },
+        });
+        return { updated, hold };
+      });
 
-      // If new goal is larger — notify additional recipients for the difference
+      if (hold) await dispatchCollectionGoalReached(ctx.db, input.id, hold).catch((err) =>
+        console.error('[updateAmount] Goal notice dispatch failed:', err),
+      );
+
+      // An increased goal can notify additional recipients only while the Need is active.
       const oldAmount = collection.amount;
-      if (amountUSD != null && (oldAmount == null || amountUSD > oldAmount)) {
+      if (updated.status === 'ACTIVE' && amountUSD != null && (oldAmount == null || amountUSD > oldAmount)) {
         const oldMax = oldAmount != null ? Math.ceil(oldAmount / NOTIFICATION_RATIO) : 0;
         const newMax = Math.ceil(amountUSD / NOTIFICATION_RATIO);
         const extra = newMax - oldMax;
@@ -375,7 +392,7 @@ export const collectionRouter = router({
       if (collection.status !== 'ACTIVE' && collection.status !== 'BLOCKED') {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection not active' });
       }
-      const updated = await ctx.db.$transaction(async (tx) => {
+      const updated = await transactionWithRetry(ctx.db, async (tx) => {
         const closed = requireUpdated(await tx.collection.updateManyAndReturn({
           where: { id: input.id, status: { in: [...OPEN_STATUSES] } },
           data: { status: 'CLOSED', closedAt: new Date() },
@@ -387,19 +404,21 @@ export const collectionRouter = router({
 
         // Everyone previously notified gets a single closure notice.
         const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
-        await tx.$executeRaw`
+        const notified = await tx.$queryRaw<{ userId: string }[]>`
           INSERT INTO notifications ("id", "userId", "collectionId", "type", "expiresAt", "wave", "updatedAt")
           SELECT gen_random_uuid()::text, notified."userId", ${input.id}, 'COLLECTION_CLOSED'::"NotificationType",
             ${expiresAt.toISOString()}::timestamptz AT TIME ZONE 'UTC', 0, CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
           FROM (SELECT DISTINCT "userId" FROM notifications WHERE "collectionId" = ${input.id}) notified
           ON CONFLICT ("userId", "collectionId", "type", "wave") DO UPDATE
             SET "status" = 'UNREAD', "expiresAt" = EXCLUDED."expiresAt", "updatedAt" = EXCLUDED."updatedAt"
+          RETURNING "userId"
         `;
+        await enqueueNeedNotice(tx, 'closed', input.id, 0,
+          notified.map(({ userId }) => userId).filter((id) => id !== ctx.userId));
         return closed;
       });
 
-      // Send Telegram notification about closure
-      sendCollectionClosedTg(ctx.db, input.id, ctx.userId).catch((err) =>
+      dispatchPendingNeedNotices(ctx.db, ['closed'], input.id).catch((err) =>
         console.error('[TG Closed] Failed:', err),
       );
 

@@ -2,8 +2,8 @@ import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
 import { REGULAR_CYCLE_DAYS, NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { transactionWithRetry } from '../lib/tx-retry.js';
-import { sendCycleRenewalReminderTg } from '../services/notification.service.js';
 import { insertCycleNotices } from '../services/cycle-notices.js';
+import { dispatchPendingNeedNotices } from '../services/notice-delivery.js';
 import { findNeedForUpdate } from '../services/collection-state.js';
 
 const DAYS_BEFORE_RENEWAL = 3;
@@ -33,28 +33,22 @@ export async function processCycleRenewalReminder(_job: Job): Promise<void> {
     },
     select: {
       id: true,
-      creatorId: true,
       cycleNumber: true,
       currentCycleStart: true,
     },
   });
 
-  if (dueCollections.length === 0) return;
-
   const expiresAt = new Date(now + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
 
   for (const collection of dueCollections) {
-    const createdUserIds = await transactionWithRetry(db, async (tx) => {
+    await transactionWithRetry(db, async (tx) => {
       // Take the same lock as withdrawals before the insert takes its statement snapshot.
-      if (!await findNeedForUpdate(tx, collection.id)) return [];
-      return insertCycleNotices(
+      if (!await findNeedForUpdate(tx, collection.id)) return;
+      await insertCycleNotices(
         tx, collection.id, collection.cycleNumber, collection.currentCycleStart, expiresAt, 'CYCLE_RENEWAL_REMINDER',
       );
     });
 
-    if (createdUserIds.length > 0) {
-      sendCycleRenewalReminderTg(db, collection.id, collection.creatorId, createdUserIds, collection.cycleNumber)
-        .catch((err) => console.error('[CycleRenewalReminder] TG/Push dispatch failed:', err));
-    }
   }
+  await dispatchPendingNeedNotices(db, ['reminder']);
 }

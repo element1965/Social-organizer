@@ -6,10 +6,12 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest
 import { appRouter } from '../src/routers/index.js';
 import { touchUserNow } from '../src/services/activity.service.js';
 import { getAskAccess } from '../src/services/ask-access.service.js';
+import { deleteUserAccount } from '../src/services/account-deletion.service.js';
 import { invalidateGraph } from '../src/services/graph-cache.service.js';
 import { runInactiveCleanup } from '../src/services/inactive-cleanup.service.js';
 import { sendCycleRenewalReminderTg, sendCycleRenewedTg } from '../src/services/notification.service.js';
 import * as notifications from '../src/services/notification.service.js';
+import * as routing from '../src/services/notify-routing.service.js';
 import * as telegram from '../src/services/telegram-bot.service.js';
 import { WEB_APP_URL } from '../src/deployment.js';
 import { processCycleClose } from '../src/workers/cycle-close.worker.js';
@@ -92,6 +94,262 @@ async function waitForDispatch(people: string[]) {
   await expect.poll(() => db.notifyStats.count({ where: { userId: { in: people }, lastSentAt: { not: null } } }))
     .toBe(people.length);
 }
+
+describe('Need concurrency regressions', () => {
+  function deferred<T>() {
+    let resolve!: (value: T | PromiseLike<T>) => void;
+    let reject!: (reason: unknown) => void;
+    const promise = new Promise<T>((done, fail) => { resolve = done; reject = fail; });
+    return { promise, resolve, reject };
+  }
+
+  async function setup(name: string, data: Partial<database.Collection> = {}) {
+    const author = `race-${name}-author`;
+    const member = `race-${name}-member`;
+    await db.user.createMany({ data: [author, member].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.com/chat', ...data },
+    });
+    return { author, member, need };
+  }
+
+  function pauseAfterCommit() {
+    const committed = deferred<void>();
+    const resume = deferred<void>();
+    const transact = db.$transaction.bind(db);
+    const spy = vi.spyOn(db, '$transaction').mockImplementationOnce(((...args: Parameters<typeof transact>) =>
+      transact(...args).then(async (result) => {
+        committed.resolve();
+        await resume.promise;
+        return result;
+      })) as typeof db.$transaction);
+    return { committed: committed.promise, resume, restore: () => spy.mockRestore() };
+  }
+
+  function holdNeed(id: string, write: (tx: database.Prisma.TransactionClient) => Promise<unknown>) {
+    const locked = deferred<number>();
+    const resume = deferred<void>();
+    const finished = db.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM collections WHERE id = ${id} FOR UPDATE`;
+      const [backend] = await tx.$queryRaw<{ pid: number }[]>`SELECT pg_backend_pid() AS pid`;
+      locked.resolve(backend!.pid);
+      await resume.promise;
+      await write(tx);
+    });
+    return { locked: locked.promise, resume: resume.resolve, finished };
+  }
+
+  it.each([
+    ['lowered', 20, 10, 'ACTIVE', 'BLOCKED'],
+    ['raised', 10, 20, 'BLOCKED', 'ACTIVE'],
+    ['removed', 10, null, 'BLOCKED', 'ACTIVE'],
+  ] as const)('reconciles the %s goal with the pledge committed while the update waits', async (change, before, amount, initial, status) => {
+    const { author, member, need } = await setup(`goal-${change}`, {
+      amount: before, status: initial, blockedAt: initial === 'BLOCKED' ? new Date() : null,
+    });
+    const lock = holdNeed(need.id, (tx) =>
+      tx.obligation.create({ data: { collectionId: need.id, userId: member, amount: 10 } }));
+    const pid = await lock.locked;
+    const updated = caller(author).collection.updateAmount({ id: need.id, amount });
+    try {
+      await expect.poll(() => isBlockingTransaction(db, pid)).toBe(true);
+    } finally {
+      lock.resume();
+      await lock.finished;
+    }
+    expect(await updated).toMatchObject({ amount, status, blockedAt: status === 'BLOCKED' ? expect.any(Date) : null });
+    if (status === 'BLOCKED') {
+      await expect.poll(() => db.notificationDelivery.count({
+        where: { userId: author, eventKey: { startsWith: `goal:${need.id}:` } },
+      })).toBe(1);
+    }
+  });
+
+  it('commits a reached goal with the pledge before another pledge can be accepted', async () => {
+    const { author, member, need } = await setup('second-pledge');
+    const gate = pauseAfterCommit();
+    const first = caller(member).obligation.create({ collectionId: need.id, amount: 20 });
+    try {
+      await gate.committed;
+      await expect(caller(author).obligation.create({ collectionId: need.id, amount: 1 }))
+        .rejects.toMatchObject({ code: 'BAD_REQUEST' });
+    } finally {
+      gate.resume.resolve();
+      await first;
+      gate.restore();
+    }
+    expect(await db.obligation.count({ where: { collectionId: need.id } })).toBe(1);
+  });
+
+  it('rejects a new SOS connection when the Need closes after the initial read', async () => {
+    const { author, member, need } = await setup('sos');
+    const find = db.collection.findUnique.bind(db.collection);
+    const snapshot = vi.spyOn(db.collection, 'findUnique').mockImplementationOnce((args) =>
+      find(args).then(async (row) => {
+        await caller(author).collection.close({ id: need.id });
+        return row;
+      }) as ReturnType<typeof find>,
+    );
+    try {
+      await expect(caller(member).invite.acceptSos({ collectionId: need.id })).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+      expect(await db.connection.count({ where: { viaCollectionId: need.id } })).toBe(0);
+    } finally {
+      snapshot.mockRestore();
+    }
+  });
+
+  it('does not insert a repeat wave when closure commits after its recipient snapshot', async () => {
+    const author = 'race-wave';
+    const { circle: [member] } = await seedNetwork(author, 1, 1);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.com/chat' },
+    });
+    const find = db.notifyStats.findMany.bind(db.notifyStats);
+    const snapshot = vi.spyOn(db.notifyStats, 'findMany').mockImplementationOnce((args) =>
+      find(args).then(async (rows) => {
+        await caller(author).collection.close({ id: need.id });
+        return rows;
+      }) as ReturnType<typeof find>,
+    );
+    try {
+      expect(await notifications.sendCollectionNotifications(db, need.id, author, 'RE_NOTIFY', 2, 1)).toBe(0);
+      expect(await db.notification.count({ where: { collectionId: need.id, userId: member } })).toBe(0);
+    } finally {
+      snapshot.mockRestore();
+    }
+  });
+
+  it('suppresses the external request if the Need closes after the wave commits', async () => {
+    const author = 'race-wave-delivery';
+    const { circle: [member] } = await seedNetwork(author, 1, 1);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.com/chat' },
+    });
+    const targetsLoaded = deferred<void>();
+    const resume = deferred<void>();
+    const finished = deferred<void>();
+    let targetReads = 0;
+    const findUsers = db.user.findMany.bind(db.user);
+    const targets = vi.spyOn(db.user, 'findMany').mockImplementation((args) =>
+      findUsers(args).then(async (rows) => {
+        // The first target lookup plans the wave. The second prepares external delivery.
+        if (args?.select?.notifyChannel && ++targetReads === 2) {
+          targetsLoaded.resolve();
+          await resume.promise;
+        }
+        return rows;
+      }) as ReturnType<typeof findUsers>,
+    );
+    const recordSent = routing.recordSent;
+    const sent = vi.spyOn(routing, 'recordSent').mockImplementationOnce(async (...args) => {
+      try {
+        await recordSent(...args);
+      } finally {
+        finished.resolve();
+      }
+    });
+    try {
+      expect(await notifications.sendCollectionNotifications(db, need.id, author, 'RE_NOTIFY', 2, 1)).toBe(1);
+      await targetsLoaded.promise;
+      await caller(author).collection.close({ id: need.id });
+      resume.resolve();
+      await finished.promise;
+      expect(await db.notificationDelivery.count({ where: { userId: member, eventKey: `col:${need.id}:new` } })).toBe(0);
+      expect(await db.notification.count({ where: { collectionId: need.id, userId: member, type: 'COLLECTION_CLOSED' } }))
+        .toBe(1);
+    } finally {
+      resume.resolve();
+      targets.mockRestore();
+      sent.mockRestore();
+    }
+  });
+
+  it.each(['start', 'reminder', 'closed'] as const)('recovers the external %s notice after the notice transaction commits', async (event) => {
+    const daysOld = event === 'start' ? REGULAR_CYCLE_DAYS + 1 : REGULAR_CYCLE_DAYS - 2.5;
+    const { author, member, need } = await setup(`restart-${event}`, {
+      type: 'REGULAR', currentCycleStart: new Date(Date.now() - daysOld * 24 * hour),
+    });
+    await db.obligation.create({ data: { collectionId: need.id, userId: member, amount: 5 } });
+    await db.platformAccount.create({ data: { userId: member, platform: 'TELEGRAM', platformId: member } });
+    if (event === 'closed') {
+      await db.notification.create({
+        data: { collectionId: need.id, userId: member, type: 'NEW_COLLECTION', expiresAt: new Date(Date.now() + hour) },
+      });
+    }
+    const run = event === 'reminder' ? processCycleRenewalReminder : processCycleClose;
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    const send = vi.spyOn(telegram, 'sendTgMessages').mockResolvedValue();
+    const gate = pauseAfterCommit();
+    const stopped = new Error('Stopped after commit');
+    const interrupted = event === 'closed' ? caller(author).collection.close({ id: need.id }) : run({} as Job);
+    const checked = expect(interrupted).rejects.toThrow(stopped.message);
+    try {
+      await gate.committed;
+      const type = event === 'start' ? 'CYCLE_RENEWED' : event === 'reminder' ? 'CYCLE_RENEWAL_REMINDER' : 'COLLECTION_CLOSED';
+      expect(await db.notification.count({ where: { collectionId: need.id, userId: member, type } })).toBe(1);
+      expect(send).not.toHaveBeenCalled();
+      gate.resume.reject(stopped);
+      await checked;
+      const transport = deferred<void>();
+      const sending = deferred<void>();
+      send.mockImplementationOnce(async () => {
+        sending.resolve();
+        await transport.promise;
+      });
+      const resumed = run({} as Job);
+      try {
+        await Promise.race([sending.promise, resumed]);
+        await run({} as Job);
+      } finally {
+        transport.resolve();
+        await resumed;
+      }
+      await run({} as Job);
+      const key = event === 'closed' ? `col:${need.id}:closed` : `cycle:${need.id}:${event === 'start' ? 2 : 1}:${event}`;
+      expect(await db.notificationDelivery.count({ where: { userId: member, eventKey: key } })).toBe(1);
+      expect(send.mock.calls.flatMap(([messages]) => messages.map(({ telegramId }) => telegramId))).toEqual([member]);
+    } finally {
+      gate.resume.reject(stopped);
+      await interrupted.catch(() => {});
+      gate.restore();
+      getDb.mockRestore();
+      send.mockRestore();
+    }
+  });
+
+  it.each(['pledge', 'closure'] as const)('orders account deletion after an in-flight %s', async (action) => {
+    const { author, member, need } = await setup(`delete-${action}`);
+    await db.connection.create({ data: { userAId: author, userBId: member } });
+    const pledge = (tx: database.Prisma.TransactionClient) =>
+      tx.obligation.create({ data: { collectionId: need.id, userId: author, amount: 5 } });
+    if (action === 'closure') await pledge(db);
+    const lock = holdNeed(need.id, (tx) => action === 'pledge' ? pledge(tx) :
+      tx.collection.update({ where: { id: need.id }, data: { status: 'CLOSED' } }));
+    const pid = await lock.locked;
+    const deleted = deleteUserAccount(db, author);
+    let addedNeedId: string | undefined;
+    try {
+      await expect.poll(() => isBlockingTransaction(db, pid)).toBe(true);
+      if (action === 'pledge') {
+        const added = await db.collection.create({
+          data: { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat' },
+        });
+        addedNeedId = added.id;
+      }
+    } finally {
+      lock.resume();
+      await lock.finished;
+    }
+    await expect(deleted).resolves.toEqual({ mode: 'soft' });
+    expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } }))
+      .toMatchObject({ status: action === 'pledge' ? 'CANCELLED' : 'CLOSED' });
+    expect(await db.obligation.count({ where: { collectionId: need.id, userId: author } }))
+      .toBe(action === 'closure' ? 1 : 0);
+    if (addedNeedId) {
+      expect(await db.collection.findUniqueOrThrow({ where: { id: addedNeedId } })).toMatchObject({ status: 'CANCELLED' });
+    }
+  });
+});
 
 describe('Need access', () => {
   it('refuses four direct connections even with ten people within six handshakes', async () => {
