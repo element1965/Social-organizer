@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { hideBackButton, isTelegramWebApp, showBackButton } from '@so/tg-adapter';
@@ -35,6 +35,7 @@ import { GetAppCard } from '../components/app/GetApp';
 import { useCircleNetwork } from '../components/circle/network';
 import { IconAim, IconFit, IconMinus, IconPlus, IconShrink, IconUp } from '../components/circle/icons';
 import { ASK_MIN_DIRECT } from '@so/shared';
+import type { GraphLabelExclusion } from '@so/graph-3d';
 
 type Layer = 'feed' | 'graph' | 'person';
 
@@ -52,7 +53,42 @@ const SHEET_CHROME = 26 + 16;
 const GRAPH_CHIP_BOTTOM = 76;
 const LABEL_CLEARANCE = 8;
 
-type RenderGraph = (insetTop: number, labelInsetBottom: number) => React.ReactNode;
+type RenderGraph = (insetTop: number, labelInsetBottom: number, exclusions?: readonly GraphLabelExclusion[]) => React.ReactNode;
+
+function useLabelExclusion(active: boolean, direction: string) {
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const [exclusions, setExclusions] = useState<GraphLabelExclusion[]>();
+  useLayoutEffect(() => {
+    const scene = sceneRef.current;
+    const overlay = overlayRef.current;
+    if (!active || !scene || !overlay) return;
+    const measure = () => {
+      const canvas = scene.getBoundingClientRect();
+      const box = overlay.getBoundingClientRect();
+      const x0 = box.left - canvas.left - LABEL_CLEARANCE;
+      const y0 = box.top - canvas.top - LABEL_CLEARANCE;
+      const x1 = box.right - canvas.left + LABEL_CLEARANCE;
+      const y1 = box.bottom - canvas.top + LABEL_CLEARANCE;
+      setExclusions((previous) => {
+        const old = previous?.[0];
+        return old?.x0 === x0 && old.y0 === y0 && old.x1 === x1 && old.y1 === y1
+          ? previous
+          : [{ x0, y0, x1, y1 }];
+      });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(scene);
+    observer.observe(overlay);
+    window.addEventListener('resize', measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, [active, direction]);
+  return [sceneRef, overlayRef, active ? exclusions : undefined] as const;
+}
 
 function useBoxMetrics<T extends HTMLElement>(mounted = true) {
   const ref = useRef<T>(null);
@@ -387,7 +423,7 @@ export function CirclePage() {
 
   /* ----- pieces ----- */
 
-  const renderGraph: RenderGraph = (insetTop, labelInsetBottom) => empty ? (
+  const renderGraph: RenderGraph = (insetTop, labelInsetBottom, exclusions) => empty ? (
     <EmptyScene name={me.data?.name ?? ''} waitingFor={waitingFor} />
   ) : (
     <CircleGraph
@@ -405,6 +441,7 @@ export function CirclePage() {
       farRings={farRings}
       insetTop={insetTop}
       labelInsetBottom={labelInsetBottom}
+      labelExclusions={exclusions}
     />
   );
 
@@ -550,7 +587,8 @@ function PhoneCircle({
   onSceneTap,
   sheets,
 }: PhoneProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const [sceneRef, personRef, exclusions] = useLabelExclusion(layer === 'person' && !!person, i18n.dir());
   const [headerRef, headerHeight] = useBoxMetrics<HTMLDivElement>();
   const [chipsRef, chipsHeight] = useBoxMetrics<HTMLDivElement>(!empty);
   const [rootRef, height, safeTop] = useBoxMetrics<HTMLDivElement>();
@@ -714,6 +752,7 @@ function PhoneCircle({
           It grows by the status bar height at both ends (the bottom part is clipped), so the
           graph centre stays exactly where it is without the status bar strip. */}
       <div
+        ref={sceneRef}
         className={cn('absolute inset-x-0 top-0', ease)}
         style={{ bottom: `calc(${sceneBottom}px - var(--sa-top))` }}
         onPointerDown={(event) => {
@@ -726,7 +765,7 @@ function PhoneCircle({
           onSceneTap();
         }}
       >
-        {renderGraph(labelTop, labelBottom)}
+        {renderGraph(labelTop, labelBottom, exclusions)}
       </div>
 
       {/* Header: brand and numbers; fades out when the graph opens. */}
@@ -868,7 +907,7 @@ function PhoneCircle({
       </button>
 
       {/* Person card (person layer). */}
-      {layer === 'person' && person ? <div className="absolute inset-x-4 bottom-4 z-30">{person}</div> : null}
+      {layer === 'person' && person ? <div ref={personRef} className="absolute inset-x-4 bottom-4 z-30">{person}</div> : null}
 
       {sheets}
     </div>
@@ -921,7 +960,8 @@ type DesktopProps = {
 };
 
 function DesktopCircle({ sidebar, renderGraph, graphRef, empty, counts, farLabel, hiddenRings, stats, newCount, feed, person, sheets }: DesktopProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const [sceneRef, toolbarRef, exclusions] = useLabelExclusion(!empty, i18n.dir());
   const [chipsRef, chipsHeight] = useBoxMetrics<HTMLDivElement>(!empty);
   const ctl =
     'so-focus grid h-10 w-10 place-items-center rounded-md border border-node-1/15 bg-scene-2/80 text-node-1 backdrop-blur-md hover:bg-scene-3';
@@ -962,12 +1002,12 @@ function DesktopCircle({ sidebar, renderGraph, graphRef, empty, counts, farLabel
         }
       />
       <div className={cn('flex min-h-0 flex-1 gap-4 pb-4', sidebar ? 'px-7' : 'px-4')}>
-        <div className={cn('relative min-w-0 flex-1 overflow-hidden rounded-xl', SCENE_BG)}>
-          {renderGraph(chipsHeight + 16 + LABEL_CLEARANCE, 0)}
+        <div ref={sceneRef} className={cn('relative min-w-0 flex-1 overflow-hidden rounded-xl', SCENE_BG)}>
+          {renderGraph(chipsHeight + 16 + LABEL_CLEARANCE, 0, exclusions)}
           {empty ? null : (
             <>
               <RingChips ref={chipsRef} counts={counts} farLabel={farLabel} hiddenRings={hiddenRings} className="absolute start-4 top-4 z-10" />
-              <div className="absolute end-4 top-4 z-10 flex flex-col gap-2">
+              <div ref={toolbarRef} className="absolute end-4 top-4 z-10 flex flex-col gap-2">
                 <button type="button" className={ctl} aria-label={t('circle.zoomIn')} onClick={() => graphRef.current?.zoomIn()}>
                   <IconPlus className="h-5 w-5" />
                 </button>

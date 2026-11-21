@@ -1,6 +1,6 @@
 import { Component, forwardRef, Fragment, lazy, Suspense, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState, type PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { GraphImpulse, GraphNode, GraphView, NetworkGraphHandle } from '@so/graph-3d';
+import type { GraphImpulse, GraphLabelExclusion, GraphNode, GraphView, NetworkGraphHandle } from '@so/graph-3d';
 import { useCircleStore, type Ring } from './circle-store';
 import { useIsDark } from '../../hooks/useIsDark';
 import type { NetPerson } from './network';
@@ -33,6 +33,7 @@ type CircleGraphProps = {
   insetTop?: number;
   /** Height in CSS px of the UI over the bottom of the canvas. */
   labelInsetBottom?: number;
+  labelExclusions?: readonly GraphLabelExclusion[];
 };
 
 /**
@@ -46,7 +47,7 @@ type CircleGraphProps = {
  * People, or a phone/desktop layout switch) and handed back as `initialView`, which skips the intro fly.
  */
 export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(function CircleGraph(
-  { myId, people, edges, highlightPath, impulses, hiddenRings, onNodeTap, dimmed, focusId, focusLift, farRings, insetTop, labelInsetBottom },
+  { myId, people, edges, highlightPath, impulses, hiddenRings, onNodeTap, dimmed, focusId, focusLift, farRings, insetTop, labelInsetBottom, labelExclusions },
   ref,
 ) {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -138,6 +139,7 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
             farRings={farRings}
             insetTop={insetTop}
             labelInsetBottom={labelInsetBottom}
+            labelExclusions={labelExclusions}
             constrainLabelsDuringMotion
             showControls={false}
             theme={dark ? 'dark' : 'light'}

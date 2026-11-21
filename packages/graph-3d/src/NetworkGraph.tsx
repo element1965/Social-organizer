@@ -104,6 +104,8 @@ export interface NetworkGraphProps {
   insetTop?: number;
   /** Height in CSS px of the UI laid over the bottom of the canvas. */
   labelInsetBottom?: number;
+  /** Areas in canvas-relative CSS pixels occupied by UI over the graph. */
+  labelExclusions?: readonly GraphLabelExclusion[];
   /** Enforce label bounds and collisions between layout passes, for scenes with changing overlays. */
   constrainLabelsDuringMotion?: boolean;
 }
@@ -313,10 +315,13 @@ const LABEL_CAP = 30;
 const LABEL_ENTER_PAD = 2;
 const LABEL_EXIT_PAD = -1;
 const LABEL_MARK_PAD = 3;
+const PROTECTED_EDGE_PAD = 6;
 const PROTECTED_ANCHORS = ['below', 'above', 'left', 'right'] as const;
 type LabelAnchor = (typeof PROTECTED_ANCHORS)[number];
 const PROTECTED_ANCHORS_WITH_PREVIOUS = [null, ...PROTECTED_ANCHORS] as const;
-type ScreenBox = { x0: number; y0: number; x1: number; y1: number };
+const NO_LABEL_EXCLUSIONS: readonly GraphLabelExclusion[] = [];
+export type GraphLabelExclusion = { x0: number; y0: number; x1: number; y1: number };
+type ScreenBox = GraphLabelExclusion;
 
 function screenBox(): ScreenBox {
   return { x0: 0, y0: 0, x1: 0, y1: 0 };
@@ -335,8 +340,8 @@ function overlaps(a: ScreenBox, b: ScreenBox, pad: number): boolean {
     && Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0) > limit;
 }
 
-function hitsKept(box: ScreenBox, kept: ScreenBox[], pad: number): boolean {
-  for (const other of kept) {
+function hitsBoxes(box: ScreenBox, boxes: readonly ScreenBox[], pad: number): boolean {
+  for (const other of boxes) {
     if (overlaps(box, other, pad)) return true;
   }
   return false;
@@ -439,6 +444,9 @@ interface NodeVis {
   labelShow: number;
   /** The previous placement result, independent of the current fade opacity. */
   labelPlaced: boolean;
+  /** A hard visibility check hid this name. It must clear the entry margin again. */
+  labelSuppressed: boolean;
+  labelWrapWidth: number;
   labelAnchor: LabelAnchor | null;
   /** 0..1 eased: 0 = the dot, 1 = the full photo; in between the photo grows from the dot size */
   photoShow: number;
@@ -1206,6 +1214,36 @@ class ImpulseLayer {
   }
 }
 
+function wrapLabel(text: string, ctx: CanvasRenderingContext2D, width: number): string {
+  const words = text.trim().split(/\s+/);
+  const fits = (line: string) => ctx.measureText(line).width <= width;
+  const ellipsize = (line: string) => {
+    if (fits(line)) return line;
+    const graphemes = typeof Intl.Segmenter === 'function'
+      ? Array.from(new Intl.Segmenter().segment(line), ({ segment }) => segment)
+      : Array.from(line);
+    let lo = 0;
+    let hi = graphemes.length;
+    while (lo < hi) {
+      const mid = Math.ceil((lo + hi) / 2);
+      if (fits(graphemes.slice(0, mid).join('').trimEnd() + '…')) lo = mid;
+      else hi = mid - 1;
+    }
+    return graphemes.slice(0, lo).join('').trimEnd() + '…';
+  };
+
+  let first = ellipsize(words[0]!);
+  let i = 1;
+  if (first === words[0]) {
+    for (; i < words.length; i++) {
+      const next = first + ' ' + words[i];
+      if (!fits(next)) break;
+      first = next;
+    }
+  }
+  return i === words.length ? first : first + '\n' + ellipsize(words.slice(i).join(' '));
+}
+
 function disposeLabel(l: SpriteText | null) {
   if (!l) return;
   l.material.map?.dispose();
@@ -1220,6 +1258,8 @@ function dropLabel(v: NodeVis) {
   v.unwantedAt = 0;
   v.labelShow = 0;
   v.labelPlaced = false;
+  v.labelSuppressed = false;
+  v.labelWrapWidth = 0;
   v.labelAnchor = null;
 }
 
@@ -1248,6 +1288,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   farRings,
   insetTop = 0,
   labelInsetBottom = 0,
+  labelExclusions = NO_LABEL_EXCLUSIONS,
   constrainLabelsDuringMotion = false,
   sceneTheme = 'dark',
 }, ref) {
@@ -1300,6 +1341,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   insetTopRef.current = insetTop;
   const labelInsetRef = useRef(labelInsetBottom);
   labelInsetRef.current = labelInsetBottom;
+  const labelExclusionsRef = useRef(labelExclusions);
+  labelExclusionsRef.current = labelExclusions;
   const constrainLabelsRef = useRef(constrainLabelsDuringMotion);
   constrainLabelsRef.current = constrainLabelsDuringMotion;
 
@@ -1863,9 +1906,21 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const n = v.node;
     const onPath = pathRef.current.set.has(n.id) && !n.isDeleted;
     const color = n.isDeleted ? palette.node3 : onPath ? palette.careText : palette.label;
-    drawLabel(v.label as LabelSprite, color, palette.scene,
-      labelWeight(!!n.isCenter, sceneThemeRef.current), labelHalo(sceneThemeRef.current));
-    v.label.userData.baseScale = v.label.scale.clone();
+    const label = v.label as LabelSprite;
+    const weight = labelWeight(!!n.isCenter, sceneThemeRef.current);
+    const halo = labelHalo(sceneThemeRef.current);
+    const text = labelLines(n.name, !!n.isCenter);
+    if (v.labelWrapWidth) {
+      const ctx = label._canvas.getContext('2d')!;
+      ctx.font = `${weight} ${label.fontSize}px ${label.fontFace}`;
+      // Leave room for SpriteText's halo and ink overhang.
+      const padding = 2 * (Math.ceil(halo * label.fontSize / 20) + 4);
+      label._text = wrapLabel(text, ctx, Math.max(1, v.labelWrapWidth - padding));
+    } else {
+      label._text = text;
+    }
+    drawLabel(label, color, palette.scene, weight, halo);
+    (label.userData.baseScale as THREE.Vector3).copy(label.scale);
     if (v.level >= 0) applyLevel(v, v.level);
   }, [applyLevel]);
 
@@ -1978,6 +2033,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       wantedAt: 0,
       labelShow: 0,
       labelPlaced: false,
+      labelSuppressed: false,
+      labelWrapWidth: 0,
       labelAnchor: null,
       photoShow: showCached ? 1 : 0,
       photoWant: showCached,
@@ -2277,6 +2334,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const photoAllowed = new Set<string>();
     // Last time each node was among the nearest few (label hold)
     const nearSince = new Map<string, number>();
+    const nearestCandidates: { id: string; score: number }[] = [];
     const worldV = new THREE.Vector3();
     const projV = new THREE.Vector3();
     const cameraV = new THREE.Vector3();
@@ -2314,10 +2372,23 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         : (v.node.depth ?? 1) === 1 ? 3 : 4;
     }
 
-    function placeLabels(cam: THREE.Camera, width: number, height: number) {
+    function fitsLabelArea(box: ScreenBox, width: number, top: number, bottom: number, pad: number) {
+      const exclusions = labelExclusionsRef.current;
+      return fitsViewport(box, width, top, bottom) && !hitsBoxes(box, exclusions, pad);
+    }
+
+    function wrapProtectedLabel(v: NodeVis, width: number) {
+      const label = v.label!;
+      const maxLine = v.node.isCenter ? LABEL_CENTER_MAX_PX : LABEL_MAX_PX;
+      // The wrapping budget stays steady during rotation and leaves space for hover growth.
+      const limit = Math.max(1, Math.floor((width - 2 * PROTECTED_EDGE_PAD) * label.fontSize / (maxLine * 1.3)));
+      if (limit === v.labelWrapWidth) return;
+      v.labelWrapWidth = limit;
+      restyleLabel(v);
+    }
+
+    function placeLabels(cam: THREE.Camera, width: number, height: number, top: number, bottom: number, constrained: boolean) {
       cam.updateMatrixWorld();
-      const top = Math.max(0, insetTopRef.current);
-      const bottom = height - Math.max(0, labelInsetRef.current);
       candidates.length = 0;
       kept.length = 0;
       let faceCount = 0;
@@ -2343,6 +2414,13 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           continue;
         }
         const it = candidatePool[candidates.length] ??= { v, box: screenBox(), priority: 0, d2: 0, depth: 0 };
+        it.priority = labelPriority(v);
+        if (it.priority < 2) {
+          wrapProtectedLabel(v, width);
+        } else if (v.labelWrapWidth) {
+          v.labelWrapWidth = 0;
+          restyleLabel(v);
+        }
         it.depth = projectBox(label, v.lastScale, cam, width, height, it.box);
         if (it.depth === 0) {
           v.labelPlaced = false;
@@ -2350,7 +2428,6 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         }
         it.v = v;
         it.d2 = v.d2;
-        it.priority = labelPriority(v);
         candidates.push(it);
       }
       candidates.sort(compareLabels);
@@ -2358,6 +2435,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       for (const it of candidates) {
         const { v, box, priority } = it;
         const label = v.label!;
+        const entering = !v.labelPlaced || v.labelSuppressed;
+        const pad = entering ? LABEL_ENTER_PAD : constrained ? 0 : LABEL_EXIT_PAD;
         if (priority < 2) {
           const body = v.avatar.visible ? v.avatar : v.dot;
           if (projectBox(body, v.lastScale, cam, width, height, bodyBox) > 0 && bottom > top) {
@@ -2366,8 +2445,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
             const previous = v.labelAnchor;
             const xMid = (bodyBox.x0 + bodyBox.x1) / 2;
             const yMid = (bodyBox.y0 + bodyBox.y1) / 2;
-            let x = clampCenter(xMid, 0, width, w);
-            let y = clampCenter(bodyBox.y1 + LABEL_MARK_PAD + h / 2, top, bottom, h);
+            v.labelPlaced = false;
             v.labelAnchor = null;
             // Try the previous anchor first, then the four sides in reading order.
             for (const anchor of PROTECTED_ANCHORS_WITH_PREVIOUS) {
@@ -2377,32 +2455,39 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
                 : side === 'right' ? bodyBox.x1 + LABEL_MARK_PAD + w / 2 : xMid;
               const targetY = side === 'above' ? bodyBox.y0 - LABEL_MARK_PAD - h / 2
                 : side === 'below' ? bodyBox.y1 + LABEL_MARK_PAD + h / 2 : yMid;
-              const cx = clampCenter(targetX, 0, width, w);
-              const cy = clampCenter(targetY, top, bottom, h);
+              let cx = clampCenter(targetX, PROTECTED_EDGE_PAD, width - PROTECTED_EDGE_PAD, w);
+              let cy = clampCenter(targetY, top + PROTECTED_EDGE_PAD, bottom - PROTECTED_EDGE_PAD, h);
               setBox(anchorBox, cx, cy, w, h);
-              if (!fitsViewport(anchorBox, width, top, bottom)
+              for (const overlay of labelExclusionsRef.current) {
+                if (!overlaps(anchorBox, overlay, pad)) continue;
+                // Try the free side of an overlay when the node itself is underneath it.
+                const gap = pad + PROTECTED_EDGE_PAD;
+                if (side === 'above') cy = overlay.y0 - gap - h / 2;
+                else if (side === 'below') cy = overlay.y1 + gap + h / 2;
+                else if (side === 'left') cx = overlay.x0 - gap - w / 2;
+                else cx = overlay.x1 + gap + w / 2;
+                setBox(anchorBox, cx, cy, w, h);
+              }
+              if (!fitsLabelArea(anchorBox, width, top, bottom, pad)
                 || overlaps(anchorBox, bodyBox, LABEL_MARK_PAD)
                 || (hasMark && overlaps(anchorBox, mark, LABEL_MARK_PAD))
-                || hitsKept(anchorBox, kept, LABEL_MARK_PAD)) continue;
-              x = cx;
-              y = cy;
+                || hitsBoxes(anchorBox, kept, LABEL_MARK_PAD)) continue;
+              label.center.set(0.5 - (cx - (box.x0 + box.x1) / 2) / w, 0.5 + (cy - (box.y0 + box.y1) / 2) / h);
+              setBox(box, cx, cy, w, h);
               v.labelAnchor = side;
+              v.labelPlaced = true;
               break;
             }
-            // Keep the name in the usable band even when every anchor collides.
-            label.center.set(0.5 - (x - (box.x0 + box.x1) / 2) / w, 0.5 + (y - (box.y0 + box.y1) / 2) / h);
-            setBox(box, x, y, w, h);
-            v.labelPlaced = true;
           } else {
             v.labelPlaced = false;
           }
         } else {
           v.labelAnchor = null;
           label.center.set(0.5, 0.5);
-          const pad = v.labelPlaced ? LABEL_EXIT_PAD : LABEL_ENTER_PAD;
-          const markPad = v.labelPlaced ? LABEL_MARK_PAD : LABEL_MARK_PAD + LABEL_ENTER_PAD;
-          const inBand = box.y0 >= top && box.y1 <= bottom && box.x1 > 0 && box.x0 < width;
-          v.labelPlaced = inBand && !(hasMark && overlaps(box, mark, markPad)) && !hitsKept(box, kept, pad);
+          const markPad = entering ? LABEL_MARK_PAD + LABEL_ENTER_PAD : LABEL_MARK_PAD;
+          const inBand = constrained ? fitsLabelArea(box, width, top, bottom, pad)
+            : box.y0 >= top && box.y1 <= bottom && box.x1 > 0 && box.x0 < width;
+          v.labelPlaced = inBand && !(hasMark && overlaps(box, mark, markPad)) && !hitsBoxes(box, kept, pad);
           if (v.labelPlaced && priority >= 3) {
             for (let i = 0; i < faceCount; i++) {
               const face = faces[i]!;
@@ -2562,8 +2647,9 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       let labelBudget = LABELS_PER_FRAME;
       const hoverId = life.hoverId;
 
-      if (labelFrame++ % 6 === 0) {
-        const ranked: { id: string; d2: number }[] = [];
+      const placementFrame = labelFrame++ % 6 === 0;
+      if (placementFrame) {
+        let nearestCount = 0;
         let close = 0;
         for (const v of visRef.current.values()) {
           if (!v.outer.parent) continue;
@@ -2573,15 +2659,26 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           const dx = p.x - camPos.x, dy = p.y - camPos.y, dz = p.z - camPos.z;
           const d2 = dx * dx + dy * dy + dz * dz;
           if (d2 < LOD_CLOSE2) close++;
-          // 1st handshake first: a 2nd-handshake name has to be clearly nearer to take its place
-          ranked.push({ id: v.node.id, d2: depth === 2 ? d2 * RING2_LABEL_PENALTY : d2 });
+          // Keep just the best scores. A 2nd-handshake name has to be clearly nearer to take a slot.
+          const score = depth === 2 ? d2 * RING2_LABEL_PENALTY : d2;
+          if (nearestCount === NEAREST_LABELS_MAX && score >= nearestCandidates[nearestCount - 1]!.score) continue;
+          let i = Math.min(nearestCount, NEAREST_LABELS_MAX - 1);
+          const slot = nearestCandidates[i] ?? { id: '', score: 0 };
+          nearestCount = Math.min(nearestCount + 1, NEAREST_LABELS_MAX);
+          // Keep traversal order for equal scores, like a stable sort.
+          while (i > 0 && score < nearestCandidates[i - 1]!.score) {
+            nearestCandidates[i] = nearestCandidates[i - 1]!;
+            i--;
+          }
+          slot.id = v.node.id;
+          slot.score = score;
+          nearestCandidates[i] = slot;
         }
-        ranked.sort((a, b) => a.d2 - b.d2);
         const next = new Set<string>();
         // Up close there is room for more names (the overlap pass below still hides any that collide)
         const limit = Math.min(NEAREST_LABELS_MAX, NEAREST_LABELS + Math.floor(close / 2));
-        for (let i = 0; i < ranked.length && next.size < limit; i++) {
-          const id = ranked[i]?.id;
+        for (let i = 0; i < nearestCount && next.size < limit; i++) {
+          const id = nearestCandidates[i]?.id;
           if (id) { next.add(id); nearSince.set(id, now); }
         }
         // A name that just dropped out of the nearest few keeps its place a little longer, so a turning
@@ -2664,7 +2761,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           if (v.unwantedAt === 0) v.unwantedAt = now;
           else if (now - v.unwantedAt >= LABEL_IDLE_MS) dropLabel(v);
         }
-        if (v.label) {
+        if (v.label && (placementFrame || v.labelPlaced || v.labelShow > 0)) {
           labels.push(v);
           // The padded sprite is used for collision, while fit limits apply to the text itself.
           if (showLabel) {
@@ -2736,15 +2833,15 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       }
 
       const labelWidth = canvas.clientWidth || 1;
-      if (labelFrame % 6 === 1) {
-        placeLabels(cam, labelWidth, labelHeight);
-      }
       const labelTop = Math.max(0, insetTopRef.current);
       const labelBottom = labelHeight - Math.max(0, labelInsetRef.current);
-      const constrained = constrainLabelsRef.current && labels.length > 0;
+      const constrained = constrainLabelsRef.current || labelExclusionsRef.current.length > 0;
+      if (placementFrame) {
+        placeLabels(cam, labelWidth, labelHeight, labelTop, labelBottom, constrained);
+      }
       // Overlay bounds and collisions still apply while the camera moves and old labels fade between placement passes.
-      if (constrained) {
-        cam.updateMatrixWorld();
+      if (constrained && labels.length > 0) {
+        if (!placementFrame) cam.updateMatrixWorld();
         kept.length = 0;
         labels.sort((a, b) => labelPriority(a) - labelPriority(b) || a.d2 - b.d2);
       }
@@ -2753,18 +2850,31 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         const label = v.label!;
         const protectedLabel = v.node.isCenter || v.node.id === selectedIdRef.current;
         const wantShown = v.labelPlaced ? 1 : 0;
-        if (reduced) v.labelShow = wantShown;
-        else if (v.labelShow !== wantShown) {
+        let box: ScreenBox | undefined;
+        let clear = true;
+        if (constrained && (wantShown || v.labelShow > 0.01)) {
+          box = renderedBoxes[kept.length] ??= screenBox();
+          const pad = v.labelSuppressed || v.labelShow === 0 ? LABEL_ENTER_PAD : 0;
+          clear = v.outer.visible && v.lastScale >= 0.01
+            && projectBox(label, v.lastScale, cam, labelWidth, labelHeight, box, true) > 0
+            && fitsLabelArea(box, labelWidth, labelTop, labelBottom, pad)
+            && !hitsBoxes(box, kept, pad);
+        }
+        if (!clear) {
+          v.labelSuppressed = true;
+          v.labelShow = 0;
+        } else if (v.labelSuppressed && wantShown) {
+          // The frame that clears the entry margin starts the new fade at zero.
+          v.labelSuppressed = false;
+          v.labelShow = reduced ? 1 : 0;
+        } else if (reduced) {
+          v.labelShow = wantShown;
+        } else if (v.labelShow !== wantShown) {
           const step = dt / LABEL_FADE_MS;
           v.labelShow = wantShown > v.labelShow ? Math.min(1, v.labelShow + step) : Math.max(0, v.labelShow - step);
         }
         label.visible = v.labelShow > 0.01;
-        if (constrained && label.visible) {
-          const box = renderedBoxes[kept.length] ??= screenBox();
-          const depth = projectBox(label, v.lastScale, cam, labelWidth, labelHeight, box, true);
-          label.visible = depth > 0 && fitsViewport(box, labelWidth, labelTop, labelBottom) && !hitsKept(box, kept, 0);
-          if (label.visible) kept.push(box);
-        }
+        if (label.visible && box) kept.push(box);
         label.material.depthTest = !protectedLabel;
         // A protected label may be shifted into view from a node outside the frustum.
         label.frustumCulled = !protectedLabel;
