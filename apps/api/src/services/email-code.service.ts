@@ -6,6 +6,8 @@ import { DEFAULT_INTENTION_AMOUNT } from '@so/shared';
 import { sendMail } from './mail.service.js';
 import { isUniqueViolation } from './identity.service.js';
 import { restoreMutedAccount } from './account-restore.service.js';
+import { markEmailProvenFirstTime } from './email-proof.service.js';
+import { sessionClockDate } from './session-clock.js';
 
 /**
  * Sign-in with a one-time e-mail code (SO-21).
@@ -69,27 +71,32 @@ function escapeHtml(s: string): string {
 /** Sends a fresh code. Returns seconds until another code may be requested. */
 export async function requestEmailCode(db: PrismaClient, rawEmail: string, lang = 'en'): Promise<{ resendInSec: number }> {
   const email = normalizeEmail(rawEmail);
-  const now = Date.now();
-
-  const recent = await db.emailLoginCode.findMany({
-    where: { email, createdAt: { gte: new Date(now - 60 * 60 * 1000) } },
-    orderBy: { createdAt: 'desc' },
-    select: { createdAt: true },
-  });
-  const last = recent[0];
-  if (last && now - last.createdAt.getTime() < EMAIL_CODE_RESEND_MS) {
-    throw new EmailCodeError('RESEND_TOO_SOON', Math.ceil((EMAIL_CODE_RESEND_MS - (now - last.createdAt.getTime())) / 1000));
-  }
-  if (recent.length >= EMAIL_CODE_MAX_PER_HOUR) {
-    const oldest = recent[recent.length - 1]!;
-    throw new EmailCodeError('TOO_MANY_CODES', Math.ceil((oldest.createdAt.getTime() + 60 * 60 * 1000 - now) / 1000));
-  }
-
   const code = String(crypto.randomInt(0, 1_000_000)).padStart(6, '0');
-  // Only the latest code works
-  await db.emailLoginCode.updateMany({ where: { email, consumedAt: null }, data: { consumedAt: new Date() } });
-  await db.emailLoginCode.create({
-    data: { email, codeHash: hashCode(email, code), expiresAt: new Date(now + EMAIL_CODE_TTL_MS) },
+
+  // One issuance at a time per address (SEC-4): the limit check and the new row are one transaction under a
+  // lock on the normalized address, so concurrent requests cannot all pass the check before any row exists.
+  await db.$transaction(async (tx) => {
+    // 64-bit key, domain-separated from the other advisory locks (Need creation, push subscriptions)
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${`email-code:${email}`}, 0))`;
+    const now = Date.now();
+    const recent = await tx.emailLoginCode.findMany({
+      where: { email, createdAt: { gte: new Date(now - 60 * 60 * 1000) } },
+      orderBy: { createdAt: 'desc' },
+      select: { createdAt: true },
+    });
+    const last = recent[0];
+    if (last && now - last.createdAt.getTime() < EMAIL_CODE_RESEND_MS) {
+      throw new EmailCodeError('RESEND_TOO_SOON', Math.ceil((EMAIL_CODE_RESEND_MS - (now - last.createdAt.getTime())) / 1000));
+    }
+    if (recent.length >= EMAIL_CODE_MAX_PER_HOUR) {
+      const oldest = recent[recent.length - 1]!;
+      throw new EmailCodeError('TOO_MANY_CODES', Math.ceil((oldest.createdAt.getTime() + 60 * 60 * 1000 - now) / 1000));
+    }
+    // Only the latest code works
+    await tx.emailLoginCode.updateMany({ where: { email, consumedAt: null }, data: { consumedAt: new Date(now) } });
+    await tx.emailLoginCode.create({
+      data: { email, codeHash: hashCode(email, code), createdAt: new Date(now), expiresAt: new Date(now + EMAIL_CODE_TTL_MS) },
+    });
   });
 
   const t = TEXTS[lang.slice(0, 2)] ?? TEXTS.en!;
@@ -113,20 +120,46 @@ export async function verifyEmailCode(db: PrismaClient, rawEmail: string, code: 
   if (latest.expiresAt.getTime() < Date.now()) throw new EmailCodeError('CODE_EXPIRED');
   if (latest.attempts >= EMAIL_CODE_MAX_ATTEMPTS) throw new EmailCodeError('TOO_MANY_ATTEMPTS');
 
+  // Reserve this attempt before comparing (SEC-4): one conditional increment per check, so concurrent
+  // guesses can never make more than EMAIL_CODE_MAX_ATTEMPTS comparisons against one code. Expiry is part of
+  // the predicate, on the database clock, so a request delayed past the expiry cannot still reserve.
+  // Columns are timestamp(3) in UTC; now() AT TIME ZONE 'UTC' compares them whatever the session time zone.
+  const reserved = await db.$queryRaw<Array<{ attempts: number }>>`
+    UPDATE email_login_codes SET attempts = attempts + 1
+    WHERE id = ${latest.id} AND "consumedAt" IS NULL AND attempts < ${EMAIL_CODE_MAX_ATTEMPTS}
+      AND "expiresAt" > (now() AT TIME ZONE 'UTC')
+    RETURNING attempts`;
+  const attempts = reserved[0]?.attempts;
+  if (attempts == null) throw new EmailCodeError(await refusalOf(db, latest.id, 'TOO_MANY_ATTEMPTS'));
+
   const expected = Buffer.from(latest.codeHash, 'hex');
   const given = Buffer.from(hashCode(email, code), 'hex');
   if (!crypto.timingSafeEqual(expected, given)) {
-    const upd = await db.emailLoginCode.update({ where: { id: latest.id }, data: { attempts: { increment: 1 } } });
-    const left = EMAIL_CODE_MAX_ATTEMPTS - upd.attempts;
+    const left = EMAIL_CODE_MAX_ATTEMPTS - attempts;
     if (left <= 0) throw new EmailCodeError('TOO_MANY_ATTEMPTS');
     throw new EmailCodeError('INVALID_CODE', undefined, left);
   }
 
-  // One use: a second request with the same code (double tap, two devices) gets nothing
-  const used = await db.emailLoginCode.updateMany({ where: { id: latest.id, consumedAt: null }, data: { consumedAt: new Date() } });
-  if (used.count === 0) throw new EmailCodeError('INVALID_CODE');
+  // One use: a second request with the same code (double tap, two devices) gets nothing. Still unexpired
+  // on the database clock at the moment it is spent.
+  const used = await db.$executeRaw`
+    UPDATE email_login_codes SET "consumedAt" = (now() AT TIME ZONE 'UTC')
+    WHERE id = ${latest.id} AND email = ${email} AND "consumedAt" IS NULL
+      AND "expiresAt" > (now() AT TIME ZONE 'UTC')`;
+  if (used === 0) throw new EmailCodeError(await refusalOf(db, latest.id, 'INVALID_CODE'));
 
   return findOrCreateEmailUser(db, email, campaign);
+}
+
+/** Why a conditional update of a code matched nothing: used or replaced, expired, or else `otherwise`. */
+async function refusalOf(db: PrismaClient, id: string, otherwise: EmailCodeErrorCode): Promise<EmailCodeErrorCode> {
+  const rows = await db.$queryRaw<Array<{ consumed: boolean; expired: boolean }>>`
+    SELECT "consumedAt" IS NOT NULL AS consumed, "expiresAt" <= (now() AT TIME ZONE 'UTC') AS expired
+    FROM email_login_codes WHERE id = ${id}`;
+  const row = rows[0];
+  if (!row || row.consumed) return 'INVALID_CODE';
+  if (row.expired) return 'CODE_EXPIRED';
+  return otherwise;
 }
 
 async function findOrCreateEmailUser(db: PrismaClient, email: string, campaign?: Campaign): Promise<{ userId: string; isNew: boolean }> {
@@ -134,16 +167,19 @@ async function findOrCreateEmailUser(db: PrismaClient, email: string, campaign?:
   if (existing) {
     // An account the Telegram bot muted comes back when its owner signs in again
     await restoreMutedAccount(db, existing.id);
-    // The same person who once signed up with a password: the code proves the mailbox
+    // First proof of the mailbox for an address typed at password sign-up (SEC-1). Whoever typed it never
+    // proved it, so the password set then stops working in the same write that marks the address proven, and
+    // every session issued before it ends (session.service.ts); the mailbox owner signs in by code from now on.
+    // Accounts proven earlier are not touched: the timestamp is written once.
     if (!existing.emailVerifiedAt) {
-      await db.user.update({ where: { id: existing.id }, data: { emailVerifiedAt: new Date() } });
+      await markEmailProvenFirstTime(db, existing.id, { passwordHash: null });
     }
     return { userId: existing.id, isNew: false };
   }
   try {
     const user = await createUserWithReferralSlug(db, {
       email,
-      emailVerifiedAt: new Date(),
+      emailVerifiedAt: sessionClockDate(),
       name: email.split('@')[0] || 'User',
       monthlyBudget: DEFAULT_INTENTION_AMOUNT,
       remainingBudget: DEFAULT_INTENTION_AMOUNT,

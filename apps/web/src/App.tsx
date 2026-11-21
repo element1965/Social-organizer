@@ -24,6 +24,7 @@ import { currentNavigation, errorCode, isAborted, raiseActionError, wantsNotice 
 import { ActionErrorHost } from './components/errors/ActionErrorHost';
 import { applyLinkLanguage } from './lib/i18n';
 import { rememberCampaign } from './lib/campaign';
+import { isCircleListKey } from './lib/circleLists';
 
 /** Named-export pages, each its own chunk. The guest landing stays in the entry chunk. */
 function lazyPage<M, K extends keyof M>(load: () => Promise<M>, name: K) {
@@ -334,6 +335,10 @@ function isMeQuery(key: readonly unknown[]): boolean {
 }
 
 function createQueryClient(): QueryClient {
+  // Mark Circle lists for the next mount without refetching them. Do this before any hook-level success refresh.
+  const markCircleListsStale = () => {
+    void client.invalidateQueries({ predicate: (query) => isCircleListKey(query.queryKey), refetchType: 'none' });
+  };
   const client: QueryClient = new QueryClient({
     queryCache: new QueryCache({
       // user.me itself is ProtectedRoute's own signal
@@ -349,7 +354,9 @@ function createQueryClient(): QueryClient {
       onMutate: (_variables, mutation) => {
         mutationOrigin.set(mutation, currentNavigation());
       },
+      onSuccess: markCircleListsStale,
       onError: (error, _variables, _context, mutation) => {
+        markCircleListsStale();
         if (isAborted(error)) return;
         recheckSession(client, error);
         if (!wantsNotice(mutation.meta, error)) return;

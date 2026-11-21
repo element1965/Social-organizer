@@ -70,7 +70,7 @@ try {
   // A chain root → 1 → 2 → … → 8 and a fan of 30 people around person 1
   const people = ['root', ...Array.from({ length: 8 }, (_, i) => i + 1), ...Array.from({ length: 30 }, (_, i) => `f${i}`)];
   await db.user.createMany({
-    data: people.map((p) => ({ id: id(p), name: `LF ${p}`, monthlyBudget: 5, remainingBudget: 5 })),
+    data: people.map((p) => ({ id: id(p), name: `LF ${p}`, monthlyBudget: 5, remainingBudget: 5, budgetUpdatedAt: new Date() })),
   });
   const edges: Array<[string, string]> = [['root', '1']];
   for (let i = 1; i < 8; i++) edges.push([String(i), String(i + 1)]);
@@ -96,7 +96,7 @@ try {
   check('…without reading connections again', fullLoads() === reads.full && updates() === reads.updates);
 
   /* ---------- A new connection: appended, visible at once for the two people ---------- */
-  await db.user.create({ data: { id: id('new'), name: 'LF new', monthlyBudget: 7, remainingBudget: 7 } });
+  await db.user.create({ data: { id: id('new'), name: 'LF new', monthlyBudget: 7, remainingBudget: 7, budgetUpdatedAt: new Date() } });
   const versionBefore = graphVersion();
   const fullBefore = fullLoads();
   await db.$transaction((tx) => createConnectionWithinLimit(tx, id('root'), id('new')));
@@ -121,7 +121,7 @@ try {
   // A newcomer next to 5 is at the 2nd handshake; a newcomer next to 1 is at the 6th.
   clearReachCache();
   const before6 = await networkReach(db, id('6'));
-  await db.user.createMany({ data: [{ id: id('near'), name: 'LF near', remainingBudget: 3 }, { id: id('far'), name: 'LF far', remainingBudget: 4 }] });
+  await db.user.createMany({ data: [{ id: id('near'), name: 'LF near', remainingBudget: 3, budgetUpdatedAt: new Date() }, { id: id('far'), name: 'LF far', remainingBudget: 4, budgetUpdatedAt: new Date() }] });
   await db.$transaction((tx) => createConnectionWithinLimit(tx, id('5'), id('near')));
   await db.$transaction((tx) => createConnectionWithinLimit(tx, id('1'), id('far')));
   // Any request brings the graph up to date; here nobody else is asking, so the check does

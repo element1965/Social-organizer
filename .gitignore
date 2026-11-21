@@ -68,3 +68,8 @@ secrets/
 
 # Misc
 origin_logo.png
+
+# Design records for local design tooling (kept out of the public repo)
+/DESIGN.md
+/PRODUCT.md
+/.impeccable/

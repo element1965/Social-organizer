@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Błędny kod. Spróbuj ponownie lub poproś o nowy",
     "errExpired": "Kod wygasł. Poproś o nowy",
     "errAttempts": "Zbyt wiele błędnych prób. Poproś o nowy kod",
+    "errRateLimit": "Zbyt wiele prób logowania. Spróbuj ponownie później",
     "errTooSoon": "Nowy kod możesz otrzymać za {{sec}} s",
     "errUnavailable": "Wiadomości nie są teraz wysyłane. Wybierz inny sposób logowania",
     "errNetwork": "Nie udało się wysłać. Sprawdź internet i spróbuj ponownie",

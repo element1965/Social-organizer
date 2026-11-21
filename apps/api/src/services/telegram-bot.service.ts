@@ -1,5 +1,5 @@
 import { WEB_APP_URL, SUPPORT_CHAT_ID } from '../deployment.js';
-import { createHash } from 'node:crypto';
+import { webhookSecretFor } from './telegram-webhook.js';
 import { tgEscape } from './tg-html.js';
 import { getDb } from '@so/db';
 import { groupNumber } from '@so/shared';
@@ -56,6 +56,8 @@ export async function removeBlockedUser(chatId: string | number): Promise<Remove
           where: { id: userId },
           data: {
             deletedAt: new Date(),
+            // A muted person gives nothing; the network's budget sync reads this column
+            budgetUpdatedAt: new Date(),
             name: 'Deleted user',
             bio: null,
             phone: null,
@@ -1427,7 +1429,7 @@ export async function getTelegramFileUrl(fileId: string): Promise<string | null>
  * Derived from the bot token, so no extra env var; changes together with the token.
  */
 export function telegramWebhookSecret(): string {
-  return createHash('sha256').update(`so-webhook:${TELEGRAM_BOT_TOKEN}`).digest('hex');
+  return webhookSecretFor(TELEGRAM_BOT_TOKEN);
 }
 
 export async function setTelegramWebhook(webhookUrl: string): Promise<boolean> {

@@ -2,7 +2,6 @@ import { registerLandingEndpoints } from './services/landing.service.js';
 import { linkLanguage, SUPPORTED_LANGUAGES } from '@so/i18n';
 import { campaignFrom, isProductionWebRoute, type Campaign, publicPagePath, renderPublicSitemap, WEB_ROUTES } from '@so/shared';
 import { WEB_APP_URL, WEB_APP_ALT_URL, ANDROID_APP_PACKAGE, APPLE_TEAM_ID, APPLE_BUNDLE_ID, NATIVE_AUTH_SCHEME } from './deployment.js';
-import { userIdFromAuthHeader } from './services/auth.service.js';
 import { hit, clientIp, MINUTE } from './services/rate-limit.service.js';
 import { startGunRelay } from './gun-relay.js';
 import { fileURLToPath } from 'node:url';
@@ -14,20 +13,17 @@ import cors from '@fastify/cors';
 import compress from '@fastify/compress';
 import multipart from '@fastify/multipart';
 import fastifyStatic from '@fastify/static';
-import {
-  fastifyTRPCPlugin,
-  type FastifyTRPCPluginOptions,
-} from '@trpc/server/adapters/fastify';
-import { appRouter, type AppRouter } from './routers/index.js';
-import { createContext } from './context.js';
+import { registerTrpcApi } from './trpc-http.js';
 import { setupQueues } from './workers/index.js';
-import { handleTelegramUpdate, setTelegramWebhook, telegramWebhookSecret, uploadMediaToTelegram, getTelegramFileUrl } from './services/telegram-bot.service.js';
+import { handleTelegramUpdate, setTelegramWebhook, uploadMediaToTelegram, getTelegramFileUrl } from './services/telegram-bot.service.js';
+import { registerTelegramWebhook } from './services/telegram-webhook.js';
+import { fetchAvatarImage } from './services/image-proxy.service.js';
+import { activeAdminFromAuthHeader } from './services/admin-session.js';
 import { verifyAppleIdToken, findOrCreateAppleUser } from './services/apple.service.js';
 import { AccountExistsError } from './services/identity.service.js';
 import { backfillBotStartInvites } from './services/invite-fallback.service.js';
 import { getDb } from '@so/db';
 import { logMailConfig } from './services/mail.service.js';
-import { isAdmin } from './admin.js';
 import { startInactiveCleanupTimer, logInactiveCleanupConfig } from './services/inactive-cleanup.service.js';
 import { readAvatar, backfillAvatars } from './services/avatar.service.js';
 import { countRequest, startRuntimeMetrics } from './services/runtime-metrics.service.js';
@@ -37,33 +33,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 
-/**
- * Sign-in procedures open to guessing (passwords, codes) get a strict
- * per-IP limit (30 per 15 min). Signed flows (refresh, Telegram initData, Google) are left out so
- * many users behind one carrier IP are not locked out.
- */
-const AUTH_PROCEDURES = new Set([
-  'auth.registerWithEmail',
-  'auth.loginWithEmail',
-  'auth.loginWithLinkCode',
-  'auth.claimWithLinkCode',
-  'auth.requestEmailCode',
-  'auth.verifyEmailCode',
-]);
-
-
-/** Avatar hosts the image proxy may fetch from: Telegram and Google profile photos. */
-const AVATAR_HOSTS = [/^t\.me$/, /(^|\.)telegram\.org$/, /(^|\.)cdn-telegram\.org$/, /(^|\.)telegram-cdn\.org$/, /(^|\.)telesco\.pe$/, /(^|\.)googleusercontent\.com$/];
-const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
-
-function parseAvatarUrl(raw: string | undefined): URL | null {
-  try {
-    const u = new URL(raw ?? '');
-    if (u.protocol !== 'https:' || u.port) return null;
-    return AVATAR_HOSTS.some((re) => re.test(u.hostname)) ? u : null;
-  } catch {
-    return null;
-  }
+/** An admin token of an account that still exists and is not deleted (SEC-8), issued after its first mailbox proof (SEC-1). */
+function activeAdminFromRequest(req: FastifyRequest): Promise<{ userId: string } | { status: 401 | 403 }> {
+  return activeAdminFromAuthHeader(getDb(), req.headers.authorization);
 }
 
 const app = Fastify({ logger: true, maxParamLength: 5000 });
@@ -185,25 +157,10 @@ async function start() {
       if (!hit(`all:${ip}`, 600, MINUTE)) {
         return reply.status(429).send({ error: 'Too many requests' });
       }
-      if (req.url.startsWith('/trpc/')) {
-        const procs = req.url.slice(6).split('?')[0]!.split(',');
-        if (procs.some((p) => AUTH_PROCEDURES.has(p)) && !hit(`auth:${ip}`, 30, 15 * MINUTE)) {
-          return reply.status(429).send({ error: 'Too many sign-in attempts, try again later' });
-        }
-      }
     });
 
-    // tRPC
-    await app.register(fastifyTRPCPlugin, {
-      prefix: '/trpc',
-      trpcOptions: {
-        router: appRouter,
-        createContext,
-        onError({ error }) {
-          console.error('tRPC error:', error.message);
-        },
-      } satisfies FastifyTRPCPluginOptions<AppRouter>['trpcOptions'],
-    });
+    // tRPC (with the cap on sign-in calls per request, trpc-http.ts)
+    await registerTrpcApi(app);
 
     registerLandingEndpoints(app);
 
@@ -214,9 +171,8 @@ async function start() {
 
     // Manual auto-chain trigger — admin only, bypasses BullMQ
     app.post('/api/trigger-autochain', async (req, reply) => {
-      const userId = userIdFromAuthHeader(req.headers.authorization);
-      if (!userId) return reply.status(401).send({ error: 'Unauthorized' });
-      if (!isAdmin(userId)) return reply.status(403).send({ error: 'Forbidden' });
+      const admin = await activeAdminFromRequest(req);
+      if ('status' in admin) return reply.status(admin.status).send({ error: admin.status === 401 ? 'Unauthorized' : 'Forbidden' });
 
       try {
         const { processAutoChain } = await import('./workers/auto-chain.worker.js');
@@ -228,17 +184,10 @@ async function start() {
       }
     });
 
-    // Telegram Bot webhook — receives /start commands
-    app.post('/api/telegram-webhook', async (req, reply) => {
-      if (req.headers['x-telegram-bot-api-secret-token'] !== telegramWebhookSecret()) {
-        return reply.status(401).send({ ok: false });
-      }
-      try {
-        await handleTelegramUpdate(req.body as Parameters<typeof handleTelegramUpdate>[0]);
-      } catch (err) {
-        console.error('[TG Webhook] error:', err);
-      }
-      return reply.send({ ok: true });
+    // Telegram Bot webhook — receives /start commands. Off (404) when no bot token is set (SEC-9).
+    registerTelegramWebhook(app, {
+      botToken: process.env.TELEGRAM_BOT_TOKEN ?? '',
+      handle: (update) => handleTelegramUpdate(update as Parameters<typeof handleTelegramUpdate>[0]),
     });
 
     // Broadcast file upload — admin only (extended timeout for large videos)
@@ -247,9 +196,8 @@ async function start() {
       req.raw.setTimeout(180_000);
       reply.raw.setTimeout(180_000);
 
-      const userId = userIdFromAuthHeader(req.headers.authorization);
-      if (!userId) return reply.status(401).send({ error: 'Unauthorized' });
-      if (!isAdmin(userId)) return reply.status(403).send({ error: 'Forbidden' });
+      const admin = await activeAdminFromRequest(req);
+      if ('status' in admin) return reply.status(admin.status).send({ error: admin.status === 401 ? 'Unauthorized' : 'Forbidden' });
 
       let data;
       try {
@@ -305,24 +253,15 @@ async function start() {
     });
 
     // Image proxy — fetch external avatar images to bypass CORS (t.me doesn't send CORS headers).
-    // Only known avatar hosts, only images, size-capped — not an open proxy (SO-14).
+    // Only known avatar hosts (every redirect hop too), only images, size-capped — not an open proxy (SO-14).
     app.get('/api/image-proxy', async (req, reply) => {
-      const target = parseAvatarUrl((req.query as Record<string, string>).url);
-      if (!target) return reply.status(400).send({ error: 'Invalid URL' });
       try {
-        const response = await fetch(target, { signal: AbortSignal.timeout(10_000) });
-        if (!response.ok) return reply.status(response.status).send({ error: 'Upstream error' });
-        if (!parseAvatarUrl(response.url)) return reply.status(400).send({ error: 'Invalid redirect' });
-        const contentType = response.headers.get('content-type') || '';
-        if (!/^image\/(jpeg|png|webp|gif)/i.test(contentType)) {
-          return reply.status(415).send({ error: 'Not an image' });
-        }
-        const buffer = Buffer.from(await response.arrayBuffer());
-        if (buffer.length > MAX_AVATAR_BYTES) return reply.status(413).send({ error: 'Image too large' });
-        reply.header('Content-Type', contentType);
+        const result = await fetchAvatarImage((req.query as Record<string, string>).url);
+        if (!result.ok) return reply.status(result.status).send({ error: result.error });
+        reply.header('Content-Type', result.contentType);
         reply.header('X-Content-Type-Options', 'nosniff');
         reply.header('Cache-Control', 'public, max-age=86400');
-        return reply.send(buffer);
+        return reply.send(result.body);
       } catch {
         return reply.status(502).send({ error: 'Fetch failed' });
       }

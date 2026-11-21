@@ -11,6 +11,7 @@ export type ParticipantRow = {
   userId: string;
   name: string;
   photoUrl: string | null;
+  /** null for a viewer who has not joined: they see who takes part, not how much (the server sends no amount). */
   amount: number | null;
   paid: boolean;
   subtitle: string;

@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Mã sai. Thử lại hoặc yêu cầu mã mới",
     "errExpired": "Mã đã hết hạn. Hãy yêu cầu mã mới",
     "errAttempts": "Sai quá nhiều lần. Hãy yêu cầu mã mới",
+    "errRateLimit": "Đăng nhập quá nhiều lần. Hãy thử lại sau",
     "errTooSoon": "Có thể yêu cầu mã mới sau {{sec}} giây",
     "errUnavailable": "Hiện không gửi được e-mail. Hãy chọn cách đăng nhập khác",
     "errNetwork": "Không gửi được. Kiểm tra kết nối và thử lại",

@@ -8,6 +8,7 @@ import { scheduleResponseDigest } from '../services/notification.service.js';
 import { recordResponded } from '../services/notify-routing.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
 import { getDirectConnectionCounts } from '../services/direct-connection-counts.js';
+import { chatLinkFor, confirmedRenewals } from '../services/collection-view.js';
 
 export const obligationRouter = router({
   create: protectedProcedure
@@ -66,6 +67,7 @@ export const obligationRouter = router({
     // Get connection counts for all creators
     const creatorIds = [...new Set(obligations.map((o) => o.collection.creatorId))];
     const countMap = await getDirectConnectionCounts(ctx.db, creatorIds);
+    const confirmed = await confirmedRenewals(ctx.db, ctx.userId, obligations.map((o) => o.collection));
 
     const activeIds = new Set(obligations.filter((o) => o.unsubscribedAt == null).map((o) => o.collectionId));
     return obligations.map((o) => {
@@ -79,7 +81,14 @@ export const obligationRouter = router({
         confirmedAt: owner ? o.confirmedAt : null,
         collection: {
           ...o.collection,
-          chatLink: canSeeParticipation ? o.collection.chatLink : null,
+          // The same rule as the Need page (SEC-6): a declined Participation, a closed or held Need and a cycle
+          // waiting for confirmation do not open the participants' chat
+          chatLink: chatLinkFor(
+            o.collection,
+            ctx.userId,
+            o.unsubscribedAt == null ? o : null,
+            confirmed.has(`${o.collection.id}:${o.collection.cycleNumber}`),
+          ),
           creator: {
             ...o.collection.creator,
             connectionCount: countMap.get(o.collection.creatorId) || 0,

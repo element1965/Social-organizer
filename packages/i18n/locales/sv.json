@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Fel kod. Försök igen eller begär en ny",
     "errExpired": "Koden har gått ut. Begär en ny",
     "errAttempts": "För många felaktiga försök. Begär en ny kod",
+    "errRateLimit": "För många inloggningsförsök. Försök igen senare",
     "errTooSoon": "Ny kod om {{sec}} s",
     "errUnavailable": "E-post kan inte skickas just nu. Välj ett annat sätt",
     "errNetwork": "Kunde inte skicka. Kontrollera anslutningen och försök igen",

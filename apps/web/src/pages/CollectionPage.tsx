@@ -294,6 +294,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   });
 
   // Every active pledge counts until the person declines. Confirming a cycle does not change the total.
+  // The others' part comes from the server's total: a viewer who has not joined gets the rows without amounts.
   const mineTotal = activeObligations.filter((row) => row.userId === userId).reduce((sum, row) => sum + (row.amount ?? 0), 0);
   const othersTotal = Math.max(0, data.currentAmount - mineTotal);
 

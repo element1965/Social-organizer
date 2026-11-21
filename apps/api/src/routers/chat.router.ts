@@ -6,6 +6,9 @@ import { SCREEN_GUIDE } from '../knowledge/screens.js';
 import { readFaq } from '../services/faq.service.js';
 import { TRPCError } from '@trpc/server';
 import { hit, HOUR } from '../services/rate-limit.service.js';
+import { tgEscape } from '../services/tg-html.js';
+import { WEB_APP_URL } from '../deployment.js';
+import { WEB_ROUTES } from '@so/shared';
 
 /**
  * The assistant and the voice are the only paid-per-call parts of the service, so they are bounded:
@@ -77,6 +80,17 @@ function detectFeedbackByKeywords(message: string): boolean {
   return patterns.some((p) => p.test(message));
 }
 
+/**
+ * The team's Telegram copy of a feedback message (SEC-10). It carries the name, the user id, the text and
+ * where to answer: the in-app support inbox, which already has the message. No e-mail, phone or contacts:
+ * the person may hide them in the app, and replies go through the inbox. Every user value is escaped,
+ * because the message is sent with parse_mode HTML.
+ */
+export function feedbackTelegramText(userName: string | null | undefined, userId: string, userMessage: string): string {
+  return `💬 <b>Feedback</b>\n\nFrom: <b>${tgEscape(userName || 'Unknown')}</b>\nUser id: <code>${tgEscape(userId)}</code>\n\n`
+    + `${tgEscape(userMessage)}\n\nReply in the support inbox: ${tgEscape(`${WEB_APP_URL}${WEB_ROUTES.SUPPORT}`)}`;
+}
+
 /** Send user feedback to Telegram group (fire-and-forget) */
 async function sendFeedbackToTelegram(userMessage: string, userId: string): Promise<void> {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -84,23 +98,9 @@ async function sendFeedbackToTelegram(userMessage: string, userId: string): Prom
   if (!botToken || !chatId) return;
 
   const db = getDb();
-  const user = await db.user.findUnique({
-    where: { id: userId },
-    select: { name: true, email: true, phone: true, contacts: { select: { type: true, value: true } } },
-  });
+  const user = await db.user.findUnique({ where: { id: userId }, select: { name: true } });
 
-  const userName = user?.name || 'Unknown';
-  const contactLines: string[] = [];
-  if (user?.email) contactLines.push(`Email: ${user.email}`);
-  if (user?.phone) contactLines.push(`Phone: ${user.phone}`);
-  if (user?.contacts) {
-    for (const c of user.contacts) {
-      contactLines.push(`${c.type}: ${c.value}`);
-    }
-  }
-  const contactsStr = contactLines.length > 0 ? `\n${contactLines.join('\n')}` : '';
-
-  const text = `💬 <b>Feedback</b>\n\nFrom: <b>${userName}</b>${contactsStr}\n\n${userMessage}`;
+  const text = feedbackTelegramText(user?.name, userId, userMessage);
   await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

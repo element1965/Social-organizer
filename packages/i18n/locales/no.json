@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Feil kode. Prøv igjen eller be om en ny",
     "errExpired": "Koden har utløpt. Be om en ny",
     "errAttempts": "For mange feil forsøk. Be om en ny kode",
+    "errRateLimit": "For mange påloggingsforsøk. Prøv igjen senere",
     "errTooSoon": "Ny kode om {{sec}} s",
     "errUnavailable": "E-post kan ikke sendes nå. Velg en annen måte",
     "errNetwork": "Kunne ikke sende. Sjekk tilkoblingen og prøv igjen",

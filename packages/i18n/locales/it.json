@@ -34,6 +34,7 @@
     "errInvalidNoCount": "Codice errato. Riprova o richiedine uno nuovo",
     "errExpired": "Il codice è scaduto. Richiedine uno nuovo",
     "errAttempts": "Troppi tentativi errati. Richiedi un nuovo codice",
+    "errRateLimit": "Troppi tentativi di accesso. Riprova più tardi",
     "errTooSoon": "Puoi richiedere un nuovo codice tra {{sec}} s",
     "errUnavailable": "Ora non è possibile inviare e-mail. Scegli un altro modo di accesso",
     "errNetwork": "Invio non riuscito. Controlla la connessione e riprova",
