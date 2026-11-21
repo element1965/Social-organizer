@@ -15,17 +15,17 @@ import { ParticipantList, type ParticipantRow } from './ParticipantList';
 const UNDO_MS = 5000;
 
 /** `write`: the write the Undo belongs to, so only that write's failure takes it away. */
-type Undo = { text: string; ids: string[]; paid: boolean; key: number; write: number };
+type Undo = { text: string; ids: string[]; paid: boolean; key: number; write: number; cycleNumber: number };
 
 /**
  * Transfer marks for the author of a collection: one tap marks or unmarks right away (no dialog),
  * several can be marked at once, and every change can be undone for a few seconds.
  * The mark shows at once (local override) and stays until the server data agrees.
  */
-export function usePaidMarks(rows: ParticipantRow[], onSaved: () => void) {
+export function usePaidMarks(rows: ParticipantRow[], collectionId: string, cycleNumber: number, onSaved: () => void) {
   const { t } = useTranslation();
   // Per row: the mark shown before the server agrees, and the write it came from (a newer tap replaces it)
-  const [override, setOverride] = useState<Map<string, { paid: boolean; write: number }>>(new Map());
+  const [override, setOverride] = useState<Map<string, { paid: boolean; write: number; cycleNumber: number }>>(new Map());
   const [undo, setUndo] = useState<Undo | null>(null);
   const [failed, setFailed] = useState<unknown>(null);
   const writes = useRef(0);
@@ -48,21 +48,22 @@ export function usePaidMarks(rows: ParticipantRow[], onSaved: () => void) {
     setOverride((prev) => {
       if (prev.size === 0) return prev;
       const next = new Map(prev);
+      for (const [id, mark] of next) if (mark.cycleNumber !== cycleNumber) next.delete(id);
       for (const row of rows) {
         const own = next.get(row.id);
         if (own && !unsettled.current.has(own.write) && own.paid === row.paid) next.delete(row.id);
       }
       return next.size === prev.size ? prev : next;
     });
-  }, [rows]);
+  }, [rows, cycleNumber]);
 
-  const people = useMemo(
-    () => rows.map((row) => (override.has(row.id) ? { ...row, paid: override.get(row.id)!.paid } : row)),
-    [rows, override],
-  );
+  const people = useMemo(() => rows.map((row) => {
+    const mark = override.get(row.id);
+    return mark?.cycleNumber === cycleNumber ? { ...row, paid: mark.paid } : row;
+  }), [rows, override, cycleNumber]);
 
   const apply = useCallback(
-    (ids: string[], paid: boolean, text: string | null) => {
+    (ids: string[], paid: boolean, text: string | null, displayedCycle: number) => {
       if (ids.length === 0) return;
       // The account of the person who tapped, captured now: the queued write goes out for that account only and
       // is dropped quietly if another one has signed in by the time it leaves
@@ -73,12 +74,12 @@ export function usePaidMarks(rows: ParticipantRow[], onSaved: () => void) {
       setFailed(null);
       setOverride((prev) => {
         const next = new Map(prev);
-        for (const id of ids) next.set(id, { paid, write });
+        for (const id of ids) next.set(id, { paid, write, cycleNumber: displayedCycle });
         return next;
       });
-      setUndo(text ? { text, ids, paid, key: Date.now(), write } : null);
+      setUndo(text ? { text, ids, paid, key: Date.now(), write, cycleNumber: displayedCycle } : null);
       queue.current = queue.current.then(() =>
-        sendRef.current({ obligationIds: ids, paid }, { context: { account } }).then(
+        sendRef.current({ collectionId, cycleNumber: displayedCycle, obligationIds: ids, paid }, { context: { account } }).then(
           () => {
             unsettled.current.delete(write);
             savedRef.current();
@@ -100,38 +101,37 @@ export function usePaidMarks(rows: ParticipantRow[], onSaved: () => void) {
         ),
       );
     },
-    [],
+    [collectionId],
   );
 
   const toggle = useCallback(
     (row: ParticipantRow) => {
-      const current = override.get(row.id)?.paid ?? row.paid;
-      const paid = !current;
-      apply([row.id], paid, t(paid ? 'collection.markedOne' : 'collection.unmarkedOne', { name: row.name }));
+      const paid = !row.paid;
+      apply([row.id], paid, t(paid ? 'collection.markedOne' : 'collection.unmarkedOne', { name: row.name }), cycleNumber);
     },
-    [apply, override, t],
+    [apply, cycleNumber, t],
   );
 
   const markMany = useCallback(
     (selected: ParticipantRow[]) => {
       if (selected.length === 1) {
-        apply([selected[0]!.id], true, t('collection.markedOne', { name: selected[0]!.name }));
+        apply([selected[0]!.id], true, t('collection.markedOne', { name: selected[0]!.name }), cycleNumber);
       } else {
-        apply(selected.map((row) => row.id), true, t('collection.markedMany', { n: selected.length }));
+        apply(selected.map((row) => row.id), true, t('collection.markedMany', { n: selected.length }), cycleNumber);
       }
     },
-    [apply, t],
+    [apply, cycleNumber, t],
   );
 
   const undoLast = useCallback(() => {
     if (!undo) return;
-    apply(undo.ids, !undo.paid, null);
+    apply(undo.ids, !undo.paid, null, undo.cycleNumber);
   }, [apply, undo]);
 
   // Stable, so the undo bar timer is not restarted by every re-render
   const dismissUndo = useCallback(() => setUndo(null), []);
 
-  return { people, toggle, markMany, undo, undoLast, dismissUndo, failed };
+  return { people, toggle, markMany, undo: undo?.cycleNumber === cycleNumber ? undo : null, undoLast, dismissUndo, failed };
 }
 
 /** Fixed column of bars above the tab bar (or at the bottom of the window on desktop). */
@@ -289,6 +289,8 @@ function Tick({ on }: { on: boolean }) {
 
 /** The participants list with transfer marks for the author: one-tap marks, the sheet, the undo bar. */
 export function MarkableParticipantList({
+  collectionId,
+  cycleNumber,
   people: rows,
   onPerson,
   onRemove,
@@ -296,6 +298,8 @@ export function MarkableParticipantList({
   onCloseCollection,
   emptyAction,
 }: {
+  collectionId: string;
+  cycleNumber: number;
   people: ParticipantRow[];
   onPerson: (userId: string) => void;
   onRemove: (row: ParticipantRow) => void;
@@ -304,8 +308,8 @@ export function MarkableParticipantList({
   onCloseCollection: () => void;
   emptyAction?: ReactNode;
 }) {
-  const marks = usePaidMarks(rows, onSaved);
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const marks = usePaidMarks(rows, collectionId, cycleNumber, onSaved);
+  const [sheetCycle, setSheetCycle] = useState<number | null>(null);
   const unpaid = marks.people.filter((row) => !row.paid);
   const allPaid = marks.people.length > 0 && unpaid.length === 0;
   const total = marks.people.reduce((acc, row) => acc + (row.amount ?? 0), 0);
@@ -322,16 +326,16 @@ export function MarkableParticipantList({
         onPerson={onPerson}
         onPaid={marks.toggle}
         onRemove={onRemove}
-        onMarkMany={() => setSheetOpen(true)}
+        onMarkMany={() => setSheetCycle(cycleNumber)}
         emptyAction={emptyAction}
       />
       <ActionError error={marks.failed} className="mt-2" />
       <MarkTransfersSheet
-        open={sheetOpen}
+        open={sheetCycle === cycleNumber}
         people={unpaid}
-        onClose={() => setSheetOpen(false)}
+        onClose={() => setSheetCycle(null)}
         onConfirm={(chosen) => {
-          setSheetOpen(false);
+          setSheetCycle(null);
           marks.markMany(chosen);
         }}
       />

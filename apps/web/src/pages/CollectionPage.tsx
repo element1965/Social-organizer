@@ -429,13 +429,12 @@ function CollectionScreen({ id }: { id: string | undefined }) {
       return;
     }
     setEditError('');
-    // Both steps start clean, so the message under the card is always about this attempt
-    updateObligation.reset();
     confirmCycle.reset();
-    if (amount !== myObl.amount) {
-      await updateObligation.mutateAsync({ obligationId: myObl.id, amount, inputCurrency: 'USD' });
-    }
-    await confirmCycle.mutateAsync({ collectionId: data.id });
+    await confirmCycle.mutateAsync({
+      collectionId: data.id,
+      cycleNumber: data.cycleNumber,
+      pledge: amount !== myObl.amount ? { obligationId: myObl.id, amount } : undefined,
+    });
     setOtherOpen(false);
     setEditing(false);
   };
@@ -580,11 +579,11 @@ function CollectionScreen({ id }: { id: string | undefined }) {
                 label={t('collection.otherAmount')}
                 value={editAmount}
                 onValueChange={setEditAmount}
-                error={editError || serverFieldError(updateObligation.error, 'amount', t('errors.invalid'))}
+                error={editError || serverFieldError(confirmCycle.error, 'pledge', t('errors.invalid'))}
               />
               <Button
                 className="mt-3 w-full"
-                loading={confirmCycle.isPending || updateObligation.isPending}
+                loading={confirmCycle.isPending}
                 onClick={() => {
                   const message = pledgeMessage(editAmount);
                   const amount = parseWhole(editAmount);
@@ -618,10 +617,9 @@ function CollectionScreen({ id }: { id: string | undefined }) {
               {editError ? <p className="text-label font-semibold text-sos">{editError}</p> : null}
             </div>
           )}
-          {/* confirm() resets both before each attempt, so this is always about the last one */}
-          <ActionError error={confirmCycle.error ?? actionErrorBesides(updateObligation.error, 'amount')} />
         </Card>
       ) : null}
+      <ActionError error={actionErrorBesides(confirmCycle.error, 'pledge')} />
 
       {!owner && myObl && !needsConfirm && !closed && !held ? (
         <MyParticipationCard
@@ -722,6 +720,9 @@ function CollectionScreen({ id }: { id: string | undefined }) {
       {owner && !closed ? (
         // The author marks transfers: one tap with undo, or several at once in a sheet
         <MarkableParticipantList
+          key={data.id}
+          collectionId={data.id}
+          cycleNumber={data.cycleNumber}
           people={people}
           onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)}
           onRemove={setRemoveTarget}

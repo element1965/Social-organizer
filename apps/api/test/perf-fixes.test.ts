@@ -4,11 +4,12 @@ import { processCheckBlock } from '../src/workers/check-block.worker.js';
 import type { PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { appRouter } from '../src/routers/index.js';
 import { notifyGoalReached, syncCollectionGoal } from '../src/services/collection-amount.js';
 import { createUserWithReferralSlug } from '../src/services/referral-slug.service.js';
 import { remainingBudgets } from '../src/services/network.service.js';
 import { touchUserNow } from '../src/services/activity.service.js';
-import { createTestDatabase } from './test-database.js';
+import { createTestDatabase, isBlockingTransaction, pauseAfterNeedRead } from './test-database.js';
 
 vi.hoisted(() => {
   // Enable only local behavior, even if a developer's shell exports integration settings.
@@ -147,26 +148,26 @@ describe('goal reached notices (PERF-1)', () => {
   });
 
   it('keeps a Need closed when the goal worker overlaps its closure', async () => {
-    const { need } = await seedGoal('hold-worker-race');
+    const { need, id } = await seedGoal('hold-worker-race');
     const job = { data: { collectionId: need.id } } as Job<{ collectionId: string }>;
-    const close = () => db.collection.update({ where: { id: need.id }, data: { status: 'CLOSED', closedAt: new Date() } });
-    const lookup = db.collection.findUnique.bind(db.collection);
-    const before = vi.spyOn(db.collection, 'findUnique').mockImplementationOnce((args) =>
-      lookup(args).then(async (need) => { await close(); return need; }) as ReturnType<typeof lookup>,
-    );
-    const tx = db.$transaction.bind(db);
-    const startTransaction = vi.spyOn(db, '$transaction').mockImplementationOnce(((operation: Parameters<typeof tx>[0]) => {
-      before.mockRestore();
-      return close().then(() => tx(operation));
-    }) as typeof db.$transaction);
+    const author = appRouter.createCaller({ db, userId: id('author'), ip: '127.0.0.1' });
     const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    const gate = pauseAfterNeedRead(db);
+    const worker = processCheckBlock(job);
+    let closing: ReturnType<typeof author.collection.close> | undefined;
     try {
-      await processCheckBlock(job);
+      const pid = await Promise.race([gate.read, worker.then(() => { throw new Error('Worker finished before reading the Need'); })]);
+      closing = author.collection.close({ id: need.id });
+      void closing.catch(() => {});
+      await expect.poll(() => isBlockingTransaction(db, pid)).toBe(true);
+      gate.resume();
+      await Promise.all([worker, closing]);
       expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({ status: 'CLOSED' });
     } finally {
+      gate.resume();
+      await Promise.allSettled([worker, closing]);
+      gate.restore();
       getDb.mockRestore();
-      startTransaction.mockRestore();
-      before.mockRestore();
     }
   });
 

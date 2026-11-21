@@ -58,6 +58,7 @@ describe('account operations without the campaign migration', () => {
     const deleteCampaign = vi.fn().mockRejectedValue(missingCampaignTable());
     const empty = { deleteMany: vi.fn() };
     const tx = {
+      $queryRaw: vi.fn().mockResolvedValue([]),
       connection: { count: vi.fn().mockResolvedValue(1), findMany: vi.fn().mockResolvedValue([]), ...empty },
       inviteLink: { count: vi.fn().mockResolvedValue(0) },
       pendingConnection: empty,

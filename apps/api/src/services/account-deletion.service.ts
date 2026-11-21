@@ -1,4 +1,4 @@
-import type { PrismaClient, Prisma } from '@so/db';
+import type { Collection, PrismaClient, Prisma } from '@so/db';
 import { sendUserDeletedNotification } from './notification.service.js';
 import { countConnections } from './connection-request.service.js';
 import { invalidateGraph } from './graph-cache.service.js';
@@ -57,21 +57,27 @@ export async function deleteUserAccount(
       },
     });
 
-    // Cancel obligations in active collections
-    await tx.obligation.deleteMany({
-      where: {
-        userId,
-        collection: { status: { in: ['ACTIVE', 'BLOCKED'] } },
-      },
-    });
+    // Take all parent locks in ID order before touching obligations. A hard delete also
+    // cascades to closed Needs and obligations, so it locks those parents too.
+    const affected = await tx.$queryRaw<Pick<Collection, 'id' | 'status'>[]>`
+      SELECT c."id", c."status"
+      FROM collections c
+      WHERE (${!hasNetworkTies} OR c."status" IN ('ACTIVE', 'BLOCKED'))
+        AND (c."creatorId" = ${userId} OR EXISTS (
+          SELECT 1 FROM obligations o WHERE o."collectionId" = c."id" AND o."userId" = ${userId}
+        ))
+      ORDER BY c."id" FOR UPDATE
+    `;
+    const openNeedIds = affected.filter(({ status }) => status === 'ACTIVE' || status === 'BLOCKED').map(({ id }) => id);
 
     // Cancel own active collections
     await tx.collection.updateMany({
-      where: {
-        creatorId: userId,
-        status: { in: ['ACTIVE', 'BLOCKED'] },
-      },
+      where: { creatorId: userId, id: { in: openNeedIds } },
       data: { status: 'CANCELLED' },
+    });
+
+    await tx.obligation.deleteMany({
+      where: { userId, collectionId: { in: openNeedIds } },
     });
 
     // Remove user from the network (delete all connections)

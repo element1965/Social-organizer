@@ -4,6 +4,7 @@ import type { Job } from 'bullmq';
 import { REGULAR_CYCLE_DAYS } from '@so/shared';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { appRouter } from '../src/routers/index.js';
+import { deleteUserAccount } from '../src/services/account-deletion.service.js';
 import { getAskAccess } from '../src/services/ask-access.service.js';
 import { invalidateGraph } from '../src/services/graph-cache.service.js';
 import { sendCycleRenewalReminderTg, sendCycleRenewedTg } from '../src/services/notification.service.js';
@@ -12,7 +13,7 @@ import { WEB_APP_URL } from '../src/deployment.js';
 import { processCycleClose } from '../src/workers/cycle-close.worker.js';
 import { processCycleRenewalReminder } from '../src/workers/cycle-renewal-reminder.worker.js';
 import { runReNotify } from '../src/workers/re-notify.worker.js';
-import { createTestDatabase } from './test-database.js';
+import { createTestDatabase, isBlockingTransaction, pauseAfterNeedRead } from './test-database.js';
 
 vi.hoisted(() => {
   // Enable only local behavior, even if a developer's shell exports integration settings.
@@ -153,13 +154,14 @@ describe('Need participant visibility', () => {
     const before = await member.notification.pulse();
     expect(before.participating).toMatchObject({ count: 1, pledgeAt: row.createdAt.getTime() });
     expect((await owner.notification.pulse()).mine).toMatchObject({ confirmed: 0 });
-    await owner.obligation.setPaid({ obligationIds: [row.id], paid: true });
+    const mark = { collectionId: need.id, cycleNumber: need.cycleNumber, obligationIds: [row.id] };
+    await owner.obligation.setPaid({ ...mark, paid: true });
     expect(await member.notification.pulse()).toEqual(before);
     expect(before.participating).not.toHaveProperty('confirmed');
     const marked = (await owner.notification.pulse()).mine;
     expect(marked).toMatchObject({ confirmed: 1 });
     expect(marked?.pledgeAt).toBeGreaterThan(row.createdAt.getTime());
-    await owner.obligation.setPaid({ obligationIds: [row.id], paid: false });
+    await owner.obligation.setPaid({ ...mark, paid: false });
     expect(await member.notification.pulse()).toEqual(before);
     expect((await owner.notification.pulse()).mine).toMatchObject({ confirmed: 0 });
   });
@@ -207,7 +209,7 @@ describe('Need participant visibility', () => {
     });
     const owner = caller(author);
     const viewer = caller(member);
-    await owner.obligation.setPaid({ obligationIds: [row.id], paid: true });
+    await owner.obligation.setPaid({ collectionId: need.id, cycleNumber: need.cycleNumber, obligationIds: [row.id], paid: true });
     await owner.collection.close({ id: need.id });
     const closed = { code: 'BAD_REQUEST', message: 'Collection is not open' };
     const summary = { status: 'CLOSED', currentAmount: 7, participantCount: 1, obligations: [
@@ -222,28 +224,112 @@ describe('Need participant visibility', () => {
     }
   });
 
-  it('rejects a paid write when closure commits after the transfer lookup', async () => {
+  it('rejects a paid write when closure commits before the Need lock', async () => {
     const [author, member] = ['paid-race-author', 'paid-race-member'];
     await db.user.createMany({ data: [author, member].map((id) => ({ id, name: id })) });
     const need = await db.collection.create({ data: { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat' } });
     const row = await db.obligation.create({ data: { collectionId: need.id, userId: member, amount: 7 } });
     const owner = caller(author);
-    expect(await owner.obligation.setPaid({ obligationIds: [row.id], paid: false })).toEqual({ changed: 0 });
+    const mark = { collectionId: need.id, cycleNumber: need.cycleNumber, obligationIds: [row.id] };
+    expect(await owner.obligation.setPaid({ ...mark, paid: false })).toEqual({ changed: 0 });
 
-    const findTransfers = db.obligation.findMany.bind(db.obligation);
-    const lookup = vi.spyOn(db.obligation, 'findMany').mockImplementationOnce((args) =>
-      findTransfers(args).then(async (transfers) => {
-        await owner.collection.close({ id: need.id });
-        return transfers;
-      }) as ReturnType<typeof findTransfers>,
-    );
+    const transact = db.$transaction.bind(db);
+    const startTransaction = vi.spyOn(db, '$transaction').mockImplementationOnce(((operation: Parameters<typeof transact>[0]) =>
+      owner.collection.close({ id: need.id }).then(() => transact(operation))
+    ) as typeof db.$transaction);
     try {
-      await expect(owner.obligation.setPaid({ obligationIds: [row.id], paid: true }))
+      await expect(owner.obligation.setPaid({ ...mark, paid: true }))
         .rejects.toMatchObject({ code: 'BAD_REQUEST', message: 'Collection is not open' });
     } finally {
-      lookup.mockRestore();
+      startTransaction.mockRestore();
     }
     expect(await db.obligation.findUniqueOrThrow({ where: { id: row.id } })).toMatchObject({ confirmedAt: null });
+  });
+
+  it('rejects marks, Undo, and acknowledgements from a previous cycle', async () => {
+    const [author, member] = ['cycle-conflict-author', 'cycle-conflict-member'];
+    await db.user.createMany({ data: [author, member].map((id) => ({ id, name: id })) });
+    const need = await db.collection.create({
+      data: {
+        creatorId: author, type: 'REGULAR', cycleNumber: 2, amount: 10, chatLink: 'https://example.com/chat',
+        currentCycleStart: new Date(Date.now() - REGULAR_CYCLE_DAYS * 24 * hour - hour),
+      },
+    });
+    const [row, withdrawn] = await Promise.all([
+      db.obligation.create({ data: { collectionId: need.id, userId: member, amount: 7, confirmedAt: new Date() } }),
+      db.obligation.create({ data: { collectionId: need.id, userId: member, amount: 4, unsubscribedAt: new Date() } }),
+    ]);
+    const owner = caller(author).obligation;
+    const viewer = caller(member).obligation;
+    const displayed = { collectionId: need.id, cycleNumber: 2 };
+    const current = { ...displayed, cycleNumber: 3 };
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    try {
+      await processCycleClose({} as Job);
+    } finally {
+      getDb.mockRestore();
+    }
+    expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({ cycleNumber: 3 });
+    expect(await db.obligation.findUnique({ where: { id: withdrawn.id } })).toBeNull();
+
+    const conflict = { code: 'CONFLICT' };
+    await expect(owner.setPaid({ ...displayed, obligationIds: [row.id], paid: true })).rejects.toMatchObject(conflict);
+    await expect(owner.setPaid({ ...displayed, obligationIds: [withdrawn.id], paid: false })).rejects.toMatchObject(conflict);
+    await expect(owner.confirmPayment({ ...displayed, obligationId: row.id })).rejects.toMatchObject(conflict);
+    expect(await db.obligation.findUniqueOrThrow({ where: { id: row.id } })).toMatchObject({ confirmedAt: null });
+    await expect(owner.setPaid({ ...current, obligationIds: [row.id], paid: true })).resolves.toEqual({ changed: 1 });
+    await expect(owner.setPaid({ ...displayed, obligationIds: [row.id], paid: false })).rejects.toMatchObject(conflict);
+    expect(await db.obligation.findUniqueOrThrow({ where: { id: row.id } })).toMatchObject({ confirmedAt: expect.any(Date) });
+
+    const pledge = { obligationId: row.id, amount: 11 };
+    await expect(viewer.confirmCycle(displayed)).rejects.toMatchObject(conflict);
+    await expect(viewer.confirmCycle({ ...displayed, pledge })).rejects.toMatchObject(conflict);
+    expect(await db.obligation.findUniqueOrThrow({ where: { id: row.id } })).toMatchObject({ amount: 7 });
+    const acknowledgements = { collectionId: need.id, type: 'CYCLE_RENEWED', status: 'RESPONDED' } as const;
+    expect(await db.notification.count({ where: acknowledgements })).toBe(0);
+
+    // Force the acknowledgement write to fail so an independently committed edit would remain visible.
+    await db.$executeRaw`
+      ALTER TABLE notifications ADD CONSTRAINT test_reject_cycle_ack
+      CHECK (NOT ("type" = 'CYCLE_RENEWED' AND "status" = 'RESPONDED')) NOT VALID
+    `;
+    try {
+      await expect(viewer.confirmCycle({ ...current, pledge })).rejects.toMatchObject({ code: 'INTERNAL_SERVER_ERROR' });
+      expect(await db.obligation.findUniqueOrThrow({ where: { id: row.id } })).toMatchObject({ amount: 7 });
+    } finally {
+      await db.$executeRaw`ALTER TABLE notifications DROP CONSTRAINT test_reject_cycle_ack`;
+    }
+
+    await expect(viewer.confirmCycle({ ...current, pledge })).resolves.toEqual({ ok: true });
+    expect(await db.obligation.findUniqueOrThrow({ where: { id: row.id } })).toMatchObject({ amount: 11 });
+    expect(await db.notification.findMany({ where: acknowledgements })).toMatchObject([{ userId: member, wave: 3 }]);
+    expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({ status: 'BLOCKED' });
+  });
+
+  it('waits for a mark on an author’s own obligation before deleting the account', async () => {
+    const [author, peer] = ['delete-mark-author', 'delete-mark-peer'];
+    await db.user.createMany({ data: [author, peer].map((id) => ({ id, name: id })) });
+    await db.connection.create({ data: { userAId: author, userBId: peer } });
+    const need = await db.collection.create({ data: { creatorId: author, type: 'REGULAR', chatLink: 'https://example.com/chat' } });
+    const row = await db.obligation.create({ data: { collectionId: need.id, userId: author, amount: 7 } });
+    const gate = pauseAfterNeedRead(db);
+    const mark = { collectionId: need.id, cycleNumber: need.cycleNumber, obligationIds: [row.id], paid: true };
+    const marking = caller(author).obligation.setPaid(mark);
+    let deletion: ReturnType<typeof deleteUserAccount> | undefined;
+    try {
+      const pid = await Promise.race([gate.read, marking.then(() => { throw new Error('Mark finished before reading the Need'); })]);
+      deletion = deleteUserAccount(db, author);
+      void deletion.catch(() => {});
+      await expect.poll(() => isBlockingTransaction(db, pid)).toBe(true);
+      gate.resume();
+      await expect(Promise.all([marking, deletion])).resolves.toEqual([{ changed: 1 }, { mode: 'soft' }]);
+      expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({ status: 'CANCELLED' });
+      expect(await db.obligation.findUnique({ where: { id: row.id } })).toBeNull();
+    } finally {
+      gate.resume();
+      await Promise.allSettled([marking, deletion]);
+      gate.restore();
+    }
   });
 
   it.each(['create', 'updateAmount', 'confirmCycle'] as const)('rejects a late %s after the Need closes', async (action) => {
@@ -283,7 +369,7 @@ describe('Need participant visibility', () => {
       const actions = {
         create: () => viewer.obligation.create({ collectionId: need.id, amount: 12 }),
         updateAmount: () => viewer.obligation.updateAmount({ obligationId: row.id, amount: 12 }),
-        confirmCycle: () => viewer.obligation.confirmCycle({ collectionId: need.id }),
+        confirmCycle: () => viewer.obligation.confirmCycle({ collectionId: need.id, cycleNumber: need.cycleNumber }),
       };
       await expect(actions[action]()).rejects.toMatchObject({ code: 'BAD_REQUEST' });
       expect(await db.obligation.findMany({ where: { collectionId: need.id }, select: { id: true, amount: true } }))
@@ -384,7 +470,8 @@ describe('Need participant visibility', () => {
     const row = await db.obligation.create({ data: { collectionId: need.id, userId: participant, amount: 4 } });
     const unmarked = await db.obligation.create({ data: { collectionId: need.id, userId: participant, amount: 6 } });
     const owner = caller(author);
-    const marked = await owner.obligation.confirmPayment({ obligationId: row.id });
+    const displayed = { collectionId: need.id, cycleNumber: need.cycleNumber };
+    const marked = await owner.obligation.confirmPayment({ ...displayed, obligationId: row.id });
     expect(marked.confirmedAt).toBeInstanceOf(Date);
     await owner.collection.close({ id: need.id });
     const summary = async () => {
@@ -394,8 +481,8 @@ describe('Need participant visibility', () => {
     const before = await summary();
     expect(before).toEqual([{ id: marked.id, confirmedAt: marked.confirmedAt, amount: 4 }]);
     const results = await Promise.allSettled([
-      owner.obligation.confirmPayment({ obligationId: marked.id }),
-      owner.obligation.setPaid({ obligationIds: [unmarked.id], paid: true }),
+      owner.obligation.confirmPayment({ ...displayed, obligationId: marked.id }),
+      owner.obligation.setPaid({ ...displayed, obligationIds: [unmarked.id], paid: true }),
     ]);
     expect(await summary()).toEqual(before);
     const rejected = { status: 'rejected', reason: expect.objectContaining({ code: 'BAD_REQUEST' }) };

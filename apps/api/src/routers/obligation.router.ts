@@ -10,6 +10,14 @@ import { getDirectConnectionCounts } from '../services/direct-connection-counts.
 import { chatLinkFor, confirmedRenewals } from '../services/collection-view.js';
 import { assertOpenNeed, lockNeed } from '../services/collection-state.js';
 
+const displayedCycle = z.object({ collectionId: z.string(), cycleNumber: z.number().int().positive() });
+
+function assertCurrentCycle(current: number, displayed: number): void {
+  if (current !== displayed) {
+    throw new TRPCError({ code: 'CONFLICT', message: 'The Need has moved to a different cycle' });
+  }
+}
+
 export const obligationRouter = router({
   create: protectedProcedure
     .input(z.object({
@@ -130,53 +138,51 @@ export const obligationRouter = router({
     }),
 
   confirmPayment: protectedProcedure
-    .input(z.object({ obligationId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const obligation = await ctx.db.obligation.findUnique({
-        where: { id: input.obligationId },
-        select: { collectionId: true, collection: { select: { creatorId: true } } },
-      });
-      if (!obligation) throw new TRPCError({ code: 'NOT_FOUND' });
-      if (obligation.collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
-      return ctx.db.$transaction(async (tx) => {
-        assertOpenNeed(await lockNeed(tx, obligation.collectionId));
-        const current = await tx.obligation.findUnique({ where: { id: input.obligationId }, select: { confirmedAt: true } });
+    .input(displayedCycle.extend({ obligationId: z.string() }))
+    .mutation(({ ctx, input }) =>
+      ctx.db.$transaction(async (tx) => {
+        const collection = await lockNeed(tx, input.collectionId);
+        if (collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
+        assertCurrentCycle(collection.cycleNumber, input.cycleNumber);
+        assertOpenNeed(collection);
+        const current = await tx.obligation.findUnique({
+          where: { id: input.obligationId, collectionId: input.collectionId },
+          select: { confirmedAt: true },
+        });
         if (!current) throw new TRPCError({ code: 'NOT_FOUND' });
         return tx.obligation.update({
           where: { id: input.obligationId },
           data: { confirmedAt: current.confirmedAt ? null : new Date() },
         });
-      });
-    }),
+      }),
+    ),
 
   /**
    * Mark several transfers as received (or clear the mark) in one go. Idempotent, unlike the
    * confirmPayment toggle: rows already in the wanted state are left alone. Author only, one collection.
    */
   setPaid: protectedProcedure
-    .input(z.object({ obligationIds: z.array(z.string()).min(1).max(500), paid: z.boolean() }))
-    .mutation(async ({ ctx, input }) => {
+    .input(displayedCycle.extend({ obligationIds: z.array(z.string()).min(1).max(500), paid: z.boolean() }))
+    .mutation(({ ctx, input }) => {
       const ids = [...new Set(input.obligationIds)];
-      const rows = await ctx.db.obligation.findMany({
-        where: { id: { in: ids } },
-        select: { collectionId: true, collection: { select: { creatorId: true } } },
-      });
-      if (rows.length !== ids.length) throw new TRPCError({ code: 'NOT_FOUND' });
-      if (rows.some((row) => row.collection.creatorId !== ctx.userId)) throw new TRPCError({ code: 'FORBIDDEN' });
-      const collectionId = rows[0]!.collectionId;
-      if (rows.some((row) => row.collectionId !== collectionId)) {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Transfers must belong to one collection' });
-      }
       return ctx.db.$transaction(async (tx) => {
-        assertOpenNeed(await lockNeed(tx, collectionId));
+        const collection = await lockNeed(tx, input.collectionId);
+        if (collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
+        assertCurrentCycle(collection.cycleNumber, input.cycleNumber);
+        assertOpenNeed(collection);
+        const rows = await tx.obligation.findMany({
+          where: { id: { in: ids } },
+          select: { collectionId: true, collection: { select: { creatorId: true } } },
+        });
+        if (rows.length !== ids.length) throw new TRPCError({ code: 'NOT_FOUND' });
+        if (rows.some((row) => row.collection.creatorId !== ctx.userId)) throw new TRPCError({ code: 'FORBIDDEN' });
+        if (rows.some((row) => row.collectionId !== input.collectionId)) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Transfers must belong to one collection' });
+        }
         const result = await tx.obligation.updateMany({
           where: { id: { in: ids }, confirmedAt: input.paid ? null : { not: null } },
           data: { confirmedAt: input.paid ? new Date() : null },
         });
-        // Rollover may have deleted withdrawn obligations while this request waited for the lock.
-        if (await tx.obligation.count({ where: { id: { in: ids } } }) !== ids.length) {
-          throw new TRPCError({ code: 'NOT_FOUND' });
-        }
         return { changed: result.count };
       });
     }),
@@ -286,10 +292,13 @@ export const obligationRouter = router({
    * markRead and dismiss leave RESPONDED rows alone so opening the notice does not clear it.
    */
   confirmCycle: protectedProcedure
-    .input(z.object({ collectionId: z.string() }))
+    .input(displayedCycle.extend({
+      pledge: z.object({ obligationId: z.string(), amount: z.number().int().min(MIN_OBLIGATION_AMOUNT) }).optional(),
+    }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.$transaction(async (tx) => {
         const collection = await lockNeed(tx, input.collectionId);
+        assertCurrentCycle(collection.cycleNumber, input.cycleNumber);
         assertOpenNeed(collection);
         if (collection.type !== 'REGULAR' || collection.cycleNumber < 2 || collection.currentCycleStart == null) {
           throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not waiting for a cycle confirmation' });
@@ -298,10 +307,22 @@ export const obligationRouter = router({
           throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
         }
         const obligation = await tx.obligation.findFirst({
-          where: { collectionId: input.collectionId, userId: ctx.userId, unsubscribedAt: null },
+          where: {
+            id: input.pledge?.obligationId,
+            collectionId: input.collectionId,
+            userId: ctx.userId,
+            unsubscribedAt: null,
+          },
           select: { id: true },
         });
         if (!obligation) throw new TRPCError({ code: 'NOT_FOUND', message: 'Active intention not found' });
+
+        if (input.pledge) {
+          await tx.obligation.update({
+            where: { id: obligation.id },
+            data: { amount: input.pledge.amount, originalAmount: null, originalCurrency: null },
+          });
+        }
 
         const cycleEnd = collection.currentCycleStart.getTime() + REGULAR_CYCLE_DAYS * 24 * 60 * 60 * 1000;
         const expiresAt = new Date(cycleEnd + 8 * 24 * 60 * 60 * 1000);
@@ -326,6 +347,7 @@ export const obligationRouter = router({
           update: { status: 'RESPONDED', expiresAt },
         });
       });
+      if (input.pledge) await syncCollectionGoal(ctx.db, input.collectionId);
       return { ok: true as const };
     }),
 });
