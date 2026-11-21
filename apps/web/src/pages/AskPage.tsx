@@ -176,7 +176,7 @@ function AskBody() {
 
   const waveLimit = whole != null && whole >= MIN_COLLECTION_AMOUNT ? Math.ceil(whole / NOTIFICATION_RATIO) : null;
   // Older figures still feed the separate network line.
-  const reach = waveLimit != null && figure && fresh && !figure.far.approx
+  const phoneReach = waveLimit != null && figure && fresh && !figure.far.approx
     ? Math.min(waveLimit, figure.people)
     : waveLimit;
 
@@ -235,13 +235,13 @@ function AskBody() {
             </button>
           )}
         </div>
-        {reach != null || networkPeople != null ? (
+        {phoneReach != null || networkPeople != null ? (
           <div className="mt-4 rounded-lg bg-care-soft px-3.5 py-3">
-            {reach != null ? (
+            {phoneReach != null ? (
               <p className="text-caption font-semibold text-ink">
                 {t('ask.reach', {
-                  count: reach,
-                  people: formatCount(reach, i18n.language),
+                  count: phoneReach,
+                  people: formatCount(phoneReach, i18n.language),
                 })}
               </p>
             ) : null}
