@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-21T12:49:31+00:00",
+  "generatedAt": "2026-11-21T13:45:27+00:00",
   "title": "Design System: Social Organizer",
   "extensions": {
     "colorMeta": {
@@ -288,7 +288,7 @@
     "keyCharacteristics": [
       "One dark scene (Night Pine) for the network in every theme of the website and the QR camera; the Circle scene follows the app theme.",
       "Heavy, tight Manrope in the app; light, large Manrope on the website. One family everywhere.",
-      "Semantic colour only: no raw hex outside `styles/tokens.css`, enforced by the build.",
+      "Semantic colour only: no raw hex outside `apps/web/src/styles/tokens.css`, enforced by the build.",
       "Large, calm touch targets (56 / 48 / 40 px), one shadow per surface, a 0.96 press.",
       "Logical properties throughout (`ps-`, `me-`, `start-`), so right-to-left layouts mirror."
     ],
