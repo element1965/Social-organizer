@@ -16,7 +16,7 @@ import { DEFAULT_APPLE_BUNDLE_ID, DEFAULT_APPLE_TEAM_ID } from '@so/shared';
 import { connect, constants, type ClientHttp2Session } from 'node:http2';
 import { createPrivateKey, sign, type KeyObject } from 'node:crypto';
 import type { PrismaClient } from '@so/db';
-import { recordProviderOutcome, type DeliveryGate, type ProviderOutcome } from './provider-outcome.js';
+import { recordProviderOutcome, type PushDeliveryGate, type ProviderOutcome } from './provider-outcome.js';
 import type { WebPushPayload } from './web-push.service.js';
 
 const KEY_ID = process.env.APNS_KEY_ID?.trim() || '';
@@ -93,7 +93,7 @@ export async function sendApnsPush(
   db: PrismaClient,
   userIds: string[],
   payload: WebPushPayload,
-  beforeHandoff?: DeliveryGate,
+  beforeHandoff?: PushDeliveryGate,
 ): Promise<Map<string, ProviderOutcome>> {
   const outcomes = new Map<string, ProviderOutcome>();
   if (!privateKey || userIds.length === 0) return outcomes;
@@ -107,10 +107,11 @@ export async function sendApnsPush(
   try {
     for (const record of tokens) {
       if (beforeHandoff) {
-        const allowed = await beforeHandoff().catch(() => {
+        const allowed = await beforeHandoff({ kind: 'native', id: record.id, platform: record.platform }).catch(() => {
           recordProviderOutcome(outcomes, record.userId, 'retry');
           return false;
         });
+        if (allowed === 'skip') continue;
         if (!allowed) break;
       }
       try {

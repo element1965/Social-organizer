@@ -1,7 +1,7 @@
 /**
  * Local check of SO-45: one external notification per event, through the person's one channel.
  * Real tRPC procedures, services and the renewal worker against a LOCAL database. Telegram calls are
- * intercepted (global fetch is stubbed) and counted per chat; nothing leaves the machine.
+ * intercepted and counted per chat. Web Push is stubbed so app-channel requests can record a receipt.
  *
  * Covers: repeat and race of one event, channel change, explicit Telegram without a linked account,
  * "new collections" switch, later wave (RE_NOTIFY), grouped responses, responses already seen,
@@ -12,6 +12,7 @@
  *   DATABASE_URL=<local db> JWT_SECRET=<16+ chars> TELEGRAM_BOT_TOKEN=local-test npx tsx scripts/check-notifications.ts
  */
 import { readFileSync } from 'fs';
+import webpush from 'web-push';
 import { getDb } from '@so/db';
 import { REGULAR_CYCLE_DAYS } from '@so/shared';
 
@@ -21,6 +22,14 @@ if (!/@(localhost|127\.0\.0\.1)(:\d+)?\//.test(process.env.DATABASE_URL || '')) 
 }
 if (!process.env.TELEGRAM_BOT_TOKEN) { console.error('TELEGRAM_BOT_TOKEN is required (any value)'); process.exit(1); }
 delete process.env.REDIS_URL; // responses are grouped by a timer here; the digest itself is called directly
+
+// Keep the push provider local and return a successful handoff for the test endpoint.
+delete process.env.FIREBASE_SERVICE_ACCOUNT;
+delete process.env.APNS_KEY;
+process.env.VAPID_PUBLIC_KEY = 'test-public';
+process.env.VAPID_PRIVATE_KEY = 'test-private';
+webpush.setVapidDetails = () => {};
+webpush.sendNotification = async () => ({ statusCode: 201, body: '', headers: {} });
 
 // ---- Intercept Telegram ----
 const tgSent: Array<{ chatId: string; text: string }> = [];
@@ -89,7 +98,7 @@ async function main() {
   for (const p of ['a', 'b', 'c', 'e', 'g']) {
     await db.platformAccount.create({ data: { userId: id(p), platform: 'TELEGRAM', platformId: chat(p) } });
   }
-  await db.pushSubscription.create({ data: { userId: id('b'), endpoint: `https://push.invalid/${P}b`, p256dh: 'x', auth: 'y' } as any });
+  await db.pushSubscription.create({ data: { userId: id('b'), endpoint: `https://fcm.googleapis.com/fcm/send/${P}b`, p256dh: 'x', auth: 'y' } as any });
   await db.connection.createMany({ data: ['b', 'c', 'd', 'e'].map((p) => pair(id('a'), id(p))) });
 
   // --- 1. One event, repeated and raced: one message
@@ -158,7 +167,8 @@ async function main() {
   tgSent.length = 0;
   await call(id('a')).collection.close({ id: col.id });
   await sleep(800);
-  await notify.sendCollectionClosedTg(db, col.id, id('a'));
+  const { dispatchPendingNeedNotices } = await import('../src/services/notice-delivery.js');
+  await dispatchPendingNeedNotices(db, ['closed'], col.id);
   const eClose = tgTo('e').length;
   const cClose = tgTo('c').length;
   const r4 = await notify.sendResponseDigest(db, col.id);
@@ -233,7 +243,9 @@ async function main() {
   rows.push(['Regular help: renewal reminder', "participant's channel", 'unsubscribe / switch off → nothing; 28-day cycle unchanged', '2 worker runs → 1 message']);
 
   // --- 8. Push texts: a reason to open the app, no names, amounts or contacts
-  const src = readFileSync(new URL('../src/services/notification.service.ts', import.meta.url), 'utf8');
+  const src = ['notification.service.ts', 'delivery.service.ts']
+    .map((file) => readFileSync(new URL(`../src/services/${file}`, import.meta.url), 'utf8'))
+    .join('\n');
   const pushTexts = [...src.matchAll(/\{ title: (['`])([^'`]*)\1, body: (['`])([^'`]*)\3/g)].map((m) => ({ title: m[2]!, body: m[4]! }));
   const interpolated = pushTexts.filter((p) => p.title.includes('${') || p.body.includes('${'));
   check('push texts are fixed strings without names, amounts or contacts', pushTexts.length >= 11 && interpolated.length === 0, `texts=${pushTexts.length}`);

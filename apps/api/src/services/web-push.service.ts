@@ -1,6 +1,6 @@
 import webpush from 'web-push';
 import type { PrismaClient } from '@so/db';
-import { recordProviderOutcome, type DeliveryGate, type ProviderOutcome } from './provider-outcome.js';
+import { recordProviderOutcome, type PushDeliveryGate, type ProviderOutcome } from './provider-outcome.js';
 import { isAllowedPushEndpoint, MAX_PUSH_SUBSCRIPTIONS } from './push-endpoint.js';
 
 /** A push service that does not answer in time is given up on; the next notification tries again. */
@@ -31,7 +31,7 @@ export async function sendWebPush(
   db: PrismaClient,
   userIds: string[],
   payload: WebPushPayload,
-  beforeHandoff?: DeliveryGate,
+  beforeHandoff?: PushDeliveryGate,
 ): Promise<Map<string, ProviderOutcome>> {
   const outcomes = new Map<string, ProviderOutcome>();
   if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) return outcomes;
@@ -60,10 +60,11 @@ export async function sendWebPush(
       continue;
     }
     if (beforeHandoff) {
-      const allowed = await beforeHandoff().catch(() => {
+      const allowed = await beforeHandoff({ kind: 'web', id: sub.id }).catch(() => {
         recordProviderOutcome(outcomes, sub.userId, 'retry');
         return false;
       });
+      if (allowed === 'skip') continue;
       if (!allowed) break;
     }
     try {

@@ -35,18 +35,33 @@ const decay = (column: string) =>
     `notify_stats."${column}" * power(0.5, GREATEST(EXTRACT(EPOCH FROM (${utcNow.text} - notify_stats."decayedAt")), 0) / ${HALF_LIFE_SECONDS})`,
   );
 
-/** External requests delivered: one more `sent` and one more request in the current ignore streak. */
-export async function recordSent(db: Db, userIds: string[]): Promise<void> {
-  if (userIds.length === 0) return;
+/** Record the provider receipt even if the recipient reacted before it was acknowledged. */
+export async function recordSent(
+  db: Db, userId: string, collectionId: string, kind: 'NEW_COLLECTION' | 'RE_NOTIFY', wave: number,
+): Promise<void> {
   await db.$executeRaw`
+    WITH reaction AS (
+      SELECT (
+        n.status IN ('DISMISSED', 'RESPONDED')
+        OR (n.status = 'READ' AND (c.status NOT IN ('CLOSED', 'CANCELLED') OR n."updatedAt" <> c."updatedAt"))
+        OR EXISTS (
+          SELECT 1 FROM obligations o WHERE o."collectionId" = c.id
+            AND o."userId" = n."userId" AND o."unsubscribedAt" IS NULL
+        )
+      ) AS reacted
+      FROM notifications n JOIN collections c ON c.id = n."collectionId"
+      WHERE n."userId" = ${userId} AND n."collectionId" = ${collectionId}
+        AND n.type = ${kind}::"NotificationType" AND n.wave = ${wave}
+      FOR NO KEY UPDATE OF n
+    )
     INSERT INTO notify_stats ("userId", sent, "ignoreStreak", "lastSentAt", "decayedAt")
-    SELECT id, 1, 1, ${utcNow}, ${utcNow} FROM unnest(${userIds}::text[]) AS id
+    VALUES (${userId}, 1, CASE WHEN (SELECT reacted FROM reaction) THEN 0 ELSE 1 END, ${utcNow}, ${utcNow})
     ON CONFLICT ("userId") DO UPDATE SET
       sent = ${decay('sent')} + 1,
       opened = ${decay('opened')},
       responded = ${decay('responded')},
       dismissed = ${decay('dismissed')},
-      "ignoreStreak" = notify_stats."ignoreStreak" + 1,
+      "ignoreStreak" = notify_stats."ignoreStreak" + EXCLUDED."ignoreStreak",
       "lastSentAt" = ${utcNow},
       "decayedAt" = ${utcNow}
   `;
@@ -87,22 +102,24 @@ export async function recordOpened(
   collectionId: string,
   renewalWave?: number,
 ): Promise<void> {
-  const read = await db.notification.updateManyAndReturn({
-    where: {
-      userId,
-      collectionId,
-      status: 'UNREAD',
-      OR: [
-        { type: { in: [...NEED_REQUEST_TYPES] } },
-        ...(renewalWave == null ? [] : [{ type: 'CYCLE_RENEWED' as const, wave: renewalWave }]),
-      ],
-    },
-    data: { status: 'READ' },
-    select: { type: true },
+  await db.$transaction(async (tx) => {
+    const read = await tx.notification.updateManyAndReturn({
+      where: {
+        userId,
+        collectionId,
+        status: 'UNREAD',
+        OR: [
+          { type: { in: [...NEED_REQUEST_TYPES] } },
+          ...(renewalWave == null ? [] : [{ type: 'CYCLE_RENEWED' as const, wave: renewalWave }]),
+        ],
+      },
+      data: { status: 'READ' },
+      select: { type: true },
+    });
+    if (read.some(({ type }) => ROUTED_REQUEST_TYPES.some((routed) => routed === type))) {
+      await bump(tx, userId, 'opened', null);
+    }
   });
-  if (read.some(({ type }) => ROUTED_REQUEST_TYPES.some((routed) => routed === type))) {
-    await bump(db, userId, 'opened', null);
-  }
 }
 
 /**
@@ -203,11 +220,6 @@ async function holdReasons(db: PrismaClient, ids: string[]): Promise<Map<string,
     out.set(id, reason);
   }
   return out;
-}
-
-/** Recheck routing while the request sender holds this recipient's lease. */
-export async function canRouteRequest(db: PrismaClient, userId: string): Promise<boolean> {
-  return (await holdReasons(db, [userId])).get(userId) === null;
 }
 
 /**

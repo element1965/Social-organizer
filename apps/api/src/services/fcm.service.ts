@@ -1,7 +1,7 @@
 import { initializeApp, cert, type ServiceAccount, getApps } from 'firebase-admin/app';
 import { getMessaging } from 'firebase-admin/messaging';
 import type { PrismaClient } from '@so/db';
-import { recordProviderOutcome, type DeliveryGate, type ProviderOutcome } from './provider-outcome.js';
+import { recordProviderOutcome, type PushDeliveryGate, type ProviderOutcome } from './provider-outcome.js';
 import type { WebPushPayload } from './web-push.service.js';
 
 const FIREBASE_SERVICE_ACCOUNT = process.env.FIREBASE_SERVICE_ACCOUNT;
@@ -37,7 +37,7 @@ export async function sendFcmPush(
   db: PrismaClient,
   userIds: string[],
   payload: WebPushPayload,
-  beforeHandoff?: DeliveryGate,
+  beforeHandoff?: PushDeliveryGate,
 ): Promise<Map<string, ProviderOutcome>> {
   const outcomes = new Map<string, ProviderOutcome>();
   if (!FIREBASE_SERVICE_ACCOUNT || getApps().length === 0) return outcomes;
@@ -54,10 +54,11 @@ export async function sendFcmPush(
 
   for (const tokenRecord of tokens) {
     if (beforeHandoff) {
-      const allowed = await beforeHandoff().catch(() => {
+      const allowed = await beforeHandoff({ kind: 'native', id: tokenRecord.id, platform: tokenRecord.platform }).catch(() => {
         recordProviderOutcome(outcomes, tokenRecord.userId, 'retry');
         return false;
       });
+      if (allowed === 'skip') continue;
       if (!allowed) break;
     }
     try {

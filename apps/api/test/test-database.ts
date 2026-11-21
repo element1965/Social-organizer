@@ -10,7 +10,7 @@ const invalidUrl = 'Tests require a local PostgreSQL DATABASE_URL with "test" in
 const dbPackage = new URL('../../../packages/db/package.json', import.meta.url);
 const prismaCli = createRequire(dbPackage).resolve('prisma/build/index.js');
 
-export async function createTestDatabase() {
+export async function createTestDatabase(onQuery?: () => void) {
   let url: URL;
   try {
     url = new URL(process.env.DATABASE_URL ?? composeTestUrl);
@@ -32,7 +32,11 @@ export async function createTestDatabase() {
   const maintenance = new PrismaClient({ datasourceUrl: url.href });
   const name = `so_test_${randomUUID().replaceAll('-', '')}`;
   url.pathname = `/${name}`;
-  const db = new PrismaClient({ datasourceUrl: url.href });
+  const db = new PrismaClient({
+    datasourceUrl: url.href,
+    log: onQuery ? [{ emit: 'event', level: 'query' }] : [],
+  });
+  if (onQuery) db.$on('query', onQuery);
 
   let created = false;
   async function dispose() {

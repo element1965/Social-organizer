@@ -1,5 +1,5 @@
 import type { PrismaClient } from '@so/db';
-import { recordProviderOutcome, type DeliveryGate, type ProviderOutcome } from './provider-outcome.js';
+import { recordProviderOutcome, type PushDeliveryGate, type ProviderOutcome } from './provider-outcome.js';
 import { sendWebPush, type WebPushPayload } from './web-push.service.js';
 import { sendFcmPush } from './fcm.service.js';
 import { sendApnsPush } from './apns.service.js';
@@ -14,7 +14,7 @@ export async function sendPushNotification(
   db: PrismaClient,
   userIds: string[],
   payload: WebPushPayload,
-  beforeHandoff?: DeliveryGate,
+  beforeHandoff?: PushDeliveryGate,
 ): Promise<Map<string, ProviderOutcome>> {
   const outcomes = new Map<string, ProviderOutcome>(userIds.map((id) => [id, 'retired']));
   if (userIds.length === 0) return outcomes;

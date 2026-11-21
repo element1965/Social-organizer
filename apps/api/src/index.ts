@@ -1,4 +1,5 @@
 import { registerLandingEndpoints } from './services/landing.service.js';
+import { startDirectNeedNoticeDrain } from './services/notice-delivery.js';
 import { linkLanguage, SUPPORTED_LANGUAGES } from '@so/i18n';
 import { campaignFrom, isProductionWebRoute, type Campaign, publicPagePath, renderPublicSitemap, WEB_ROUTES } from '@so/shared';
 import { WEB_APP_URL, WEB_APP_ALT_URL, ANDROID_APP_PACKAGE, APPLE_TEAM_ID, APPLE_BUNDLE_ID, NATIVE_AUTH_SCHEME } from './deployment.js';
@@ -524,6 +525,10 @@ async function start() {
     }
     logInactiveCleanupConfig();
 
+    if (!process.env.REDIS_URL) {
+      const stopDrain = startDirectNeedNoticeDrain(getDb());
+      app.addHook('onClose', stopDrain);
+    }
     await app.listen({ port: PORT, host: HOST });
     // One line a minute: event loop, memory, the graph and walk timings (see the scale steps of the launch plan)
     startRuntimeMetrics();

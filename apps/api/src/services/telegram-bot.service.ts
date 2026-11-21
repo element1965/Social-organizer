@@ -356,7 +356,7 @@ export async function sendTelegramMessage(
 export async function sendTelegramMessageOutcome(
   { telegramId, text, replyMarkup }: { telegramId: string | number; text: string; replyMarkup?: TgReplyMarkup },
   beforeHandoff?: DeliveryGate,
-  { keepOnBlocked }: { keepOnBlocked?: boolean } = {},
+  { keepOnBlocked, durable = !!beforeHandoff }: { keepOnBlocked?: boolean; durable?: boolean } = {},
 ): Promise<ProviderOutcome> {
   if (!TELEGRAM_BOT_TOKEN) return 'retired';
 
@@ -366,14 +366,14 @@ export async function sendTelegramMessageOutcome(
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body,
-      signal: beforeHandoff ? AbortSignal.timeout(15_000) : undefined,
+      signal: durable ? AbortSignal.timeout(15_000) : undefined,
     });
     return { status: res.status, json: (await res.json()) as TgApiResponse };
   };
 
   if (beforeHandoff && !(await beforeHandoff())) return 'retired';
   let { status, json } = await post();
-  if (!json.ok && !beforeHandoff && status === 429 && json.parameters?.retry_after) {
+  if (!json.ok && !durable && status === 429 && json.parameters?.retry_after) {
     const seconds = json.parameters.retry_after;
     console.warn(`[TG Bot] 429 rate limited, waiting ${seconds}s`);
     await new Promise((r) => setTimeout(r, seconds * 1000));

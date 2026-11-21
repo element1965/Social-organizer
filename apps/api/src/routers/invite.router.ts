@@ -5,7 +5,7 @@ import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { sendPendingNotification } from '../services/notification.service.js';
 import { scanMatchesForUser } from '../services/match-notification.service.js';
-import { respondToConnectionRequest, createConnectionWithinLimit, connectInPersonTx, openConnectionRequest, assertConnectionSlots } from '../services/connection-request.service.js';
+import { respondToConnectionRequest, createConnectionWithinLimit, connectInPersonWithPairLocked, lockConnectionPair, openConnectionRequest, assertConnectionSlots } from '../services/connection-request.service.js';
 import { sendTelegramMessage, type TgReplyMarkup } from '../services/telegram-bot.service.js';
 import { syncMilestonesForPair } from '../services/milestone.service.js';
 import { translateWithCache } from '../services/translate.service.js';
@@ -139,7 +139,8 @@ export const inviteRouter = router({
       // In-person (QR) token: the meeting is the first handshake, so connect right away, no confirmation step
       if (inPerson) {
         // Claim + connection are atomic: if the 150 limit fails, the token stays unused
-        await ctx.db.$transaction(async (tx) => {
+        await transactionWithRetry(ctx.db, async (tx) => {
+          await lockConnectionPair(tx, ctx.userId, inviterId);
           const claimed = await tx.inviteLink.updateMany({
             where: {
               id: invite!.id,
@@ -151,7 +152,7 @@ export const inviteRouter = router({
           if (claimed.count === 0) {
             throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invite already used' });
           }
-          await connectInPersonTx(tx, ctx.userId, inviterId, 'qr');
+          await connectInPersonWithPairLocked(tx, ctx.userId, inviterId, 'qr');
         });
         await syncMilestonesForPair(ctx.db, ctx.userId, inviterId);
         const scanner = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });

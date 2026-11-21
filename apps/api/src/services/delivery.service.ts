@@ -1,8 +1,9 @@
+import { WEB_APP_URL } from '../deployment.js';
 import type { PrismaClient } from '@so/db';
 import { sendTelegramMessageOutcome, sendTgMessages, type TgReplyMarkup } from './telegram-bot.service.js';
 import { sendPushNotification, type WebPushPayload } from './push.service.js';
 import {
-  NEED_NOTICE_PREFIX, pendingNoticeKey, retirePendingNotices, runNeedDelivery, type NeedNotice,
+  NEED_NOTICE_PREFIX, pendingNoticeKey, retirePendingNotices, runNeedDelivery, runNeedRequestBatch, isRequest, type NeedDelivery, type NeedNotice,
 } from './need-delivery-state.js';
 import type { ProviderOutcome } from './provider-outcome.js';
 import type { TgBroadcastMessage } from '../workers/tg-broadcast.worker.js';
@@ -88,7 +89,7 @@ async function loadTargets(db: PrismaClient, userIds: string[]): Promise<Map<str
       language: true,
       notifyChannel: true,
       notifyNewCollections: true,
-      platformAccounts: { where: { platform: 'TELEGRAM' }, select: { platformId: true }, take: 1 },
+      platformAccounts: { where: { platform: 'TELEGRAM' }, select: { platformId: true }, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }], take: 1 },
       _count: { select: { pushSubscriptions: true, nativePushTokens: true } },
     },
   });
@@ -119,6 +120,97 @@ async function claim(db: PrismaClient, userId: string, eventKey: string, channel
   }
 }
 
+export const REQUEST_BATCH_SIZE = 25;
+export const TELEGRAM_BATCH_DELAY_MS = 1050;
+
+export type NeedRequestMessage = TgBroadcastMessage & { delivery: NeedDelivery };
+
+export function requestPushPayload({ type, collectionId }: NeedNotice): WebPushPayload {
+  const url = `${WEB_APP_URL}/collection/${collectionId}`;
+  return type === 'repeat'
+    ? { title: 'Reminder', body: 'A Need in your network is still open.', url }
+    : { title: 'New Need', body: 'Someone in your network has reported a Need.', url };
+}
+
+export function deliverNeedRequestBatch(db: PrismaClient, messages: NeedRequestMessage[]) {
+  return runNeedRequestBatch(db, messages.map((msg) => ({
+    delivery: msg.delivery,
+    send: async (target, refresh) => {
+      const sendTelegram = async (telegramId: string) => ({
+        channel: 'TELEGRAM' as const,
+        outcome: await sendTelegramMessageOutcome({ ...msg, telegramId }, undefined, { durable: true }),
+      });
+      if (target.channel === 'TELEGRAM') return sendTelegram(target.telegramId);
+
+      let authorizedPush = false;
+      let staleDestination = false;
+      const { userId, notice } = msg.delivery;
+      const results = await sendPushNotification(db, [userId], msg.requestPush ?? requestPushPayload(notice), async (destination) => {
+        const current = await refresh(destination);
+        if (current?.channel !== 'APP') return false;
+        if (!current.destinationOwned) {
+          staleDestination = true;
+          return 'skip';
+        }
+        authorizedPush = true;
+        return true;
+      });
+      // Settings may have changed again while the push service loaded device endpoints.
+      const current = authorizedPush ? undefined : await refresh();
+      if (current?.channel === 'TELEGRAM') return sendTelegram(current.telegramId);
+      const outcome = results.get(userId) ?? 'retired';
+      // The next attempt can load a newly registered device.
+      return { channel: 'APP', outcome: outcome === 'retired' && staleDestination && current ? 'retry' : outcome };
+    },
+  })));
+}
+
+async function deliverRequests(
+  db: PrismaClient, targets: Map<string, Target>, userIds: string[],
+  eventFor: (userId: string) => OutgoingEvent | null, notice: NeedNotice,
+): Promise<Map<string, DeliveryOutcome>> {
+  const outcomes = new Map<string, DeliveryOutcome>();
+  const app: NeedRequestMessage[] = [];
+  const telegram: NeedRequestMessage[] = [];
+  for (const userId of new Set(userIds)) {
+    const event = eventFor(userId);
+    if (!event) continue;
+    const target = targets.get(userId);
+    const copy = event.telegram(target?.lang ?? 'en');
+    if (!copy) continue; // Need requests have Telegram copy in every supported language.
+    const message = {
+      ...copy, telegramId: target?.telegramId ?? '', requestPush: event.push,
+      delivery: { userId, eventKey: event.key, notice },
+    };
+    (target?.channel === 'TELEGRAM' ? telegram : app).push(message);
+  }
+
+  let direct = [...app, ...telegram];
+  if (telegram.length > REQUEST_BATCH_SIZE && process.env.REDIS_URL) {
+    try {
+      const { enqueueTgBroadcast } = await import('../workers/index.js');
+      await enqueueTgBroadcast(telegram);
+      for (const { delivery } of telegram) outcomes.set(delivery.userId, 'queued');
+      direct = app;
+    } catch (err) {
+      // SQL ownership also covers a job Redis accepted before losing the enqueue response.
+      console.error('[NeedNotice] Telegram enqueue failed, trying direct delivery:', err instanceof Error ? err.name : 'unknown error');
+    }
+  }
+  for (let i = 0; i < direct.length; i += REQUEST_BATCH_SIZE) {
+    const batch = direct.slice(i, i + REQUEST_BATCH_SIZE);
+    const results = await deliverNeedRequestBatch(db, batch);
+    for (const [index, result] of results.entries()) {
+      if (result.status === 'rejected') {
+        console.error('[NeedNotice] Request delivery failed:', result.reason instanceof Error ? result.reason.name : 'unknown error');
+      }
+      outcomes.set(batch[index]!.delivery.userId, result.status === 'fulfilled' ? result.value : 'retry');
+    }
+    if (batch.length === REQUEST_BATCH_SIZE) await new Promise((resolve) => setTimeout(resolve, TELEGRAM_BATCH_DELAY_MS));
+  }
+  return outcomes;
+}
+
 /**
  * Delivers one event per person, each through their own channel. `eventFor` builds the event for a person
  * (personal text or key); returning null skips that person.
@@ -132,6 +224,7 @@ export async function deliverMany(
   const outcomes = new Map<string, DeliveryOutcome>();
   if (userIds.length === 0) return outcomes;
   const targets = await loadTargets(db, userIds);
+  if (needNotice && isRequest(needNotice)) return deliverRequests(db, targets, userIds, eventFor, needNotice);
 
   const pushByPayload = new Map<string, { payload: WebPushPayload; userIds: string[] }>();
   const tgMessages: TgBroadcastMessage[] = [];

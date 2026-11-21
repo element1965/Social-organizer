@@ -54,10 +54,8 @@ export async function deleteUserAccount(
       ORDER BY c."id" FOR UPDATE OF c
     `;
 
-    if (opts.guard) {
-      await tx.$executeRaw`SELECT 1 FROM "users" WHERE "id" = ${userId} FOR UPDATE`;
-      if (!(await opts.guard(tx))) return null;
-    }
+    await tx.$executeRaw`SELECT 1 FROM "users" WHERE "id" = ${userId} FOR UPDATE`;
+    if (opts.guard && !(await opts.guard(tx))) return null;
     // Connections are counted before they are removed below.
     // Pending requests and unused invite links don't count as connections.
     const [connectionCount, usedInviteCount] = await Promise.all([

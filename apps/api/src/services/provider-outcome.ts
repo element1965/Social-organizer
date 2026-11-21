@@ -1,5 +1,9 @@
 export type ProviderOutcome = 'sent' | 'retry' | 'retired';
 export type DeliveryGate = () => Promise<boolean>;
+export type PushDestination =
+  | { kind: 'web'; id: string }
+  | { kind: 'native'; id: string; platform: string };
+export type PushDeliveryGate = (destination: PushDestination) => Promise<boolean | 'skip'>;
 
 /** One accepted device is enough to deliver to the person. */
 export function mergeProviderOutcomes(a: ProviderOutcome, b: ProviderOutcome): ProviderOutcome {

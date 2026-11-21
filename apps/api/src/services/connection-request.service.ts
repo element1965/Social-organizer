@@ -54,7 +54,7 @@ export async function countConnections(db: Db, userId: string): Promise<number> 
 }
 
 /** Every acceptance locks the sorted user pair before locking any pending request for that pair. */
-async function lockConnectionPair(tx: Prisma.TransactionClient, userAId: string, userBId: string): Promise<void> {
+export async function lockConnectionPair(tx: Prisma.TransactionClient, userAId: string, userBId: string): Promise<void> {
   await tx.$queryRaw`SELECT id FROM users WHERE id IN (${userAId}, ${userBId}) ORDER BY id FOR UPDATE`;
 }
 
@@ -115,7 +115,17 @@ export async function connectInPersonTx(
   otherId: string,
   source: ConnectionSource,
 ): Promise<'created' | 'exists'> {
-  const outcome = await createConnectionWithinLimit(tx, actorId, otherId, { source });
+  await lockConnectionPair(tx, actorId, otherId);
+  return connectInPersonWithPairLocked(tx, actorId, otherId, source);
+}
+
+export async function connectInPersonWithPairLocked(
+  tx: Prisma.TransactionClient,
+  actorId: string,
+  otherId: string,
+  source: ConnectionSource,
+): Promise<'created' | 'exists'> {
+  const outcome = await createConnectionWithPairLocked(tx, actorId, otherId, { source });
   await tx.pendingConnection.updateMany({
     where: {
       OR: [

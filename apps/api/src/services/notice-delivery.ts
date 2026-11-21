@@ -2,7 +2,7 @@ import type { PrismaClient } from '@so/db';
 import {
   sendCollectionClosedTg, sendCycleRenewalReminderTg, sendCycleRenewedTg, sendNeedRequestNotices,
 } from './notification.service.js';
-import { NEED_NOTICE_PREFIX, retirePendingNotices, type NoticeEvent } from './need-delivery-state.js';
+import { listDueNeedNoticePage, retirePendingNotices, type NoticeEvent } from './need-delivery-state.js';
 
 /** Page through due intents. Each sender claims its own recipient just before attempting delivery. */
 export async function dispatchPendingNeedNotices(
@@ -12,18 +12,7 @@ export async function dispatchPendingNeedNotices(
 ): Promise<void> {
   let afterId: string | undefined;
   for (;;) {
-    const rows = await db.notificationDelivery.findMany({
-      where: {
-        OR: events.map((type) => ({
-          eventKey: { startsWith: `${NEED_NOTICE_PREFIX}${type}:${collectionId == null ? '' : `${collectionId}:`}` },
-        })),
-        createdAt: { lte: new Date() },
-        id: { gt: afterId },
-      },
-      select: { id: true, userId: true, eventKey: true },
-      orderBy: { id: 'asc' },
-      take: 250,
-    });
+    const rows = await listDueNeedNoticePage(db, events, collectionId, afterId);
     if (rows.length === 0) return;
     afterId = rows.at(-1)!.id;
 
@@ -54,4 +43,24 @@ export async function dispatchPendingNeedNotices(
       }
     }
   }
+}
+
+const DIRECT_DRAIN_INTERVAL_MS = 60_000;
+
+/** Drain durable intents at startup and periodically when BullMQ is disabled. */
+export function startDirectNeedNoticeDrain(db: PrismaClient): () => Promise<void> {
+  let running: Promise<void> | undefined;
+  const tick = () => {
+    if (running) return;
+    running = dispatchPendingNeedNotices(db, ['closed', 'start', 'reminder', 'new', 'repeat'])
+      .catch((err) => console.error('[NeedNotice] Direct drain failed:', err instanceof Error ? err.name : 'unknown error'))
+      .finally(() => { running = undefined; });
+  };
+  const timer = setInterval(tick, DIRECT_DRAIN_INTERVAL_MS);
+  timer.unref();
+  tick();
+  return async () => {
+    clearInterval(timer);
+    await running;
+  };
 }

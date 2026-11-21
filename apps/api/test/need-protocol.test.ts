@@ -12,7 +12,7 @@ import { runInactiveCleanup } from '../src/services/inactive-cleanup.service.js'
 import { sendCycleRenewalReminderTg, sendCycleRenewedTg } from '../src/services/notification.service.js';
 import { respondToConnectionRequest } from '../src/services/connection-request.service.js';
 import { pruneDeliveries } from '../src/services/delivery.service.js';
-import { dispatchPendingNeedNotices } from '../src/services/notice-delivery.js';
+import { dispatchPendingNeedNotices, startDirectNeedNoticeDrain } from '../src/services/notice-delivery.js';
 import { enqueueNeedNotice } from '../src/services/need-delivery-state.js';
 import * as notifications from '../src/services/notification.service.js';
 import { planWave } from '../src/services/notify-routing.service.js';
@@ -21,6 +21,7 @@ import { processCycleClose } from '../src/workers/cycle-close.worker.js';
 import { processCycleRenewalReminder } from '../src/workers/cycle-renewal-reminder.worker.js';
 import * as workers from '../src/workers/index.js';
 import { processTgBroadcast } from '../src/workers/tg-broadcast.worker.js';
+import { runSpecialNotify } from '../src/workers/special-notify.worker.js';
 import { runReNotify } from '../src/workers/re-notify.worker.js';
 import { createTestDatabase, isBlockingTransaction, pauseAfterLockedRead } from './test-database.js';
 
@@ -58,11 +59,12 @@ function sendsTo(id: string) {
 }
 
 let db: PrismaClient;
+let queryCount = 0;
 let dispose: (() => Promise<void>) | undefined;
 
 beforeAll(async () => {
   vi.stubGlobal('fetch', telegramFetch);
-  ({ db, dispose } = await createTestDatabase());
+  ({ db, dispose } = await createTestDatabase(() => { queryCount++; }));
 }, 60_000);
 afterAll(async () => {
   vi.unstubAllGlobals();
@@ -338,6 +340,154 @@ describe('Need concurrency regressions', () => {
     }
   });
 
+  it('spends a scheduled wave once when the first worker resumes after the second commits', async () => {
+    const author = 'overlapping-repeat';
+    const { circle } = await seedNetwork(author, 20, 1);
+    const now = new Date();
+    const need = await db.collection.create({ data: {
+      creatorId: author, type: 'EMERGENCY', amount: 10, chatLink: 'https://example.test/chat',
+      createdAt: new Date(now.getTime() - 13 * hour),
+    } });
+    const paused = deferred<void>();
+    const resume = deferred<void>();
+    const find = db.ignoreEntry.findMany.bind(db.ignoreEntry);
+    const gate = vi.spyOn(db.ignoreEntry, 'findMany').mockImplementationOnce((args) =>
+      find(args).then(async (rows) => {
+        paused.resolve();
+        await resume.promise;
+        return rows;
+      }) as ReturnType<typeof find>,
+    );
+    const first = runReNotify(db, now);
+    try {
+      await Promise.race([paused.promise, first.then(() => { throw new Error('Worker skipped planning'); })]);
+      expect((await runReNotify(db, now)).get(need.id)).toBe(10);
+      resume.resolve();
+      expect((await first).has(need.id)).toBe(false);
+      const entries = await db.notification.findMany({
+        where: { collectionId: need.id, type: 'RE_NOTIFY' }, select: { userId: true, wave: true },
+      });
+      expect(entries).toHaveLength(10);
+      expect(entries.every(({ wave }) => wave === 1)).toBe(true);
+      await waitForDispatch(entries.map(({ userId }) => userId));
+      expect(await db.notificationDelivery.count({ where: { userId: { in: circle }, eventKey: `col:${need.id}:new` } })).toBe(10);
+    } finally {
+      resume.resolve();
+      await first;
+      gate.mockRestore();
+    }
+  });
+
+  it('trims an initial $20 wave to ten nearest recipients after the goal is lowered during planning', async () => {
+    const author = 'initial-goal-cap';
+    const { circle } = await seedNetwork(author, 10, 1);
+    const outer = Array.from({ length: 10 }, (_, i) => `outer-${author}-${i}`);
+    await db.user.createMany({ data: outer.map((id) => ({ id, name: id })) });
+    await db.platformAccount.createMany({ data: outer.map((userId) => ({ userId, platform: 'TELEGRAM', platformId: userId })) });
+    await db.connection.createMany({ data: outer.map((userAId) => ({ userAId: circle[0]!, userBId: userAId })) });
+    invalidateGraph(circle);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.test/chat' },
+    });
+    const find = db.notifyStats.findMany.bind(db.notifyStats);
+    const snapshot = vi.spyOn(db.notifyStats, 'findMany').mockImplementationOnce((args) =>
+      find(args).then(async (rows) => {
+        await caller(author).collection.updateAmount({ id: need.id, amount: 10 });
+        return rows;
+      }) as ReturnType<typeof find>,
+    );
+    try {
+      expect(await notifications.sendCollectionNotifications(db, need.id, author, 'NEW_COLLECTION', 1, 20)).toBe(10);
+      expect((await recipients(need.id, 'NEW_COLLECTION')).map(({ userId }) => userId)).toEqual([...circle].sort());
+      await waitForDispatch(circle);
+      expect(await db.notificationDelivery.count({ where: { eventKey: `col:${need.id}:new` } })).toBe(10);
+    } finally {
+      snapshot.mockRestore();
+    }
+  });
+
+  it('locks both users before claiming reciprocal live QR tokens', async () => {
+    const { author, member } = await setup('reciprocal-live-qr');
+    const [authorInvite, memberInvite] = await Promise.all([
+      caller(author).invite.generate({ ttl: 60 }), caller(member).invite.generate({ ttl: 60 }),
+    ]);
+    const gate = pauseAfterLockedRead(db, author);
+    const first = caller(author).invite.accept({ token: memberInvite.token });
+    let second: typeof first | undefined;
+    try {
+      const pid = await Promise.race([gate.read, first.then(() => { throw new Error('Scan did not lock the pair'); })]);
+      second = caller(member).invite.accept({ token: authorInvite.token });
+      void second.catch(() => {});
+      await expect.poll(() => isBlockingTransaction(db, pid)).toBe(true);
+      const unlocked = await db.$queryRaw<{ id: string }[]>`
+        SELECT id FROM invite_links WHERE id IN (${authorInvite.id}, ${memberInvite.id}) FOR UPDATE NOWAIT
+      `;
+      expect(unlocked).toHaveLength(2);
+      gate.resume();
+      await expect(Promise.all([first, second])).resolves.toEqual([
+        expect.objectContaining({ success: true }), expect.objectContaining({ success: true }),
+      ]);
+      expect(await db.connection.count({ where: { userAId: author, userBId: member } })).toBe(1);
+      expect(await db.inviteLink.count({ where: {
+        OR: [{ id: authorInvite.id, usedById: member }, { id: memberInvite.id, usedById: author }],
+      } })).toBe(2);
+    } finally {
+      gate.resume();
+      await Promise.allSettled([first, second]);
+      gate.restore();
+    }
+  });
+
+  it('voluntary deletion waits on the user lock before touching an accepted pending request', async () => {
+    const { author, member } = await setup('delete-pending-order');
+    const pending = await db.pendingConnection.create({ data: { fromUserId: author, toUserId: member } });
+    const gate = pauseAfterLockedRead(db, author);
+    const accept = respondToConnectionRequest(db, pending.id, member, 'accept');
+    let deletion: ReturnType<typeof deleteUserAccount> | undefined;
+    try {
+      const pid = await Promise.race([gate.read, accept.then(() => { throw new Error('Acceptance did not lock the pair'); })]);
+      deletion = deleteUserAccount(db, author);
+      void deletion.catch(() => {});
+      await expect.poll(() => isBlockingTransaction(db, pid)).toBe(true);
+      const unlocked = await db.$queryRaw<{ id: string }[]>`
+        SELECT id FROM pending_connections WHERE id = ${pending.id} FOR UPDATE NOWAIT
+      `;
+      expect(unlocked).toEqual([{ id: pending.id }]);
+      gate.resume();
+      await expect(accept).resolves.toMatchObject({ outcome: 'accepted' });
+      await expect(deletion).resolves.toEqual({ mode: 'soft' });
+      expect(await db.pendingConnection.findUnique({ where: { id: pending.id } })).toBeNull();
+    } finally {
+      gate.resume();
+      await Promise.allSettled([accept, deletion]);
+      gate.restore();
+    }
+  });
+
+  it('does not insert an unread special-author request when the Need closes after selection', async () => {
+    const { author, member, need } = await setup('special-close');
+    await db.user.update({ where: { id: author }, data: { role: 'AUTHOR' } });
+    const other = await db.collection.create({ data: {
+      creatorId: member, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.test/chat',
+    } });
+    await db.obligation.create({ data: { userId: member, collectionId: other.id, amount: 1 } });
+    const find = db.user.findMany.bind(db.user.findMany);
+    const selection = vi.spyOn(db.user, 'findMany').mockImplementationOnce((args) =>
+      find(args).then(async (rows) => {
+        expect(rows).toContainEqual({ id: member });
+        await caller(author).collection.close({ id: need.id });
+        return rows;
+      }) as ReturnType<typeof find>,
+    );
+    try {
+      expect(await runSpecialNotify(db)).toBe(0);
+      expect(await db.notification.count({ where: { collectionId: need.id, type: 'SPECIAL_AUTHOR' } })).toBe(0);
+      await waitForCloseDrain(need.id);
+    } finally {
+      selection.mockRestore();
+    }
+  });
+
   it('prunes old receipts but lets the drainer retire an obsolete pending notice', async () => {
     const { member, need } = await setup('notice-retention', { status: 'CLOSED' });
     const pending = `need-notice:reminder:${need.id}:1`;
@@ -468,7 +618,7 @@ describe('Need concurrency regressions', () => {
       .toEqual([{ eventKey: receipt }]);
   });
 
-  it('queues one stable job per recipient and only receipts eligible handoffs in the worker', async () => {
+  it('queues bounded request batches and only receipts eligible handoffs in the worker', async () => {
     const author = 'queue-repeat-author';
     const { circle } = await seedNetwork(author, 26, 1);
     const need = await db.collection.create({
@@ -488,15 +638,17 @@ describe('Need concurrency regressions', () => {
       await dispatchPendingNeedNotices(db, ['repeat'], need.id);
       expect(jobs).toHaveLength(2);
       const jobIds = (batch: typeof jobs[number]) => batch.map(({ opts }) => opts.jobId);
-      expect(new Set(jobIds(jobs[0]!)).size).toBe(26);
-      expect(jobIds(jobs[0]!).every(Boolean)).toBe(true);
-      expect(jobIds(jobs[0]!).sort()).toEqual(jobIds(jobs[1]!).sort());
+      expect(jobs[0]!.map(({ data }) => data.messages.length)).toEqual([25, 1]);
+      expect(new Set(jobIds(jobs[0]!)).size).toBe(2);
+      const messages = (batch: typeof jobs[number]) => batch.flatMap(({ data }) => data.messages);
+      expect(jobIds(jobs[0]!)).toEqual(jobIds(workers.tgJobs(messages(jobs[0]!), 'wave')));
+      expect(messages(jobs[1]!).map((msg) => msg.delivery!.userId).sort()).toEqual([...circle].sort());
       expect(await db.notificationDelivery.count({ where: { eventKey: finalKey } })).toBe(0);
       expect(await db.notifyStats.count({ where: { userId: { in: circle }, lastSentAt: { not: null } } })).toBe(0);
 
-      const run = (who: string) => processTgBroadcast(jobs[0]!.find(
-        ({ data }) => data.messages[0]?.delivery?.userId === who,
-      ) as unknown as Parameters<typeof processTgBroadcast>[0]);
+      const run = (who: string) => processTgBroadcast({
+        data: { messages: messages(jobs[0]!).filter((msg) => msg.delivery?.userId === who) },
+      } as Parameters<typeof processTgBroadcast>[0]);
       const [sent, transient, reached, closed] = circle as [string, string, string, string, ...string[]];
       await Promise.all([run(sent), run(sent)]);
       await run(sent);
@@ -526,6 +678,200 @@ describe('Need concurrency regressions', () => {
       telegramFetch.mockImplementation(defaultTelegram);
     }
   });
+
+  async function seedQueuedRequests(need: database.Collection, members: string[]) {
+    const notice = { type: 'new' as const, collectionId: need.id, wave: 1 };
+    const eventKey = `col:${need.id}:new`;
+    const entries = await db.notification.createManyAndReturn({ data: members.map((userId) => ({
+      userId, collectionId: need.id, type: 'NEW_COLLECTION', wave: 1, expiresAt: new Date(Date.now() + hour),
+    })) });
+    await enqueueNeedNotice(db, notice.type, need.id, notice.wave, members);
+    const job = { data: { messages: members.map((userId) => ({
+      telegramId: `test-${userId}`, text: 'Test request', delivery: { userId, eventKey, notice },
+    })) } } as Parameters<typeof processTgBroadcast>[0];
+    return { entries, eventKey, job };
+  }
+
+  it('routes a queued request to the current channel and destination, and retires both ignore directions', async () => {
+    const author = 'current-target';
+    const { circle } = await seedNetwork(author, 5, 1);
+    const [changedChat, app, incoming, outgoing, muted] = circle as [string, string, string, string, string];
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.test/chat' },
+    });
+    const { eventKey, job } = await seedQueuedRequests(need, circle);
+    const endpoint = 'https://fcm.googleapis.com/fcm/send/current-target';
+    const claimed = deferred<void>();
+    const resume = deferred<void>();
+    const find = db.notificationDelivery.findUnique.bind(db.notificationDelivery);
+    const gate = vi.spyOn(db.notificationDelivery, 'findUnique').mockImplementationOnce((args) =>
+      find(args).then(async (row) => {
+        claimed.resolve();
+        await resume.promise;
+        return row;
+      }) as ReturnType<typeof find>,
+    );
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    const running = processTgBroadcast(job);
+    try {
+      await Promise.race([claimed.promise, running.then(() => { throw new Error('Worker skipped claiming the request'); })]);
+      await db.pushSubscription.create({ data: { userId: app, endpoint, p256dh: 'key', auth: 'key' } });
+      await db.user.update({ where: { id: app }, data: { notifyChannel: 'APP' } });
+      await db.user.update({ where: { id: muted }, data: { notifyNewCollections: false } });
+      await db.platformAccount.update({
+        where: { platform_platformId: { platform: 'TELEGRAM', platformId: `test-${changedChat}` } },
+        data: { platformId: 'current-telegram-chat' },
+      });
+      await db.ignoreEntry.createMany({ data: [
+        { fromUserId: incoming, toUserId: author }, { fromUserId: author, toUserId: outgoing },
+      ] });
+      resume.resolve();
+      await running;
+      expect(sendsTo('current-telegram-chat')).toHaveLength(1);
+      for (const id of circle) expect(sendsTo(`test-${id}`)).toHaveLength(0);
+      expect(webPushTransport).toHaveBeenCalledWith(expect.objectContaining({ endpoint }), expect.any(String), expect.anything());
+      expect(await db.notificationDelivery.findMany({
+        where: { eventKey }, select: { userId: true, channel: true }, orderBy: { userId: 'asc' },
+      })).toEqual([{ userId: changedChat, channel: 'TELEGRAM' }, { userId: app, channel: 'APP' }]);
+      expect(await db.notificationDelivery.count({ where: { eventKey: `need-notice:new:${need.id}:1` } })).toBe(0);
+      expect(await db.notifyStats.count({ where: { userId: { in: [incoming, outgoing, muted] } } })).toBe(0);
+    } finally {
+      resume.resolve();
+      await running;
+      gate.mockRestore();
+      getDb.mockRestore();
+    }
+  });
+
+  it.each(['channel switch', 'device transfer'] as const)('rechecks an app destination after a %s during endpoint lookup', async (change) => {
+    const author = `queued-app-${change.replace(' ', '-')}`;
+    const { circle: [member] } = await seedNetwork(author, 1, 1);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.test/chat' },
+    });
+    const { job, eventKey } = await seedQueuedRequests(need, [member!]);
+    await db.user.update({ where: { id: member }, data: { notifyChannel: 'APP' } });
+    const stale = `https://fcm.googleapis.com/fcm/send/${author}-old`;
+    const current = `https://fcm.googleapis.com/fcm/send/${author}-current`;
+    await db.pushSubscription.createMany({ data: [current, stale].map((endpoint, index) => ({
+      userId: member!, endpoint, p256dh: 'key', auth: 'key', createdAt: new Date(Date.now() + index),
+    })) });
+    const endpointsRead = deferred<void>();
+    const resume = deferred<void>();
+    const find = db.pushSubscription.findMany.bind(db.pushSubscription);
+    const gate = vi.spyOn(db.pushSubscription, 'findMany').mockImplementationOnce((args) =>
+      find(args).then(async (rows) => {
+        endpointsRead.resolve();
+        await resume.promise;
+        return rows;
+      }) as ReturnType<typeof find>,
+    );
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    const running = processTgBroadcast(job);
+    try {
+      await Promise.race([endpointsRead.promise, running.then(() => { throw new Error('Worker skipped app endpoint lookup'); })]);
+      const toTelegram = change === 'channel switch';
+      if (toTelegram) await db.user.update({ where: { id: member }, data: { notifyChannel: 'TELEGRAM' } });
+      else await db.pushSubscription.update({ where: { endpoint: stale }, data: { userId: author } });
+      resume.resolve();
+      await running;
+      expect(webPushTransport).not.toHaveBeenCalledWith(expect.objectContaining({ endpoint: stale }), expect.anything(), expect.anything());
+      if (!toTelegram) {
+        expect(webPushTransport).toHaveBeenCalledWith(expect.objectContaining({ endpoint: current }), expect.anything(), expect.anything());
+      }
+      expect(sendsTo(`test-${member}`)).toHaveLength(toTelegram ? 1 : 0);
+      expect(await db.notificationDelivery.findMany({ where: { eventKey }, select: { channel: true } }))
+        .toEqual([{ channel: toTelegram ? 'TELEGRAM' : 'APP' }]);
+    } finally {
+      resume.resolve();
+      await running;
+      gate.mockRestore();
+      getDb.mockRestore();
+    }
+  });
+
+  it.each(['open', 'dismiss', 'close'] as const)('reconciles a %s that commits before Telegram acknowledgement', async (action) => {
+    const author = `ack-race-${action}`;
+    const { circle: [member] } = await seedNetwork(author, 1, 1);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.test/chat' },
+    });
+    const { entries: [entry], eventKey, job } = await seedQueuedRequests(need, [member!]);
+    await db.notifyStats.create({ data: { userId: member!, ignoreStreak: 4, lastSentAt: new Date() } });
+    const handedOff = deferred<void>();
+    const acknowledge = deferred<void>();
+    telegramFetch.mockImplementation(async (url, init) => {
+      const text = String(JSON.parse(String(init?.body)).text);
+      if (telegramChat(init) === `test-${member}` && text === 'Test request') {
+        handedOff.resolve();
+        await acknowledge.promise;
+      }
+      return defaultTelegram(url);
+    });
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    const running = processTgBroadcast(job);
+    try {
+      await Promise.race([handedOff.promise, running.then(() => { throw new Error('Telegram did not receive the request'); })]);
+      if (action === 'open') await caller(member!).notification.markRead({ id: entry!.id });
+      else if (action === 'dismiss') await caller(member!).notification.dismiss({ id: entry!.id });
+      else await caller(author).collection.close({ id: need.id });
+      expect(await db.notificationDelivery.count({ where: { eventKey } })).toBe(0);
+      acknowledge.resolve();
+      await running;
+      expect(await db.notificationDelivery.count({ where: { eventKey } })).toBe(1);
+      expect(await db.notifyStats.findUniqueOrThrow({ where: { userId: member! } }))
+        .toMatchObject({ sent: 1, ignoreStreak: action === 'close' ? 5 : 0 });
+      if (action === 'close') await waitForCloseDrain(need.id);
+    } finally {
+      acknowledge.resolve();
+      await running;
+      getDb.mockRestore();
+      telegramFetch.mockImplementation(defaultTelegram);
+    }
+  });
+
+  it('drains persisted intents at startup and again on the direct-mode interval', async () => {
+    const author = 'direct-startup-drain';
+    const { circle: [first, second] } = await seedNetwork(author, 2, 1);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.test/chat' },
+    });
+    const { eventKey } = await seedQueuedRequests(need, [first!]);
+    vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+    const stop = startDirectNeedNoticeDrain(db);
+    try {
+      await waitForDispatch([first!]);
+      await seedQueuedRequests(need, [second!]);
+      expect(sendsTo(`test-${second}`)).toHaveLength(0);
+      vi.advanceTimersByTime(60_000);
+      await waitForDispatch([second!]);
+      expect(await db.notificationDelivery.count({ where: { eventKey } })).toBe(2);
+    } finally {
+      await stop();
+      vi.useRealTimers();
+    }
+  });
+
+  it('measures SQL for a 300-recipient Telegram request dispatch', async () => {
+    const author = 'statement-count';
+    const { circle } = await seedNetwork(author, 300, 1);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 300, chatLink: 'https://example.test/chat' },
+    });
+    const { job: { data: { messages } }, eventKey } = await seedQueuedRequests(need, circle);
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    const jobs = workers.tgJobs(messages, 'wave');
+    const start = queryCount;
+    try {
+      for (const job of jobs) await processTgBroadcast(job as unknown as Parameters<typeof processTgBroadcast>[0]);
+      const statements = queryCount - start;
+      console.log(`[Need delivery SQL] ${statements} statements for 300 recipients`);
+      expect(statements).toBeLessThan(3_300);
+      expect(await db.notificationDelivery.count({ where: { eventKey } })).toBe(300);
+    } finally {
+      getDb.mockRestore();
+    }
+  }, 45_000);
 
   it('uses guarded direct sends if a large Telegram enqueue returns an error', async () => {
     const author = 'queue-error-author';
@@ -1388,9 +1734,13 @@ describe('Need participant visibility', () => {
       // The worker awaits the query directly, so the delayed real result is sufficient.
       return snapshot as ReturnType<typeof findCycles>;
     });
+    // A producer timestamped by PostgreSQL must be due even if the API clock is behind it.
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(Date.now() - 2_000);
     try {
       await processCycleClose({} as Job);
     } finally {
+      vi.useRealTimers();
       cycleSnapshot.mockRestore();
       getDb.mockRestore();
     }
@@ -1403,7 +1753,7 @@ describe('Need participant visibility', () => {
       { userId: active, type: 'COLLECTION_CLOSED', wave: 1 },
       { userId: active, type: 'CYCLE_RENEWED', wave: 2 },
     ]);
-    await expect.poll(() => db.notificationDelivery.count({ where: { eventKey: `cycle:${need.id}:2:start` } })).toBe(1);
+    expect(await db.notificationDelivery.count({ where: { eventKey: `cycle:${need.id}:2:start` } })).toBe(1);
   });
 
   it.each([

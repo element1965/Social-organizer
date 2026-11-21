@@ -400,7 +400,8 @@ export const collectionRouter = router({
         }));
         await tx.notification.updateMany({
           where: { collectionId: input.id, type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] }, status: 'UNREAD' },
-          data: { status: 'READ' },
+          // Keep the request in history without treating this system read as a recipient reaction.
+          data: { status: 'READ', updatedAt: closed.updatedAt },
         });
 
         // Everyone previously notified gets a single closure notice.
@@ -442,7 +443,8 @@ export const collectionRouter = router({
         }));
         await tx.notification.updateMany({
           where: { collectionId: input.id, type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] }, status: 'UNREAD' },
-          data: { status: 'READ' },
+          // Keep the request in history without treating this system read as a recipient reaction.
+          data: { status: 'READ', updatedAt: cancelled.updatedAt },
         });
         return cancelled;
       });
