@@ -316,10 +316,19 @@ function CollectionScreen({ id }: { id: string | undefined }) {
   }
 
   // People beyond my visible rings come without a name: one "…" stands for all of them
-  const pathNames = foldHidden(path.data?.path ?? []).map((person, index) => (
+  const pathPeople = path.data?.path ?? [];
+  const pathNames = foldHidden(pathPeople).map((person, index) => (
     !person ? '…' : index === 0 ? t('common.you') : resolve(person.id, person.name)
   ));
   const showPath = !owner && pathNames.length > 1;
+  const acquaintance = pathPeople[1];
+  const acquaintanceName = acquaintance && !acquaintance.hidden
+    ? resolve(acquaintance.id, acquaintance.name).trim()
+    : '';
+  const askAcquaintance = !owner && data.status === 'ACTIVE' && !held
+    && pathPeople.length >= 3 && acquaintance && acquaintance.id !== data.creatorId && acquaintanceName
+    ? { id: acquaintance.id, name: acquaintanceName }
+    : undefined;
   // The amount is named when the Need is reported. The meter above shows progress towards it.
   const stages = [
     ...(hasGoal ? [t('collection.stageAmountNamed')] : []),
@@ -498,6 +507,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
     >
       <NeedSummaryCard
         pathNames={showPath ? pathNames : undefined}
+        askAcquaintance={askAcquaintance}
         creatorName={creatorName}
         pageHeading={!desktop}
         photoUrl={data.creator.photoUrl}

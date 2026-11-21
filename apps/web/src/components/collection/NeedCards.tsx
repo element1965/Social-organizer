@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { Avatar } from '../ui2/Avatar';
 import { Button } from '../ui2/Button';
 import { Card } from '../ui2/Card';
@@ -17,6 +18,7 @@ import { IconChat } from './icons';
 type NeedSummaryCardProps = {
   /** Names from me to the author ("You", …, the author). Not shown with fewer than two. */
   pathNames?: string[];
+  askAcquaintance?: { id: string; name: string };
   creatorName: string;
   /** Use the author's name as the page heading when the screen header has no title. */
   pageHeading?: boolean;
@@ -34,12 +36,32 @@ type NeedSummaryCardProps = {
 };
 
 /** The head of a Need: the chain to the author, the author, the amount reported and the stage. */
-export function NeedSummaryCard({ pathNames, creatorName, pageHeading, photoUrl, onCreator, subtitle, meter, stages, stageDone, note }: NeedSummaryCardProps) {
+export function NeedSummaryCard({ pathNames, askAcquaintance, creatorName, pageHeading, photoUrl, onCreator, subtitle, meter, stages, stageDone, note }: NeedSummaryCardProps) {
   const { t } = useTranslation();
   const AuthorLine = pageHeading ? 'h1' : 'div';
   return (
     <Card className="mt-2">
-      {pathNames && pathNames.length > 1 ? <div className="mb-4"><PathFigure names={pathNames} /></div> : null}
+      {pathNames && pathNames.length > 1 ? (
+        <div className="mb-4">
+          <PathFigure names={pathNames} />
+          {askAcquaintance ? (
+            <Link
+              to={`/person/${encodeURIComponent(askAcquaintance.id)}`}
+              className="so-focus inline-flex min-h-11 min-w-11 max-w-full items-center rounded-md text-body-s font-bold text-ink-muted underline underline-offset-2 hover:text-ink"
+            >
+              <span className="min-w-0 break-words">
+                <Trans
+                  i18nKey="collection.askAcquaintance"
+                  values={{ name: askAcquaintance.name }}
+                  components={{ name: <bdi /> }}
+                  tOptions={{ interpolation: { escapeValue: true } }}
+                  shouldUnescape
+                />
+              </span>
+            </Link>
+          ) : null}
+        </div>
+      ) : null}
       <div className="flex items-center gap-3">
         <Avatar name={creatorName} src={photoUrl ?? null} size={48} />
         <div className="min-w-0">
