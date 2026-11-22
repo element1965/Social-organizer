@@ -137,6 +137,8 @@
     "attention": "확인할 항목이 있어요"
   },
   "circle": {
+    "pauseMotion": "움직임 일시 정지",
+    "resumeMotion": "움직임 재개",
     "toSelf": "나에게",
     "backToFeed": "피드",
     "openGraph": "그래프 펼치기",
@@ -209,11 +211,11 @@
       "milestoneFirstNeedSub": "알림이 악수를 따라 이동하고 있어요",
       "milestoneFirstPart": "첫 참여",
       "milestoneFirstPartSub": "필요를 올린 사람이 내 참여를 볼 수 있어요",
-      "accepted": "아는 사이를 확인했어요 · 이제 서로의 서클에 있어요",
+      "accepted": "아는 사이를 확인했어요",
       "stack": {
         "waiting": "확인을 기다리는 중이에요",
         "incoming": "연결을 원해요",
-        "accepted": "이제 내 서클에 있어요",
+        "accepted": "아는 사이 확인됨",
         "participating": "참여 중",
         "closed": "완료",
         "names": "{{names}} 외 {{count}}명",
@@ -656,7 +658,8 @@
     "loadFailedTitle": "초대를 열지 못했어요",
     "loadFailedText": "연결이 없는 것 같아요. 링크는 저장되어 있으니 다시 시도해 주세요.",
     "waiting": "확인을 기다리는 중이에요.",
-    "network_other": "네트워크에 {{n}}명",
+    "network_other": "{{name}}의 직접 연결 {{n}}개",
+    "invitation": "초대",
     "dead": {
       "deletedTitle": "이 사람은 계정을 삭제했습니다",
       "deletedText": "초대가 더 이상 유효하지 않습니다. 아는 다른 사람에게 링크를 요청하세요.",
@@ -715,6 +718,11 @@
         "join": "함께하기",
         "faq": "질문",
         "signin": "로그인"
+      },
+      "motion": {
+        "pause": "애니메이션 멈추기",
+        "play": "애니메이션 재생",
+        "paused": "애니메이션이 멈춤"
       },
       "hero": {
         "title": "세상은 생각보다 좁아요.",
@@ -1321,6 +1329,8 @@
   "sos": {
     "headline": "{{name}}님이 도움을 요청해요",
     "ofGoal": "{{amount}} 중",
+    "reported": "{{amount}} 밝힘",
+    "needed": "{{amount}} 필요",
     "peopleLine": "참여자 {{count}}명 · 돈은 서비스를 거치지 않고 직접 건네요",
     "joinCircle": "{{name}} 님이 내 인맥에 추가돼요. 이렇게 서로 직접 아는 사이라는 걸 확인해요.",
     "joinCircleBody": "참여하면 이 사람을 직접 안다는 것을 확인하는 거예요.",
@@ -1397,6 +1407,7 @@
     "largeYes": "네, 보내기",
     "largeNo": "금액 바꾸기",
     "alreadyOpen": "이 종류의 열린 필요가 이미 있어요",
+    "bothTypesOpen": "각 유형에 열린 필요가 하나씩 있어요.",
     "serverLocked": "필요는 아직 알릴 수 없어요",
     "chatSheetTitle": "채팅은 어떻게 만드나요?",
     "chatSheetLead": "아무 메신저에서나 쓸 수 있는 채팅이에요. 그룹 초대 링크가 필요해요.",

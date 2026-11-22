@@ -346,7 +346,7 @@ function CollectionScreen({ id }: { id: string | undefined }) {
 
   const people: ParticipantRow[] = activeObligations.map((row) => {
     const mine = row.userId === userId;
-    let line = mine ? t('collection.youLower') : direct.has(row.userId) ? t('collection.firstHandshake') : t('collection.inNetwork');
+    let line = mine ? t('collection.youLower') : direct.has(row.userId) ? t('collection.firstHandshake') : undefined;
     if (renewal && row.cycleConfirmed === false) line = mine ? t('collection.waitingYou') : t('collection.waiting');
     else if (renewal && row.cycleConfirmed === true && !mine) line = t('collection.confirmed');
     return {

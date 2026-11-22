@@ -137,6 +137,8 @@
     "attention": "väntar på dig"
   },
   "circle": {
+    "pauseMotion": "Pausa rörelsen",
+    "resumeMotion": "Återuppta rörelsen",
     "toSelf": "Tillbaka till mig",
     "backToFeed": "Flöde",
     "openGraph": "Fäll ut grafen",
@@ -212,11 +214,11 @@
       "milestoneFirstNeedSub": "Meddelandet går via handslag",
       "milestoneFirstPart": "Första deltagandet",
       "milestoneFirstPartSub": "Den som anmälde behovet ser ditt deltagande",
-      "accepted": "har bekräftat bekantskapen · ni finns nu i varandras kretsar",
+      "accepted": "har bekräftat bekantskapen",
       "stack": {
         "waiting": "Väntar på bekräftelse",
         "incoming": "Vill knyta kontakt",
-        "accepted": "Nu i din krets",
+        "accepted": "Bekantskaper bekräftade",
         "participating": "Du deltar",
         "closed": "Avslutade",
         "names": "{{names}} och {{count}} till",
@@ -659,8 +661,9 @@
     "loadFailedTitle": "Det gick inte att öppna inbjudan",
     "loadFailedText": "Det verkar saknas anslutning. Länken är sparad, försök igen.",
     "waiting": "Väntar på bekräftelse.",
-    "network_one": "{{n}} person i nätverket",
-    "network_other": "{{n}} personer i nätverket",
+    "network_one": "{{name}} har {{n}} direkt koppling",
+    "network_other": "{{name}} har {{n}} direkta kopplingar",
+    "invitation": "Inbjudan",
     "dead": {
       "deletedTitle": "Den här personen har tagit bort sitt konto",
       "deletedText": "Inbjudan fungerar inte längre. Be någon annan du känner om en länk.",
@@ -719,6 +722,11 @@
         "join": "Var med",
         "faq": "Frågor",
         "signin": "Logga in"
+      },
+      "motion": {
+        "pause": "Pausa animeringen",
+        "play": "Spela animeringen",
+        "paused": "Animeringen är pausad"
       },
       "hero": {
         "title": "Världen är mindre än du tror.",
@@ -1330,6 +1338,8 @@
   "sos": {
     "headline": "{{name}} behöver bistånd",
     "ofGoal": "av {{amount}}",
+    "reported": "{{amount}} angivet",
+    "needed": "{{amount}} behövs",
     "peopleLine": "Deltagare: {{count}} · pengar lämnas över direkt, inte via tjänsten",
     "joinCircle": "{{name}} visas i din krets. Så bekräftar du att ni känner varandra personligen.",
     "joinCircleBody": "Genom att gå med bekräftar du att du känner den här personen personligen.",
@@ -1408,6 +1418,7 @@
     "largeYes": "Ja, skicka",
     "largeNo": "Ändra belopp",
     "alreadyOpen": "Du har redan ett öppet behov av den här typen",
+    "bothTypesOpen": "Du har ett öppet behov av varje typ.",
     "serverLocked": "Du kan inte anmäla ett behov ännu",
     "chatSheetTitle": "Hur skapar jag en chatt?",
     "chatSheetLead": "Valfri messenger. Du behöver en inbjudningslänk till en grupp.",

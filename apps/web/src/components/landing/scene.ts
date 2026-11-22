@@ -41,6 +41,9 @@ export interface SceneElements {
 
 export interface SceneOptions {
   rtl: boolean;
+  language: string;
+  /** Suppress continuous motion while leaving the scroll-driven story available. */
+  paused?: boolean;
   format: (n: number) => string;
   /** The words under a counter, in the plural form its number takes. */
   label: (key: 'reached' | 'people', n: number) => string;
@@ -88,11 +91,16 @@ const easeIO = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2
 
 export function initScene(els: SceneElements, initial: SceneOptions, intro: SceneIntro = {}): SceneHandle {
   let opts = initial;
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+  let reduce = motionQuery.matches || !!opts.paused;
   const small = innerWidth < 760;
   const palette = landingCanvasPalette(els.root);
   const white = palette('white');
   const careBright = palette('care-bright');
+  const sceneColor = (name: string, space: THREE.ColorSpace = THREE.SRGBColorSpace) => {
+    const [r, g, b] = palette(name).split(/\s+/).map(Number);
+    return new THREE.Color().setRGB((r ?? 0) / 255, (g ?? 0) / 255, (b ?? 0) / 255, space);
+  };
   const lowEnd = (navigator.hardwareConcurrency || 8) <= 4;
   const N = small ? 2000 : lowEnd ? 4000 : 6500;
   const { canvas, sky: skyEl, night: nightEl, graphBg, beats, story } = els;
@@ -411,9 +419,11 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
   let sceneDirty = true;
-  renderer.setClearColor(0x000000, 0);
+  renderer.setClearColor(sceneColor('black'), 0);
   const scene = new THREE.Scene();
-  const fog = new THREE.Fog(0x6c7f86, 40, 200);
+  const fogDay = sceneColor('fog-day', THREE.LinearSRGBColorSpace);
+  const fogNight = sceneColor('fog-night', THREE.LinearSRGBColorSpace);
+  const fog = new THREE.Fog(fogDay, 40, 200);
   scene.fog = fog;
   const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 600);
 
@@ -450,21 +460,22 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
 
   // brand colours (tokens.css): nodes, care for Participation, sos for a Need, warm for those who heard of it
   const C = {
-    base: new THREE.Color(0x0d1715),
-    you: new THREE.Color(0xffffff),
-    n1: new THREE.Color(0xffffff),
-    n2: new THREE.Color(0xd3e6e1),
-    n3: new THREE.Color(0xa3c2ba),
-    warm: new THREE.Color(0xf2be68),
-    care: new THREE.Color(0x5fd3c6),
-    sos: new THREE.Color(0xff6a5c),
-    dim: new THREE.Color(0x3a4a46),
+    base: sceneColor('starling'),
+    you: sceneColor('white'),
+    n1: sceneColor('white'),
+    n2: sceneColor('starling-near'),
+    n3: sceneColor('starling-far'),
+    warm: sceneColor('warm'),
+    care: sceneColor('care-scene'),
+    sos: sceneColor('sos-scene'),
+    dim: sceneColor('starling-dim'),
     // the app's graph (graph-3d palette): dots by handshake, the dust, the scene
-    g1: new THREE.Color(0xe7eeeb),
-    g2: new THREE.Color(0x9fb0aa),
-    g3: new THREE.Color(0x5f7069),
-    dust: new THREE.Color(0x4d5d58),
-    scene: new THREE.Color(0x0b1513),
+    g1: sceneColor('node'),
+    g2: sceneColor('node-mid'),
+    g3: sceneColor('node-far'),
+    dust: sceneColor('node-dust'),
+    scene: sceneColor('scene'),
+    thread: sceneColor('thread'),
   };
   const ringCol = (i: number) => {
     const d = dep[i]!;
@@ -605,14 +616,14 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const linkGeo = new THREE.BufferGeometry();
   const linkAttr = new THREE.BufferAttribute(linkArr, 3).setUsage(THREE.DynamicDrawUsage);
   linkGeo.setAttribute('position', linkAttr);
-  const linkMat = new THREE.LineBasicMaterial({ color: 0xe7eeeb, transparent: true, opacity: 0, depthWrite: false, fog: false });
+  const linkMat = new THREE.LineBasicMaterial({ color: C.g1, transparent: true, opacity: 0, depthWrite: false, fog: false });
   const links = new THREE.LineSegments(linkGeo, linkMat);
   links.frustumCulled = false;
   links.visible = false;
   scene.add(links);
 
-  const thinMat = new LineMaterial({ color: 0xd9efea, linewidth: 1.4, transparent: true, opacity: 0.7, depthWrite: false });
-  const thickMat = new LineMaterial({ color: 0xffffff, linewidth: 3, transparent: true, opacity: 0.95, depthWrite: false });
+  const thinMat = new LineMaterial({ color: C.thread, linewidth: 1.4, transparent: true, opacity: 0.7, depthWrite: false });
+  const thickMat = new LineMaterial({ color: C.you, linewidth: 3, transparent: true, opacity: 0.95, depthWrite: false });
   thinMat.fog = false;
   thickMat.fog = false;
   const thinGeo = new LineSegmentsGeometry();
@@ -1018,12 +1029,12 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       CAM.offY = lerp(SA.offY, SB.offY, e);
     }
     // a second, damped follow removes the kinks where one shot hands over to the next
-    const a = csInit ? 1 - Math.exp(-dt * 3) : 1;
+    const a = csInit && !reduce ? 1 - Math.exp(-dt * 3) : 1;
     // the turn follows the scroll with its own, slower pace, so it eases out after the page has stopped;
     // it is a separate angle, so the sky behind, which follows the yaw, does not run away
     const spinE = reduce ? 0 : easeIO(remap(t, MORPH + 0.5, LAST + 0.45));
     const spinT = spinE * SPIN_TURNS * Math.PI * 2;
-    spin = csInit ? spin + (spinT - spin) * (1 - Math.exp(-dt * 1.6)) : spinT;
+    spin = csInit && !reduce ? spin + (spinT - spin) * (1 - Math.exp(-dt * 1.6)) : spinT;
     spinning = Math.abs(spinT - spin) > 0.2 || (spinE > 0.005 && spinE < 0.995);
     csInit = true;
     CS.t.lerp(CAM.t, a);
@@ -1048,8 +1059,11 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   };
 
   // chapter rail: shows where you are (in page time: one mark per beat)
+  let railBeat = -1;
   const rail = (d: number) => {
     const k = Math.floor(d + 0.02);
+    if (k === railBeat) return;
+    railBeat = k;
     els.rail.classList.toggle('on', k >= 1 && k <= beats.length - 1);
     els.railLinks.forEach((a, n) => {
       const b = n + 1;
@@ -1072,7 +1086,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     colT[i * 3] = c.r;
     colT[i * 3 + 1] = c.g;
     colT[i * 3 + 2] = c.b;
-    scl[i] = lerp(scl[i]!, s, 0.15);
+    scl[i] = reduce ? s : lerp(scl[i]!, s, 0.15);
   };
   /** In the graph a colour is reached as the bird arrives: a dark bird on the sky, a light dot on the scene. */
   const setG = (i: number, c: THREE.Color, s = 1) => setT(i, tmpC.copy(C.base).lerp(c, GI[i]!), s);
@@ -1083,12 +1097,13 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
    * The position is read only while a word is kept and the time is before its beat.
    */
   const keepLate = els.lates.map((el) => !!el && el.getBoundingClientRect().top < innerHeight);
-  const showLates = (t: number) =>
+  const showLates = (t: number) => {
+    const viewportHeight = innerHeight;
     els.lates.forEach((el, j) => {
-      if (!el) return;
-      if (keepLate[j] && t < (phaseStart[j] ?? 0) && el.getBoundingClientRect().top >= innerHeight) keepLate[j] = false;
-      el.classList.toggle('on', t > (lateAt[j] ?? Infinity) || !!keepLate[j]);
+      if (el && keepLate[j] && t < (phaseStart[j] ?? 0) && el.getBoundingClientRect().top >= viewportHeight) keepLate[j] = false;
     });
+    els.lates.forEach((el, j) => el?.classList.toggle('on', t > (lateAt[j] ?? Infinity) || !!keepLate[j]));
+  };
   const beatState = (t: number): BeatOut => {
     const k = Math.floor(t);
     const p = t - k;
@@ -1308,7 +1323,6 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   let last = performance.now();
   let lastBg = '';
   let graphOn = false;
-  const fogNight = new THREE.Color();
   const tmpP = new THREE.Vector3();
 
   // The scene never pops in: on the opening screen the flock flies in; anywhere else (a link to a later section,
@@ -1317,7 +1331,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const flyIn = !reduce && intro.flyIn !== false && tD < 0.3;
   const FADE = flyIn ? 0.5 : reduce ? 0.3 : 0.6;
   const SETTLE = flyIn ? 1.8 : FADE;
-  let introT = 0;
+  let introT = reduce ? SETTLE : 0;
   let introDone = false;
   canvas.style.opacity = '0';
   /** Page time when the arrival began, and the furthest the reader has scrolled from it since. */
@@ -1353,7 +1367,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
   const tick = (dt: number, target: number) => {
     clock += reduce ? 0 : dt;
     uTime.value = clock;
-    tD += (target - tD) * (reduce ? 1 : Math.min(1, dt * 4));
+    tD = reduce ? target : tD + (target - tD) * Math.min(1, dt * 4);
     tS = sceneT(tD);
     if (arrK > 0) {
       // the arrival dies away in time, and sooner as the reader scrolls on: half the opening beat ends it
@@ -1377,7 +1391,8 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     const calm = clamp(tS - 1);
     place(clock + 20, morph, calm, gS);
     const st = beatState(tS);
-    for (let i = 0; i < N * 3; i++) col[i]! += (colT[i]! - col[i]!) * 0.14;
+    if (reduce) col.set(colT);
+    else for (let i = 0; i < N * 3; i++) col[i]! += (colT[i]! - col[i]!) * 0.14;
     const allDots = gS >= 1;
     birds.visible = !allDots;
     if (!primed) {
@@ -1403,9 +1418,9 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     if (st.path) setCurve(st.path);
     else setLines(thick2, st.thick, P);
     const graphView = k >= LAST;
-    thinMat.color.set(k === 7 || graphView ? 0x5fd3c6 : 0xd9efea);
+    thinMat.color.copy(k === 7 || graphView ? C.care : C.thread);
     thinMat.opacity = k === 7 ? 0.4 : graphView ? 0.55 : 0.7;
-    thickMat.color.set(graphView ? 0x5fd3c6 : 0xffffff);
+    thickMat.color.copy(graphView ? C.care : C.you);
     thickMat.linewidth = graphView ? 2.2 : 3;
     halo.visible = st.halo >= 0;
     if (halo.visible) {
@@ -1418,7 +1433,7 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       // in the app the person with the Need keeps a breathing ring
       const breathe = graphView && !reduce ? 1 + 0.18 * Math.sin(clock * 3) : 1;
       ringS.scale.setScalar(CS.d * (graphView ? 0.022 : 0.045) * breathe);
-      ringMat.color.set(graphView ? 0xff6a5c : 0xffffff);
+      ringMat.color.copy(graphView ? C.sos : C.you);
     }
     // you become the app's tile: the logo on care
     const tileA = ease(remap(gS, 0.45, 0.9));
@@ -1474,18 +1489,36 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
       // (before the scene the photograph is unmoved: it eases from there into the framing)
       skyEl.style.transform = `translate3d(${((-CS.yaw * 9 + CS.off * 5) * settle).toFixed(2)}%, ${((clamp(tS / 3) * 5 + CS.pitch * 18) * settle).toFixed(2)}%, 0) scale(${(1 + (0.04 + close * 0.14) * settle).toFixed(3)})`;
     }
-    fogNight.setRGB(lerp(0.42, 0.07, nt), lerp(0.5, 0.14, nt), lerp(0.53, 0.13, nt));
-    fog.color.copy(fogNight).lerp(C.scene, bgA);
+    fog.color.copy(fogDay).lerp(fogNight, nt).lerp(C.scene, bgA);
     renderer.render(scene, camera);
   };
 
   let raf = 0;
-  let stillTime = 0;
-  let stillFrames = 0;
+  let heldScroll: number | null = null;
+  const releaseStillFrame = () => {
+    heldScroll = null;
+    if (reduce) {
+      arrK = 0;
+      introT = SETTLE;
+    }
+    sceneDirty = true;
+  };
+  const updateMotion = () => {
+    const next = motionQuery.matches || !!opts.paused;
+    if (next === reduce) return;
+    reduce = next;
+    if (reduce && !motionQuery.matches && primed) {
+      heldScroll = storyT();
+    } else {
+      releaseStillFrame();
+    }
+  };
+  motionQuery.addEventListener('change', updateMotion);
   const frame = (now: number) => {
     raf = requestAnimationFrame(frame);
     if (resizePending) {
       resizePending = false;
+      releaseStillFrame();
       resize();
     }
     // the first frame's timestamp can precede the end of the setup above: no negative step
@@ -1493,16 +1526,9 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     last = now;
     if (!visible || document.hidden) return;
     const target = storyT();
-    if (reduce) {
-      if (!introDone || sceneDirty || target !== tD) {
-        stillTime = stillFrames = 0;
-      } else {
-        // The camera damps by elapsed time, colours and sizes by frame count.
-        if (stillTime >= 4 && stillFrames >= 60) return;
-        stillTime += dt;
-        stillFrames++;
-      }
-    }
+    if (heldScroll === target) return;
+    if (heldScroll != null) releaseStillFrame();
+    if (reduce && introDone && !sceneDirty && target === tD) return;
     sceneDirty = false;
     tick(dt, target);
   };
@@ -1551,13 +1577,18 @@ export function initScene(els: SceneElements, initial: SceneOptions, intro: Scen
     update(next) {
       // a new language: numbers are written again; a new direction moves the subject to the other side (the
       // damped camera follow glides there); a new currency gives the participants new sums
-      if (next.money.shortfall !== opts.money.shortfall || next.money.mine !== opts.money.mine) setMoney(next.money);
+      const moneyChanged = next.money.shortfall !== opts.money.shortfall || next.money.mine !== opts.money.mine;
+      const contentChanged = moneyChanged || next.rtl !== opts.rtl || next.language !== opts.language;
+      if (moneyChanged) setMoney(next.money);
       opts = next;
+      updateMotion();
+      if (contentChanged) releaseStillFrame();
       lastHud = '';
       invalidateLayout();
     },
     destroy() {
       cancelAnimationFrame(raf);
+      motionQuery.removeEventListener('change', updateMotion);
       removeEventListener('resize', onResize);
       canvas.removeEventListener('webglcontextrestored', onContextRestored);
       if (!layoutObserver) {

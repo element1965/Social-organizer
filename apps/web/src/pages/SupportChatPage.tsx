@@ -215,7 +215,7 @@ export function SupportChatPage() {
                   {msg.message && (
                     <p className="whitespace-pre-wrap">{msg.message}</p>
                   )}
-                  <p className={cn('text-micro opacity-60', msg.fromAdmin ? 'text-end' : '')}>
+                  <p className={cn('text-micro', msg.fromAdmin ? 'text-end' : 'text-ink-muted')}>
                     {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>

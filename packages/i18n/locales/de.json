@@ -137,6 +137,8 @@
     "attention": "wartet auf Sie"
   },
   "circle": {
+    "pauseMotion": "Bewegung pausieren",
+    "resumeMotion": "Bewegung fortsetzen",
     "toSelf": "Zurück zu mir",
     "backToFeed": "Feed",
     "openGraph": "Graph ausklappen",
@@ -212,11 +214,11 @@
       "milestoneFirstNeedSub": "Die Meldung geht über Handschläge",
       "milestoneFirstPart": "Erste Beteiligung",
       "milestoneFirstPartSub": "Wer den Bedarf gemeldet hat, sieht Ihre Beteiligung",
-      "accepted": "hat die Bekanntschaft bestätigt · Sie sind jetzt beide im Kreis des anderen",
+      "accepted": "hat die Bekanntschaft bestätigt",
       "stack": {
         "waiting": "Warten auf Bestätigung",
         "incoming": "Möchten sich verbinden",
-        "accepted": "Jetzt in Ihrem Kreis",
+        "accepted": "Bekanntschaften bestätigt",
         "participating": "Sie beteiligen sich",
         "closed": "Abgeschlossen",
         "names": "{{names}} und {{count}} weitere",
@@ -659,8 +661,9 @@
     "loadFailedTitle": "Die Einladung konnte nicht geöffnet werden",
     "loadFailedText": "Anscheinend gibt es keine Verbindung. Der Link ist gespeichert, versuchen Sie es erneut.",
     "waiting": "Warten auf Bestätigung.",
-    "network_one": "{{n}} Person im Netzwerk",
-    "network_other": "{{n}} Personen im Netzwerk",
+    "network_one": "{{name}} hat {{n}} direkte Verbindung",
+    "network_other": "{{name}} hat {{n}} direkte Verbindungen",
+    "invitation": "Einladung",
     "dead": {
       "deletedTitle": "Diese Person hat ihr Konto gelöscht",
       "deletedText": "Die Einladung funktioniert nicht mehr. Bitte jemand anderen aus deinem Bekanntenkreis um einen Link.",
@@ -719,6 +722,11 @@
         "join": "Mitmachen",
         "faq": "Fragen",
         "signin": "Anmelden"
+      },
+      "motion": {
+        "pause": "Animation pausieren",
+        "play": "Animation abspielen",
+        "paused": "Animation pausiert"
       },
       "hero": {
         "title": "Die Welt ist kleiner, als Sie denken.",
@@ -1330,6 +1338,8 @@
   "sos": {
     "headline": "{{name}} braucht Unterstützung",
     "ofGoal": "von {{amount}}",
+    "reported": "{{amount}} angegeben",
+    "needed": "{{amount}} benötigt",
     "peopleLine": "Beteiligte: {{count}} · Geld wird direkt übergeben, nicht über den Dienst",
     "joinCircle": "{{name}} wird in Ihren Kreis aufgenommen. Damit bestätigen Sie, dass Sie sich persönlich kennen.",
     "joinCircleBody": "Mit dem Beitritt bestätigen Sie, dass Sie diese Person persönlich kennen.",
@@ -1408,6 +1418,7 @@
     "largeYes": "Ja, senden",
     "largeNo": "Betrag ändern",
     "alreadyOpen": "Sie haben schon einen offenen Bedarf dieses Typs",
+    "bothTypesOpen": "Sie haben einen offenen Bedarf jeder Art.",
     "serverLocked": "Einen Bedarf zu melden ist noch nicht möglich",
     "chatSheetTitle": "Wie erstelle ich einen Chat?",
     "chatSheetLead": "Jeder Messenger, der Ihnen passt. Sie brauchen einen Einladungslink zu einer Gruppe.",

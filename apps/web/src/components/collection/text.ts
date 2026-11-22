@@ -1,13 +1,6 @@
 import { formatUnbrokenNumber, MAX_CHAT_LINK_LENGTH } from '@so/shared';
-
-/** Whole dollars only. Empty and partial input is not a number. */
-export function parseWhole(raw: string): number | null {
-  const cleaned = raw.trim().replace(/\s/g, '');
-  if (!/^\d+$/.test(cleaned)) return null;
-  const value = Number(cleaned);
-  if (!Number.isSafeInteger(value)) return null;
-  return value;
-}
+import { parseWhole } from '../../lib/wholeAmount';
+export { parseWhole } from '../../lib/wholeAmount';
 
 /** Why a money field cannot be submitted. `whole` is a decimal or other junk; `low` is under the minimum. */
 export function amountIssue(raw: string, min: number): 'empty' | 'whole' | 'low' | null {

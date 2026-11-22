@@ -137,6 +137,8 @@
     "attention": "waiting for you"
   },
   "circle": {
+    "pauseMotion": "Pause motion",
+    "resumeMotion": "Resume motion",
     "toSelf": "Back to me",
     "backToFeed": "Feed",
     "openGraph": "Expand the graph",
@@ -212,11 +214,11 @@
       "milestoneFirstNeedSub": "The message is travelling by handshakes",
       "milestoneFirstPart": "First Participation",
       "milestoneFirstPartSub": "The author of the Need sees your Participation",
-      "accepted": "confirmed the acquaintance · you are in each other's circle",
+      "accepted": "confirmed the acquaintance",
       "stack": {
         "waiting": "Waiting for confirmation",
         "incoming": "Want to connect",
-        "accepted": "Now in your circle",
+        "accepted": "Acquaintances confirmed",
         "participating": "You take part",
         "closed": "Completed",
         "names": "{{names}} and {{count}} more",
@@ -641,8 +643,9 @@
     "calls": "{{name}} invites you",
     "say": "Sign in to ask {{name}} to confirm that you know each other.",
     "sayQr": "A network of people who know each other in person. Sign in before the QR code expires to confirm that you know {{name}} right away.",
-    "network_one": "{{n}} person in the network",
-    "network_other": "{{n}} people in the network",
+    "network_one": "{{name}} has {{n}} direct connection",
+    "network_other": "{{name}} has {{n}} direct connections",
+    "invitation": "Invitation",
     "known": "We know each other",
     "notNow": "Not now",
     "toCircle": "To the circle",
@@ -719,6 +722,11 @@
         "join": "Get involved",
         "faq": "Questions",
         "signin": "Sign in"
+      },
+      "motion": {
+        "pause": "Pause animation",
+        "play": "Play animation",
+        "paused": "Animation paused"
       },
       "hero": {
         "title": "It's a smaller world than you think.",
@@ -1330,6 +1338,8 @@
   "sos": {
     "headline": "{{name}} needs assistance",
     "ofGoal": "of {{amount}}",
+    "reported": "{{amount}} reported",
+    "needed": "{{amount}} needed",
     "peopleLine": "Participants: {{count}} · money is handed over directly, not through the service",
     "joinCircle": "{{name}} will appear in your circle. This confirms you know each other in person.",
     "joinCircleBody": "By joining, you confirm that you know this person personally.",
@@ -1408,6 +1418,7 @@
     "largeYes": "Yes, send",
     "largeNo": "Change amount",
     "alreadyOpen": "You already have an open Need of this type",
+    "bothTypesOpen": "You have an open Need of each type.",
     "serverLocked": "You cannot report a Need yet",
     "chatSheetTitle": "How do I create a chat?",
     "chatSheetLead": "Any messenger you like. You need an invite link to a group.",

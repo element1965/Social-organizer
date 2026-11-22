@@ -137,6 +137,8 @@
     "attention": "aguarda você"
   },
   "circle": {
+    "pauseMotion": "Pausar a animação",
+    "resumeMotion": "Retomar a animação",
     "toSelf": "Voltar para mim",
     "backToFeed": "Feed",
     "openGraph": "Expandir o grafo",
@@ -215,11 +217,11 @@
       "milestoneFirstNeedSub": "A mensagem segue pelos apertos de mão",
       "milestoneFirstPart": "Primeira participação",
       "milestoneFirstPartSub": "O autor da necessidade vê a sua participação",
-      "accepted": "confirmou que vocês se conhecem · vocês estão no círculo um do outro",
+      "accepted": "confirmou que vocês se conhecem",
       "stack": {
         "waiting": "Aguardando confirmação",
         "incoming": "Querem se conectar com você",
-        "accepted": "Agora no seu círculo",
+        "accepted": "Relações confirmadas",
         "participating": "Você participa",
         "closed": "Concluídas",
         "names": "{{names}} e mais {{count}}",
@@ -662,9 +664,10 @@
     "loadFailedTitle": "Não foi possível abrir o convite",
     "loadFailedText": "Parece que não há conexão. O link foi salvo; tente de novo.",
     "waiting": "Aguardando confirmação.",
-    "network_many": "{{n}} de pessoas na rede",
-    "network_one": "{{n}} pessoa na rede",
-    "network_other": "{{n}} pessoas na rede",
+    "network_many": "{{name}} tem {{n}} de ligações diretas",
+    "network_one": "{{name}} tem {{n}} ligação direta",
+    "network_other": "{{name}} tem {{n}} ligações diretas",
+    "invitation": "Convite",
     "dead": {
       "deletedTitle": "Esta pessoa excluiu a conta",
       "deletedText": "O convite não funciona mais. Peça um link a outra pessoa que você conhece.",
@@ -723,6 +726,11 @@
         "join": "Colabore",
         "faq": "Perguntas",
         "signin": "Entrar"
+      },
+      "motion": {
+        "pause": "Pausar a animação",
+        "play": "Reproduzir a animação",
+        "paused": "Animação em pausa"
       },
       "hero": {
         "title": "O mundo é menor do que você imagina.",
@@ -1339,6 +1347,8 @@
   "sos": {
     "headline": "{{name}} precisa de assistência",
     "ofGoal": "de {{amount}}",
+    "reported": "{{amount}} declarado",
+    "needed": "{{amount}} necessário",
     "peopleLine": "Participantes: {{count}} · o dinheiro é entregue diretamente, não pelo serviço",
     "joinCircle": "{{name}} vai aparecer no seu círculo. Assim confirma que se conhecem pessoalmente.",
     "joinCircleBody": "Ao entrar, você confirma que conhece esta pessoa pessoalmente.",
@@ -1419,6 +1429,7 @@
     "largeYes": "Sim, enviar",
     "largeNo": "Alterar valor",
     "alreadyOpen": "Você já tem uma necessidade aberta deste tipo",
+    "bothTypesOpen": "Você tem uma necessidade aberta de cada tipo.",
     "serverLocked": "Ainda não é possível informar uma necessidade",
     "chatSheetTitle": "Como crio um chat?",
     "chatSheetLead": "Qualquer mensageiro que você quiser. É preciso um link de convite para um grupo.",

@@ -9,6 +9,7 @@ import { GITHUB_URL, LanguageSelect, useLoginHref } from '../components/site/Sit
 import { usePendingInvite } from '../components/site/DeviceEntry';
 import { PeopleCount, useDocumentTitle, useSitePhone } from '../components/site/hooks';
 import { copyText } from '../lib/share';
+import { usePrefersReducedMotion } from '../lib/scrollPlay';
 import { REPORT_URL, TEAM_URL } from '../components/site/team';
 import { SITE_ORIGIN, storeLinks, useDevice } from '../lib/device';
 import { IconGlobe } from '../components/site/icons';
@@ -26,7 +27,8 @@ import '../components/landing/landing.css';
  * works, in eight beats; at the end the flock becomes the graph the app shows), then the growth model, what comes
  * next, the experiment, questions and the app.
  * Ported from the concept prototype (local/media/concept-6, v9; docs/narrative/topics/packaging/landing-concept-flock.md).
- * The page stays in the entry chunk so its words paint at once; Three.js and the scene load with a dynamic import.
+ * The page is its own chunk. A guest tab starts that chunk with the entry, so the words still paint with the
+ * first screen; a signed-in tab does not download it. Three.js and the scene load with a further dynamic import.
  * Signed-in users get the circle instead (App.tsx).
  */
 
@@ -34,6 +36,18 @@ const STUDY_URL = 'https://research.facebook.com/blog/2016/02/three-and-a-half-d
 const BOT_URL = TELEGRAM_BOT_URL;
 const ICON_CREDITS = 'Gil Barbara logos (CC0)';
 const STORES = ['play', 'appstore', 'web', 'telegram'] as const;
+
+function MotionGlyph({ mark }: { mark: 'pause' | 'play' }) {
+  return mark === 'play' ? (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path fill="currentColor" d="M5 3.2v9.6L13 8z" />
+    </svg>
+  ) : (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path fill="currentColor" d="M4 3h2.2v10H4zm5.8 0H12v10H9.8z" />
+    </svg>
+  );
+}
 
 function LandingPhoto({ name, hero = false }: { name: 'sky' | 'starlings' | 'wave'; hero?: boolean }) {
   const size = (width: number) => '/landing/' + name + '-' + width + '.webp';
@@ -100,6 +114,9 @@ export function LandingPage() {
   const loginHref = useLoginHref();
   const invite = usePendingInvite();
   const phone = useSitePhone();
+  const reduceMotion = usePrefersReducedMotion();
+  const [scenePaused, setScenePaused] = useState(false);
+  const motionPlaying = !scenePaused && !reduceMotion;
   const device = useDevice();
   const primary = phone ? ({ android: 'play', ios: 'appstore', desktop: 'web' } as const)[device] : null;
   const links = storeLinks(invite, firstTouchCampaign());
@@ -164,9 +181,11 @@ export function LandingPage() {
   // what the imperative parts need from the current language
   const sceneOptions: SceneOptions = {
     rtl,
+    language: lang,
     format: (n) => nf.format(n),
     label: (key, n) => (key === 'reached' ? t('landing.v2.story.hud.reached', { count: n }) : t('landing.v2.story.hud.people', { count: n })),
     money: { shortfall: money.shortfall, mine: money.mine },
+    paused: scenePaused || reduceMotion,
   };
   const growOptions: GrowOptions = {
     rtl,
@@ -318,10 +337,6 @@ export function LandingPage() {
 
   // scroll finishing, the growth model and the "next" network
   useEffect(() => {
-    const main = mainRef.current;
-    const root = rootRef.current;
-    const beats = beatRefs.current.filter((b): b is HTMLElement => !!b);
-    const stopGlide = main && root ? initGlide(beats, main, root) : () => {};
     const els = {
       canvas: growCvRef.current,
       chart: growChartRef.current,
@@ -342,7 +357,6 @@ export function LandingPage() {
     }
     if (nextCvRef.current) nextHandle.current = initNextNet(nextCvRef.current, { rtl: optionsRef.current.rtl });
     return () => {
-      stopGlide();
       growHandle.current?.destroy();
       growHandle.current = null;
       nextHandle.current?.destroy();
@@ -350,12 +364,22 @@ export function LandingPage() {
     };
   }, []);
 
-  // a new language: numbers, canvas labels and the side of the pictures follow it without a reload
+  // Keep scrolling native while the animation is paused or reduced motion is on.
+  useEffect(() => {
+    if (!motionPlaying) return;
+    const main = mainRef.current;
+    const root = rootRef.current;
+    const beats = beatRefs.current.filter((b): b is HTMLElement => !!b);
+    if (!main || !root || beats.length === 0) return;
+    return initGlide(beats, main, root);
+  }, [motionPlaying]);
+
+  // a new language, or a pause: numbers, canvas labels and the still frame follow without a reload
   useEffect(() => {
     sceneHandle.current?.update(optionsRef.current.scene);
     growHandle.current?.update(optionsRef.current.grow);
     nextHandle.current?.update({ rtl: optionsRef.current.rtl });
-  }, [lang, rtl, money]);
+  }, [lang, rtl, money, scenePaused, reduceMotion]);
 
   // chapter rail: a click scrolls to the moment the beat is fully told (its middle)
   const goBeat = (e: ReactMouseEvent<HTMLAnchorElement>, n: number) => {
@@ -418,6 +442,25 @@ export function LandingPage() {
             <a href="#join">{t('landing.v2.nav.join')}</a>
           </nav>
           <div className="tools">
+            <a className="jump" href="#faq">{t('landing.v2.nav.faq')}</a>
+            <button
+              type="button"
+              className="motion"
+              aria-disabled={reduceMotion ? true : undefined}
+              aria-label={
+                reduceMotion
+                  ? t('landing.v2.motion.paused')
+                  : motionPlaying
+                    ? t('landing.v2.motion.pause')
+                    : t('landing.v2.motion.play')
+              }
+              onClick={() => {
+                if (reduceMotion) return;
+                setScenePaused((value) => !value);
+              }}
+            >
+              <MotionGlyph mark={motionPlaying || reduceMotion ? 'pause' : 'play'} />
+            </button>
             <LanguageSelect />
             <Link className="signin" to={loginHref} onClick={() => recordLandingEvent('header_signin', search)}>
               {t('landing.v2.nav.signin')}

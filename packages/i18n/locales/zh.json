@@ -137,6 +137,8 @@
     "attention": "有事等你处理"
   },
   "circle": {
+    "pauseMotion": "暂停动画",
+    "resumeMotion": "继续动画",
     "toSelf": "回到我",
     "backToFeed": "动态",
     "openGraph": "展开图谱",
@@ -209,11 +211,11 @@
       "milestoneFirstNeedSub": "消息正沿握手传递",
       "milestoneFirstPart": "第一次参与",
       "milestoneFirstPartSub": "需求的发起人能看到你的参与",
-      "accepted": "已确认相识 · 你们已在彼此的圈子里",
+      "accepted": "已确认相识",
       "stack": {
         "waiting": "等待确认",
         "incoming": "请求相识",
-        "accepted": "已进入你的圈子",
+        "accepted": "已确认相识",
         "participating": "你已参与",
         "closed": "已结束",
         "names": "{{names}} 及另外 {{count}} 人",
@@ -656,7 +658,8 @@
     "loadFailedTitle": "无法打开邀请",
     "loadFailedText": "好像没有网络。链接已保存，请重试。",
     "waiting": "等待确认。",
-    "network_other": "网络中 {{n}} 人",
+    "network_other": "{{name}}有 {{n}} 个直接联系",
+    "invitation": "邀请",
     "dead": {
       "deletedTitle": "此人已删除账户",
       "deletedText": "邀请已失效。请向其他认识的人索取链接。",
@@ -715,6 +718,11 @@
         "join": "加入我们",
         "faq": "常见问题",
         "signin": "登录"
+      },
+      "motion": {
+        "pause": "暂停动画",
+        "play": "播放动画",
+        "paused": "动画已暂停"
       },
       "hero": {
         "title": "世界比你想的要小。",
@@ -1321,6 +1329,8 @@
   "sos": {
     "headline": "{{name}} 需要互助",
     "ofGoal": "/ {{amount}}",
+    "reported": "已表明 {{amount}}",
+    "needed": "需要 {{amount}}",
     "peopleLine": "参与者：{{count}} · 钱款由参与者直接交付，不经过本服务",
     "joinCircle": "{{name}} 会出现在你的熟人圈中。这样，你就确认了你们在现实中认识。",
     "joinCircleBody": "加入即表示你确认亲自认识这个人。",
@@ -1397,6 +1407,7 @@
     "largeYes": "对，发送",
     "largeNo": "修改金额",
     "alreadyOpen": "你已经有一个同类型的进行中的需求",
+    "bothTypesOpen": "每种需求都已有一项进行中。",
     "serverLocked": "暂时还不能告知需求",
     "chatSheetTitle": "怎么创建聊天？",
     "chatSheetLead": "用你顺手的任何聊天工具。你需要一个群邀请链接。",

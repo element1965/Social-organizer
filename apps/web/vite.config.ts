@@ -31,6 +31,7 @@ const GRAPH_PACKAGES = new Set([
   'preact',
   'prop-types',
 ]);
+const webgpuShim = normalizePath(fileURLToPath(new URL('./build/webgpu-shim.ts', import.meta.url)));
 
 function packageName(id: string): string | null {
   const norm = id.replace(/\\/g, '/');
@@ -116,7 +117,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: [{
         find: /^three\/webgpu$/,
-        replacement: fileURLToPath(new URL('./build/webgpu-shim.ts', import.meta.url)),
+        replacement: webgpuShim,
       }],
     },
     server: {
@@ -139,12 +140,12 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 600,
       rollupOptions: {
         output: {
-          // Shared modules (React, the CJS helper) must stay out of these chunks.
-          // Otherwise the entry statically imports them and the guest landing
-          // downloads Three and Gun. Every graph package goes in one chunk so
-          // the graph libraries do not import each other across chunks.
+          // Shared React and CommonJS helpers stay out of the graph and Gun chunks.
+          // The shim belongs with the graph package that imports it. Keeping it outside
+          // that chunk would create a circular import from the graph entry back to itself.
           onlyExplicitManualChunks: true,
           manualChunks(id) {
+            if (normalizePath(id) === webgpuShim) return 'graph3d';
             const pkg = packageName(id);
             if (!pkg) return;
             if (pkg === 'gun') return 'gun';

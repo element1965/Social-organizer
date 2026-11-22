@@ -10,8 +10,8 @@ import { usePlayOnEnter } from '../site/hooks';
 
 function OrbitExample() {
   const [depth, setDepth] = useState<0 | 1 | 2>(0);
-  const ref = usePlayOnEnter<0 | 1 | 2>(setDepth, [0, 1, 2], 900);
-  return <div ref={ref}><OrbitFigure depth={depth} /></div>;
+  const play = usePlayOnEnter<0 | 1 | 2>(setDepth, [0, 1, 2], 900);
+  return <div ref={play.ref}><OrbitFigure depth={depth} /></div>;
 }
 ```
 

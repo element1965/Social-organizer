@@ -1,6 +1,6 @@
 import { SOS_PREVIEW_ID } from '@so/shared';
 import { TELEGRAM_MINI_APP_BOT } from '../lib/deployment';
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { isTelegramWebApp } from '@so/tg-adapter';
@@ -8,7 +8,7 @@ import { MIN_OBLIGATION_AMOUNT } from '@so/shared';
 import { asDate, firstName, formatDay, relativePast } from '../components/collection/text';
 import { isDefinitiveLoadError, NeedLoadError } from '../components/errors/ErrorState';
 import { Logo } from '../components/Logo';
-import { BackLink } from '../components/onboarding/OnboardingFrame';
+import { BackLink, LanguageCorner } from '../components/onboarding/OnboardingFrame';
 import { SignInFlow } from '../components/onboarding/SignInFlow';
 import { Avatar } from '../components/ui2/Avatar';
 import { Button } from '../components/ui2/Button';
@@ -50,6 +50,20 @@ export function SosLandingPage() {
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
   const isPreview = DEMO_COLLECTION != null && collectionId === SOS_PREVIEW_ID;
   const language = i18n.language;
+  // A language switch rewrites the page. Keep the reader on this Need, at the same scroll.
+  const scrollY = useRef(0);
+  const languageSeen = useRef(language);
+  useEffect(() => {
+    const remember = () => { scrollY.current = window.scrollY; };
+    remember();
+    window.addEventListener('scroll', remember, { passive: true });
+    return () => window.removeEventListener('scroll', remember);
+  }, []);
+  useLayoutEffect(() => {
+    if (languageSeen.current === language) return;
+    languageSeen.current = language;
+    window.scrollTo(0, scrollY.current);
+  }, [language]);
 
   const fetched = trpc.collection.getPublic.useQuery(
     { id: collectionId ?? '' },
@@ -101,7 +115,9 @@ export function SosLandingPage() {
             </h1>
             {hasGoal ? (
               <p className="mt-2 text-body-s font-semibold tabular-nums text-ink-muted">
-                {formatMoney(collection.currentAmount)} {t('sos.ofGoal', { amount: formatMoney(collection.amount ?? 0) })}
+                {t('sos.reported', { amount: formatMoney(collection.currentAmount) })}
+                {' · '}
+                {t('sos.needed', { amount: formatMoney(collection.amount ?? 0) })}
               </p>
             ) : null}
             <p className="mt-2.5 max-w-[32ch] text-body-s text-ink-muted">
@@ -122,9 +138,12 @@ export function SosLandingPage() {
         className="flex w-full max-w-[460px] flex-col items-center px-5"
         style={{ paddingTop: 'max(1.75rem, env(safe-area-inset-top))' }}
       >
-        <div className="flex items-center gap-2 text-body-s font-extrabold">
-          <Logo size={28} className="text-ink" />
-          <span>{t('common.appName')}</span>
+        <div className="flex w-full items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2 text-body-s font-extrabold">
+            <Logo size={28} className="shrink-0 text-ink" />
+            <span className="truncate">{t('common.appName')}</span>
+          </div>
+          <LanguageCorner />
         </div>
 
         {loading ? (
@@ -229,10 +248,10 @@ function PublicBody({
         {hasGoal ? (
           <>
             <div className="flex items-baseline justify-between gap-3">
-              <b className="text-h2 font-extrabold tabular-nums">{formatMoney(currentAmount)}</b>
-              <span className="text-body-s font-semibold text-ink-muted">{t('sos.ofGoal', { amount: formatMoney(amount) })}</span>
+              <b className="text-h2 font-extrabold tabular-nums">{t('sos.reported', { amount: formatMoney(currentAmount) })}</b>
+              <span className="text-end text-body-s font-semibold text-ink-muted">{t('sos.needed', { amount: formatMoney(amount) })}</span>
             </div>
-            <div className="mt-2.5 h-2.5 overflow-hidden rounded-pill bg-canvas">
+            <div className="mt-2.5 h-2.5 overflow-hidden rounded-pill bg-canvas" aria-hidden="true">
               <i className="block h-full rounded-pill bg-care" style={{ width: `${percent}%` }} />
             </div>
           </>

@@ -1,6 +1,7 @@
 import { useId, useRef, type InputHTMLAttributes, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
+import { normalizeMoneyInput } from '../../lib/wholeAmount';
 import { IconLock, IconSearch } from './icons';
 
 type Common = {
@@ -134,7 +135,7 @@ function MoneyField({ label, labelIncludesCurrency, hint, error, value, onValueC
           aria-labelledby={labelledBy}
           aria-invalid={error ? true : undefined}
           aria-describedby={error || hint ? `${fieldId}-hint` : undefined}
-          onChange={(event) => onValueChange?.(event.target.value.replace(/[^\d.,]/g, ''))}
+          onChange={(event) => onValueChange?.(normalizeMoneyInput(event.target.value).replace(/[^\d.,]/g, ''))}
           className="min-w-0 flex-1 bg-transparent text-display font-extrabold tabular-nums text-ink outline-none placeholder:text-ink-subtle"
         />
         <span aria-hidden="true" className="text-[24px] font-bold leading-none text-ink-muted">$</span>

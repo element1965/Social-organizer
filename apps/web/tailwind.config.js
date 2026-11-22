@@ -67,9 +67,11 @@ function lintDesignTokens() {
       problems.push(`${path.relative(here, file)}:${lineNumber}: raw RGB or HSL color`);
     }
     const lines = source.split(/\r?\n/);
+    const webglScene = file === path.join(here, 'src', 'components', 'landing', 'scene.ts');
     lines.forEach((lineText, index) => {
       const where = `${path.relative(here, file)}:${index + 1}`;
       if (hexRe.test(lineText)) problems.push(`${where}: hex color`);
+      if (webglScene && /\b0x[0-9a-f]{6,8}\b/i.test(lineText)) problems.push(`${where}: numeric WebGL color`);
       if (darkRe.test(lineText)) problems.push(`${where}: dark: variant`);
       if (rampRe.test(lineText)) problems.push(`${where}: old color ramp`);
       if (bareRe.test(lineText)) problems.push(`${where}: bare white or black`);

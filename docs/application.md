@@ -10,7 +10,7 @@ React 19 SPA with tRPC client.
 
 ### Pages
 
-Route pages other than the guest landing are `React.lazy`. The Circle chunk is prefetched after sign-in. A failed lazy chunk retries the import once; if the preload still fails, the page reloads once (a sessionStorage timestamp stops a loop) and then shows a reload screen. `telegram-web-app.js` is injected during HTML parse, before the app entry, only inside Telegram: `tgWebAppData` or `tgWebApp` in the URL or hash, a Telegram user agent, `window.TelegramWebviewProxy`, sessionStorage `__telegram__initParams`, or an iframe that has those stored params or a `tgWebApp` hash. That still matches after a full-page reload inside Telegram Desktop, iOS, Android, and Web A/K. A normal browser does not request the script.
+Route pages use `React.lazy`. A direct visit to the guest home starts its chunk alongside the locale. The Circle chunk is prefetched after sign-in. A failed lazy chunk retries the import once. If it keeps failing, the page reloads once and then shows a reload screen. The sessionStorage timestamp prevents a reload loop. `telegram-web-app.js` is injected during HTML parse, before the app entry, only inside Telegram: `tgWebAppData` or `tgWebApp` in the URL or hash, a Telegram user agent, `window.TelegramWebviewProxy`, sessionStorage `__telegram__initParams`, or an iframe that has those stored params or a `tgWebApp` hash. That still matches after a full-page reload inside Telegram Desktop, iOS, Android, and Web A/K. A normal browser does not request the script.
 
 | Page | Path | Description |
 |------|------|-------------|
@@ -21,8 +21,8 @@ Route pages other than the guest landing are `React.lazy`. The Circle chunk is p
 | LoginPage | `/login` | E-mail code, Telegram, Google, Apple |
 | IntroPage | `/intro` | First-run intro (`/onboarding` redirects here) |
 | SeedPage | `/seed` | First-run name step: asked only when the account has no real name yet (e-mail sign-up), otherwise passes straight on; `?end=1` (after the intro) closes the first run |
-| CirclePage | `/` (signed in) | Circle: 3D graph, feed, tab bar. Once a Need can be reported, the Need tab shows its hand on a soft red tile and turns solid red only inside the Need section (a Need opened from `/ask` counts as that section), so the bar does not nag |
-| AskPage | `/ask` | Report a Need (`/create` redirects here). A compact link in the title row ("Activity · N", open plus past) leads to the list at `/me/history`; it takes no height, so the form and its button stay on the first screen. After reporting a Need, the author lands on its share block. The form is removed from history and Back leads to the Circle. The "Your Need is out" note gets focus on that visit only |
+| CirclePage | `/` (signed in) | Circle: 3D graph, feed, tab bar. The first action in an empty Circle opens Add. The motion control pauses the graph's rotation and pulses while keeping the camera controls available. The Need tab uses a soft red tile when the person can report a Need and solid red inside the Need section |
+| AskPage | `/ask` | Report a Need (`/create` redirects here). Activity opens `/me/history`. Open Need cards show their type and link to the Need. The form offers any type the author can still report and keeps the amount, type and chat link for the account in the current tab. After reporting a Need, the author lands on its share block. Back leads to the Circle, and the "Your Need is out" note gets focus on that visit only |
 | AddPage | `/add`, `/add/qr`, `/add/scan` | Invite link, QR, scan |
 | ProfilePage | `/me` | Own profile (`/settings` redirects here) |
 | HistoryPage | `/me/history` | Titled "Activity", the same name as the Profile row and the Need tab link. Own Needs and the ones the person takes part in, tabs Open and Past (opens on Past when nothing is open). On top, a "Participation so far" card (replaces the old Helped / Helped me half-circle of the SOS screen): two equal columns — the amount and number of the person's own Participation, and of Participation in their Needs (`stats.help`) — plus, for closed Needs, how many of them authors marked as received (`stats.participationFacts`). No ratio or balance is shown on purpose; the card is hidden while both counts are zero. It is deliberately not on the Ask screen, so a request never looks like a debt. Reached from the Need tab and from Profile; both rows show the same counts (`useNeedCounts`) |
@@ -67,20 +67,21 @@ Old paths `/dashboard`, `/network`, `/notifications`, `/matches`, `/skills`, `/n
 
 ### Bundle size (vite build, guest landing)
 
-Measured on this branch (2026-11-18). The guest document does not preload Three.js, the force-graph, or Gun, and it does not request `telegram-web-app.js`. The landing's words paint from the entry chunk; its flock scene then loads Three.js with a dynamic import.
+The guest document preloads the font and English locale. The entry starts the landing content on a direct visit to `/`. The flock scene loads Three.js later. Requests to signed-in screens and other public pages share the entry and skip the landing code and CSS.
 
 | Chunk | Raw | Gzip | When |
 |-------|-----|------|------|
-| index (entry) | 607 KB | 193 KB | Always |
-| CSS | 78 KB | 17 KB | Always |
-| scene (landing flock and its graph) | 38 KB | 14 KB | Guest landing, after the words paint |
-| three (Three.js core) | 1069 KB | 285 KB | Guest landing scene; the Circle graph |
-| CirclePage | 47 KB | 15 KB | After sign-in (prefetched) |
+| index (entry) | 577 KB | 184 KB | Always |
+| shared CSS | 65 KB | 14 KB | Always |
+| LandingPage and its CSS | 73 KB | 21 KB | Guest landing |
+| scene (landing flock and its graph) | 42 KB | 16 KB | Guest landing, after the words paint |
+| three (Three.js core) | 532 KB | 136 KB | Guest landing scene and the Circle graph |
+| CirclePage | 39 KB | 13 KB | After sign-in (prefetched) |
 | graph3d (force-graph + Three.js addons) | 254 KB | 74 KB | When the Circle graph loads |
 | gun | 43 KB | 17 KB | Signed-in shell |
 | jsQR | 131 KB | 47 KB | Scan screen |
 
-Before this split the entry was 1858 KB / 558 KB gzip and the landing also pulled Three.js (1284 KB / 342 KB gzip), React Three Fiber (171 KB / 55 KB gzip) and the force-graph chunk (206 KB / 63 KB gzip), plus a render-blocking Telegram script. Local Lighthouse mobile on `vite preview` of `/`: performance 97 → 96, accessibility 94 → 94. First contentful paint 1.8 s → 0.9 s, time to interactive 7.6 s → 4.9 s, unused JavaScript about 544 KiB → 156 KiB. The earlier production mobile score of 74 was a different run (throttled network, the old single bundle). The entry is still over 600 KB because the locale catalogs ship in it.
+On 22 November the shared entry, CSS and English locale totalled about 223 KB gzip, down from 253 KB in the launch build. The table uses decimal KB from the Vite build.
 
 ## Key Features
 

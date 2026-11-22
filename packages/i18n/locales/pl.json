@@ -137,6 +137,8 @@
     "attention": "czeka na Ciebie"
   },
   "circle": {
+    "pauseMotion": "Wstrzymaj animację",
+    "resumeMotion": "Wznów animację",
     "toSelf": "Wróć do mnie",
     "backToFeed": "Kanał",
     "openGraph": "Rozwiń graf",
@@ -218,11 +220,11 @@
       "milestoneFirstNeedSub": "Wiadomość idzie po uściskach dłoni",
       "milestoneFirstPart": "Pierwszy udział",
       "milestoneFirstPartSub": "Autor potrzeby widzi Twój udział",
-      "accepted": "znajomość potwierdzona · jesteście nawzajem w swoich kręgach",
+      "accepted": "znajomość potwierdzona",
       "stack": {
         "waiting": "Czekamy na potwierdzenie",
         "incoming": "Chcą się połączyć",
-        "accepted": "Teraz w Twoim kręgu",
+        "accepted": "Znajomości potwierdzone",
         "participating": "Bierzesz udział",
         "closed": "Zakończone",
         "names": "{{names}} i jeszcze {{count}}",
@@ -665,10 +667,11 @@
     "loadFailedTitle": "Nie udało się otworzyć zaproszenia",
     "loadFailedText": "Wygląda na to, że nie ma połączenia. Link jest zapisany, spróbuj jeszcze raz.",
     "waiting": "Czekamy na potwierdzenie.",
-    "network_few": "{{n}} osoby w sieci",
-    "network_many": "{{n}} osób w sieci",
-    "network_one": "{{n}} osoba w sieci",
-    "network_other": "{{n}} osoby w sieci",
+    "network_few": "{{name}} ma {{n}} bezpośrednie połączenia",
+    "network_many": "{{name}} ma {{n}} bezpośrednich połączeń",
+    "network_one": "{{name}} ma {{n}} bezpośrednie połączenie",
+    "network_other": "{{name}} ma {{n}} bezpośredniego połączenia",
+    "invitation": "Zaproszenie",
     "dead": {
       "deletedTitle": "Ta osoba usunęła konto",
       "deletedText": "Zaproszenie już nie działa. Poproś o link kogoś innego ze znajomych.",
@@ -727,6 +730,11 @@
         "join": "Dołącz",
         "faq": "Pytania",
         "signin": "Zaloguj się"
+      },
+      "motion": {
+        "pause": "Wstrzymaj animację",
+        "play": "Odtwórz animację",
+        "paused": "Animacja wstrzymana"
       },
       "hero": {
         "title": "Świat jest mniejszy, niż myślisz.",
@@ -1348,6 +1356,8 @@
   "sos": {
     "headline": "{{name}} potrzebuje wsparcia",
     "ofGoal": "z {{amount}}",
+    "reported": "Zgłoszono {{amount}}",
+    "needed": "Potrzeba {{amount}}",
     "peopleLine": "Uczestnicy: {{count}} · pieniądze przekazuje się bezpośrednio, nie przez serwis",
     "joinCircle": "{{name}} pojawi się w Twoim kręgu. W ten sposób potwierdzisz, że znacie się osobiście.",
     "joinCircleBody": "Dołączając, potwierdzasz, że znasz tę osobę osobiście.",
@@ -1430,6 +1440,7 @@
     "largeYes": "Tak, wyślij",
     "largeNo": "Zmień kwotę",
     "alreadyOpen": "Masz już otwartą potrzebę tego typu",
+    "bothTypesOpen": "Masz otwartą potrzebę każdego typu.",
     "serverLocked": "Zgłaszanie potrzeby jest jeszcze niedostępne",
     "chatSheetTitle": "Jak utworzyć czat?",
     "chatSheetLead": "Dowolny komunikator, w którym Ci wygodnie. Potrzebny jest link-zaproszenie do grupy.",

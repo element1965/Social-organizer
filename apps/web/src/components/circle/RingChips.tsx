@@ -1,6 +1,6 @@
 import type { CSSProperties, Ref } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { Chip } from '../ui2/Chip';
 import type { Ring } from './circle-store';
@@ -19,6 +19,7 @@ type RingChipsProps = {
   ref?: Ref<HTMLDivElement>;
   className?: string;
   style?: CSSProperties;
+  inert?: boolean;
 };
 
 /**
@@ -27,13 +28,12 @@ type RingChipsProps = {
  * A tap opens People for the ring, over the feed and on the expanded graph alike; the switch that shows or
  * hides a ring on the graph is in that list.
  */
-export function RingChips({ counts, farLabel, hiddenRings, onSelf, ref, className, style }: RingChipsProps) {
+export function RingChips({ counts, farLabel, hiddenRings, onSelf, ref, className, style, inert }: RingChipsProps) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const rings: Ring[] = [1, 2, 3];
 
   return (
-    <div ref={ref} className={className} style={style}>
+    <div ref={ref} className={className} style={style} inert={inert}>
       <p className="mb-1 flex items-baseline justify-between gap-3 px-1 text-micro font-bold text-node-2">
         <span aria-hidden>{t('circle.rings.caption')}</span>
         {/* 4th to 6th rings: one rounded count only, nobody there is named */}
@@ -44,18 +44,16 @@ export function RingChips({ counts, farLabel, hiddenRings, onSelf, ref, classNam
           const hidden = hiddenRings.includes(ring);
           const label = t(`circle.rings.chip${ring}`);
           return (
-            <Chip
+            <Link
               key={ring}
-              variant="onscene"
+              to={`/people/${ring}`}
               aria-label={t('circle.rings.open', { ring: t(`circle.rings.full${ring}`), count: counts[ring] })}
-              aria-pressed={!hidden}
-              className="min-w-[46px] bg-scene-2/[0.86] backdrop-blur-md"
-              onClick={() => navigate(`/people/${ring}`)}
+              className="so-focus relative inline-flex h-[34px] min-w-[46px] items-center justify-center gap-1 whitespace-nowrap rounded-md border border-node-1/15 bg-scene-2/[0.86] px-2.5 text-micro font-bold text-node-2 backdrop-blur-md before:absolute before:-inset-y-1.5 before:inset-x-0"
             >
               <i className={cn('h-2 w-2 shrink-0 rounded-full', DOT[ring], hidden ? 'border border-current' : 'bg-current')} aria-hidden />
               <b className="shrink-0 text-caption font-extrabold tabular-nums tracking-tight text-node-1">{counts[ring]}</b>
               <span className="min-w-0 truncate">{label}</span>
-            </Chip>
+            </Link>
           );
         })}
         {onSelf ? (
