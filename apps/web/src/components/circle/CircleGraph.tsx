@@ -15,6 +15,7 @@ type CircleGraphProps = {
   myId: string | null;
   people: Map<string, NetPerson>;
   edges: Array<{ from: string; to: string }>;
+  links?: Array<{ from: string; to: string }>;
   /** Ids from me to the selected person. Empty when nobody is selected. */
   highlightPath: string[];
   /** Active incoming Needs, nearest first: ids from the asker to me. The graph runs a pulse along each. */
@@ -48,7 +49,7 @@ type CircleGraphProps = {
  * People, or a phone/desktop layout switch) and handed back as `initialView`, which skips the intro fly.
  */
 export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(function CircleGraph(
-  { myId, people, edges, highlightPath, impulses, motionPaused, hiddenRings, onNodeTap, dimmed, focusId, focusLift, farRings, insetTop, labelInsetBottom, labelExclusions },
+  { myId, people, edges, links, highlightPath, impulses, motionPaused, hiddenRings, onNodeTap, dimmed, focusId, focusLift, farRings, insetTop, labelInsetBottom, labelExclusions },
   ref,
 ) {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -82,19 +83,17 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
     [saveView],
   );
 
-  const data = useMemo(() => {
-    const nodes: GraphNode[] = [...people.values()].map((p) => ({
-      id: p.id,
-      name: p.name,
-      photoUrl: p.photoUrl,
-      isCenter: p.id === myId,
-      depth: p.depth,
-      connectionCount: p.connectionCount,
-      lastSeen: p.lastSeen,
-    }));
-    const links = edges.map((e) => ({ source: e.from, target: e.to }));
-    return { nodes, links };
-  }, [people, edges, myId]);
+  const nodes = useMemo(() => [...people.values()].map((p): GraphNode => ({
+    id: p.id,
+    name: p.name,
+    photoUrl: p.photoUrl,
+    isCenter: p.id === myId,
+    depth: p.depth,
+    connectionCount: p.connectionCount,
+    lastSeen: p.lastSeen,
+  })), [people, myId]);
+  const treeEdges = useMemo(() => edges.map((e) => ({ source: e.from, target: e.to })), [edges]);
+  const extraLinks = useMemo(() => links?.map((e) => ({ source: e.from, target: e.to })), [links]);
 
   const handleTap = useCallback((node: GraphNode) => onNodeTap(node.id), [onNodeTap]);
 
@@ -121,13 +120,14 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
       className="absolute inset-0 overflow-hidden"
       style={{ opacity: dimmed ? 0.55 : 1, transition: 'opacity 420ms cubic-bezier(0.22, 0.8, 0.24, 1)' }}
     >
-      {size && data.nodes.length > 0 ? (
+      {size && nodes.length > 0 ? (
         <GraphErrorBoundary>
         <Suspense fallback={<SceneSkeleton />}>
           <LazyNetworkGraph
             ref={graphRef}
-            nodes={data.nodes}
-            edges={data.links}
+            nodes={nodes}
+            edges={treeEdges}
+            extraLinks={extraLinks}
             width={size.w}
             height={size.h}
             onNodeTap={handleTap}

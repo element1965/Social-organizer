@@ -156,6 +156,7 @@ export function useCircleNetwork() {
     people: model.people,
     nodes: model.nodes,
     edges: model.edges,
+    links: slice.data?.links,
     pathTo,
     viaNames,
     displayName,

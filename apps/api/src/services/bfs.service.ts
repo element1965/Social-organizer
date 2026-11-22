@@ -190,9 +190,9 @@ export async function findPathBetweenUsers(
   });
 }
 
-/**
- * Get graph slice for 3D visualization.
- */
+const MAX_SLICE_LINKS = 3000;
+
+/** Get the BFS tree and the other confirmed connections between its visible nodes. */
 export async function getGraphSlice(
   db: PrismaClient,
   userId: string,
@@ -200,6 +200,7 @@ export async function getGraphSlice(
 ): Promise<{
   nodes: Array<{ id: string; name: string; photoUrl: string | null; depth: number; connectionCount: number; lastSeen: Date | null }>;
   edges: Array<{ from: string; to: string }>;
+  links: Array<{ from: string; to: string }>;
 }> {
   const graph = await getGraph(db);
   const recipients = await findRecipientsViaBfs(db, userId, depth, 500, []);
@@ -240,12 +241,31 @@ export async function getGraphSlice(
   const uniqueEdges: Array<{ from: string; to: string }> = [];
   for (const e of edges) {
     const [a, b] = [e.from, e.to].sort();
-    const key = `${a}-${b}`;
+    const key = `${a}\0${b}`;
     if (!edgeSet.has(key)) {
       edgeSet.add(key);
       uniqueEdges.push({ from: a!, to: b! });
     }
   }
 
-  return { nodes, edges: uniqueEdges };
+  const links: Array<{ from: string; to: string }> = [];
+  const remaining = new Set(nodes.map((node) => node.id));
+  // userIds is in BFS order, so links touching nearer rings get the available slots first.
+  for (const from of userIds) {
+    if (links.length === MAX_SLICE_LINKS) break;
+    if (!remaining.delete(from)) continue;
+    const n = graph.find(from);
+    if (n === undefined) continue;
+    graph.eachNeighbour(n, (m) => {
+      if (links.length === MAX_SLICE_LINKS) return;
+      const to = graph.ids[m]!;
+      if (!remaining.has(to)) return;
+      const key = from < to ? `${from}\0${to}` : `${to}\0${from}`;
+      if (edgeSet.has(key)) return;
+      edgeSet.add(key);
+      links.push({ from, to });
+    });
+  }
+
+  return { nodes, edges: uniqueEdges, links };
 }

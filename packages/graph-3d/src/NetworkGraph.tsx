@@ -55,6 +55,8 @@ export interface GraphImpulse {
 export interface NetworkGraphProps {
   nodes: GraphNode[];
   edges: GraphEdge[];
+  /** Confirmed connections drawn between existing nodes, independent of the force layout. */
+  extraLinks?: GraphEdge[];
   /** Node ids from me to the target. Unknown ids are ignored. Fewer than two matches: no dimming. */
   highlightPath?: string[];
   /**
@@ -559,6 +561,7 @@ function labelLines(name: string, center: boolean): string {
 
 const PATH_SEGMENTS = 20;        // a highlighted (curved) link is drawn with this many segments
 const SOFT_LINK_OPACITY = 0.4;   // impulse links outside the highlighted path, relative to the path links
+const EXTRA_LINK_OPACITY = 0.45; // relative to an ordinary link in the current highlight state
 const tmpColor = new THREE.Color();
 
 /** sRGB hex → linear rgb into `out` at `i` (vertex colours are in the working colour space). */
@@ -573,6 +576,7 @@ function writeLinear(out: Float32Array, i: number, hex: number, alpha: number) {
 interface LinkEnds {
   a: SimNode;
   b: SimNode;
+  extra: boolean;
   /** `${a.id}\0${b.id}` as given in the data, for the path lookup */
   key: string;
 }
@@ -652,13 +656,14 @@ class LinkLayer {
 
   setLinks(links: LinkEnds[]) {
     this.links = links;
-    this.plainGeom.dispose(); // the attributes below are replaced; free the old GL buffers
-    this.pos = new Float32Array(links.length * 6);
-    this.col = new Float32Array(links.length * 8);
-    const posAttr = new THREE.BufferAttribute(this.pos, 3).setUsage(THREE.DynamicDrawUsage);
-    const colAttr = new THREE.BufferAttribute(this.col, 4).setUsage(THREE.DynamicDrawUsage);
-    this.plainGeom.setAttribute('position', posAttr);
-    this.plainGeom.setAttribute('color', colAttr);
+    if (this.pos.length < links.length * 6 || this.pos.length === 0) {
+      this.plainGeom.dispose(); // free the old GL buffers before replacing their attributes
+      const capacity = Math.max(1, links.length);
+      this.pos = new Float32Array(capacity * 6);
+      this.col = new Float32Array(capacity * 8);
+      this.plainGeom.setAttribute('position', new THREE.BufferAttribute(this.pos, 3).setUsage(THREE.DynamicDrawUsage));
+      this.plainGeom.setAttribute('color', new THREE.BufferAttribute(this.col, 4).setUsage(THREE.DynamicDrawUsage));
+    }
     this.plainGeom.setDrawRange(0, links.length * 2);
   }
 
@@ -701,7 +706,8 @@ class LinkLayer {
       else if (soft) onSoft.push(l);
       const spoke = shown && !path && !soft && opts.isSpoke(l);
       const hex = spoke ? opts.spoke : opts.plain;
-      const alpha = !shown || path || soft ? 0 : spoke ? opts.spokeOp : opts.plainOp;
+      const opacity = (spoke ? opts.spokeOp : opts.plainOp) * (l.extra ? EXTRA_LINK_OPACITY : 1);
+      const alpha = !shown || path || soft ? 0 : opacity;
       writeLinear(this.col, i * 8, hex, alpha);
       writeLinear(this.col, i * 8 + 4, hex, alpha);
     }
@@ -1308,6 +1314,7 @@ const NO_HINT = () => '';
 export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(function NetworkGraph({
   nodes,
   edges,
+  extraLinks,
   highlightPath,
   impulses,
   motionPaused = false,
@@ -1567,6 +1574,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const map = nodeMapRef.current;
     const edgeKeys = new Set<string>();
     for (const e of edges) edgeKeys.add(`${e.source}\0${e.target}`).add(`${e.target}\0${e.source}`);
+    for (const e of extraLinks ?? []) edgeKeys.add(`${e.source}\0${e.target}`).add(`${e.target}\0${e.source}`);
     const shown = (n: SimNode) => {
       const depth = n.depth ?? depthRef.current.get(n.id) ?? (n.isCenter ? 0 : 1);
       return n.isCenter || depth <= 0 || !hiddenRef.current.has(depth);
@@ -1598,7 +1606,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     return items.length ? { items, links, set } : EMPTY_IMPULSES;
     // impulsesKey covers the array; signature covers the nodes and edges; hiddenKey the rings.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [impulsesKey, hiddenKey, signature]);
+  }, [impulsesKey, hiddenKey, signature, extraLinks]);
 
   const highlightKey = (highlightPath ?? []).join('\u0001');
   const pathState = useMemo<PathState>(() => {
@@ -1698,19 +1706,6 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   // Batched layers: every link in one draw call, every dot in one (see LinkLayer / DotLayer)
   const graphDataRef = useRef(graphData);
   graphDataRef.current = graphData;
-  /** Links with their node objects (the simulation moves those in place) */
-  const resolveLinks = useCallback((): LinkEnds[] => {
-    const map = nodeMapRef.current;
-    const out: LinkEnds[] = [];
-    for (const l of graphDataRef.current.links as Array<{ source: string | SimNode; target: string | SimNode }>) {
-      const sid = typeof l.source === 'object' ? l.source.id : l.source;
-      const tid = typeof l.target === 'object' ? l.target.id : l.target;
-      const a = map.get(String(sid));
-      const b = map.get(String(tid));
-      if (a && b) out.push({ a, b, key: `${a.id}\0${b.id}` });
-    }
-    return out;
-  }, []);
   const linksRef = useRef<LinkLayer | null>(null);
   const dotsRef = useRef<DotLayer | null>(null);
   const impulseRef = useRef<ImpulseLayer | null>(null);
@@ -2309,10 +2304,6 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const impulseLayer = new ImpulseLayer(res.impulseMaterial);
     scene.add(impulseLayer.points);
     impulseRef.current = impulseLayer;
-    const firstLinks = resolveLinks();
-    linkLayer.setLinks(firstLinks);
-    impulseLayer.setLinks(firstLinks);
-    linkPaintRef.current = true;
     // The impulse work runs only while the canvas is on screen (and the tab visible: rAF stops by itself)
     let onScreen = true;
     const screenObserver = typeof IntersectionObserver === 'undefined'
@@ -3131,24 +3122,35 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     }
   }, [nodes, applyLevel]);
 
+  // Both batches follow the simulation's node objects. Only tree edges enter graphData.
+  useEffect(() => {
+    const nodesById = nodeMapRef.current;
+    const links: LinkEnds[] = [];
+    const append = (edge: GraphEdge, extra: boolean) => {
+      const a = nodesById.get(edge.source);
+      const b = nodesById.get(edge.target);
+      if (a && b) links.push({ a, b, extra, key: `${a.id}\0${b.id}` });
+    };
+    for (const edge of edges) append(edge, false);
+    for (const edge of extraLinks ?? []) append(edge, true);
+    linksRef.current?.setLinks(links);
+    impulseRef.current?.setLinks(links);
+    linkPaintRef.current = true;
+  }, [graphData, edges, extraLinks]);
+
   // Structural changes that need new objects (name / photo / deleted). Theme does not rebuild the scene.
   useEffect(() => {
     const fg = fgRef.current;
     if (!fg) return;
     const refresh = needsRefreshRef.current;
     needsRefreshRef.current = false;
-    // New data: the link layer takes the new set of links (node objects are kept by id)
-    const links = resolveLinks();
-    linksRef.current?.setLinks(links);
-    impulseRef.current?.setLinks(links);
-    linkPaintRef.current = true;
     if (refresh) {
       for (const v of visRef.current.values()) disposeLabel(v.label);
       visRef.current.clear();
       res.resetMaterials();
       try { fg.refresh(); } catch { /* noop */ }
     }
-  }, [graphData, res, resolveLinks]);
+  }, [graphData, res]);
 
   // Far rings (4th to 6th handshake) as an anonymous dust around the ball: no nodes, no links, no names.
   // Dots stand for a rounded count and are scattered at random, so they say "how many", never "who" or "via whom".
