@@ -1562,10 +1562,6 @@
       "hint": "Tanıdıklarınızın tanıdığı kişiler. Yalnızca şahsen tanıdıklarınızı onaylayın.",
       "mutual": "Ortak tanıdık: {{count}}"
     },
-    "named": {
-      "title": "Kişisel davetler",
-      "hint": "Tanıdığınız kişilerin adları, her satıra bir ad. Her bağlantı kişiye adıyla seslenir."
-    },
     "readyLine": "Kendi {{min}} bağlantısı olanlar: {{total}} kişiden {{count}}"
   },
   "account": {

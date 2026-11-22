@@ -1549,10 +1549,6 @@
       "hint": "Orang yang dikenal oleh kenalan Anda. Konfirmasi hanya yang Anda kenal secara pribadi.",
       "mutual": "Kenalan bersama: {{count}}"
     },
-    "named": {
-      "title": "Undangan pribadi",
-      "hint": "Nama orang yang Anda kenal, satu per baris. Setiap tautan menyapa orang itu dengan namanya."
-    },
     "readyLine": "Punya {{min}} koneksi sendiri: {{count}} dari {{total}}"
   },
   "account": {

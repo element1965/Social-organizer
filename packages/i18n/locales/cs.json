@@ -1588,10 +1588,6 @@
       "hint": "Lidé, které znají vaši známí. Potvrzujte jen ty, které znáte osobně.",
       "mutual": "Společní známí: {{count}}"
     },
-    "named": {
-      "title": "Osobní pozvánky",
-      "hint": "Jména lidí, které znáte, jedno na řádek. Každý odkaz osloví člověka jménem."
-    },
     "readyLine": "Mají {{min}} vlastních spojení: {{count}} z {{total}}"
   },
   "account": {

@@ -4,6 +4,10 @@ All notable changes to Social Organizer are documented here. The format follows 
 
 ## [Unreleased]
 
+### Changed
+
+- On Add, "Change link" sits in the address itself. The separate "Personal invitations" action is gone.
+
 ### Fixed
 
 - The landing's starlings fly into the opening screen soon after it loads instead of popping in once the visitor scrolls; opened at a later section or with reduced motion, the scene fades in.

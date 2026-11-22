@@ -1562,10 +1562,6 @@
       "hint": "Mensen die je kennissen kennen. Bevestig alleen wie je persoonlijk kent.",
       "mutual": "Gemeenschappelijke kennissen: {{count}}"
     },
-    "named": {
-      "title": "Persoonlijke uitnodigingen",
-      "hint": "Namen van mensen die je kent, één per regel. Elke link spreekt de persoon bij naam aan."
-    },
     "readyLine": "Hebben {{min}} eigen verbindingen: {{count}} van {{total}}"
   },
   "account": {

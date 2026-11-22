@@ -5,7 +5,6 @@ import { isValidReferralSlug } from '@so/shared';
 import { Button } from '../ui2/Button';
 import { Input } from '../ui2/Input';
 import { LinkCardView } from './LinkCardView';
-import { NamedInvites } from './NamedInvites';
 import { withSrc } from '../../lib/messengerShare';
 import { permanentInviteUrl, prettyInvite } from './links';
 import { shareLink } from '../../lib/share';
@@ -28,7 +27,6 @@ export function LinkCard({ slug, name }: LinkCardProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
   const [editError, setEditError] = useState('');
-  const [namedOpen, setNamedOpen] = useState(false);
   const pretty = prettyInvite(slug);
 
   const share = async () => {
@@ -126,9 +124,6 @@ export function LinkCard({ slug, name }: LinkCardProps) {
       failed={failed}
       onQr={() => navigate('/add/qr')}
       onScan={() => navigate('/add/scan')}
-      onNamed={() => setNamedOpen(true)}
-    >
-      <NamedInvites open={namedOpen} onClose={() => setNamedOpen(false)} slug={slug} name={name} />
-    </LinkCardView>
+    />
   );
 }

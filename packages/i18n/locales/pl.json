@@ -1588,10 +1588,6 @@
       "hint": "Osoby, które znają Twoi znajomi. Potwierdzaj tylko tych, których znasz osobiście.",
       "mutual": "Wspólni znajomi: {{count}}"
     },
-    "named": {
-      "title": "Imienne zaproszenia",
-      "hint": "Imiona osób, które znasz, po jednym w wierszu. Każdy link zwraca się do osoby po imieniu."
-    },
     "readyLine": "Mają {{min}} własnych połączeń: {{count}} z {{total}}"
   },
   "account": {

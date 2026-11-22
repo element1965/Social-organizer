@@ -1562,10 +1562,6 @@
       "hint": "People your acquaintances know. Confirm only those you know in person.",
       "mutual": "Shared acquaintances: {{count}}"
     },
-    "named": {
-      "title": "Personal invitations",
-      "hint": "Names of people you know, one per line. Each link greets the person by name."
-    },
     "readyLine": "Have {{min}} connections of their own: {{count}} of {{total}}"
   },
   "account": {

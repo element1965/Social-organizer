@@ -1549,10 +1549,6 @@
       "hint": "Những người mà người quen của bạn biết. Chỉ xác nhận những người bạn quen trực tiếp.",
       "mutual": "Người quen chung: {{count}}"
     },
-    "named": {
-      "title": "Lời mời đích danh",
-      "hint": "Tên những người bạn quen, mỗi dòng một tên. Mỗi liên kết sẽ gọi tên người đó."
-    },
     "readyLine": "Đã có {{min}} kết nối riêng: {{count}} trên {{total}}"
   },
   "account": {

@@ -1575,10 +1575,6 @@
       "hint": "Personas que sus conocidos conocen. Confirme solo a quienes conoce en persona.",
       "mutual": "Conocidos en común: {{count}}"
     },
-    "named": {
-      "title": "Invitaciones personales",
-      "hint": "Nombres de personas que conoce, uno por línea. Cada enlace saluda a la persona por su nombre."
-    },
     "readyLine": "Tienen {{min}} conexiones propias: {{count}} de {{total}}"
   },
   "account": {

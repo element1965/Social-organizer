@@ -1562,10 +1562,6 @@
       "hint": "Personer som dine bekjente kjenner. Bekreft bare dem du kjenner personlig.",
       "mutual": "Felles bekjente: {{count}}"
     },
-    "named": {
-      "title": "Personlige invitasjoner",
-      "hint": "Navn på personer du kjenner, ett per linje. Hver lenke hilser personen med navn."
-    },
     "readyLine": "Har {{min}} egne forbindelser: {{count}} av {{total}}"
   },
   "account": {

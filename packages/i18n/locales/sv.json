@@ -1562,10 +1562,6 @@
       "hint": "Personer som dina bekanta känner. Bekräfta bara dem du känner personligen.",
       "mutual": "Gemensamma bekanta: {{count}}"
     },
-    "named": {
-      "title": "Personliga inbjudningar",
-      "hint": "Namn på personer du känner, ett per rad. Varje länk hälsar personen vid namn."
-    },
     "readyLine": "Har {{min}} egna kontakter: {{count}} av {{total}}"
   },
   "account": {

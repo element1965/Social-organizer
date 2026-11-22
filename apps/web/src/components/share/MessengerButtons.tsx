@@ -42,37 +42,3 @@ export function MessengerButtons({
     </div>
   );
 }
-
-/** The same two actions as compact icon buttons, for a row of a list. */
-export function MessengerIconButtons({
-  text,
-  urlFor,
-  label,
-  onOpen,
-}: {
-  text: string;
-  urlFor: (messenger: Messenger) => string;
-  /** Who the message is for; read out with the messenger's name */
-  label: string;
-  onOpen?: (messenger: Messenger) => void;
-}) {
-  return (
-    <>
-      {MESSENGERS.map((m) => (
-        <Button
-          key={m.id}
-          variant="icon"
-          size="md"
-          className="shrink-0"
-          aria-label={`${m.label}: ${label}`}
-          onClick={() => {
-            openMessengerShare(m.id, text, urlFor(m.id));
-            onOpen?.(m.id);
-          }}
-        >
-          <SocialIcon type={m.icon} className="h-5 w-5" />
-        </Button>
-      ))}
-    </>
-  );
-}
