@@ -202,8 +202,9 @@ export async function getGraphSlice(
   edges: Array<{ from: string; to: string }>;
   links: Array<{ from: string; to: string }>;
 }> {
-  const graph = await getGraph(db);
   const recipients = await findRecipientsViaBfs(db, userId, depth, 500, []);
+  // Read after the BFS, so the walk below uses the snapshot the BFS just ran on (cached, usually no wait)
+  const graph = await getGraph(db);
 
   const userIds = new Set<string>([userId]);
   const edges: Array<{ from: string; to: string }> = [];
@@ -216,6 +217,34 @@ export async function getGraphSlice(
     for (let i = 0; i < r.path.length - 1; i++) {
       edges.push({ from: r.path[i]!, to: r.path[i + 1]! });
     }
+  }
+
+  // Tree edges, deduplicated (undirected)
+  const edgeSet = new Set<string>();
+  const uniqueEdges: Array<{ from: string; to: string }> = [];
+  for (const e of edges) {
+    const [a, b] = [e.from, e.to].sort();
+    const key = `${a}\0${b}`;
+    if (!edgeSet.has(key)) {
+      edgeSet.add(key);
+      uniqueEdges.push({ from: a!, to: b! });
+    }
+  }
+
+  // Every other connection between two people in the slice, walked synchronously right after the BFS
+  // (before any await), bucketed by the farther ring of the pair so the cap keeps the nearer links.
+  const buckets: Array<Array<{ from: string; to: string }>> = [];
+  for (const from of userIds) {
+    const n = graph.find(from);
+    if (n === undefined) continue;
+    const fromDepth = depthMap.get(from) ?? 0;
+    graph.eachNeighbour(n, (m) => {
+      const to = graph.ids[m]!;
+      if (to <= from || !userIds.has(to)) return; // each pair once
+      if (edgeSet.has(`${from}\0${to}`)) return;
+      const rank = Math.max(fromDepth, depthMap.get(to) ?? 0);
+      (buckets[rank] ??= []).push({ from, to });
+    });
   }
 
   const users = await db.user.findMany({
@@ -236,35 +265,14 @@ export async function getGraphSlice(
     };
   });
 
-  // Deduplicate edges
-  const edgeSet = new Set<string>();
-  const uniqueEdges: Array<{ from: string; to: string }> = [];
-  for (const e of edges) {
-    const [a, b] = [e.from, e.to].sort();
-    const key = `${a}\0${b}`;
-    if (!edgeSet.has(key)) {
-      edgeSet.add(key);
-      uniqueEdges.push({ from: a!, to: b! });
-    }
-  }
-
+  // Only people the viewer gets in `nodes` may appear in a link; nearer buckets fill the cap first
+  const visible = new Set(nodes.map((node) => node.id));
   const links: Array<{ from: string; to: string }> = [];
-  const remaining = new Set(nodes.map((node) => node.id));
-  // userIds is in BFS order, so links touching nearer rings get the available slots first.
-  for (const from of userIds) {
-    if (links.length === MAX_SLICE_LINKS) break;
-    if (!remaining.delete(from)) continue;
-    const n = graph.find(from);
-    if (n === undefined) continue;
-    graph.eachNeighbour(n, (m) => {
-      if (links.length === MAX_SLICE_LINKS) return;
-      const to = graph.ids[m]!;
-      if (!remaining.has(to)) return;
-      const key = from < to ? `${from}\0${to}` : `${to}\0${from}`;
-      if (edgeSet.has(key)) return;
-      edgeSet.add(key);
-      links.push({ from, to });
-    });
+  for (const bucket of buckets) {
+    for (const l of bucket ?? []) {
+      if (links.length === MAX_SLICE_LINKS) break;
+      if (visible.has(l.from) && visible.has(l.to)) links.push(l);
+    }
   }
 
   return { nodes, edges: uniqueEdges, links };

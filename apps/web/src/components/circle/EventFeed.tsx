@@ -289,7 +289,7 @@ export function QuietFeed() {
   const { t } = useTranslation();
   return (
     <EmptyState
-      className="mt-4"
+      className="py-2"
       variant="plain"
       title={t('circle.feed.quietTitle')}
       body={t('circle.feed.quietBody')}

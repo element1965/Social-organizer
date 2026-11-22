@@ -114,12 +114,13 @@ function useLabelExclusion(active: boolean, direction: string) {
 function useBoxMetrics<T extends HTMLElement>(mounted = true) {
   const ref = useRef<T>(null);
   const [box, setBox] = useState({ height: 0, top: 0 });
-  useEffect(() => {
+  // Layout effect: the first paint already uses the measured sizes (the feed sheet fits its content at once)
+  useLayoutEffect(() => {
     if (!mounted) return;
     const el = ref.current;
     if (!el) return;
     const measure = () => {
-      const height = Math.round(el.getBoundingClientRect().height);
+      const height = Math.ceil(el.getBoundingClientRect().height);
       const top = el.offsetTop;
       setBox((previous) => previous.height === height && previous.top === top ? previous : { height, top });
     };
@@ -628,6 +629,8 @@ function PhoneCircle({
   // button (up to ~70% of the screen) instead of hiding the button under the tab bar.
   const baseSheetH = Math.max(280, Math.round(height * 0.42));
   let sheetH = baseSheetH;
+  // A short feed fits exactly: no scrollbar (a 1px rounding gap must not show one and rewrap the text)
+  const feedFits = !empty && feedContentH > 0 && feedContentH + SHEET_CHROME <= baseSheetH;
   if (feedContentH > 0) {
     const contentH = feedContentH + SHEET_CHROME;
     sheetH = empty
@@ -921,7 +924,7 @@ function PhoneCircle({
         >
           <span className="h-[5px] w-10 rounded-pill bg-line-strong" />
         </div>
-        <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4">
+        <div ref={scrollRef} className={cn('min-h-0 flex-1 overscroll-contain px-4 pb-4', feedFits ? 'overflow-y-hidden' : 'overflow-y-auto')}>
           <div ref={feedRef} className="flow-root">{feed}</div>
         </div>
       </section>
