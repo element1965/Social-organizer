@@ -132,7 +132,8 @@ type PathPerson = {
   photoUrl: string | null;
   connectionCount: number;
   remainingBudget: number | null;
-  /** A person beyond the viewer's visible rings: only their place in the chain is sent, never who they are */
+  contactable: boolean;
+  /** A person whose place in the chain is shown without identifying details */
   hidden?: boolean;
 };
 
@@ -174,21 +175,19 @@ export async function findPathBetweenUsers(
   const hidden = (index: number) => index > VISIBLE_RINGS && index < last;
   const users = await db.user.findMany({
     where: { id: { in: fullPath.filter((_, index) => !hidden(index)) } },
-    select: { id: true, name: true, photoUrl: true, remainingBudget: true },
+    select: { id: true, name: true, photoUrl: true, remainingBudget: true, deletedAt: true },
   });
   const userMap = new Map(users.map((u) => [u.id, u]));
-  const out: PathPerson[] = [];
-  fullPath.forEach((id, index) => {
-    if (hidden(index)) {
-      out.push({ id: '', name: '', photoUrl: null, connectionCount: 0, remainingBudget: null, hidden: true });
-      return;
+  return fullPath.map((id, index) => {
+    const user = hidden(index) ? undefined : userMap.get(id);
+    if (!user) {
+      // Keep the slot if a user disappeared after the graph was read.
+      return { id: '', name: '', photoUrl: null, connectionCount: 0, remainingBudget: null, contactable: false, hidden: true };
     }
-    const user = userMap.get(id);
-    if (!user) return;
+    const { deletedAt, ...person } = user;
     const n = graph.find(id);
-    out.push({ ...user, connectionCount: n === undefined ? 0 : graph.degree(n) });
+    return { ...person, connectionCount: n === undefined ? 0 : graph.degree(n), contactable: deletedAt === null };
   });
-  return out;
 }
 
 /**

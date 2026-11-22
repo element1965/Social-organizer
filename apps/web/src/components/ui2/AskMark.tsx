@@ -6,11 +6,12 @@ const CIRC = 88;
 
 type AskMarkProps = {
   progress: AskProgress;
+  active?: boolean;
   className?: string;
 };
 
-/** Red hand when the request is open. Quiet hand and a care ring while it is not. */
-export function AskMark({ progress, className }: AskMarkProps) {
+/** The ready hand uses a solid tile only in the Need section. */
+export function AskMark({ progress, active = false, className }: AskMarkProps) {
   const { ready, ratio } = askRing(progress);
   return (
     <span className={cn('relative grid h-[26px] w-[26px] place-items-center', className)}>
@@ -33,7 +34,9 @@ export function AskMark({ progress, className }: AskMarkProps) {
       <span
         className={cn(
           'grid h-[26px] w-[26px] place-items-center rounded-sm',
-          ready ? 'bg-sos text-sos-on' : 'text-ink-subtle',
+          ready && active && 'bg-sos text-sos-on',
+          ready && !active && 'bg-sos-soft text-sos',
+          !ready && 'text-ink-subtle',
         )}
       >
         <IconHand className={cn('h-4 w-4', !ready && 'opacity-60')} />

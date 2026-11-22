@@ -1267,6 +1267,23 @@ describe('Need access', () => {
 });
 
 describe('Need participant visibility', () => {
+  it('keeps a soft-deleted first handshake in the path but marks it as unavailable', async () => {
+    const viewer = 'path-viewer';
+    const { chain } = await seedNetwork(viewer, 1, 3);
+    const [acquaintance, intermediary, author] = chain as [string, string, string];
+    await db.user.update({ where: { id: acquaintance }, data: { deletedAt: new Date() } });
+
+    const { path } = await caller(viewer).connection.findPath({ targetUserId: author });
+
+    expect(path).toMatchObject([
+      { id: viewer, contactable: true },
+      { id: acquaintance, contactable: false },
+      { id: intermediary, contactable: true },
+      { id: author, contactable: true },
+    ]);
+    expect(path.every((person) => !Object.hasOwn(person, 'deletedAt'))).toBe(true);
+  });
+
   it('keeps the inviter’s active and withdrawn amounts out of public invite responses', async () => {
     const [inviter, author] = ['invite-private', 'invite-private-author'];
     await db.user.createMany({ data: [inviter, author].map((id) => ({ id, name: id })) });

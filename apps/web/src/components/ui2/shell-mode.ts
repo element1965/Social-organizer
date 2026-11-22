@@ -75,7 +75,8 @@ export function hidesTabBar(pathname: string): boolean {
 
 export type ShellSection ='circle' | 'people' | 'ask' | 'add' | 'profile';
 
-export function shellSection(pathname: string): ShellSection | null {
+export function shellSection(pathname: string, state?: { needOrigin?: string } | null): ShellSection | null {
+  if (pathname.startsWith('/collection/') && state?.needOrigin === 'ask') return 'ask';
   if (pathname === '/' || pathname.startsWith('/collection')) return 'circle';
   if (pathname.startsWith('/people') || pathname.startsWith('/person')) return 'people';
   if (pathname === '/ask') return 'ask';

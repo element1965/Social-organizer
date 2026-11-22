@@ -23,13 +23,13 @@ import { NETWORK_STALE_MS, useCircleNetwork } from '../components/circle/network
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
 /** List order. "brought" exists only for the 1st handshake, where we know whom each person added. */
-type SortKey = 'recent' | 'name' | 'intention' | 'brought';
+type SortKey = 'recent' | 'name' | 'brought';
 const SORT_KEY = 'so.people.sort';
 
 function readSort(): SortKey {
   try {
     const value = localStorage.getItem(SORT_KEY);
-    if (value === 'name' || value === 'intention' || value === 'brought') return value;
+    if (value === 'name' || value === 'brought') return value;
   } catch {
     // Storage blocked (private mode): fall back to the default order.
   }
@@ -52,8 +52,6 @@ type Entry = {
   value: string | null;
   photoUrl: string | null;
   at: number;
-  /** Their saved intention, for sorting (0 when not set). */
-  intention: number;
   /** People they added besides you (1st handshake only). */
   brought: number;
   /** Incoming request: opens the acquaintance sheet instead of the Person screen. */
@@ -152,7 +150,6 @@ export function PeoplePage() {
     const order: Record<SortKey, (a: Entry, b: Entry) => number> = {
       recent: (a, b) => b.at - a.at,
       name: byName,
-      intention: (a, b) => b.intention - a.intention || byName(a, b),
       brought: (a, b) => b.brought - a.brought || byName(a, b),
     };
     return (list: Entry[], key: SortKey) => [...list].sort(order[key]);
@@ -177,7 +174,6 @@ export function PeoplePage() {
           value: pledged(c.remainingBudget),
           photoUrl: c.photoUrl,
           at: new Date(c.createdAt).getTime(),
-          intention: c.remainingBudget ?? 0,
           brought: others,
         };
       }),
@@ -194,7 +190,6 @@ export function PeoplePage() {
       value: pledged(u.remainingBudget),
       photoUrl: u.photoUrl,
       at: new Date(u.connectedAt ?? u.createdAt ?? 0).getTime(),
-      intention: u.remainingBudget ?? 0,
       brought: 0,
     };
   };
@@ -301,7 +296,6 @@ export function PeoplePage() {
             value: null,
             photoUrl: p.fromUser.photoUrl,
             at: new Date(p.createdAt).getTime(),
-            intention: 0,
             brought: 0,
             pendingId: p.id,
           }))
@@ -366,7 +360,6 @@ export function PeoplePage() {
   const sortOptions: { value: SortKey; label: string }[] = [
     { value: 'recent', label: t('people.sortRecent') },
     { value: 'name', label: t('people.sortName') },
-    { value: 'intention', label: t('people.sortIntention') },
     ...(ring === 1 ? [{ value: 'brought' as const, label: t('people.sortBrought') }] : []),
   ];
 
