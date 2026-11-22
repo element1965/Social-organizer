@@ -294,6 +294,7 @@ html.dark,
   --lv-foot-fine: #7d8d87;
   /* the app's graph (graph-3d palette): its names and the wash behind the ball */
   --lv-node: #e7eeeb;
+  --lv-node-rgb: 231 238 235;
   --lv-wash: #1b332e;
   /* Translucent scene washes and Canvas paints that have no opaque CSS counterpart. */
   --lv-grow-shade-rgb: 5 10 9;
@@ -301,6 +302,16 @@ html.dark,
   --lv-canvas-rgb: 243 246 244;
   --lv-care-bright-rgb: 13 148 136;
   --lv-node-mid-rgb: 159 176 170;
+  --lv-node-far-rgb: 95 112 105;
+  --lv-node-dust-rgb: 77 93 88;
+  --lv-starling-rgb: 13 23 21;
+  --lv-starling-near-rgb: 211 230 225;
+  --lv-starling-far-rgb: 163 194 186;
+  --lv-starling-dim-rgb: 58 74 70;
+  --lv-thread-rgb: 217 239 234;
+  /* Fog channels are linear so the gradient matches the WebGL scene. */
+  --lv-fog-day-rgb: 107.1 127.5 135.15;
+  --lv-fog-night-rgb: 17.85 35.7 33.15;
   --lv-network-node-rgb: 207 222 217;
   --lv-joint-rgb: 173 190 255;
   color-scheme: dark;

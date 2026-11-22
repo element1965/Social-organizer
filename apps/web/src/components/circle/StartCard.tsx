@@ -1,8 +1,9 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ASK_MIN_DIRECT } from '@so/shared';
 import { cn } from '../../lib/utils';
 import { formatMoney } from '../ui2/format';
+import { IconChevron } from '../ui2/icons';
 import { IconCheck } from './icons';
 
 type StartCardProps = {
@@ -36,9 +37,7 @@ function Step({ n, title, sub, done }: { n: number; title: string; sub: string; 
 const ROW = 'grid min-h-[58px] grid-cols-[32px_1fr] items-center gap-3 [&+&]:border-t [&+&]:border-line-soft';
 
 /**
- * "You are first": a checklist for an empty circle. The first step is the
- * intention: the person meets the amount here, after seeing the Circle, not on a screen before it (audit A12).
- * It is what the network figure is made of, so the row says so and opens My intention.
+ * The first person starts an empty Circle. My intention follows as a separate action.
  */
 export function StartCard({ intention, direct, waiting }: StartCardProps) {
   const { t } = useTranslation();
@@ -50,13 +49,27 @@ export function StartCard({ intention, direct, waiting }: StartCardProps) {
       </p>
       <ol className="list-none p-0">
         <li className={ROW}>
+          <Link
+            to="/add"
+            className="so-focus col-span-2 grid min-h-[58px] grid-cols-[32px_1fr_auto] items-center gap-3 py-2 text-start hover:[&_b]:text-care"
+          >
+            <Step
+              n={1}
+              title={t(direct > 0 ? 'circle.start.step2' : 'nav.addPerson')}
+              sub={waiting ? t('circle.start.step2Waiting') : t('circle.start.step2Sub')}
+              done={direct > 0}
+            />
+            <IconChevron className="h-[18px] w-[18px] text-care" aria-hidden />
+          </Link>
+        </li>
+        <li className={ROW}>
           <button
             type="button"
             onClick={() => navigate('/me/stake')}
             className="so-focus col-span-2 grid grid-cols-[32px_1fr_auto] items-center gap-3 py-2 text-start"
           >
             <i className="grid h-8 w-8 place-items-center rounded-full bg-care-soft text-caption font-extrabold not-italic text-care" aria-hidden>
-              1
+              2
             </i>
             <span className="flex min-w-0 flex-col gap-0.5">
               <b className="text-body font-bold tracking-tight text-ink">
@@ -71,14 +84,6 @@ export function StartCard({ intention, direct, waiting }: StartCardProps) {
               {t(intention == null ? 'circle.start.setIntention' : 'collection.change')}
             </span>
           </button>
-        </li>
-        <li className={ROW}>
-          <Step
-            n={2}
-            title={t('circle.start.step2')}
-            sub={waiting ? t('circle.start.step2Waiting') : t('circle.start.step2Sub')}
-            done={direct > 0}
-          />
         </li>
         <li className={ROW}>
           <Step

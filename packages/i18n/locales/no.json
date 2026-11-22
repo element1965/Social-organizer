@@ -137,6 +137,8 @@
     "attention": "venter på deg"
   },
   "circle": {
+    "pauseMotion": "Sett bevegelsen på pause",
+    "resumeMotion": "Fortsett bevegelsen",
     "toSelf": "Tilbake til meg",
     "backToFeed": "Strøm",
     "openGraph": "Utvid grafen",
@@ -212,11 +214,11 @@
       "milestoneFirstNeedSub": "Meldingen går via håndtrykk",
       "milestoneFirstPart": "Første deltakelse",
       "milestoneFirstPartSub": "Den som meldte behovet, ser deltakelsen din",
-      "accepted": "har bekreftet bekjentskapet · dere er nå i hverandres krets",
+      "accepted": "har bekreftet bekjentskapet",
       "stack": {
         "waiting": "Venter på bekreftelse",
         "incoming": "Vil knytte kontakt",
-        "accepted": "Nå i kretsen din",
+        "accepted": "Bekjentskap bekreftet",
         "participating": "Du deltar",
         "closed": "Avsluttet",
         "names": "{{names}} og {{count}} til",
@@ -659,8 +661,9 @@
     "loadFailedTitle": "Kunne ikke åpne invitasjonen",
     "loadFailedText": "Det ser ut som det ikke er noen forbindelse. Lenken er lagret. Prøv igjen.",
     "waiting": "Venter på bekreftelse.",
-    "network_one": "{{n}} person i nettverket",
-    "network_other": "{{n}} personer i nettverket",
+    "network_one": "{{name}} har {{n}} direkte forbindelse",
+    "network_other": "{{name}} har {{n}} direkte forbindelser",
+    "invitation": "Invitasjon",
     "dead": {
       "deletedTitle": "Denne personen har slettet kontoen sin",
       "deletedText": "Invitasjonen virker ikke lenger. Be noen andre du kjenner om en lenke.",
@@ -719,6 +722,11 @@
         "join": "Bli med",
         "faq": "Spørsmål",
         "signin": "Logg inn"
+      },
+      "motion": {
+        "pause": "Pause animasjonen",
+        "play": "Spill av animasjonen",
+        "paused": "Animasjonen er pauset"
       },
       "hero": {
         "title": "Verden er mindre enn du tror.",
@@ -1330,6 +1338,8 @@
   "sos": {
     "headline": "{{name}} trenger bistand",
     "ofGoal": "av {{amount}}",
+    "reported": "{{amount}} oppgitt",
+    "needed": "{{amount}} trengs",
     "peopleLine": "Deltakere: {{count}} · penger overleveres direkte, ikke via tjenesten",
     "joinCircle": "{{name}} vises i kretsen din. Slik bekrefter du at dere kjenner hverandre personlig.",
     "joinCircleBody": "Ved å bli med bekrefter du at du kjenner denne personen personlig.",
@@ -1408,6 +1418,7 @@
     "largeYes": "Ja, send",
     "largeNo": "Endre beløp",
     "alreadyOpen": "Du har allerede et åpent behov av denne typen",
+    "bothTypesOpen": "Du har et åpent behov av hver type.",
     "serverLocked": "Du kan ikke melde om et behov ennå",
     "chatSheetTitle": "Hvordan oppretter jeg en chat?",
     "chatSheetLead": "En hvilken som helst meldingstjeneste du liker. Du trenger en invitasjonslenke til en gruppe.",

@@ -14,7 +14,7 @@ export type ParticipantRow = {
   /** null for a viewer who has not joined: they see who takes part, not how much (the server sends no amount). */
   amount: number | null;
   paid: boolean;
-  subtitle: string;
+  subtitle?: string;
   mine: boolean;
   joinedViaLink: boolean;
 };
@@ -85,7 +85,7 @@ export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove, 
               <span className="min-w-0 flex-1">
                 <button type="button" className="so-focus block max-w-full text-start" onClick={() => onPerson?.(person.userId)}>
                   <span className="block truncate text-body font-body text-ink">{person.name}</span>
-                  <span className="mt-0.5 block truncate text-label font-semibold text-ink-muted">{person.subtitle}</span>
+                  {person.subtitle && <span className="mt-0.5 block truncate text-label font-semibold text-ink-muted">{person.subtitle}</span>}
                 </button>
                 {person.joinedViaLink && onRemove ? (
                   <button type="button" className="so-focus mt-1 text-micro font-bold text-sos" onClick={() => onRemove(person)}>

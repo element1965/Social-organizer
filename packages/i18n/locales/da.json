@@ -137,6 +137,8 @@
     "attention": "venter på dig"
   },
   "circle": {
+    "pauseMotion": "Sæt bevægelsen på pause",
+    "resumeMotion": "Genoptag bevægelsen",
     "toSelf": "Tilbage til mig",
     "backToFeed": "Feed",
     "openGraph": "Fold grafen ud",
@@ -212,11 +214,11 @@
       "milestoneFirstNeedSub": "Beskeden går via håndtryk",
       "milestoneFirstPart": "Første deltagelse",
       "milestoneFirstPartSub": "Den, der har meldt behovet, kan se din deltagelse",
-      "accepted": "har bekræftet bekendtskabet · I er nu i hinandens kreds",
+      "accepted": "har bekræftet bekendtskabet",
       "stack": {
         "waiting": "Venter på bekræftelse",
         "incoming": "Vil i kontakt med dig",
-        "accepted": "Nu i din kreds",
+        "accepted": "Bekendtskaber bekræftet",
         "participating": "Du deltager",
         "closed": "Afsluttede",
         "names": "{{names}} og {{count}} til",
@@ -659,8 +661,9 @@
     "loadFailedTitle": "Kunne ikke åbne invitationen",
     "loadFailedText": "Det ligner, at der ikke er forbindelse. Linket er gemt. Prøv igen.",
     "waiting": "Venter på bekræftelse.",
-    "network_one": "{{n}} person i netværket",
-    "network_other": "{{n}} personer i netværket",
+    "network_one": "{{name}} har {{n}} direkte forbindelse",
+    "network_other": "{{name}} har {{n}} direkte forbindelser",
+    "invitation": "Invitation",
     "dead": {
       "deletedTitle": "Denne person har slettet sin konto",
       "deletedText": "Invitationen virker ikke længere. Bed en anden, du kender, om et link.",
@@ -719,6 +722,11 @@
         "join": "Vær med",
         "faq": "Spørgsmål",
         "signin": "Log ind"
+      },
+      "motion": {
+        "pause": "Pause animationen",
+        "play": "Afspil animationen",
+        "paused": "Animationen er på pause"
       },
       "hero": {
         "title": "Verden er mindre, end du tror.",
@@ -1330,6 +1338,8 @@
   "sos": {
     "headline": "{{name}} har brug for hjælp",
     "ofGoal": "af {{amount}}",
+    "reported": "{{amount}} angivet",
+    "needed": "{{amount}} nødvendigt",
     "peopleLine": "Deltagere: {{count}} · penge gives direkte videre, ikke gennem tjenesten",
     "joinCircle": "{{name}} bliver en del af din kreds. Sådan bekræfter du, at I kender hinanden personligt.",
     "joinCircleBody": "Ved at deltage bekræfter du, at du kender denne person personligt.",
@@ -1408,6 +1418,7 @@
     "largeYes": "Ja, send",
     "largeNo": "Ændr beløb",
     "alreadyOpen": "Du har allerede et åbent behov af denne type",
+    "bothTypesOpen": "Du har et åbent behov af hver type.",
     "serverLocked": "Du kan endnu ikke melde et behov",
     "chatSheetTitle": "Hvordan opretter jeg en chat?",
     "chatSheetLead": "En hvilken som helst messenger. Du skal bruge et invitationslink til en gruppe.",

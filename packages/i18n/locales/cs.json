@@ -137,6 +137,8 @@
     "attention": "čeká na vás"
   },
   "circle": {
+    "pauseMotion": "Pozastavit pohyb",
+    "resumeMotion": "Obnovit pohyb",
     "toSelf": "Zpět ke mně",
     "backToFeed": "Přehled",
     "openGraph": "Rozbalit graf",
@@ -218,11 +220,11 @@
       "milestoneFirstNeedSub": "Oznámení putuje po podáních ruky",
       "milestoneFirstPart": "První účast",
       "milestoneFirstPartSub": "Autor potřeby vidí vaši účast",
-      "accepted": "známost potvrzena · jste navzájem ve svých kruzích",
+      "accepted": "známost potvrzena",
       "stack": {
         "waiting": "Čekáme na potvrzení",
         "incoming": "Chtějí se propojit",
-        "accepted": "Nově ve vašem kruhu",
+        "accepted": "Známosti potvrzeny",
         "participating": "Účastníte se",
         "closed": "Uzavřené",
         "names": "{{names}} a další {{count}}",
@@ -665,10 +667,11 @@
     "loadFailedTitle": "Pozvánku se nepodařilo otevřít",
     "loadFailedText": "Vypadá to, že nejste připojeni. Odkaz je uložený, zkuste to znovu.",
     "waiting": "Čekáme na potvrzení.",
-    "network_few": "{{n}} lidé v síti",
-    "network_many": "{{n}} člověka v síti",
-    "network_one": "{{n}} člověk v síti",
-    "network_other": "{{n}} lidí v síti",
+    "network_few": "{{name}} má {{n}} přímá spojení",
+    "network_many": "{{name}} má {{n}} přímých spojení",
+    "network_one": "{{name}} má {{n}} přímé spojení",
+    "network_other": "{{name}} má {{n}} přímého spojení",
+    "invitation": "Pozvánka",
     "dead": {
       "deletedTitle": "Tento člověk smazal účet",
       "deletedText": "Pozvánka už nefunguje. Požádejte o odkaz někoho jiného ze známých.",
@@ -727,6 +730,11 @@
         "join": "Zapojte se",
         "faq": "Otázky",
         "signin": "Přihlásit se"
+      },
+      "motion": {
+        "pause": "Pozastavit animaci",
+        "play": "Přehrát animaci",
+        "paused": "Animace je pozastavená"
       },
       "hero": {
         "title": "Svět je menší, než se zdá.",
@@ -1348,6 +1356,8 @@
   "sos": {
     "headline": "{{name}} potřebuje pomoc",
     "ofGoal": "z {{amount}}",
+    "reported": "Uvedeno {{amount}}",
+    "needed": "Potřeba {{amount}}",
     "peopleLine": "Účastníci: {{count}} · peníze se předávají přímo, ne přes službu",
     "joinCircle": "{{name}} se objeví ve vašem okruhu. Tím potvrdíte, že se znáte osobně.",
     "joinCircleBody": "Připojením potvrzujete, že tohoto člověka znáte osobně.",
@@ -1430,6 +1440,7 @@
     "largeYes": "Ano, odeslat",
     "largeNo": "Změnit částku",
     "alreadyOpen": "Otevřenou potřebu tohoto typu už máte",
+    "bothTypesOpen": "Máte otevřenou potřebu každého typu.",
     "serverLocked": "Potřebu zatím oznámit nelze",
     "chatSheetTitle": "Jak vytvořím chat?",
     "chatSheetLead": "Libovolný messenger, který vám vyhovuje. Potřebujete odkaz s pozvánkou do skupiny.",

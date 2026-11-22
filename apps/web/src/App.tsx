@@ -16,7 +16,6 @@ import { AppLoader } from './components/ui2/AppLoader';
 import { ProfileRedirect } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
 import { afterSignInPath, safeInviteToken, safeMasked, safePath, setPendingInvite } from './components/onboarding/flow';
-import { LandingPage } from './pages/LandingPage';
 import { GetRedirect, RedirectHome, SlugRedirect } from './components/site/redirects';
 import { HomeGate, OfflineRouteBoundary, PeopleGate, PersonGate } from './components/offline/gates';
 import { onRecovery } from './lib/connectivity';
@@ -26,7 +25,7 @@ import { applyLinkLanguage } from './lib/i18n';
 import { rememberCampaign } from './lib/campaign';
 import { isCircleListKey } from './lib/circleLists';
 
-/** Named-export pages, each its own chunk. The guest landing stays in the entry chunk. */
+/** Named-export pages, each its own chunk. */
 function lazyPage<M, K extends keyof M>(load: () => Promise<M>, name: K) {
   return lazy(() =>
     load()
@@ -84,6 +83,28 @@ function PrefetchCircle() {
   }, [isAuthenticated]);
   return null;
 }
+
+function hasStoredSession(): boolean {
+  try {
+    return !!localStorage.getItem('accessToken');
+  } catch {
+    return false;
+  }
+}
+
+/** Start the guest home alongside the locale on a direct visit. */
+const loadLanding = () => import('./pages/LandingPage');
+const directGuestHome = window.location.pathname === WEB_ROUTES.HOME
+  && !Capacitor.isNativePlatform()
+  && !hasStoredSession()
+  && !safeInviteToken(new URLSearchParams(window.location.search).get('invite'));
+let landingPrefetch = directGuestHome ? loadLanding() : null;
+void landingPrefetch?.catch(() => undefined);
+const LandingPage = lazyPage(() => {
+  const pending = landingPrefetch;
+  landingPrefetch = null;
+  return pending ?? loadLanding();
+}, 'LandingPage');
 
 const loadCircle = () => import('./pages/CirclePage');
 const AppShell = lazyPage(() => import('./components/ui2/AppShell'), 'AppShell');
@@ -239,7 +260,13 @@ function HomeIndex() {
     return <Navigate to={redirectParam ? `/login?redirect=${encodeURIComponent(redirectParam)}` : '/login'} replace />;
   }
 
-  if (!isAuthenticated) return <LandingPage />;
+  if (!isAuthenticated) {
+    return (
+      <Suspense fallback={<RouteFallback full />}>
+        <LandingPage />
+      </Suspense>
+    );
+  }
   return (
     <HomeGate>
       <CirclePage />

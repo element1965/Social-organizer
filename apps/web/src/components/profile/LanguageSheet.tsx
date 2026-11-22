@@ -60,7 +60,7 @@ export function LanguageSheet({ open, onClose }: { open: boolean; onClose: () =>
 
   return (
     <Sheet open={open} onClose={onClose} title={t('settings.language')} bodyClassName="max-h-[60dvh]">
-      <div ref={listRef} className="grid grid-cols-2 gap-1 pb-1">
+      <div ref={listRef} className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-1 pb-1">
         {codes.map((code) => {
           const selected = code === current;
           return (
@@ -70,12 +70,12 @@ export function LanguageSheet({ open, onClose }: { open: boolean; onClose: () =>
               lang={code}
               aria-pressed={selected}
               className={cn(
-                'so-focus flex min-h-12 items-center gap-2 rounded-md px-3 text-start text-body transition-colors',
+                'so-focus flex min-h-12 items-center gap-2 rounded-md px-3 py-1.5 text-start text-body transition-colors',
                 selected ? 'bg-care-soft font-bold text-care' : 'font-semibold text-ink hover:bg-surface-2',
               )}
               onClick={() => pick(code)}
             >
-              <span dir="auto" className="min-w-0 flex-1 truncate">
+              <span dir="auto" className="min-w-0 flex-1 [overflow-wrap:anywhere]">
                 {languageNames[code]}
               </span>
               {selected ? (

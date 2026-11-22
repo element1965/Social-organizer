@@ -14,13 +14,12 @@ import { QueryState } from '../components/profile/QueryState';
 import { ActionError } from '../components/errors/ActionError';
 import { STAKE_PRESETS } from '../components/profile/constants';
 import { useSmartBack } from '../components/profile/useSmartBack';
+import { parseWhole } from '../lib/wholeAmount';
 
 function parseStake(raw: string): number | null {
-  const cleaned = raw.trim().replace(',', '.');
-  if (!/^\d+$/.test(cleaned)) return null;
-  const amount = Number(cleaned);
+  const amount = parseWhole(raw);
   // The intention rule (packages/shared): 0 is "I can't take part right now", otherwise at least the Participation minimum
-  if (!Number.isInteger(amount) || amount < MIN_INTENTION_AMOUNT) return null;
+  if (amount == null || amount < MIN_INTENTION_AMOUNT) return null;
   if (amount > 0 && amount < MIN_OBLIGATION_AMOUNT) return null;
   return amount;
 }

@@ -137,6 +137,8 @@
     "attention": "sizi bekliyor"
   },
   "circle": {
+    "pauseMotion": "Hareketi duraklat",
+    "resumeMotion": "Hareketi sürdür",
     "toSelf": "Bana dön",
     "backToFeed": "Akış",
     "openGraph": "Grafiği genişlet",
@@ -212,11 +214,11 @@
       "milestoneFirstNeedSub": "Bildirim tokalaşmalarla ilerliyor",
       "milestoneFirstPart": "İlk katılım",
       "milestoneFirstPartSub": "İhtiyacı bildiren kişi katılımınızı görüyor",
-      "accepted": "tanışıklığı onayladı · artık birbirinizin çevresindesiniz",
+      "accepted": "tanışıklığı onayladı",
       "stack": {
         "waiting": "Onay bekleniyor",
         "incoming": "Tanışmak istiyorlar",
-        "accepted": "Artık çevrenizde",
+        "accepted": "Tanışıklıklar onaylandı",
         "participating": "Katılıyorsunuz",
         "closed": "Tamamlananlar",
         "names": "{{names}} ve {{count}} kişi daha",
@@ -659,8 +661,9 @@
     "loadFailedTitle": "Davet açılamadı",
     "loadFailedText": "Bağlantı yok gibi görünüyor. Bağlantı kaydedildi; lütfen yeniden deneyin.",
     "waiting": "Onay bekleniyor.",
-    "network_one": "Ağda {{n}} kişi",
-    "network_other": "Ağda {{n}} kişi",
+    "network_one": "{{name}} adlı kişinin {{n}} doğrudan bağlantısı var",
+    "network_other": "{{name}} adlı kişinin {{n}} doğrudan bağlantısı var",
+    "invitation": "Davet",
     "dead": {
       "deletedTitle": "Bu kişi hesabını sildi",
       "deletedText": "Davet artık çalışmıyor. Tanıdığın başka birinden bağlantı iste.",
@@ -719,6 +722,11 @@
         "join": "Dahil olun",
         "faq": "Sorular",
         "signin": "Giriş yap"
+      },
+      "motion": {
+        "pause": "Animasyonu duraklat",
+        "play": "Animasyonu oynat",
+        "paused": "Animasyon duraklatıldı"
       },
       "hero": {
         "title": "Dünya sandığınızdan daha küçük.",
@@ -1330,6 +1338,8 @@
   "sos": {
     "headline": "{{name}} desteğe ihtiyaç duyuyor",
     "ofGoal": "{{amount}} içinden",
+    "reported": "{{amount}} belirtildi",
+    "needed": "{{amount}} gerekli",
     "peopleLine": "Katılımcılar: {{count}} · para doğrudan devredilir, hizmet üzerinden değil",
     "joinCircle": "{{name}} çevrenizde görünecek. Böylece birbirinizi şahsen tanıdığınızı onaylarsınız.",
     "joinCircleBody": "Katılarak bu kişiyi kişisel olarak tanıdığınızı onaylarsınız.",
@@ -1408,6 +1418,7 @@
     "largeYes": "Evet, gönder",
     "largeNo": "Tutarı değiştir",
     "alreadyOpen": "Bu türde açık bir ihtiyacınız zaten var",
+    "bothTypesOpen": "Her türden bir açık ihtiyacınız var.",
     "serverLocked": "İhtiyaç henüz bildirilemiyor",
     "chatSheetTitle": "Sohbeti nasıl oluştururum?",
     "chatSheetLead": "Dilediğiniz mesajlaşma. Bir gruba davet bağlantısı gerekir.",

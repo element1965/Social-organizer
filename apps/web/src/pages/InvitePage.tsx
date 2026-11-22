@@ -165,7 +165,9 @@ export function InvitePage() {
       firstRun={firstRun || !me.data.onboardingCompleted}
       cameThroughInvite={cameThroughInvite}
       src={src}
-      hero={(showInstruction) => <InviteHero {...heroProps} signedIn showInstruction={showInstruction} />}
+      hero={(showInstruction, pending) => (
+        <InviteHero {...heroProps} signedIn showInstruction={showInstruction} pending={pending} />
+      )}
     />
   );
 }
@@ -178,6 +180,7 @@ function InviteHero({
   addressee = null,
   signedIn = false,
   showInstruction = true,
+  pending = true,
 }: {
   name: string;
   networkCount: number;
@@ -189,6 +192,8 @@ function InviteHero({
   /** Signed-in variant: no "sign in" in the sentence. */
   signedIn?: boolean;
   showInstruction?: boolean;
+  /** The acquaintance is not confirmed yet: the line is an invitation, not a handshake. */
+  pending?: boolean;
 }) {
   const { t } = useTranslation();
   const expiresAt = inPersonUntil ? new Date(inPersonUntil).getTime() : 0;
@@ -213,10 +218,15 @@ function InviteHero({
             {networkCount > 20 && <circle cx="55" cy="49" r="48" className="stroke-node-2/25" />}
           </svg>
         )}
-        <PathFigure names={[name, t('common.you')]} scene />
+        <PathFigure
+          names={[name, t('common.you')]}
+          scene
+          pending={pending}
+          lineLabel={pending ? t('invite.invitation') : undefined}
+        />
         {networkCount > 0 && (
           <p className="relative mt-2 text-label font-semibold tabular-nums text-node-2">
-            {t('invite.network', { count: networkCount, n: num(networkCount) })}
+            {t('invite.network', { count: networkCount, n: num(networkCount), name: firstName(name) })}
           </p>
         )}
       </div>
@@ -263,7 +273,7 @@ function AcceptView({
   cameThroughInvite: boolean;
   /** Which way the link travelled, sent with the request (funnel only) */
   src?: InviteSrcParam;
-  hero: (showInstruction: boolean) => React.ReactNode;
+  hero: (showInstruction: boolean, pending: boolean) => React.ReactNode;
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -416,7 +426,7 @@ function AcceptView({
 
   return (
     <OnboardingFrame top={<BrandLine />} corner={<LanguageCorner />} centre foot={foot}>
-      {hero(!accept.isSuccess)}
+      {hero(!accept.isSuccess, !connected)}
     </OnboardingFrame>
   );
 }

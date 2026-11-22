@@ -67,7 +67,8 @@ export function initGlide(beats: HTMLElement[], main: HTMLElement, root: HTMLEle
     return best;
   };
 
-  const setScroll = (y: number) => window.scrollTo(0, Math.max(0, Math.min(maxY(), y)));
+  // The browser clamps the destination. Reading scrollHeight here forces layout on every glide frame.
+  const setScroll = (y: number) => window.scrollTo(0, y);
   const stop = () => {
     if (anim) {
       cancelAnimationFrame(anim);
@@ -85,7 +86,8 @@ export function initGlide(beats: HTMLElement[], main: HTMLElement, root: HTMLEle
   /** Glides to `to`; `speed` (px/ms) is the speed it starts with, so a fling flows on instead of jumping. */
   const glideTo = (to: number, speed = 0) => {
     const y0 = scrollY;
-    const dy = Math.max(0, Math.min(maxY(), to)) - y0;
+    const destination = Math.max(0, Math.min(maxY(), to));
+    const dy = destination - y0;
     if (Math.abs(dy) < 1) {
       finish();
       return;
@@ -103,7 +105,7 @@ export function initGlide(beats: HTMLElement[], main: HTMLElement, root: HTMLEle
       dur = Math.min(950, 380 + Math.abs(dy) * 0.6);
       curve = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
     }
-    anchorY = Math.max(0, Math.min(maxY(), to));
+    anchorY = destination;
     const step = (now: number) => {
       const k = Math.min(1, (now - t0) / dur);
       setScroll(y0 + dy * curve(k));

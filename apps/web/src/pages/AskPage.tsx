@@ -13,7 +13,7 @@ import { Sheet } from '../components/ui2/Sheet';
 import { useShellMode } from '../components/ui2/shell-mode';
 import { formatMoney } from '../components/ui2/format';
 import { Card } from '../components/ui2/Card';
-import { trpc } from '../lib/trpc';
+import { currentAccount, trpc } from '../lib/trpc';
 import { actionErrorKey, errorKind, invalidFields } from '../lib/errors';
 import { useNetworkFigure } from '../hooks/useNetworkFigure';
 import { useAskAccess } from '../hooks/useAskAccess';
@@ -22,15 +22,16 @@ import { useOffline } from '../lib/connectivity';
 import { OfflineHint } from '../components/offline/OfflineNotice';
 import { PathToRequestSheet } from '../components/circle/PathToRequest';
 import { useNeedCounts } from '../components/profile/useNeedCounts';
+import { useAuth } from '../hooks/useAuth';
+import { clearAskDraft, readAskDraft, writeAskDraft, type AskDraft, type AskType } from '../lib/askDraft';
 
 const APPS = ['appTelegram', 'appWhatsApp', 'appSignal', 'appViber', 'appDiscord', 'appOther'] as const;
 
 
-type AskType = 'EMERGENCY' | 'REGULAR';
-
 export function AskPage() {
   const { t } = useTranslation();
   const desktop = useShellMode() === 'sidebar';
+  const userId = useAuth((s) => s.userId);
 
   return (
     <Screen
@@ -45,7 +46,7 @@ export function AskPage() {
           <NeedsLink />
         </div>
       )}
-      <AskBody />
+      <AskBody key={userId} userId={userId} />
     </Screen>
   );
 }
@@ -67,7 +68,7 @@ function NeedsLink() {
   );
 }
 
-function AskBody() {
+function AskBody({ userId }: { userId: string | null }) {
   const { t, i18n } = useTranslation();
   const offline = useOffline();
   const navigate = useNavigate();
@@ -77,9 +78,15 @@ function AskBody() {
   const { figure, fresh } = useNetworkFigure();
   const mine = trpc.collection.myActive.useQuery(undefined, { enabled: access.data?.allowed === true });
   const create = trpc.collection.create.useMutation({
+    trpc: { context: { account: userId ?? '' } },
     meta: { notifyOnError: false },
-    onSuccess: (created) => {
+    onSuccess: (created, submitted) => {
+      if (useAuth.getState().userId !== userId) return;
       utils.collection.myActive.invalidate();
+      const saved = readAskDraft(userId);
+      if (saved.type === submitted.type && parseWhole(saved.amount) === submitted.amount && saved.chat.trim() === submitted.chatLink) {
+        clearAskDraft(userId);
+      }
       // Reuse the Circle entry when the Need tab was opened from it. Otherwise replace
       // the form with Circle before opening the Need, so Back always lands there.
       const fromCircle = (location.state as { fromCircle?: boolean } | null)?.fromCircle === true;
@@ -88,9 +95,8 @@ function AskBody() {
     },
   });
 
-  const [type, setType] = useState<AskType>('EMERGENCY');
-  const [amount, setAmount] = useState('');
-  const [chat, setChat] = useState('');
+  const [draft, setDraft] = useState(() => readAskDraft(userId));
+  const { amount, chat } = draft;
   const [errors, setErrors] = useState<{ amount?: string; chat?: string; form?: string }>({});
   const [howOpen, setHowOpen] = useState(false);
   const [largeOpen, setLargeOpen] = useState(false);
@@ -118,6 +124,18 @@ function AskBody() {
   }
 
   const whole = parseWhole(amount);
+  const openNeeds = mine.data ?? [];
+  const hasOnce = openNeeds.some((need) => need.type === 'EMERGENCY');
+  const hasRecurring = openNeeds.some((need) => need.type === 'REGULAR');
+  const type: AskType = hasOnce && !hasRecurring ? 'REGULAR'
+    : hasRecurring && !hasOnce ? 'EMERGENCY'
+    : draft.type;
+  const canPrepareNeed = !!mine.data && !(hasOnce && hasRecurring);
+  const changeDraft = (change: Partial<AskDraft>) => {
+    const next = { ...draft, type, ...change };
+    setDraft(next);
+    writeAskDraft(userId, next);
+  };
   // The network figure is the only source of the people and the sum shown here: the query shared with the Circle,
   // the Profile and My intention (everyone up to the 6th handshake, the people a Need can reach in waves, and their
   // declared participation). askAccess is read only for the gate. Without a figure the hint and the line wait.
@@ -143,7 +161,8 @@ function AskBody() {
   };
 
   const send = () => {
-    if (whole == null) return;
+    if (whole == null || !canPrepareNeed || create.isPending || offline || currentAccount() !== userId) return;
+    changeDraft({ type });
     setErrors({});
     create.mutate(
       // No free text about the situation: people talk it over in the chat, outside the app
@@ -152,8 +171,10 @@ function AskBody() {
         onError: (error) => {
           const message = error.message;
           if (message.includes('ASK_LOCKED')) setErrors({ form: t('ask.serverLocked') });
-          else if (message.includes('already have an active')) setErrors({ form: t('ask.alreadyOpen') });
-          else if (message.includes('https://') || invalidFields(error)?.includes('chatLink')) setErrors({ chat: t('ask.chatInvalid') });
+          else if (message.includes('already have an active')) {
+            void mine.refetch();
+            setErrors({ form: t('ask.alreadyOpen') });
+          } else if (message.includes('https://') || invalidFields(error)?.includes('chatLink')) setErrors({ chat: t('ask.chatInvalid') });
           else setErrors({ form: t(actionErrorKey(errorKind(error))) });
         },
       },
@@ -162,6 +183,7 @@ function AskBody() {
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
+    if (!canPrepareNeed) return;
     const next = validate();
     if (next.amount || next.chat) {
       setErrors(next);
@@ -184,18 +206,27 @@ function AskBody() {
   return (
     <>
       <div className="mt-4 flex flex-col gap-3">
-        {(mine.data ?? []).map((col) => (
+        {openNeeds.map((col) => (
           <OwnCollection key={col.id} col={col} />
         ))}
       </div>
-      <form onSubmit={onSubmit} className="mt-3 rounded-xl bg-surface p-4 shadow-card" noValidate>
+      {!mine.data && (mine.isError ? (
+        <Card className="mt-3">
+          <p className="text-body-s font-semibold">{t('common.error')}</p>
+          <Button className="mt-3 w-full" onClick={() => mine.refetch()}>{t('common.retry')}</Button>
+        </Card>
+      ) : (
+        <p className="mt-3 text-body-s font-semibold text-ink-muted">{t('common.loading')}</p>
+      ))}
+      {mine.data && !canPrepareNeed && <p className="mt-3 text-body-s font-semibold text-ink-muted">{t('ask.bothTypesOpen')}</p>}
+      {canPrepareNeed && <form onSubmit={onSubmit} className="mt-3 rounded-xl bg-surface p-4 shadow-card" noValidate>
         <div ref={amountRef}>
           <Input
             variant="money"
             label={t('ask.amountLabel')}
             value={amount}
             onValueChange={(value) => {
-              setAmount(value);
+              changeDraft({ amount: value });
               setErrors((prev) => ({ ...prev, amount: undefined, form: undefined }));
             }}
             error={errors.amount}
@@ -206,10 +237,13 @@ function AskBody() {
           className="mt-4"
           label={t('ask.typeLabel')}
           value={type}
-          onChange={setType}
+          onChange={(type) => {
+            changeDraft({ type });
+            setErrors((prev) => ({ ...prev, form: undefined }));
+          }}
           options={[
-            { value: 'EMERGENCY', label: t('ask.once') },
-            { value: 'REGULAR', label: t('ask.every28') },
+            { value: 'EMERGENCY', label: t('ask.once'), disabled: hasOnce },
+            { value: 'REGULAR', label: t('ask.every28'), disabled: hasRecurring },
           ]}
         />
         <p className="mt-2 text-label font-semibold text-ink-muted">
@@ -228,7 +262,7 @@ function AskBody() {
             spellCheck={false}
             error={errors.chat}
             onChange={(event) => {
-              setChat(event.target.value);
+              changeDraft({ chat: event.target.value });
               setErrors((prev) => ({ ...prev, chat: undefined, form: undefined }));
             }}
           />
@@ -263,10 +297,10 @@ function AskBody() {
           {t('ask.submit')}
         </Button>
         {offline ? <OfflineHint /> : null}
-      </form>
+      </form>}
 
       <Sheet
-        open={largeOpen}
+        open={largeOpen && canPrepareNeed}
         onClose={() => setLargeOpen(false)}
         title={t('ask.largeTitle', { amount: formatMoney(whole ?? 0) })}
         footer={
@@ -304,7 +338,7 @@ function AskBody() {
   );
 }
 
-function OwnCollection({ col }: { col: { id: string; amount: number | null; currentAmount: number; participantCount?: number; _count?: { obligations: number }; status: string; blockReason: string | null } }) {
+function OwnCollection({ col }: { col: { id: string; type: AskType; amount: number | null; currentAmount: number; participantCount?: number; _count?: { obligations: number }; status: string; blockReason: string | null } }) {
   const { t } = useTranslation();
   const goal = col.amount ?? 0;
   const ratio = goal > 0 ? Math.min(1, col.currentAmount / goal) : 0;
@@ -321,7 +355,9 @@ function OwnCollection({ col }: { col: { id: string; amount: number | null; curr
       <Ring ratio={goal > 0 ? ratio : null} />
       <span className="min-w-0 flex-1">
         <span className="block truncate text-body-s font-extrabold tracking-tight">{title}</span>
-        <span className="mt-0.5 block truncate text-label font-semibold text-ink-muted">{meta}</span>
+        <span className="mt-0.5 block text-label font-semibold text-ink-muted">
+          {t(col.type === 'REGULAR' ? 'ask.every28' : 'ask.once')} · {meta}
+        </span>
       </span>
       <IconChevron className="h-[18px] w-[18px] shrink-0 text-ink-subtle" />
     </Link>

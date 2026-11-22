@@ -23,7 +23,8 @@ const COMPARE_ROWS = 6;
  * "How it works" (`/how`, screens.md §17), in the order things happen: the network is built first (a new person,
  * then how far it reaches), a Need travels inside it, and last the closest real example, China's online mutual aid
  * platforms, side by side with Social Organizer. One markup for 1280 and 390.
- * Each figure plays its sequence when half of it is on screen and again on every return; sections fade in once.
+ * Each figure plays its sequence when half of it is on screen and again on every return, until the reader
+ * picks a step. That first choice stops the sequence. Sections fade in once.
  * Under prefers-reduced-motion figures show their final state.
  */
 export function HowPage() {
@@ -40,19 +41,19 @@ export function HowPage() {
 
   /* 2. handshake rings */
   const [depth, setDepth] = useState<OrbitDepth>(0);
-  const orbitRef = usePlayOnEnter<OrbitDepth>(setDepth, [0, 1, 2], 900);
+  const orbit = usePlayOnEnter<OrbitDepth>(setDepth, [0, 1, 2], 900);
   const rings = arr('how.orbit.rings');
   const orbitSays = arr('how.orbit.says');
   const reach = RING_SIZES.slice(0, depth + 1).reduce((a, n) => a + n, 0) * SHARE;
 
   /* 3. path through acquaintances */
   const [chain, setChain] = useState<ChainStep>(0);
-  const chainRef = usePlayOnEnter<ChainStep>(setChain, [0, 1, 2], 1000);
+  const chainPlay = usePlayOnEnter<ChainStep>(setChain, [0, 1, 2], 1000);
   const chainSays = arr('how.chain.says');
 
   /* 1. a new person */
   const [join, setJoin] = useState<JoinStep>(0);
-  const joinRef = usePlayOnEnter<JoinStep>(setJoin, [0, 1], 1400);
+  const joinPlay = usePlayOnEnter<JoinStep>(setJoin, [0, 1], 1400);
   const joinSays = arr('how.join.says');
   const rows = Array.from({ length: COMPARE_ROWS }, (_v, i) => arr(`how.compare.rows.${i}`));
 
@@ -82,8 +83,8 @@ export function HowPage() {
             <Trans defaults={joinSays[join] ?? ''} components={B} />
           </p>
         </div>
-        <div ref={joinRef} className="site-fig chain">
-          <JoinFigure step={join} labels={labels.join} onSelect={setJoin} />
+        <div ref={joinPlay.ref} className="site-fig chain">
+          <JoinFigure step={join} labels={labels.join} onSelect={joinPlay.choose} />
         </div>
       </Reveal>
 
@@ -95,7 +96,7 @@ export function HowPage() {
           </p>
           <div className="site-chips" role="group" aria-label={t('how.orbit.ringsAria')}>
             {rings.map((r, k) => (
-              <button key={r} type="button" aria-pressed={k === depth} onClick={() => setDepth(k as OrbitDepth)}>
+              <button key={r} type="button" aria-pressed={k === depth} onClick={() => orbit.choose(k as OrbitDepth)}>
                 {r}
               </button>
             ))}
@@ -108,7 +109,7 @@ export function HowPage() {
             <span>{t('how.orbit.sumNote', { share: formatIsolatedMoney(SHARE) })}</span>
           </div>
         </div>
-        <div ref={orbitRef} className="site-fig orbit">
+        <div ref={orbit.ref} className="site-fig orbit">
           <OrbitFigure depth={depth} labels={labels.orbit} />
         </div>
       </Reveal>
@@ -121,8 +122,8 @@ export function HowPage() {
             <Trans defaults={chainSays[chain] ?? ''} components={B} />
           </p>
         </div>
-        <div ref={chainRef} className="site-fig chain">
-          <ChainFigure step={chain} labels={labels.chain} onSelect={setChain} />
+        <div ref={chainPlay.ref} className="site-fig chain">
+          <ChainFigure step={chain} labels={labels.chain} onSelect={chainPlay.choose} />
         </div>
       </Reveal>
 

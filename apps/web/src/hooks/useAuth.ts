@@ -1,4 +1,5 @@
 import { clearCampaign } from '../lib/campaign';
+import { clearAskDraft } from '../lib/askDraft';
 import { create } from 'zustand';
 import { clearLocal, setActiveUser } from '@so/gun-backup';
 
@@ -86,6 +87,10 @@ export const useAuth = create<AuthState>((set) => ({
     set({ accessToken, refreshToken });
   },
 }));
+
+useAuth.subscribe((state, previous) => {
+  if (state.userId !== previous.userId) clearAskDraft(previous.userId);
+});
 
 /** The account id inside a token's payload (`sub`, as the API signs it), read locally without verification. */
 function tokenSubject(token: string): string | null {

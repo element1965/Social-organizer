@@ -48,7 +48,8 @@ html.lv-page body { background-color: rgb(var(--so-scene)); }
 .lv .nav { position: fixed; z-index: 20; top: 0; inset-inline: 0; transition: background .3s; }
 .lv .nav.solid { background: rgb(var(--lv-scene-rgb) / calc(189 / 255)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .lv .nav .wrap { display: flex; align-items: center; gap: 28px; height: 72px; }
-.lv .brand { display: flex; align-items: center; gap: 12px; font-weight: 600; text-decoration: none; letter-spacing: -.01em; white-space: nowrap; }
+.lv .brand { display: flex; align-items: center; gap: 12px; min-width: 44px; min-height: 44px; font-weight: 600; text-decoration: none; letter-spacing: -.01em; white-space: nowrap; }
+.lv .brand span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .lv .brand img { height: 22px; width: auto; }
 .lv .nav nav { display: flex; gap: 24px; margin-inline-start: auto; font-size: 15px; }
 .lv .nav nav a { text-decoration: none; white-space: nowrap; opacity: .78; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .25s, opacity .2s; padding-bottom: 2px; }
@@ -57,12 +58,18 @@ html.lv-page body { background-color: rgb(var(--so-scene)); }
 .lv .nav .btn { padding: 11px 18px; font-size: 14px; white-space: nowrap; }
 .lv .nav .signin { text-decoration: none; font-size: 15px; opacity: .85; white-space: nowrap; }
 .lv .nav .signin:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
-.lv .site-lang { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; min-width: 44px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1px rgb(var(--lv-white-rgb) / calc(77 / 255)); color: rgb(var(--lv-white-rgb) / calc(219 / 255)); font: 700 13px/1 var(--sans); text-transform: uppercase; cursor: pointer; transition: color .2s, box-shadow .2s; }
+.lv .site-lang { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 44px; min-width: 44px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1px rgb(var(--lv-white-rgb) / calc(77 / 255)); color: rgb(var(--lv-white-rgb) / calc(219 / 255)); font: 700 13px/1 var(--sans); text-transform: uppercase; cursor: pointer; transition: color .2s, box-shadow .2s; }
+.lv .motion { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex: none; padding: 0; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1px rgb(var(--lv-white-rgb) / calc(77 / 255)); color: rgb(var(--lv-white-rgb) / calc(219 / 255)); cursor: pointer; }
+.lv .motion:hover { color: var(--lv-white); box-shadow: inset 0 0 0 1px rgb(var(--lv-white-rgb) / .6); }
+.lv .motion[aria-disabled="true"] { cursor: default; opacity: .72; }
+.lv .motion svg { width: 16px; height: 16px; }
+.lv .nav .jump { display: none; align-items: center; min-height: 44px; padding-inline: 2px; font-size: 14px; text-decoration: none; white-space: nowrap; opacity: .85; }
+.lv .nav .jump:hover { opacity: 1; }
 .lv .site-lang:hover { color: var(--lv-white); box-shadow: inset 0 0 0 1px rgb(var(--lv-white-rgb) / .6); }
 .lv .site-lang svg { width: 16px; height: 16px; }
 
 /* the fixed scene: the sky graded towards the brand scene colour, the flock, the night */
-.lv .sky { position: fixed; inset: -10% -10% 0 -10%; z-index: 0; background: var(--lv-sky) center bottom / cover no-repeat; transform-origin: 50% 70%; will-change: transform; }
+.lv .sky { position: fixed; inset: -10% -10% 0 -10%; z-index: 0; background: var(--lv-sky) center bottom / cover no-repeat; transform-origin: 50% 70%; }
 .lv .sky .poster { width: 100%; height: 100%; object-fit: cover; object-position: center bottom; }
 .lv .night { position: fixed; inset: 0; z-index: 0; background: linear-gradient(180deg, var(--lv-night) 0%, var(--lv-scene) 55%, var(--lv-scene-2) 100%); opacity: 0; pointer-events: none; }
 /* the app's scene at the end of the story: its dark ground and centre wash, centred on you (scene.ts sets --gx, --gy) */
@@ -124,7 +131,8 @@ html[dir="rtl"] .lv.graph .tag.t-maria.flip { transform: translate(18px, -50%); 
 .lv .copy { max-width: 560px; }
 .lv .say { font-size: clamp(24px, 2.15vw, 32px); line-height: 1.3; letter-spacing: -.015em; }
 .lv .late { margin-top: 22px; font-size: clamp(18px, 1.35vw, 21px); line-height: 1.55; color: rgb(var(--lv-white-rgb) / calc(214 / 255)); opacity: 0; transform: translateY(10px); transition: opacity .6s, transform .6s; }
-.lv:not(.scene-ready) .late, .lv .late.on { opacity: 1; transform: none; }
+.lv:not(.scene-ready) .late, .lv .late.on, .lv .late:focus-within { opacity: 1; transform: none; }
+.lv .late:focus-within { transition: none; }
 .lv .late:empty { display: none; }
 .lv .beat .mono { color: var(--lv-care-scene); margin-bottom: 22px; display: block; }
 .lv .hero .copy { max-width: 640px; }
@@ -164,7 +172,7 @@ html[dir="rtl"] .lv.graph .tag.t-maria.flip { transform: translate(18px, -50%); 
 .lv .ctrl label.q { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; font: 500 12px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: rgb(var(--lv-white-rgb) / calc(191 / 255)); margin: 0 0 10px; }
 .lv .ctrl label.q b { font: 400 26px/1 var(--sans); letter-spacing: -.02em; text-transform: none; color: var(--lv-white); font-variant-numeric: tabular-nums; }
 .lv .range { position: relative; padding-bottom: 24px; direction: ltr; }
-.lv .range input { -webkit-appearance: none; appearance: none; width: 100%; height: 30px; background: transparent; cursor: pointer; margin: 0; }
+.lv .range input { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; background: transparent; cursor: pointer; margin: 0; }
 .lv .range input::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: linear-gradient(90deg, rgb(var(--lv-sos-scene-rgb) / calc(191 / 255)) 0 25%, rgb(var(--lv-care-scene-rgb) / calc(217 / 255)) 25% 100%); }
 .lv .range input::-moz-range-track { height: 4px; border-radius: 4px; background: linear-gradient(90deg, rgb(var(--lv-sos-scene-rgb) / calc(191 / 255)) 0 25%, rgb(var(--lv-care-scene-rgb) / calc(217 / 255)) 25% 100%); }
 .lv .range input::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--lv-white); margin-top: -9px; box-shadow: 0 0 0 6px rgb(var(--lv-care-scene-rgb) / calc(56 / 255)); transition: transform .15s; }
@@ -314,6 +322,7 @@ html[lang="th"] .lv :is(h1, h2) { line-height: 1.25; }
 /* tablets: the section links leave the header before they can crowd it (longer languages need the room) */
 @media (max-width: 1200px) {
   .lv .nav nav { display: none; }
+  .lv .nav .jump { display: inline-flex; }
   .lv .nav .tools { margin-inline-start: auto; }
 }
 @media (max-width: 860px) {
@@ -321,7 +330,7 @@ html[lang="th"] .lv :is(h1, h2) { line-height: 1.25; }
   .lv .nav .tools { margin-inline-start: auto; gap: 10px; }
   .lv .nav .btn { position: relative; padding: 10px 14px; font-size: 13px; }
   .lv .nav .btn::before { content: ""; position: absolute; inset-block: -6px; inset-inline: 0; }
-  .lv .site-lang { height: 34px; padding: 0 10px; font-size: 12px; }
+  .lv .site-lang { height: 44px; padding: 0 10px; font-size: 12px; }
   .lv .brand { font-size: 15px; }
   .lv .brand img { height: 18px; }
   .lv .scrim, html[dir="rtl"] .lv .scrim { background: linear-gradient(0deg, rgb(var(--lv-night-rgb) / calc(214 / 255)) 0%, rgb(var(--lv-night-rgb) / calc(143 / 255)) 38%, rgb(var(--lv-night-rgb) / 0) 62%); }

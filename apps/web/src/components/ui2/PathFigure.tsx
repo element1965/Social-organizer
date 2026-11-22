@@ -3,6 +3,10 @@ import { cn } from '../../lib/utils';
 type PathFigureProps = {
   names: string[];
   scene?: boolean;
+  /** A not-yet-confirmed acquaintance: dashed, and named, so it is not the solid line of a handshake. */
+  pending?: boolean;
+  /** Visible name of a pending line, for example "Invitation". */
+  lineLabel?: string;
 };
 
 function shortName(name: string, compact: boolean): string {
@@ -11,11 +15,26 @@ function shortName(name: string, compact: boolean): string {
   return first || name;
 }
 
-export function PathFigure({ names, scene = false }: PathFigureProps) {
+export function PathFigure({ names, scene = false, pending = false, lineLabel }: PathFigureProps) {
   const compact = names.length >= 4;
   return (
     <div className={cn('flex items-start text-label font-bold text-ink-muted', scene && 'relative')}>
-      {scene && <span aria-hidden className="absolute inset-x-1/4 top-1 h-0.5 bg-care-scene/60" />}
+      {scene && (
+        <span
+          aria-hidden
+          className={cn(
+            'absolute inset-x-1/4 top-1 h-0.5',
+            pending
+              ? 'text-node-2 [background-image:repeating-linear-gradient(90deg,currentColor_0_6px,transparent_6px_10px)]'
+              : 'bg-care-scene/60',
+          )}
+        />
+      )}
+      {scene && pending && lineLabel ? (
+        <span className="absolute left-1/2 top-1 z-[1] -translate-x-1/2 -translate-y-1/2 bg-scene px-1.5 text-center text-micro font-bold leading-tight text-node-2">
+          {lineLabel}
+        </span>
+      ) : null}
       {names.map((name, index) => {
         const end = index === names.length - 1;
         const start = index === 0;

@@ -66,6 +66,8 @@ export interface NetworkGraphProps {
    * With `prefers-reduced-motion` nothing moves: a steady bead gradient points from the asker to me.
    */
   impulses?: GraphImpulse[];
+  /** Freeze automatic motion and keep direct camera controls available. */
+  motionPaused?: boolean;
   /** Ring depths to hide. The centre (depth 0) always stays. */
   hiddenRings?: number[];
   /** Scene palette. Defaults are the dark v2 tokens; the scene stays dark in both themes. */
@@ -800,6 +802,9 @@ class DotLayer {
   private rgba = new Float32Array(0);
   private size = new Float32Array(0);
   private rim = new Float32Array(0);
+  private inputOrder: NodeVis[] = [];
+  private depthOrder: NodeVis[] = [];
+  private rimColor: number | undefined;
 
   constructor(map: THREE.Texture) {
     this.material = new THREE.ShaderMaterial({
@@ -836,27 +841,60 @@ class DotLayer {
 
   /** The accent colour of the 1st-handshake rim */
   setRim(hex: number) {
+    if (hex === this.rimColor) return;
+    this.rimColor = hex;
     (this.material.uniforms.uRim!.value as THREE.Color).setHex(hex);
   }
 
-  /** `list` is far → near. */
-  write(list: NodeVis[]) {
+  /** Keep the previous far-to-near order while it still matches the scene. */
+  write(visible: NodeVis[]) {
+    const membershipChanged = visible.length !== this.inputOrder.length
+      || visible.some((node, i) => node !== this.inputOrder[i]);
+    if (membershipChanged) {
+      this.inputOrder = visible.slice();
+      this.depthOrder = visible.slice();
+    }
+    const list = this.depthOrder;
+    if (membershipChanged || list.some((node, i) => i > 0 && list[i - 1]!.d2 < node.d2)) {
+      list.sort((a, b) => b.d2 - a.d2);
+    }
     this.ensure(list.length);
     const p = this.pos, c = this.rgba, s = this.size, r = this.rim;
+    let positionsChanged = false;
+    let colorsChanged = false;
+    let sizesChanged = false;
+    let rimsChanged = false;
     for (let i = 0; i < list.length; i++) {
       const v = list[i]!;
       const o = v.outer.position;
-      p[i * 3] = o.x;
-      p[i * 3 + 1] = o.y + v.inner.position.y;
-      p[i * 3 + 2] = o.z;
-      c[i * 4] = v.dotRgba[0]; c[i * 4 + 1] = v.dotRgba[1]; c[i * 4 + 2] = v.dotRgba[2]; c[i * 4 + 3] = v.dotRgba[3];
-      s[i] = v.dot.scale.x * v.inner.scale.x;
-      r[i] = (v.node.depth ?? 1) === 1 && !v.node.isDeleted && !v.node.isCenter ? 1 : 0;
+      const x = Math.fround(o.x), y = Math.fround(o.y + v.inner.position.y), z = Math.fround(o.z);
+      if (p[i * 3] !== x || p[i * 3 + 1] !== y || p[i * 3 + 2] !== z) {
+        p[i * 3] = x; p[i * 3 + 1] = y; p[i * 3 + 2] = z;
+        positionsChanged = true;
+      }
+      for (let channel = 0; channel < 4; channel++) {
+        const value = Math.fround(v.dotRgba[channel]!);
+        const offset = i * 4 + channel;
+        if (c[offset] === value) continue;
+        c[offset] = value;
+        colorsChanged = true;
+      }
+      const size = Math.fround(v.dot.scale.x * v.inner.scale.x);
+      if (s[i] !== size) {
+        s[i] = size;
+        sizesChanged = true;
+      }
+      const rim = (v.node.depth ?? 1) === 1 && !v.node.isDeleted && !v.node.isCenter ? 1 : 0;
+      if (r[i] !== rim) {
+        r[i] = rim;
+        rimsChanged = true;
+      }
     }
-    for (const name of ['position', 'rgba', 'size', 'rim']) {
-      (this.geom.getAttribute(name) as THREE.BufferAttribute).needsUpdate = true;
-    }
-    this.geom.setDrawRange(0, list.length);
+    if (positionsChanged) this.geom.getAttribute('position').needsUpdate = true;
+    if (colorsChanged) this.geom.getAttribute('rgba').needsUpdate = true;
+    if (sizesChanged) this.geom.getAttribute('size').needsUpdate = true;
+    if (rimsChanged) this.geom.getAttribute('rim').needsUpdate = true;
+    if (this.geom.drawRange.count !== list.length) this.geom.setDrawRange(0, list.length);
   }
 
   dispose() {
@@ -1272,6 +1310,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   edges,
   highlightPath,
   impulses,
+  motionPaused = false,
   hiddenRings,
   colors: colorsProp,
   width,
@@ -1591,6 +1630,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
 
   const nearestRef = useRef<Set<string>>(new Set());
   const reducedRef = useRef(false);
+  const setMotionPausedRef = useRef<((paused: boolean) => void) | null>(null);
   const sceneFxRef = useRef<{ stars: THREE.Points | null; glow: THREE.Mesh | null }>({ stars: null, glow: null });
 
   const lifeRef = useRef<{ disposeTimer: ReturnType<typeof setTimeout> | null; userTouched: boolean; hoverId: string | null }>({
@@ -2088,21 +2128,43 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     // --- Camera controls: orbit with damping = inertia after a fling, smooth auto-rotate ---
     const controls = fg.controls();
     let resumeTimer: ReturnType<typeof setTimeout> | null = null;
+    let resumeAt = 0;
     const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    reducedRef.current = reduceMq.matches;
-    let rotTarget = reduceMq.matches ? 0 : AUTO_ROTATE_SPEED;
+    let paused = motionPaused;
+    reducedRef.current = paused || reduceMq.matches;
+    let rotTarget = reducedRef.current ? 0 : AUTO_ROTATE_SPEED;
     let rotCur = 0;
+    const resumeRotation = () => {
+      if (resumeTimer) clearTimeout(resumeTimer);
+      resumeTimer = null;
+      if (reducedRef.current || resumeAt === Infinity) return;
+      const delay = resumeAt - performance.now();
+      if (delay <= 0) {
+        rotTarget = AUTO_ROTATE_SPEED;
+        return;
+      }
+      resumeTimer = setTimeout(() => { rotTarget = AUTO_ROTATE_SPEED; }, delay);
+    };
     const onReduce = () => {
-      reducedRef.current = reduceMq.matches;
+      reducedRef.current = paused || reduceMq.matches;
       if (!controls) return;
-      if (reduceMq.matches) {
+      if (reducedRef.current) {
+        resumeRotation();
         rotTarget = 0;
         rotCur = 0;
         controls.autoRotate = false;
         controls.autoRotateSpeed = 0;
+        flyRef.current.active = false;
+        viewFlyRef.current.active = false;
       } else {
         controls.autoRotate = true;
+        resumeRotation();
       }
+    };
+    setMotionPausedRef.current = (next) => {
+      if (paused === next) return;
+      paused = next;
+      onReduce();
     };
     reduceMq.addEventListener('change', onReduce);
     const onStart = () => {
@@ -2110,17 +2172,12 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       flyRef.current.active = false;
       viewFlyRef.current.active = false;
       rotTarget = 0;
-      if (resumeTimer) clearTimeout(resumeTimer);
+      resumeAt = Infinity;
+      resumeRotation();
     };
     const onEnd = () => {
-      if (resumeTimer) clearTimeout(resumeTimer);
-      if (reducedRef.current) {
-        rotTarget = 0;
-        return;
-      }
-      resumeTimer = setTimeout(() => {
-        if (!reducedRef.current) rotTarget = AUTO_ROTATE_SPEED;
-      }, AUTO_ROTATE_RESUME_MS);
+      resumeAt = performance.now() + AUTO_ROTATE_RESUME_MS;
+      resumeRotation();
     };
     if (controls) {
       controls.enableDamping = true;
@@ -2129,7 +2186,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       controls.zoomSpeed = 0.8;
       controls.enablePan = false;
       controls.minDistance = 30;
-      controls.autoRotate = !reduceMq.matches;
+      controls.autoRotate = !reducedRef.current;
       controls.autoRotateSpeed = 0;
       controls.addEventListener('start', onStart);
       controls.addEventListener('end', onEnd);
@@ -2266,7 +2323,6 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       });
     screenObserver?.observe(renderer.domElement);
     const dotList: NodeVis[] = [];
-    const farFirst = (a: NodeVis, b: NodeVis) => b.d2 - a.d2;
 
     // Soft centre wash + a few stars, behind the nodes. Added once per scene.
     const existingStars = scene.getObjectByName('so-stars') as THREE.Points | undefined;
@@ -2889,7 +2945,6 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       // All dots in one draw call, far to near so overlapping ones blend like separate sprites did
       const dots = dotsRef.current;
       if (dots) {
-        dotList.sort(farFirst);
         const canvasH = (fg.renderer() as THREE.WebGLRenderer).domElement.height;
         dots.setScale(((cam as THREE.PerspectiveCamera).projectionMatrix.elements[5] ?? 1) * canvasH * 0.5);
         dots.setRim(readInk().care);
@@ -2996,8 +3051,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       if (controls) controls.autoRotate = false;
       timers.push(setTimeout(() => { if (!life.userTouched) fitCameraRef.current(0); }, 350));
     } else {
-      timers.push(setTimeout(() => { if (!life.userTouched) fitCameraRef.current(1800, true); }, 350));
-      timers.push(setTimeout(() => { if (!life.userTouched) fitCameraRef.current(1500); }, 2600));
+      timers.push(setTimeout(() => { if (!life.userTouched && !paused) fitCameraRef.current(1800, true); }, 350));
+      timers.push(setTimeout(() => { if (!life.userTouched && !paused) fitCameraRef.current(1500); }, 2600));
     }
 
     return () => {
@@ -3005,6 +3060,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       timers.forEach(clearTimeout);
       if (resumeTimer) clearTimeout(resumeTimer);
       reduceMq.removeEventListener('change', onReduce);
+      setMotionPausedRef.current = null;
       dprMq.removeEventListener('change', onDpr);
       resizeObserver.disconnect();
       sceneFxRef.current.stars = null;
@@ -3051,6 +3107,10 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   }, []);
 
   /* ----- In-place updates: no rebuild, no layout restart ----- */
+
+  useEffect(() => {
+    setMotionPausedRef.current?.(motionPaused);
+  }, [motionPaused]);
 
   // connectionCount / lastSeen change on every refetch
   useEffect(() => {

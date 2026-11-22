@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ElementType, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { onEnter, prefersReducedMotion, seq } from '../../lib/scrollPlay';
+import { onEnter, prefersReducedMotion, seq, type Seq } from '../../lib/scrollPlay';
 import { cn } from '../../lib/utils';
 
 /** Reactive `matchMedia`. */
@@ -125,23 +125,37 @@ export function Reveal({
 }
 
 /**
- * Plays `steps` through `set` every time half of the element is on screen (figures on the site and /how).
- * The caller keeps the state, so clicks can still move the figure between plays.
+ * Plays `steps` through `set` every time half of the element is on screen (figures on /how).
+ * `choose` is the manual control: the first call stops this run and every later one, so a reader's
+ * pick is not replaced when the sequence ticks or the figure scrolls back in.
  */
 export function usePlayOnEnter<T>(set: (step: T) => void, steps: readonly T[], gap: number) {
   const ref = useRef<HTMLDivElement>(null);
   const setRef = useRef(set);
   setRef.current = set;
+  const runnerRef = useRef<Seq | null>(null);
+  const held = useRef(false);
   const key = steps.map(String).join('|');
   useEffect(() => {
-    const runner = seq<T>((k) => setRef.current(k), steps, gap);
-    const off = onEnter(ref.current, () => runner.run(), { threshold: 0.5, repeat: true });
+    const runner = seq<T>((k) => {
+      if (!held.current) setRef.current(k);
+    }, steps, gap);
+    runnerRef.current = runner;
+    const off = onEnter(ref.current, () => {
+      if (!held.current) runner.run();
+    }, { threshold: 0.5, repeat: true });
     return () => {
       off();
       runner.cancel();
+      if (runnerRef.current === runner) runnerRef.current = null;
     };
     // `steps` is compared by value through `key`.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, gap]);
-  return ref;
+  const choose = (step: T) => {
+    held.current = true;
+    runnerRef.current?.cancel();
+    setRef.current(step);
+  };
+  return { ref, choose };
 }

@@ -137,6 +137,8 @@
     "attention": "đang chờ bạn"
   },
   "circle": {
+    "pauseMotion": "Tạm dừng chuyển động",
+    "resumeMotion": "Tiếp tục chuyển động",
     "toSelf": "Quay về bạn",
     "backToFeed": "Bảng tin",
     "openGraph": "Mở rộng sơ đồ",
@@ -209,11 +211,11 @@
       "milestoneFirstNeedSub": "Thông báo đang đi theo các cái bắt tay",
       "milestoneFirstPart": "Lần tham gia đầu tiên",
       "milestoneFirstPartSub": "Người đăng nhu cầu thấy sự tham gia của bạn",
-      "accepted": "đã xác nhận quen nhau · hai bạn đã ở trong vòng tròn của nhau",
+      "accepted": "đã xác nhận quen nhau",
       "stack": {
         "waiting": "Đang chờ xác nhận",
         "incoming": "Muốn kết nối",
-        "accepted": "Đã vào vòng tròn của bạn",
+        "accepted": "Đã xác nhận quen nhau",
         "participating": "Bạn đang tham gia",
         "closed": "Đã kết thúc",
         "names": "{{names}} và {{count}} người khác",
@@ -656,7 +658,8 @@
     "loadFailedTitle": "Không mở được lời mời",
     "loadFailedText": "Có vẻ mất kết nối. Liên kết đã được lưu; vui lòng thử lại.",
     "waiting": "Đang chờ xác nhận.",
-    "network_other": "{{n}} người trong mạng lưới",
+    "network_other": "{{name}} có {{n}} mối quan hệ trực tiếp",
+    "invitation": "Lời mời",
     "dead": {
       "deletedTitle": "Người này đã xóa tài khoản",
       "deletedText": "Lời mời không còn hiệu lực. Hãy xin liên kết từ một người quen khác.",
@@ -715,6 +718,11 @@
         "join": "Góp sức",
         "faq": "Câu hỏi",
         "signin": "Đăng nhập"
+      },
+      "motion": {
+        "pause": "Tạm dừng hoạt ảnh",
+        "play": "Phát hoạt ảnh",
+        "paused": "Hoạt ảnh đang tạm dừng"
       },
       "hero": {
         "title": "Thế giới nhỏ hơn bạn nghĩ.",
@@ -1321,6 +1329,8 @@
   "sos": {
     "headline": "{{name}} cần được hỗ trợ",
     "ofGoal": "trên {{amount}}",
+    "reported": "Đã nêu {{amount}}",
+    "needed": "Cần {{amount}}",
     "peopleLine": "Người tham gia: {{count}} · tiền được chuyển trực tiếp, không qua dịch vụ",
     "joinCircle": "{{name}} sẽ xuất hiện trong vòng kết nối của bạn. Như vậy, bạn xác nhận hai người quen nhau ngoài đời.",
     "joinCircleBody": "Khi tham gia, bạn xác nhận rằng mình quen người này trực tiếp.",
@@ -1397,6 +1407,7 @@
     "largeYes": "Đúng, gửi",
     "largeNo": "Đổi số tiền",
     "alreadyOpen": "Bạn đã có một nhu cầu đang mở thuộc kiểu này",
+    "bothTypesOpen": "Bạn có một nhu cầu đang mở ở mỗi loại.",
     "serverLocked": "Chưa thể thông báo nhu cầu",
     "chatSheetTitle": "Làm sao tạo chat?",
     "chatSheetLead": "Ứng dụng nhắn tin nào bạn thấy tiện. Bạn cần liên kết mời vào nhóm.",

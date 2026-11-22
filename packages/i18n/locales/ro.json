@@ -137,6 +137,8 @@
     "attention": "te așteaptă"
   },
   "circle": {
+    "pauseMotion": "Oprește temporar animația",
+    "resumeMotion": "Reia animația",
     "toSelf": "Înapoi la mine",
     "backToFeed": "Flux",
     "openGraph": "Extinde graful",
@@ -215,11 +217,11 @@
       "milestoneFirstNeedSub": "Mesajul merge pe strângeri de mână",
       "milestoneFirstPart": "Prima participare",
       "milestoneFirstPartSub": "Autorul nevoii îți vede participarea",
-      "accepted": "a confirmat cunoștința · sunteți unul în cercul celuilalt",
+      "accepted": "a confirmat cunoștința",
       "stack": {
         "waiting": "Așteaptă confirmarea",
         "incoming": "Vor să se conecteze cu tine",
-        "accepted": "Acum în cercul tău",
+        "accepted": "Cunoștințe confirmate",
         "participating": "Participi",
         "closed": "Încheiate",
         "names": "{{names}} și încă {{count}}",
@@ -662,9 +664,10 @@
     "loadFailedTitle": "Nu am putut deschide invitația",
     "loadFailedText": "Pare că nu ai conexiune. Linkul e salvat; încearcă din nou.",
     "waiting": "Se așteaptă confirmarea.",
-    "network_few": "{{n}} persoane în rețea",
-    "network_one": "{{n}} persoană în rețea",
-    "network_other": "{{n}} de persoane în rețea",
+    "network_few": "{{name}} are {{n}} legături directe",
+    "network_one": "{{name}} are {{n}} legătură directă",
+    "network_other": "{{name}} are {{n}} de legături directe",
+    "invitation": "Invitație",
     "dead": {
       "deletedTitle": "Această persoană și-a șters contul",
       "deletedText": "Invitația nu mai funcționează. Cere un link altcuiva pe care îl cunoști.",
@@ -723,6 +726,11 @@
         "join": "Implică-te",
         "faq": "Întrebări",
         "signin": "Conectează-te"
+      },
+      "motion": {
+        "pause": "Pauză animație",
+        "play": "Redă animația",
+        "paused": "Animația este în pauză"
       },
       "hero": {
         "title": "Lumea e mai mică decât crezi.",
@@ -1339,6 +1347,8 @@
   "sos": {
     "headline": "{{name}} are nevoie de ajutor",
     "ofGoal": "din {{amount}}",
+    "reported": "{{amount}} declarat",
+    "needed": "{{amount}} necesar",
     "peopleLine": "Participanți: {{count}} · banii se predau direct, nu prin serviciu",
     "joinCircle": "{{name}} va apărea în cercul tău. Așa confirmi că vă cunoașteți personal.",
     "joinCircleBody": "Alăturându-te, confirmi că cunoști persoana aceasta personal.",
@@ -1419,6 +1429,7 @@
     "largeYes": "Da, trimite",
     "largeNo": "Schimbă suma",
     "alreadyOpen": "Ai deja o nevoie deschisă de tipul acesta",
+    "bothTypesOpen": "Ai câte o nevoie deschisă din fiecare tip.",
     "serverLocked": "Deocamdată nu poți anunța o nevoie",
     "chatSheetTitle": "Cum creez un chat?",
     "chatSheetLead": "Orice messenger îți convine. Îți trebuie un link de invitație către un grup.",

@@ -137,6 +137,8 @@
     "attention": "wacht op jou"
   },
   "circle": {
+    "pauseMotion": "Beweging pauzeren",
+    "resumeMotion": "Beweging hervatten",
     "toSelf": "Terug naar mij",
     "backToFeed": "Feed",
     "openGraph": "Graaf uitklappen",
@@ -212,11 +214,11 @@
       "milestoneFirstNeedSub": "Het bericht gaat via handdrukken",
       "milestoneFirstPart": "Eerste deelname",
       "milestoneFirstPartSub": "De indiener van de behoefte ziet je deelname",
-      "accepted": "heeft de kennismaking bevestigd · jullie zitten nu in elkaars kring",
+      "accepted": "heeft de kennismaking bevestigd",
       "stack": {
         "waiting": "Wachten op bevestiging",
         "incoming": "Willen je toevoegen",
-        "accepted": "Nu in je kring",
+        "accepted": "Kennismakingen bevestigd",
         "participating": "Je doet mee",
         "closed": "Afgerond",
         "names": "{{names}} en nog {{count}}",
@@ -659,8 +661,9 @@
     "loadFailedTitle": "De uitnodiging kon niet worden geopend",
     "loadFailedText": "Het lijkt erop dat er geen verbinding is. De link is bewaard; probeer het opnieuw.",
     "waiting": "Wachten op bevestiging.",
-    "network_one": "{{n}} persoon in het netwerk",
-    "network_other": "{{n}} personen in het netwerk",
+    "network_one": "{{name}} heeft {{n}} directe verbinding",
+    "network_other": "{{name}} heeft {{n}} directe verbindingen",
+    "invitation": "Uitnodiging",
     "dead": {
       "deletedTitle": "Deze persoon heeft het account verwijderd",
       "deletedText": "De uitnodiging werkt niet meer. Vraag iemand anders die je kent om een link.",
@@ -719,6 +722,11 @@
         "join": "Meedoen",
         "faq": "Vragen",
         "signin": "Inloggen"
+      },
+      "motion": {
+        "pause": "Animatie pauzeren",
+        "play": "Animatie afspelen",
+        "paused": "Animatie gepauzeerd"
       },
       "hero": {
         "title": "De wereld is kleiner dan je denkt.",
@@ -1330,6 +1338,8 @@
   "sos": {
     "headline": "{{name}} heeft hulp nodig",
     "ofGoal": "van {{amount}}",
+    "reported": "{{amount}} genoemd",
+    "needed": "{{amount}} nodig",
     "peopleLine": "Deelnemers: {{count}} · geld wordt rechtstreeks overgedragen, niet via de dienst",
     "joinCircle": "{{name}} verschijnt in je kring. Zo bevestig je dat jullie elkaar persoonlijk kennen.",
     "joinCircleBody": "Door mee te doen, bevestig je dat je deze persoon persoonlijk kent.",
@@ -1408,6 +1418,7 @@
     "largeYes": "Ja, versturen",
     "largeNo": "Bedrag wijzigen",
     "alreadyOpen": "Je hebt al een open behoefte van dit type",
+    "bothTypesOpen": "Je hebt van elk type één open behoefte.",
     "serverLocked": "Een behoefte melden kan nog niet",
     "chatSheetTitle": "Hoe maak ik een chat?",
     "chatSheetLead": "Elke messenger die je wilt. Je hebt een uitnodigingslink naar een groep nodig.",

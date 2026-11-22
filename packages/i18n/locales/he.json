@@ -137,6 +137,8 @@
     "attention": "מחכה לכם"
   },
   "circle": {
+    "pauseMotion": "השהיית התנועה",
+    "resumeMotion": "חידוש התנועה",
     "toSelf": "חזרה אליי",
     "backToFeed": "פיד",
     "openGraph": "פתיחת הגרף",
@@ -215,11 +217,11 @@
       "milestoneFirstNeedSub": "ההודעה נעה בלחיצות יד",
       "milestoneFirstPart": "ההשתתפות הראשונה",
       "milestoneFirstPartSub": "מי שדיווח על הצורך רואה את ההשתתפות שלכם",
-      "accepted": "ההיכרות אושרה · אתם במעגל זה של זה",
+      "accepted": "ההיכרות אושרה",
       "stack": {
         "waiting": "ממתינים לאישור",
         "incoming": "רוצים להתחבר",
-        "accepted": "עכשיו במעגל שלכם",
+        "accepted": "היכרויות אושרו",
         "participating": "אתם משתתפים",
         "closed": "הושלמו",
         "names": "{{names}} ועוד {{count}}",
@@ -662,9 +664,10 @@
     "loadFailedTitle": "לא הצלחנו לפתוח את ההזמנה",
     "loadFailedText": "נראה שאין חיבור. הקישור נשמר, נסו שוב.",
     "waiting": "ממתינים לאישור.",
-    "network_one": "{{n}} אדם ברשת",
-    "network_two": "{{n}} אנשים ברשת",
-    "network_other": "{{n}} אנשים ברשת",
+    "network_one": "ל{{name}} יש {{n}} קשר ישיר",
+    "network_two": "ל{{name}} יש {{n}} קשרים ישירים",
+    "network_other": "ל{{name}} יש {{n}} קשרים ישירים",
+    "invitation": "הזמנה",
     "dead": {
       "deletedTitle": "האדם הזה מחק את החשבון",
       "deletedText": "ההזמנה כבר לא פעילה. בקשו קישור ממישהו אחר שאתם מכירים.",
@@ -723,6 +726,11 @@
         "join": "הצטרפות",
         "faq": "שאלות",
         "signin": "התחברות"
+      },
+      "motion": {
+        "pause": "השהה אנימציה",
+        "play": "הפעל אנימציה",
+        "paused": "האנימציה מושהית"
       },
       "hero": {
         "title": "העולם קטן ממה שנדמה.",
@@ -1339,6 +1347,8 @@
   "sos": {
     "headline": "{{name}}: בקשה לסיוע",
     "ofGoal": "מתוך {{amount}}",
+    "reported": "{{amount}} דווח",
+    "needed": "{{amount}} נדרש",
     "peopleLine": "משתתפים: {{count}} · כסף מועבר ישירות, לא דרך השירות",
     "joinCircle": "{{name}} יופיע במעגל שלכם. כך תאשרו שאתם מכירים זה את זה באופן אישי.",
     "joinCircleBody": "בהצטרפות אתם מאשרים שאתם מכירים את האדם הזה אישית.",
@@ -1419,6 +1429,7 @@
     "largeYes": "כן, לשלוח",
     "largeNo": "שינוי הסכום",
     "alreadyOpen": "כבר יש לכם צורך פתוח מהסוג הזה",
+    "bothTypesOpen": "יש לכם צורך פתוח מכל סוג.",
     "serverLocked": "עדיין אי אפשר לדווח על צורך",
     "chatSheetTitle": "איך יוצרים צ'אט?",
     "chatSheetLead": "כל מסנג'ר שנוח לכם. צריך קישור הזמנה לקבוצה.",

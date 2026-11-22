@@ -137,6 +137,8 @@
     "attention": "odottaa sinua"
   },
   "circle": {
+    "pauseMotion": "Pysäytä liike",
+    "resumeMotion": "Jatka liikettä",
     "toSelf": "Takaisin minuun",
     "backToFeed": "Syöte",
     "openGraph": "Laajenna graafi",
@@ -212,11 +214,11 @@
       "milestoneFirstNeedSub": "Viesti kulkee kädenpuristuksia pitkin",
       "milestoneFirstPart": "Ensimmäinen osallistuminen",
       "milestoneFirstPartSub": "Tarpeen ilmoittaja näkee osallistumisesi",
-      "accepted": "vahvisti tuttavuuden · olette nyt toistenne piireissä",
+      "accepted": "vahvisti tuttavuuden",
       "stack": {
         "waiting": "Odotetaan vahvistusta",
         "incoming": "Haluavat yhteyden",
-        "accepted": "Nyt piirissäsi",
+        "accepted": "Tuttavuudet vahvistettu",
         "participating": "Osallistut",
         "closed": "Päättyneet",
         "names": "{{names}} ja {{count}} muuta",
@@ -659,8 +661,9 @@
     "loadFailedTitle": "Kutsua ei voitu avata",
     "loadFailedText": "Yhteyttä ei näytä olevan. Linkki on tallessa. Yritä uudelleen.",
     "waiting": "Odotetaan vahvistusta.",
-    "network_one": "{{n}} henkilö verkostossa",
-    "network_other": "{{n}} henkilöä verkostossa",
+    "network_one": "Henkilöllä {{name}} on {{n}} suora yhteys",
+    "network_other": "Henkilöllä {{name}} on {{n}} suoraa yhteyttä",
+    "invitation": "Kutsu",
     "dead": {
       "deletedTitle": "Tämä henkilö on poistanut tilinsä",
       "deletedText": "Kutsu ei enää toimi. Pyydä linkkiä joltakulta toiselta tutulta.",
@@ -719,6 +722,11 @@
         "join": "Lähde mukaan",
         "faq": "Kysymykset",
         "signin": "Kirjaudu"
+      },
+      "motion": {
+        "pause": "Keskeytä animaatio",
+        "play": "Toista animaatio",
+        "paused": "Animaatio on keskeytetty"
       },
       "hero": {
         "title": "Maailma on pienempi kuin luulet.",
@@ -1330,6 +1338,8 @@
   "sos": {
     "headline": "{{name}} tarvitsee apua",
     "ofGoal": "/ {{amount}}",
+    "reported": "{{amount}} ilmoitettu",
+    "needed": "{{amount}} tarvitaan",
     "peopleLine": "Osallistujia: {{count}} · raha luovutetaan suoraan, ei palvelun kautta",
     "joinCircle": "{{name}} ilmestyy piiriisi. Näin vahvistat, että tunnette toisenne henkilökohtaisesti.",
     "joinCircleBody": "Liittymällä vahvistat, että tunnet tämän henkilön henkilökohtaisesti.",
@@ -1408,6 +1418,7 @@
     "largeYes": "Kyllä, lähetä",
     "largeNo": "Muuta summaa",
     "alreadyOpen": "Sinulla on jo avoin tämän tyyppinen tarve",
+    "bothTypesOpen": "Sinulla on avoin tarve kumpaakin tyyppiä.",
     "serverLocked": "Tarpeesta ei voi vielä ilmoittaa",
     "chatSheetTitle": "Miten luon keskustelun?",
     "chatSheetLead": "Mikä tahansa viestisovellus sopii. Tarvitset kutsulinkin ryhmään.",

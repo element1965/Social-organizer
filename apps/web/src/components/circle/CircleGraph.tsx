@@ -19,6 +19,7 @@ type CircleGraphProps = {
   highlightPath: string[];
   /** Active incoming Needs, nearest first: ids from the asker to me. The graph runs a pulse along each. */
   impulses?: GraphImpulse[];
+  motionPaused?: boolean;
   hiddenRings: Ring[];
   onNodeTap: (id: string) => void;
   /** Dim the scene while the person card is open. */
@@ -47,7 +48,7 @@ type CircleGraphProps = {
  * People, or a phone/desktop layout switch) and handed back as `initialView`, which skips the intro fly.
  */
 export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(function CircleGraph(
-  { myId, people, edges, highlightPath, impulses, hiddenRings, onNodeTap, dimmed, focusId, focusLift, farRings, insetTop, labelInsetBottom, labelExclusions },
+  { myId, people, edges, highlightPath, impulses, motionPaused, hiddenRings, onNodeTap, dimmed, focusId, focusLift, farRings, insetTop, labelInsetBottom, labelExclusions },
   ref,
 ) {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -132,6 +133,7 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
             onNodeTap={handleTap}
             highlightPath={highlightPath}
             impulses={impulses}
+            motionPaused={motionPaused}
             hiddenRings={hiddenRings}
             initialView={initialView}
             focusId={focusId ?? null}
