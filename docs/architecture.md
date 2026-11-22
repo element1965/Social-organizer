@@ -100,7 +100,7 @@ The [Prisma schema](../packages/db/prisma/schema.prisma) defines 41 models.
 | MatchChainLink | An ordered giver–receiver link within a skills match chain, with category and offer details. |
 | SupportMessage | Telegram support conversation entry with sender, text, and optional media. |
 | NotifyStats | Per-person counters and timing used for Need notification routing. |
-| NotificationDelivery | An external notification delivery claim keyed by user and event, with its channel. |
+| NotificationDelivery | An external notification delivery claim keyed by user and event, with its channel. Keys under `need-notice:` are durable pending intents for Need requests and cycle notices: written in the same transaction as the in-app entry, leased one recipient at a time (10 min), retried up to 3 times, and replaced by the receipt only after the provider accepted the message. Pending, failed and retired intents never count toward the per-person limits, and the 60-day receipt pruning keeps them. |
 
 ## tRPC routers
 
@@ -158,6 +158,7 @@ The [router registry](../apps/api/src/routers/index.ts) mounts 22 routers.
 |--------|-------------|----------|
 | `cycle-close` | Auto-close 28-day cycle for regular collections + emit `CYCLE_RENEWED` to active subscribers; moves the author's "received" marks of the ended cycle into `ObligationReceipt` and clears them, so the new cycle starts unmarked | Every hour |
 | `re-notify` | Repeat waves for Emergency Needs: once the previous wave is 12 hours old and the Need is active and short of its amount, people who were never told about it get an entry (continues along the graph). Regular Needs are announced once. A wave that finds nobody new leaves a marker (`notification_deliveries`, key `renotify:<collectionId>:<ms>`) so the Need rests for another 12 hours | Every hour (12-hour gate per Need) |
+| Need notice drain | Sends pending `need-notice:` intents (Need requests, cycle start, reminder and closure notices) after restarts or provider failures. Each handoff rechecks the Need (open, below its goal), the recipient's current channel and both ignore directions. With Redis it runs with the hourly workers; without Redis the API drains at start and every minute | Hourly (Redis) / every minute (direct) |
 | `special-notify` | People who already reported Participation somewhere hear once, in the app only, about active Needs of the Author / Developer roles | Every hour |
 | `cycle-renewal-reminder` | Send `CYCLE_RENEWAL_REMINDER` to subscribers 3 days before next cycle (in-app + TG + push) | Every hour |
 | `expire-notifications` | Expired notifications (24h) → EXPIRED; old ones are deleted after 7 days, except request entries of a Need that is still open (they are the record of who was already told) | Every hour |
