@@ -151,14 +151,11 @@ async function sendWave(
   const result = await transactionWithRetry(db, async (tx) => {
     const need = await findNeedForUpdate(tx, collectionId);
     if (!need || need.creatorId !== creatorId || need.status !== 'ACTIVE' || need.blockReason === 'COMMUNITY') return;
-    if (due && (need.type !== 'EMERGENCY' || need.blockReason != null || need.amount == null)) return;
+    if (need.amount == null || (due && (need.type !== 'EMERGENCY' || need.blockReason != null))) return;
 
-    let budget = maxRecipients ?? Infinity;
-    if (need.amount != null) {
-      const { amount: pledged } = await activeObligationTotals(tx, collectionId);
-      budget = Math.min(budget, Math.ceil((need.amount - pledged) / NOTIFICATION_RATIO));
-      if (budget <= 0) return;
-    }
+    const { amount: pledged } = await activeObligationTotals(tx, collectionId);
+    const budget = Math.min(maxRecipients ?? Infinity, Math.ceil((need.amount - pledged) / NOTIFICATION_RATIO));
+    if (budget <= 0) return;
 
     let currentWave = wave;
     if (due) {

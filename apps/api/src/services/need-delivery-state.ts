@@ -7,6 +7,7 @@ import type { DeliveryGate, ProviderOutcome, PushDestination } from './provider-
 export const NEED_NOTICE_PREFIX = 'need-notice:';
 // One recipient at a time. Allow for native push SDK timeouts and internal retries.
 const LEASE_MS = 10 * 60_000;
+const HANDOFF_SAFETY_MS = 1_000;
 const RETRY_DELAY_MS = 60_000;
 const MAX_ATTEMPTS = 3;
 // Prisma's DateTime columns store UTC wall time. Use the database clock for lease transitions.
@@ -284,7 +285,7 @@ async function authorizeRequests(
           OR s."lastSentAt" <= ${dbClock} - ${PROBE_AFTER_DAYS} * interval '1 day')
         AND n.status IN ('READ', 'UNREAD') AND n."expiresAt" > ${dbClock}
         AND c.status = 'ACTIVE' AND c."blockReason" IS DISTINCT FROM 'COMMUNITY'
-        AND (c.amount IS NULL OR c.amount > COALESCE(p.total, 0))
+        AND c.amount > COALESCE(p.total, 0)
         AND NOT EXISTS (
           SELECT 1 FROM obligations o WHERE o."collectionId" = c.id
             AND o."userId" = u.id AND o."unsubscribedAt" IS NULL
@@ -316,6 +317,8 @@ export async function runNeedRequestBatch(
   const prepared = await Promise.allSettled(requests.map(({ delivery }) => prepareDelivery(db, delivery)));
   const owned = prepared.flatMap((p, i) => p.status === 'fulfilled' && typeof p.value !== 'string'
     ? [{ attempt: p.value, delivery: requests[i]!.delivery }] : []);
+  // The database can renew the lease before the result reaches this process.
+  const deadline = performance.now() + LEASE_MS - HANDOFF_SAFETY_MS;
   const targets = await authorizeRequests(db, owned).catch((err) => {
     console.error('[NeedNotice] Request authorization failed:', err instanceof Error ? err.name : 'unknown error');
     return null;
@@ -329,7 +332,16 @@ export async function runNeedRequestBatch(
     let result: { channel: Channel; outcome: ProviderOutcome } = { channel: 'APP', outcome: targets ? 'retired' : 'retry' };
     if (target) {
       try {
-        result = await send(target, async (destination) => (await authorizeRequests(db, [{ attempt, delivery, destination }])).get(attempt.id));
+        if (performance.now() >= deadline) {
+          result.outcome = 'retry';
+        } else {
+          result = await send(target, async (destination) => {
+            const refreshDeadline = performance.now() + LEASE_MS - HANDOFF_SAFETY_MS;
+            const refreshed = await authorizeRequests(db, [{ attempt, delivery, destination }]);
+            if (performance.now() >= refreshDeadline) throw new Error('Request handoff authorization timed out');
+            return refreshed.get(attempt.id);
+          });
+        }
       } catch (err) {
         console.error('[NeedNotice] Handoff failed:', err instanceof Error ? err.name : 'unknown error');
         result.outcome = 'retry';

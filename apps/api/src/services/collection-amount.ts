@@ -48,9 +48,19 @@ export async function applyCollectionGoal(
       where: {
         collectionId,
         type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] },
-        status: { in: ['UNREAD', 'READ'] },
+        status: 'UNREAD',
       },
       data: { status: 'EXPIRED' },
+    });
+    // Keep the recipient's open for receipt accounting. End its waiting lifetime even if the Need reopens.
+    await tx.notification.updateMany({
+      where: {
+        collectionId,
+        type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] },
+        status: 'READ',
+        expiresAt: { gt: blockedAt },
+      },
+      data: { expiresAt: blockedAt },
     });
     return { blockedAt, creatorId: collection.creatorId };
   }

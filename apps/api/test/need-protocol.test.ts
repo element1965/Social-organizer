@@ -36,7 +36,7 @@ const { webPushTransport } = vi.hoisted(() => {
   process.env.TELEGRAM_BOT_TOKEN = 'test-bot-token';
   process.env.VAPID_PUBLIC_KEY = 'test-public';
   process.env.VAPID_PRIVATE_KEY = 'test-private';
-  return { webPushTransport: vi.fn(async () => ({})) };
+  return { webPushTransport: vi.fn(async (_subscription: { endpoint: string }) => ({})) };
 });
 
 vi.mock('web-push', () => ({
@@ -406,6 +406,31 @@ describe('Need concurrency regressions', () => {
     }
   });
 
+  it('discards an initial $20 wave when the goal is cleared during planning', async () => {
+    const author = 'initial-goal-cleared';
+    const { circle: [member] } = await seedNetwork(author, 1, 1);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.test/chat' },
+    });
+    const find = db.notifyStats.findMany.bind(db.notifyStats);
+    const snapshot = vi.spyOn(db.notifyStats, 'findMany').mockImplementationOnce((args) =>
+      find(args).then(async (rows) => {
+        await caller(author).collection.updateAmount({ id: need.id, amount: null });
+        return rows;
+      }) as ReturnType<typeof find>,
+    );
+    try {
+      const count = await notifications.sendCollectionNotifications(db, need.id, author, 'NEW_COLLECTION', 1, 20);
+      if (count > 0) await waitForDispatch([member!]);
+      expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({ amount: null });
+      expect(count).toBe(0);
+      expect(await recipients(need.id, 'NEW_COLLECTION')).toEqual([]);
+      expect(sendsTo(`test-${member}`)).toHaveLength(0);
+    } finally {
+      snapshot.mockRestore();
+    }
+  });
+
   it('locks both users before claiming reciprocal live QR tokens', async () => {
     const { author, member } = await setup('reciprocal-live-qr');
     const [authorInvite, memberInvite] = await Promise.all([
@@ -692,6 +717,75 @@ describe('Need concurrency regressions', () => {
     return { entries, eventKey, job };
   }
 
+  it('retires a queued amount-based request when its goal is cleared before handoff', async () => {
+    const author = 'queued-goal-cleared';
+    const { circle: [member] } = await seedNetwork(author, 1, 1);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.test/chat' },
+    });
+    const { eventKey, job } = await seedQueuedRequests(need, [member!]);
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    try {
+      await caller(author).collection.updateAmount({ id: need.id, amount: null });
+      await processTgBroadcast(job);
+      expect(sendsTo(`test-${member}`)).toHaveLength(0);
+      expect(await db.notificationDelivery.count({
+        where: { eventKey: { in: [eventKey, `need-notice:new:${need.id}:1`] } },
+      })).toBe(0);
+    } finally {
+      getDb.mockRestore();
+    }
+  });
+
+  it('skips a Telegram handoff after a delayed batch authorization loses its lease', async () => {
+    const author = 'queued-stale-authorization';
+    const { circle: [member] } = await seedNetwork(author, 1, 1);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.test/chat' },
+    });
+    const { eventKey, job } = await seedQueuedRequests(need, [member!]);
+    const pendingKey = `need-notice:new:${need.id}:1`;
+    const authorized = deferred<void>();
+    const resume = deferred<void>();
+    const query = db.$queryRaw.bind(db);
+    let paused = false;
+    const gate = vi.spyOn(db, '$queryRaw').mockImplementation((sql, ...values) => {
+      if (paused || !Array.isArray(sql) || !sql.some((part) => part.includes('WITH requests AS MATERIALIZED'))) {
+        return query(sql, ...values);
+      }
+      paused = true;
+      return query(sql, ...values).then(async (rows) => {
+        authorized.resolve();
+        await resume.promise;
+        return rows;
+      }) as ReturnType<typeof query>;
+    });
+    const clock = performance.now.bind(performance);
+    let elapsed = 0;
+    const monotonic = vi.spyOn(performance, 'now').mockImplementation(() => clock() + elapsed);
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    const first = processTgBroadcast(job);
+    try {
+      await Promise.race([authorized.promise, first.then(() => { throw new Error('Worker skipped authorization'); })]);
+      // Move both lease clocks forward without a ten-minute wait. The second worker really claims the SQL row.
+      elapsed = 601_000;
+      await db.notificationDelivery.updateMany({ where: { eventKey: pendingKey }, data: { createdAt: new Date(0) } });
+      await processTgBroadcast(job);
+      expect(sendsTo(`test-${member}`)).toHaveLength(1);
+      expect(await db.notificationDelivery.count({ where: { eventKey } })).toBe(1);
+      resume.resolve();
+      await first;
+      expect(sendsTo(`test-${member}`)).toHaveLength(1);
+      expect(await db.notificationDelivery.count({ where: { eventKey: pendingKey } })).toBe(0);
+    } finally {
+      resume.resolve();
+      await first;
+      getDb.mockRestore();
+      monotonic.mockRestore();
+      gate.mockRestore();
+    }
+  });
+
   it('routes a queued request to the current channel and destination, and retires both ignore directions', async () => {
     const author = 'current-target';
     const { circle } = await seedNetwork(author, 5, 1);
@@ -790,9 +884,62 @@ describe('Need concurrency regressions', () => {
     }
   });
 
-  it.each(['open', 'dismiss', 'close'] as const)('reconciles a %s that commits before Telegram acknowledgement', async (action) => {
-    const author = `ack-race-${action}`;
+  it.each(['replacement ready', 'replacement missed again'] as const)('recovers a request after an empty push lookup with %s', async (change) => {
+    const author = `queued-empty-${change.replaceAll(' ', '-')}`;
     const { circle: [member] } = await seedNetwork(author, 1, 1);
+    const need = await db.collection.create({
+      data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.test/chat' },
+    });
+    const { job, eventKey } = await seedQueuedRequests(need, [member!]);
+    const pendingKey = `need-notice:new:${need.id}:1`;
+    await db.user.update({ where: { id: member }, data: { notifyChannel: 'APP' } });
+    const old = `https://fcm.googleapis.com/fcm/send/${author}-old`;
+    const replacement = `https://fcm.googleapis.com/fcm/send/${author}-replacement`;
+    const subscribe = (endpoint: string) => db.pushSubscription.create({
+      data: { userId: member!, endpoint, p256dh: 'key', auth: 'key' },
+    });
+    await subscribe(old);
+    const find = db.pushSubscription.findMany.bind(db.pushSubscription);
+    const gate = vi.spyOn(db.pushSubscription, 'findMany').mockImplementationOnce((args) => (async () => {
+      await db.pushSubscription.delete({ where: { endpoint: old } });
+      const rows = await find(args);
+      await subscribe(replacement);
+      return rows;
+    })() as ReturnType<typeof find>);
+    if (change === 'replacement missed again') {
+      gate.mockImplementationOnce((args) => (async () => {
+        await db.pushSubscription.delete({ where: { endpoint: replacement } });
+        const rows = await find(args);
+        await subscribe(replacement);
+        return rows;
+      })() as ReturnType<typeof find>);
+    }
+    const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
+    const replacementSends = () => webPushTransport.mock.calls.filter(([sub]) => sub.endpoint === replacement);
+    try {
+      await processTgBroadcast(job);
+      if (change === 'replacement missed again') {
+        expect(replacementSends()).toHaveLength(0);
+        expect(await db.notificationDelivery.count({ where: { eventKey } })).toBe(0);
+        const pending = await db.notificationDelivery.findFirst({ where: { eventKey: pendingKey } });
+        expect(pending?.createdAt.getTime()).toBeGreaterThan(Date.now());
+        await db.notificationDelivery.update({ where: { id: pending!.id }, data: { createdAt: new Date(0) } });
+        await processTgBroadcast(job);
+      }
+      expect(replacementSends()).toHaveLength(1);
+      expect(sendsTo(`test-${member}`)).toHaveLength(0);
+      expect(await db.notificationDelivery.findMany({ where: { eventKey }, select: { channel: true } }))
+        .toEqual([{ channel: 'APP' }]);
+      expect(await db.notificationDelivery.count({ where: { eventKey: pendingKey } })).toBe(0);
+    } finally {
+      getDb.mockRestore();
+      gate.mockRestore();
+    }
+  });
+
+  it.each(['open', 'dismiss', 'close', 'open then goal'] as const)('reconciles a %s that commits before Telegram acknowledgement', async (action) => {
+    const author = `ack-race-${action}`;
+    const { circle: [member, pledger] } = await seedNetwork(author, 2, 1);
     const need = await db.collection.create({
       data: { creatorId: author, type: 'EMERGENCY', amount: 20, chatLink: 'https://example.test/chat' },
     });
@@ -812,9 +959,13 @@ describe('Need concurrency regressions', () => {
     const running = processTgBroadcast(job);
     try {
       await Promise.race([handedOff.promise, running.then(() => { throw new Error('Telegram did not receive the request'); })]);
-      if (action === 'open') await caller(member!).notification.markRead({ id: entry!.id });
+      if (action === 'open' || action === 'open then goal') await caller(member!).notification.markRead({ id: entry!.id });
       else if (action === 'dismiss') await caller(member!).notification.dismiss({ id: entry!.id });
       else await caller(author).collection.close({ id: need.id });
+      if (action === 'open then goal') {
+        await caller(pledger!).obligation.create({ collectionId: need.id, amount: 20 });
+        expect(await db.collection.findUniqueOrThrow({ where: { id: need.id } })).toMatchObject({ status: 'BLOCKED' });
+      }
       expect(await db.notificationDelivery.count({ where: { eventKey } })).toBe(0);
       acknowledge.resolve();
       await running;
@@ -822,6 +973,13 @@ describe('Need concurrency regressions', () => {
       expect(await db.notifyStats.findUniqueOrThrow({ where: { userId: member! } }))
         .toMatchObject({ sent: 1, ignoreStreak: action === 'close' ? 5 : 0 });
       if (action === 'close') await waitForCloseDrain(need.id);
+      if (action === 'open then goal') {
+        const inbox = caller(member!).notification;
+        expect(await inbox.attention()).toMatchObject({ needs: 0 });
+        expect(await inbox.unreadCount()).toEqual({ count: 1 }); // Only the goal-reached notice.
+        await caller(author).collection.updateAmount({ id: need.id, amount: 21 });
+        expect(await inbox.attention()).toMatchObject({ needs: 0 });
+      }
     } finally {
       acknowledge.resolve();
       await running;

@@ -143,24 +143,26 @@ export function deliverNeedRequestBatch(db: PrismaClient, messages: NeedRequestM
       if (target.channel === 'TELEGRAM') return sendTelegram(target.telegramId);
 
       let authorizedPush = false;
-      let staleDestination = false;
       const { userId, notice } = msg.delivery;
-      const results = await sendPushNotification(db, [userId], msg.requestPush ?? requestPushPayload(notice), async (destination) => {
-        const current = await refresh(destination);
-        if (current?.channel !== 'APP') return false;
-        if (!current.destinationOwned) {
-          staleDestination = true;
-          return 'skip';
-        }
-        authorizedPush = true;
-        return true;
-      });
+      const payload = msg.requestPush ?? requestPushPayload(notice);
+      const sendPush = async () =>
+        (await sendPushNotification(db, [userId], payload, async (destination) => {
+          const current = await refresh(destination);
+          if (current?.channel !== 'APP') return false;
+          if (!current.destinationOwned) return 'skip';
+          authorizedPush = true;
+          return true;
+        })).get(userId) ?? 'retired';
+      let outcome = await sendPush();
       // Settings may have changed again while the push service loaded device endpoints.
       const current = authorizedPush ? undefined : await refresh();
       if (current?.channel === 'TELEGRAM') return sendTelegram(current.telegramId);
-      const outcome = results.get(userId) ?? 'retired';
-      // The next attempt can load a newly registered device.
-      return { channel: 'APP', outcome: outcome === 'retired' && staleDestination && current ? 'retry' : outcome };
+      if (current?.channel === 'APP') {
+        // A reachable app target can have a replacement device that the first lookup missed.
+        outcome = await sendPush();
+        if (!authorizedPush && outcome === 'retired') outcome = 'retry';
+      }
+      return { channel: 'APP', outcome };
     },
   })));
 }
