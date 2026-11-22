@@ -1,18 +1,19 @@
 import { Prisma } from '@so/db';
+import { enqueueNeedNotice } from './need-delivery-state.js';
 
 type CycleNotice = 'CYCLE_RENEWED' | 'CYCLE_RENEWAL_REMINDER';
 
 /** The eligible participants and the rows this run inserted must come from the same statement. */
 export async function insertCycleNotices(
-  db: Pick<Prisma.TransactionClient, '$queryRaw'>,
+  tx: Prisma.TransactionClient,
   collectionId: string,
   cycleNumber: number,
   currentCycleStart: Date | null,
   expiresAt: Date,
   type: CycleNotice,
-): Promise<string[]> {
+): Promise<void> {
   const optedIn = type === 'CYCLE_RENEWED' ? Prisma.sql`u."notifyRenewalStart"` : Prisma.sql`u."notifyRenewalReminder"`;
-  const rows = await db.$queryRaw<{ userId: string }[]>`
+  const rows = await tx.$queryRaw<{ userId: string }[]>`
     INSERT INTO notifications ("id", "userId", "collectionId", "type", "expiresAt", "wave", "updatedAt")
     SELECT gen_random_uuid()::text, active."userId", ${collectionId},
       ${type}::"NotificationType", ${expiresAt.toISOString()}::timestamptz AT TIME ZONE 'UTC',
@@ -32,5 +33,6 @@ export async function insertCycleNotices(
     ON CONFLICT ("userId", "collectionId", "type", "wave") DO NOTHING
     RETURNING "userId"
   `;
-  return rows.map(({ userId }) => userId);
+  await enqueueNeedNotice(tx, type === 'CYCLE_RENEWED' ? 'start' : 'reminder', collectionId, cycleNumber,
+    rows.map(({ userId }) => userId));
 }

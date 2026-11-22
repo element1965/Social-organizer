@@ -4,6 +4,7 @@ import { MAX_CONNECTIONS, type ConnectionSource } from '@so/shared';
 import { sendPendingNotification } from './notification.service.js';
 import { syncMilestonesForPair } from './milestone.service.js';
 import { invalidateGraph } from './graph-cache.service.js';
+import { transactionWithRetry } from '../lib/tx-retry.js';
 
 /**
  * One place that answers a connection request (PendingConnection).
@@ -52,6 +53,11 @@ export async function countConnections(db: Db, userId: string): Promise<number> 
   return db.connection.count({ where: { OR: [{ userAId: userId }, { userBId: userId }] } });
 }
 
+/** Every acceptance locks the sorted user pair before locking any pending request for that pair. */
+export async function lockConnectionPair(tx: Prisma.TransactionClient, userAId: string, userBId: string): Promise<void> {
+  await tx.$queryRaw`SELECT id FROM users WHERE id IN (${userAId}, ${userBId}) ORDER BY id FOR UPDATE`;
+}
+
 /**
  * Creates the connection inside a transaction and checks the 150 limit for both people atomically:
  * both user rows are locked (in id order, so two transactions can't deadlock), then counted.
@@ -63,9 +69,19 @@ export async function createConnectionWithinLimit(
   otherId: string,
   options?: { viaCollectionId?: string; source?: ConnectionSource | string | null },
 ): Promise<'created' | 'exists'> {
+  const [userAId, userBId] = sortPair(actorId, otherId);
+  await lockConnectionPair(tx, userAId, userBId);
+  return createConnectionWithPairLocked(tx, actorId, otherId, options);
+}
+
+async function createConnectionWithPairLocked(
+  tx: Prisma.TransactionClient,
+  actorId: string,
+  otherId: string,
+  options?: { viaCollectionId?: string; source?: ConnectionSource | string | null },
+): Promise<'created' | 'exists'> {
   if (actorId === otherId) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot connect to yourself' });
   const [userAId, userBId] = sortPair(actorId, otherId);
-  await tx.$queryRaw`SELECT id FROM users WHERE id IN (${userAId}, ${userBId}) ORDER BY id FOR UPDATE`;
   const existing = await tx.connection.findUnique({ where: { userAId_userBId: { userAId, userBId } } });
   if (existing) return 'exists';
   const [mine, theirs] = await Promise.all([countConnections(tx, actorId), countConnections(tx, otherId)]);
@@ -99,7 +115,17 @@ export async function connectInPersonTx(
   otherId: string,
   source: ConnectionSource,
 ): Promise<'created' | 'exists'> {
-  const outcome = await createConnectionWithinLimit(tx, actorId, otherId, { source });
+  await lockConnectionPair(tx, actorId, otherId);
+  return connectInPersonWithPairLocked(tx, actorId, otherId, source);
+}
+
+export async function connectInPersonWithPairLocked(
+  tx: Prisma.TransactionClient,
+  actorId: string,
+  otherId: string,
+  source: ConnectionSource,
+): Promise<'created' | 'exists'> {
+  const outcome = await createConnectionWithPairLocked(tx, actorId, otherId, { source });
   await tx.pendingConnection.updateMany({
     where: {
       OR: [
@@ -156,7 +182,8 @@ export async function respondToConnectionRequest(
   }
 
   const status = action === 'accept' ? 'ACCEPTED' : 'REJECTED';
-  const changed = await db.$transaction(async (tx) => {
+  const changed = await transactionWithRetry(db, async (tx) => {
+    if (action === 'accept') await lockConnectionPair(tx, pending.fromUserId, pending.toUserId);
     const res = await tx.pendingConnection.updateMany({
       where: { id: pendingId, status: 'PENDING' },
       data: { status, resolvedAt: new Date() },
@@ -165,7 +192,7 @@ export async function respondToConnectionRequest(
     if (action === 'accept') {
       // Limit is re-checked under row locks; a failure rolls back the status change too
       // The connection keeps the way the request came in
-      await createConnectionWithinLimit(tx, pending.toUserId, pending.fromUserId, { source: pending.source });
+      await createConnectionWithPairLocked(tx, pending.toUserId, pending.fromUserId, { source: pending.source });
     }
     return true;
   });

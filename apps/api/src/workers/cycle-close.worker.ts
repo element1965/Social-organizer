@@ -2,8 +2,8 @@ import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
 import { REGULAR_CYCLE_DAYS, NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { transactionWithRetry } from '../lib/tx-retry.js';
-import { sendCycleRenewedTg } from '../services/notification.service.js';
 import { insertCycleNotices } from '../services/cycle-notices.js';
+import { dispatchPendingNeedNotices } from '../services/notice-delivery.js';
 
 type ReceiptDb = Pick<ReturnType<typeof getDb>, 'obligation' | 'obligationReceipt'>;
 
@@ -68,7 +68,6 @@ export async function processCycleClose(_job: Job): Promise<void> {
     },
     select: {
       id: true,
-      creatorId: true,
       cycleNumber: true,
       currentCycleStart: true,
     },
@@ -79,7 +78,7 @@ export async function processCycleClose(_job: Job): Promise<void> {
   for (const collection of expiredCycles) {
     const newCycleNumber = collection.cycleNumber + 1;
 
-    const renewedUserIds = await transactionWithRetry(db, async (tx) => {
+    await transactionWithRetry(db, async (tx) => {
       const currentCycleStart = new Date();
       const result = await tx.collection.updateMany({
         where: {
@@ -98,7 +97,7 @@ export async function processCycleClose(_job: Job): Promise<void> {
         },
       });
 
-      if (result.count === 0) return [];
+      if (result.count === 0) return;
 
       // The author's received marks of the ended cycle go to the history; the new cycle starts unmarked
       await recordCycleReceipts(tx, collection.id, collection.cycleNumber);
@@ -125,13 +124,8 @@ export async function processCycleClose(_job: Job): Promise<void> {
           unsubscribedAt: { not: null },
         },
       });
-      return insertCycleNotices(tx, collection.id, newCycleNumber, currentCycleStart, expiresAt, 'CYCLE_RENEWED');
+      await insertCycleNotices(tx, collection.id, newCycleNumber, currentCycleStart, expiresAt, 'CYCLE_RENEWED');
     });
-
-    if (renewedUserIds.length > 0) {
-      sendCycleRenewedTg(db, collection.id, collection.creatorId, renewedUserIds, newCycleNumber).catch((err) =>
-        console.error('[CycleClose] CycleRenewed dispatch failed:', err),
-      );
-    }
   }
+  await dispatchPendingNeedNotices(db, ['start', 'closed', 'new', 'repeat']);
 }

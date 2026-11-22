@@ -3,6 +3,8 @@ import { transactionWithRetry } from '../lib/tx-retry.js';
 import { sendUserDeletedNotification } from './notification.service.js';
 import { countConnections } from './connection-request.service.js';
 import { invalidateGraph } from './graph-cache.service.js';
+import { lockNeedAccount, type NeedState } from './collection-state.js';
+import { applyCollectionGoal } from './collection-amount.js';
 
 /**
  * Deletes an account. Single source for the user-initiated deletion (`user.delete`)
@@ -12,7 +14,7 @@ import { invalidateGraph } from './graph-cache.service.js';
  * (soft delete) so the invite chain stays intact; otherwise it is deleted without traces.
  * Returns `null` when the user does not exist, is already deleted, or `guard` refused.
  *
- * `guard` runs first inside the deletion transaction (after locking the user row), so a final
+ * `guard` runs before any deletion writes, under the user row lock, so a final
  * eligibility check cannot race with a concurrent sign-in. The user-initiated path passes none.
  */
 export async function deleteUserAccount(
@@ -36,10 +38,24 @@ export async function deleteUserAccount(
   });
 
   const deleted = await transactionWithRetry(db, async (tx) => {
-    if (opts.guard) {
-      await tx.$executeRaw`SELECT 1 FROM "users" WHERE "id" = ${userId} FOR UPDATE`;
-      if (!(await opts.guard(tx))) return null;
-    }
+    await lockNeedAccount(tx, userId);
+    const account = await tx.user.findUnique({ where: { id: userId }, select: { deletedAt: true } });
+    if (!account || account.deletedAt) return null;
+
+    // A pledge or closure holding a Need lock must finish before the deletion statement
+    // gets its snapshot. Include historical Needs that a hard deletion can touch by cascade.
+    const needs = await tx.$queryRaw<(NeedState & { id: string })[]>`
+      SELECT c."id", c."creatorId", c."status", c."type", c."cycleNumber",
+        c."currentCycleStart", c."amount", c."blockReason"
+      FROM collections c
+      WHERE c."creatorId" = ${userId} OR EXISTS (
+        SELECT 1 FROM obligations o WHERE o."collectionId" = c."id" AND o."userId" = ${userId}
+      )
+      ORDER BY c."id" FOR UPDATE OF c
+    `;
+
+    await tx.$executeRaw`SELECT 1 FROM "users" WHERE "id" = ${userId} FOR UPDATE`;
+    if (opts.guard && !(await opts.guard(tx))) return null;
     // Connections are counted before they are removed below.
     // Pending requests and unused invite links don't count as connections.
     const [connectionCount, usedInviteCount] = await Promise.all([
@@ -66,7 +82,13 @@ export async function deleteUserAccount(
       },
     });
 
-    // Cancel own active collections
+    for (const need of needs) {
+      if (need.creatorId !== userId && need.status === 'BLOCKED' && need.blockReason == null) {
+        await applyCollectionGoal(tx, need.id, need);
+      }
+    }
+
+    // Use a fresh status query to catch owned Needs created while the lock query was waiting.
     await tx.collection.updateMany({
       where: {
         creatorId: userId,

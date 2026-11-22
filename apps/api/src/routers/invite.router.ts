@@ -5,12 +5,14 @@ import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { sendPendingNotification } from '../services/notification.service.js';
 import { scanMatchesForUser } from '../services/match-notification.service.js';
-import { respondToConnectionRequest, createConnectionWithinLimit, connectInPersonTx, openConnectionRequest, assertConnectionSlots } from '../services/connection-request.service.js';
+import { respondToConnectionRequest, createConnectionWithinLimit, connectInPersonWithPairLocked, lockConnectionPair, openConnectionRequest, assertConnectionSlots } from '../services/connection-request.service.js';
 import { sendTelegramMessage, type TgReplyMarkup } from '../services/telegram-bot.service.js';
 import { syncMilestonesForPair } from '../services/milestone.service.js';
 import { translateWithCache } from '../services/translate.service.js';
 import { INVITE_SRC_PARAMS, linkSource } from '@so/shared';
 import { hit, MINUTE } from '../services/rate-limit.service.js';
+import { transactionWithRetry } from '../lib/tx-retry.js';
+import { lockNeed } from '../services/collection-state.js';
 
 const INVITE_EXPIRED_MESSAGE = 'INVITE_EXPIRED: This invite has expired';
 
@@ -137,7 +139,8 @@ export const inviteRouter = router({
       // In-person (QR) token: the meeting is the first handshake, so connect right away, no confirmation step
       if (inPerson) {
         // Claim + connection are atomic: if the 150 limit fails, the token stays unused
-        await ctx.db.$transaction(async (tx) => {
+        await transactionWithRetry(ctx.db, async (tx) => {
+          await lockConnectionPair(tx, ctx.userId, inviterId);
           const claimed = await tx.inviteLink.updateMany({
             where: {
               id: invite!.id,
@@ -149,7 +152,7 @@ export const inviteRouter = router({
           if (claimed.count === 0) {
             throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invite already used' });
           }
-          await connectInPersonTx(tx, ctx.userId, inviterId, 'qr');
+          await connectInPersonWithPairLocked(tx, ctx.userId, inviterId, 'qr');
         });
         await syncMilestonesForPair(ctx.db, ctx.userId, inviterId);
         const scanner = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
@@ -238,7 +241,7 @@ export const inviteRouter = router({
     .mutation(async ({ ctx, input }) => {
       const collection = await ctx.db.collection.findUnique({
         where: { id: input.collectionId },
-        select: { id: true, creatorId: true, status: true },
+        select: { id: true, creatorId: true },
       });
       if (!collection) throw new TRPCError({ code: 'NOT_FOUND', message: 'Collection not found' });
 
@@ -255,14 +258,17 @@ export const inviteRouter = router({
         return { success: true, alreadyConnected: true, connectedWith: creatorId, firstConnection: false };
       }
 
-      // A closed, cancelled, or held collection must not add a handshake.
-      if (collection.status !== 'ACTIVE') {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
-      }
-
       // Create direct connection (SOS bypasses pending approval, but not the 150 limit).
       // viaCollectionId is written only on this create, never on an existing friendship.
-      const outcome = await ctx.db.$transaction(async (tx) => {
+      const outcome = await transactionWithRetry(ctx.db, async (tx) => {
+        const need = await lockNeed(tx, collection.id);
+        if (need.status !== 'ACTIVE') {
+          // Another accept may have connected this pair before the Need closed.
+          if (await tx.connection.findUnique({
+            where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
+          })) return 'exists';
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
+        }
         const created = await createConnectionWithinLimit(tx, ctx.userId, creatorId, {
           viaCollectionId: collection.id,
           source: 'need',

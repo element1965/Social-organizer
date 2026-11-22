@@ -27,26 +27,43 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 /* ---------- Recording ---------- */
 
+const utcNow = Prisma.sql`(CURRENT_TIMESTAMP AT TIME ZONE 'UTC')`;
+
 /** Counters decayed to now, then the change applied; one statement, so parallel events do not lose updates. */
 const decay = (column: string) =>
   Prisma.raw(
-    `notify_stats."${column}" * power(0.5, GREATEST(EXTRACT(EPOCH FROM (now() - notify_stats."decayedAt")), 0) / ${HALF_LIFE_SECONDS})`,
+    `notify_stats."${column}" * power(0.5, GREATEST(EXTRACT(EPOCH FROM (${utcNow.text} - notify_stats."decayedAt")), 0) / ${HALF_LIFE_SECONDS})`,
   );
 
-/** External requests delivered: one more `sent` and one more request in the current ignore streak. */
-export async function recordSent(db: PrismaClient, userIds: string[]): Promise<void> {
-  if (userIds.length === 0) return;
+/** Record the provider receipt even if the recipient reacted before it was acknowledged. */
+export async function recordSent(
+  db: Db, userId: string, collectionId: string, kind: 'NEW_COLLECTION' | 'RE_NOTIFY', wave: number,
+): Promise<void> {
   await db.$executeRaw`
+    WITH reaction AS (
+      SELECT (
+        n.status IN ('DISMISSED', 'RESPONDED')
+        OR (n.status = 'READ' AND (c.status NOT IN ('CLOSED', 'CANCELLED') OR n."updatedAt" <> c."updatedAt"))
+        OR EXISTS (
+          SELECT 1 FROM obligations o WHERE o."collectionId" = c.id
+            AND o."userId" = n."userId" AND o."unsubscribedAt" IS NULL
+        )
+      ) AS reacted
+      FROM notifications n JOIN collections c ON c.id = n."collectionId"
+      WHERE n."userId" = ${userId} AND n."collectionId" = ${collectionId}
+        AND n.type = ${kind}::"NotificationType" AND n.wave = ${wave}
+      FOR NO KEY UPDATE OF n
+    )
     INSERT INTO notify_stats ("userId", sent, "ignoreStreak", "lastSentAt", "decayedAt")
-    SELECT id, 1, 1, now(), now() FROM unnest(${userIds}::text[]) AS id
+    VALUES (${userId}, 1, CASE WHEN (SELECT reacted FROM reaction) THEN 0 ELSE 1 END, ${utcNow}, ${utcNow})
     ON CONFLICT ("userId") DO UPDATE SET
       sent = ${decay('sent')} + 1,
       opened = ${decay('opened')},
       responded = ${decay('responded')},
       dismissed = ${decay('dismissed')},
-      "ignoreStreak" = notify_stats."ignoreStreak" + 1,
-      "lastSentAt" = now(),
-      "decayedAt" = now()
+      "ignoreStreak" = notify_stats."ignoreStreak" + EXCLUDED."ignoreStreak",
+      "lastSentAt" = ${utcNow},
+      "decayedAt" = ${utcNow}
   `;
 }
 
@@ -55,10 +72,10 @@ type Db = PrismaClient | Prisma.TransactionClient;
 /** Any reaction ends the ignore streak. `amount`: how many reactions of that kind (one per notice). */
 async function bump(db: Db, userId: string, column: 'opened' | 'responded' | 'dismissed', minutes: number | null, amount = 1) {
   const col = Prisma.raw(`"${column}"`);
-  const respondedAt = column === 'responded' ? Prisma.sql`now()` : Prisma.sql`NULL`;
+  const respondedAt = column === 'responded' ? utcNow : Prisma.sql`NULL`;
   await db.$executeRaw`
     INSERT INTO notify_stats ("userId", ${col}, "ignoreStreak", "responseMinutes", "lastRespondedAt", "decayedAt")
-    VALUES (${userId}, ${amount}, 0, ${minutes}, ${respondedAt}, now())
+    VALUES (${userId}, ${amount}, 0, ${minutes}, ${respondedAt}, ${utcNow})
     ON CONFLICT ("userId") DO UPDATE SET
       sent = ${decay('sent')},
       opened = ${decay('opened')} + ${column === 'opened' ? amount : 0},
@@ -71,7 +88,7 @@ async function bump(db: Db, userId: string, column: 'opened' | 'responded' | 'di
         ELSE notify_stats."responseMinutes" * 0.7 + ${minutes}::float * 0.3
       END,
       "lastRespondedAt" = COALESCE(${respondedAt}, notify_stats."lastRespondedAt"),
-      "decayedAt" = now()
+      "decayedAt" = ${utcNow}
   `;
 }
 
@@ -85,22 +102,24 @@ export async function recordOpened(
   collectionId: string,
   renewalWave?: number,
 ): Promise<void> {
-  const read = await db.notification.updateManyAndReturn({
-    where: {
-      userId,
-      collectionId,
-      status: 'UNREAD',
-      OR: [
-        { type: { in: [...NEED_REQUEST_TYPES] } },
-        ...(renewalWave == null ? [] : [{ type: 'CYCLE_RENEWED' as const, wave: renewalWave }]),
-      ],
-    },
-    data: { status: 'READ' },
-    select: { type: true },
+  await db.$transaction(async (tx) => {
+    const read = await tx.notification.updateManyAndReturn({
+      where: {
+        userId,
+        collectionId,
+        status: 'UNREAD',
+        OR: [
+          { type: { in: [...NEED_REQUEST_TYPES] } },
+          ...(renewalWave == null ? [] : [{ type: 'CYCLE_RENEWED' as const, wave: renewalWave }]),
+        ],
+      },
+      data: { status: 'READ' },
+      select: { type: true },
+    });
+    if (read.some(({ type }) => ROUTED_REQUEST_TYPES.some((routed) => routed === type))) {
+      await bump(tx, userId, 'opened', null);
+    }
   });
-  if (read.some(({ type }) => ROUTED_REQUEST_TYPES.some((routed) => routed === type))) {
-    await bump(db, userId, 'opened', null);
-  }
 }
 
 /**
@@ -174,10 +193,10 @@ async function holdReasons(db: PrismaClient, ids: string[]): Promise<Map<string,
     db.notifyStats.findMany({ where: { userId: { in: ids } }, select: { userId: true, ignoreStreak: true, lastSentAt: true } }),
     db.$queryRaw<Array<{ userId: string; day: bigint; week: bigint }>>`
       SELECT "userId",
-        COUNT(*) FILTER (WHERE "createdAt" >= ${new Date(now - DAY_MS)})::bigint AS day,
+        COUNT(*) FILTER (WHERE "createdAt" >= ${utcNow} - interval '1 day')::bigint AS day,
         COUNT(*)::bigint AS week
       FROM notification_deliveries
-      WHERE "userId" = ANY(${ids}) AND "eventKey" LIKE 'col:%:new' AND "createdAt" >= ${new Date(now - 7 * DAY_MS)}
+      WHERE "userId" = ANY(${ids}) AND "eventKey" LIKE 'col:%:new' AND "createdAt" >= ${utcNow} - interval '7 days'
       GROUP BY "userId"
     `,
   ]);

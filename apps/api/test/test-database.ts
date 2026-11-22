@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import { PrismaClient, type Prisma } from '@so/db';
+import { PrismaClient } from '@so/db';
 import { vi } from 'vitest';
 
 const composeTestUrl = 'postgresql://organizer:organizer-dev@127.0.0.1:54329/social_organizer_test';
@@ -10,7 +10,7 @@ const invalidUrl = 'Tests require a local PostgreSQL DATABASE_URL with "test" in
 const dbPackage = new URL('../../../packages/db/package.json', import.meta.url);
 const prismaCli = createRequire(dbPackage).resolve('prisma/build/index.js');
 
-export async function createTestDatabase() {
+export async function createTestDatabase(onQuery?: () => void) {
   let url: URL;
   try {
     url = new URL(process.env.DATABASE_URL ?? composeTestUrl);
@@ -32,7 +32,11 @@ export async function createTestDatabase() {
   const maintenance = new PrismaClient({ datasourceUrl: url.href });
   const name = `so_test_${randomUUID().replaceAll('-', '')}`;
   url.pathname = `/${name}`;
-  const db = new PrismaClient({ datasourceUrl: url.href });
+  const db = new PrismaClient({
+    datasourceUrl: url.href,
+    log: onQuery ? [{ emit: 'event', level: 'query' }] : [],
+  });
+  if (onQuery) db.$on('query', onQuery);
 
   let created = false;
   async function dispose() {
@@ -66,25 +70,27 @@ export async function createTestDatabase() {
   }
 }
 
-/** Pause the first transaction just after its Need read, keeping the real connection and any locks open. */
-export function pauseAfterNeedRead(db: PrismaClient) {
+/** Pause after the raw read for this ID, keeping its real connection and any locks open. */
+export function pauseAfterLockedRead(db: PrismaClient, id: string) {
   let signalRead!: (pid: number) => void;
   const read = new Promise<number>((resolve) => { signalRead = resolve; });
   let resume!: () => void;
   const paused = new Promise<void>((resolve) => { resume = resolve; });
   const transact = db.$transaction.bind(db);
-  const spy = vi.spyOn(db, '$transaction').mockImplementationOnce(((operation: (tx: Prisma.TransactionClient) => Promise<unknown>) =>
-    transact(async (tx) => {
-      const [backend] = await tx.$queryRaw<{ pid: number }[]>`SELECT pg_backend_pid() AS pid`;
+  let seen = false;
+  const spy = vi.spyOn(db, '$transaction').mockImplementation(((...args: Parameters<typeof transact>) => {
+    const [operation, options] = args;
+    if (typeof operation !== 'function') return transact(...args);
+    return transact(async (tx) => {
       const query = tx.$queryRaw.bind(tx);
-      let firstRead = true;
       const gated = new Proxy(tx, {
         get(target, key, receiver) {
           if (key !== '$queryRaw') return Reflect.get(target, key, receiver);
-          return async (...args: Parameters<typeof query>) => {
-            const result = await query(...args);
-            if (firstRead) {
-              firstRead = false;
+          return async (...queryArgs: Parameters<typeof query>) => {
+            const result = await query(...queryArgs);
+            if (!seen && queryArgs.slice(1).includes(id)) {
+              seen = true;
+              const [backend] = await query<{ pid: number }[]>`SELECT pg_backend_pid() AS pid`;
               signalRead(backend!.pid);
               await paused;
             }
@@ -93,7 +99,8 @@ export function pauseAfterNeedRead(db: PrismaClient) {
         },
       });
       return operation(gated);
-    })) as typeof db.$transaction);
+    }, options);
+  }) as typeof db.$transaction);
   return { read, resume, restore: () => spy.mockRestore() };
 }
 

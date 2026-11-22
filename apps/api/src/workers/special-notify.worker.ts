@@ -2,6 +2,8 @@ import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
 import type { PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS } from '@so/shared';
+import { transactionWithRetry } from '../lib/tx-retry.js';
+import { findNeedForUpdate } from '../services/collection-state.js';
 
 /** People handled per collection and run; the rest follow on the next hourly runs */
 const BATCH = 500;
@@ -50,12 +52,17 @@ export async function runSpecialNotify(db: PrismaClient): Promise<number> {
 
       const type = col.creator.role === 'AUTHOR' ? 'SPECIAL_AUTHOR' : 'SPECIAL_DEVELOPER';
       const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
-      const res = await db.notification.createMany({
-        data: users.map((u) => ({ userId: u.id, collectionId: col.id, type, handshakePath: [], expiresAt, wave: 0 })),
-        skipDuplicates: true,
+      const count = await transactionWithRetry(db, async (tx) => {
+        const need = await findNeedForUpdate(tx, col.id);
+        if (!need || need.status !== 'ACTIVE' || need.blockReason != null) return 0;
+        const result = await tx.notification.createMany({
+          data: users.map((u) => ({ userId: u.id, collectionId: col.id, type, handshakePath: [], expiresAt, wave: 0 })),
+          skipDuplicates: true,
+        });
+        return result.count;
       });
-      total += res.count;
-      console.log(`[special-notify] collection ${col.id}: ${res.count} people told`);
+      total += count;
+      console.log(`[special-notify] collection ${col.id}: ${count} people told`);
     } catch (err) {
       console.error(`[special-notify] collection ${col.id} failed:`, err);
     }

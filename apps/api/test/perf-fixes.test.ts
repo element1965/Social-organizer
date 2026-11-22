@@ -6,10 +6,11 @@ import { NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { appRouter } from '../src/routers/index.js';
 import { notifyGoalReached, syncCollectionGoal } from '../src/services/collection-amount.js';
+import * as notices from '../src/services/notice-delivery.js';
 import { createUserWithReferralSlug } from '../src/services/referral-slug.service.js';
 import { remainingBudgets } from '../src/services/network.service.js';
 import { touchUserNow } from '../src/services/activity.service.js';
-import { createTestDatabase, isBlockingTransaction, pauseAfterNeedRead } from './test-database.js';
+import { createTestDatabase, isBlockingTransaction, pauseAfterLockedRead } from './test-database.js';
 
 vi.hoisted(() => {
   // Enable only local behavior, even if a developer's shell exports integration settings.
@@ -152,7 +153,14 @@ describe('goal reached notices (PERF-1)', () => {
     const job = { data: { collectionId: need.id } } as Job<{ collectionId: string }>;
     const author = appRouter.createCaller({ db, userId: id('author'), ip: '127.0.0.1' });
     const getDb = vi.spyOn(database, 'getDb').mockReturnValue(db);
-    const gate = pauseAfterNeedRead(db);
+    const gate = pauseAfterLockedRead(db, need.id);
+    const drains: Promise<void>[] = [];
+    const dispatch = notices.dispatchPendingNeedNotices;
+    const drain = vi.spyOn(notices, 'dispatchPendingNeedNotices').mockImplementation((...args) => {
+      const pending = dispatch(...args);
+      drains.push(pending);
+      return pending;
+    });
     const worker = processCheckBlock(job);
     let closing: ReturnType<typeof author.collection.close> | undefined;
     try {
@@ -166,6 +174,8 @@ describe('goal reached notices (PERF-1)', () => {
     } finally {
       gate.resume();
       await Promise.allSettled([worker, closing]);
+      await Promise.all(drains);
+      drain.mockRestore();
       gate.restore();
       getDb.mockRestore();
     }

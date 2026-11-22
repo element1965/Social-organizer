@@ -1,5 +1,6 @@
 import webpush from 'web-push';
 import type { PrismaClient } from '@so/db';
+import { recordProviderOutcome, type PushDeliveryGate, type ProviderOutcome } from './provider-outcome.js';
 import { isAllowedPushEndpoint, MAX_PUSH_SUBSCRIPTIONS } from './push-endpoint.js';
 
 /** A push service that does not answer in time is given up on; the next notification tries again. */
@@ -30,9 +31,11 @@ export async function sendWebPush(
   db: PrismaClient,
   userIds: string[],
   payload: WebPushPayload,
-): Promise<void> {
-  if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) return;
-  if (userIds.length === 0) return;
+  beforeHandoff?: PushDeliveryGate,
+): Promise<Map<string, ProviderOutcome>> {
+  const outcomes = new Map<string, ProviderOutcome>();
+  if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) return outcomes;
+  if (userIds.length === 0) return outcomes;
 
   const all = await db.pushSubscription.findMany({
     where: { userId: { in: userIds } },
@@ -46,7 +49,7 @@ export async function sendWebPush(
     perUser.set(sub.userId, n);
     return n <= MAX_PUSH_SUBSCRIPTIONS;
   });
-  if (subscriptions.length === 0) return;
+  if (subscriptions.length === 0) return outcomes;
 
   const expiredIds: string[] = [];
   const jsonPayload = JSON.stringify(payload);
@@ -55,6 +58,14 @@ export async function sendWebPush(
     if (!isAllowedPushEndpoint(sub.endpoint)) {
       expiredIds.push(sub.id);
       continue;
+    }
+    if (beforeHandoff) {
+      const allowed = await beforeHandoff({ kind: 'web', id: sub.id }).catch(() => {
+        recordProviderOutcome(outcomes, sub.userId, 'retry');
+        return false;
+      });
+      if (allowed === 'skip') continue;
+      if (!allowed) break;
     }
     try {
       await webpush.sendNotification(
@@ -65,17 +76,20 @@ export async function sendWebPush(
         jsonPayload,
         { timeout: PUSH_TIMEOUT_MS },
       );
+      recordProviderOutcome(outcomes, sub.userId, 'sent');
     } catch (err: any) {
       if (err?.statusCode === 410 || err?.statusCode === 404) {
         expiredIds.push(sub.id);
+      } else {
+        recordProviderOutcome(outcomes, sub.userId, 'retry');
       }
     }
   }
 
   if (expiredIds.length > 0) {
-    await db.pushSubscription.deleteMany({
-      where: { id: { in: expiredIds } },
-    });
+    await db.pushSubscription.deleteMany({ where: { id: { in: expiredIds } } })
+      .catch(() => console.error('[WebPush] Could not clean up expired subscriptions'));
     console.log(`[WebPush] Cleaned up ${expiredIds.length} expired or unsupported subscriptions`);
   }
+  return outcomes;
 }
