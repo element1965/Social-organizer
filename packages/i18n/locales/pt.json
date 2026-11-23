@@ -821,7 +821,6 @@
       },
       "app": {
         "title": "O aplicativo em si",
-        "example": "Exemplo",
         "circle": "Seu Círculo: as pessoas que você conhece e as que elas conhecem. A Necessidade de Beatriz chega até você por meio de João.",
         "circleSubtitle": "Necessidade · via João",
         "need": "A Necessidade de Beatriz: você informa a sua parte, e os participantes combinam tudo no próprio chat.",

@@ -37,6 +37,7 @@ const net = demoNetwork();
 // empty name would draw a dot)
 const nodes: GraphNode[] = net.nodes.map((n) => ({ id: n.id, name: '​', photoUrl: null, isCenter: n.depth === 0, depth: n.depth }));
 const edges = net.edges.map((e) => ({ source: e.from, target: e.to }));
+const extraLinks = net.links.map((e) => ({ source: e.from, target: e.to }));
 const impulses = [{ id: 'need', path: net.need }];
 const LABELS: DemoLabel[] = ['you', 'tom', 'sarah', 'emma'];
 const query = new URLSearchParams(location.search);
@@ -70,6 +71,7 @@ function Capture() {
       <NetworkGraph
         nodes={nodes}
         edges={edges}
+        extraLinks={extraLinks}
         impulses={impulses}
         farRings={[DEMO_FAR]}
         width={BOX.width}

@@ -815,7 +815,6 @@
       },
       "app": {
         "title": "Die App selbst",
-        "example": "Beispiel",
         "circle": "Ihr Kreis: die Menschen, die Sie kennen, und die, die diese kennen. Julias Bedarf erreicht Sie über Markus.",
         "circleSubtitle": "Bedarf · über Markus",
         "need": "Julias Bedarf: Sie melden Ihren Anteil, und die Beteiligten sprechen sich in ihrem eigenen Chat ab.",

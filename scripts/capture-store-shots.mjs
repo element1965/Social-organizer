@@ -69,6 +69,8 @@ if (!origin) {
       cwd: root,
       shell: true,
       stdio: 'ignore',
+      // The Add screen shows the public link, not a local apps/web/.env address (Vite prefers the process env)
+      env: { ...process.env, VITE_WEB_APP_URL: 'https://www.orginizer.com' },
     });
     let up = false;
     for (let i = 0; i < 120 && !up; i++) {

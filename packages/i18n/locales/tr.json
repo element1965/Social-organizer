@@ -815,7 +815,6 @@
       },
       "app": {
         "title": "Uygulamanın kendisi",
-        "example": "Örnek",
         "circle": "Çevreniz: tanıdığınız kişiler ve onların tanıdıkları. Ayşe’nin İhtiyacı size Murat üzerinden ulaşıyor.",
         "circleSubtitle": "İhtiyaç · Murat üzerinden",
         "need": "Ayşe’nin İhtiyacı: payınızı bildiriyorsunuz, katılımcılar da kendi sohbetlerinde anlaşıyor.",

@@ -815,7 +815,6 @@
       },
       "app": {
         "title": "Själva appen",
-        "example": "Exempel",
         "circle": "Din Krets: de du känner och de som de känner. Annas Behov når dig genom Johan.",
         "circleSubtitle": "Behov · via Johan",
         "need": "Annas Behov: du rapporterar din andel, och deltagarna kommer överens i sin egen chatt.",

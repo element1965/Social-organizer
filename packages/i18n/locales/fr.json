@@ -821,7 +821,6 @@
       },
       "app": {
         "title": "L’application elle-même",
-        "example": "Exemple",
         "circle": "Votre Cercle : les personnes que vous connaissez et celles qu’elles connaissent. Le Besoin de Sophie vous parvient par Julien.",
         "circleSubtitle": "Besoin · par Julien",
         "need": "Le Besoin de Sophie : vous indiquez votre part, et les participants s’organisent dans leur propre chat.",

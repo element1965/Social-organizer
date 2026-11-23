@@ -84,13 +84,11 @@ export function AppFrame({ section, height, children }: { section: ShellSection 
 
 /** A phone: the screen at its real size (390 x 844), scaled into the frame by CSS. */
 function Phone({ section, children }: { section: ShellSection | null; children: ReactNode }) {
-  const { t } = useTranslation();
   return (
     <div className="lvapp-phone">
       <div className="lvapp-screen bg-canvas text-ink" style={PHONE_VARS}>
         <AppFrame section={section} height={PHONE_SCREEN.height}>{children}</AppFrame>
       </div>
-      <span className="lvapp-badge">{t('landing.v2.app.example')}</span>
     </div>
   );
 }

@@ -827,7 +827,6 @@
       },
       "app": {
         "title": "Samotná aplikace",
-        "example": "Příklad",
         "circle": "Váš Kruh: lidé, které znáte, a lidé, které znají oni. Potřeba Jany se k vám dostane přes Tomáše.",
         "circleSubtitle": "Potřeba · přes Tomáše",
         "need": "Potřeba Jany: oznámíte svůj podíl a účastníci se domluví ve vlastním chatu.",

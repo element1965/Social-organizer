@@ -62,21 +62,6 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* "Example", on the frame's top corner */
-.lv .lvapp-badge {
-  position: absolute;
-  top: -12px;
-  inset-inline-start: 22px;
-  z-index: 2;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: var(--lv-warm);
-  color: var(--lv-ink);
-  font: 700 11px/1 var(--sans);
-  letter-spacing: .1em;
-  text-transform: uppercase;
-}
-
 /* the graph's names over its picture: bold, under the dot, with a halo of the scene colour (as graph-3d draws them) */
 .lv .lvapp-name {
   position: absolute;

@@ -815,7 +815,6 @@
       },
       "app": {
         "title": "Itse sovellus",
-        "example": "Esimerkki",
         "circle": "Piirisi: ihmiset, jotka tunnet, ja ihmiset, jotka he tuntevat. Lauran Tarve tulee sinulle Mikon kautta.",
         "circleSubtitle": "Tarve · Mikon kautta",
         "need": "Lauran Tarve: ilmoitat oman osuutesi, ja osallistujat sopivat asioista omassa keskustelussaan.",

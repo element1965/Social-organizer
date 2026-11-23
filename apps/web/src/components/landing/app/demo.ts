@@ -29,12 +29,15 @@ export type DemoEdge = { from: string; to: string };
 /**
  * The example network up to the 3rd handshake, always the same: each person hangs on someone one handshake nearer,
  * and some know a second person. Sarah's Need comes along Sarah → Tom → you.
+ * As in the app (graph.getSlice), `edges` is the walk's tree and `links` the other acquaintances between people in
+ * it: a second person one handshake nearer, or someone in the same ring.
  */
-export function demoNetwork(): { nodes: DemoNode[]; edges: DemoEdge[]; need: string[] } {
+export function demoNetwork(): { nodes: DemoNode[]; edges: DemoEdge[]; links: DemoEdge[]; need: string[] } {
   let seed = 11;
   const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const nodes: DemoNode[] = [{ id: 'you', depth: 0 }];
   const edges: DemoEdge[] = [];
+  const links: DemoEdge[] = [];
   const byDepth: string[][] = [['you'], [], [], []];
   const named: Record<number, string> = { 1: 'tom', 2: 'sarah', 3: 'emma' };
   const parentOf: Record<string, string> = { tom: 'you', sarah: 'tom', emma: 'sarah' };
@@ -49,9 +52,24 @@ export function demoNetwork(): { nodes: DemoNode[]; edges: DemoEdge[]; need: str
       // some people know a second person one handshake nearer
       if (depth > 1 && rand() < 0.18) {
         const other = near[Math.floor(rand() * near.length)]!;
-        if (other !== parent) edges.push({ from: other, to: id });
+        if (other !== parent) links.push({ from: other, to: id });
       }
     }
   }
-  return { nodes, edges, need: ['sarah', 'tom', 'you'] };
+  // Acquaintances inside a ring, from a generator of their own so the tree above stays the same picture
+  let linkSeed = 29;
+  const linkRand = () => (linkSeed = (linkSeed * 16807) % 2147483647) / 2147483647;
+  const seen = new Set<string>();
+  for (const depth of [1, 2, 3] as const) {
+    const ring = byDepth[depth]!;
+    for (const id of ring) {
+      if (linkRand() >= (depth === 1 ? 0.5 : 0.22)) continue;
+      const other = ring[Math.floor(linkRand() * ring.length)]!;
+      const key = [id, other].sort().join('|');
+      if (other === id || seen.has(key)) continue;
+      seen.add(key);
+      links.push({ from: id, to: other });
+    }
+  }
+  return { nodes, edges, links, need: ['sarah', 'tom', 'you'] };
 }

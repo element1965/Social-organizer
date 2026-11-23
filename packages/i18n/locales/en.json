@@ -815,7 +815,6 @@
       },
       "app": {
         "title": "The app itself",
-        "example": "Example",
         "circle": "Your Circle: the people you know and the people they know. Sarah’s Need reaches you through Tom.",
         "circleSubtitle": "Need · through Tom",
         "need": "Sarah’s Need: you report your share, and the participants agree in their own chat.",

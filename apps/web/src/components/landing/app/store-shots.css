@@ -79,22 +79,6 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* "Example", on the frame's top corner (as on the landing) */
-.ss-tag {
-  position: absolute;
-  top: -13px;
-  inset-inline-start: 24px;
-  z-index: 3;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: rgb(var(--so-warm));
-  color: rgb(var(--so-ink));
-  font: 800 12px/1 var(--font);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.ss-ipad .ss-tag { top: -18px; inset-inline-start: 40px; padding: 10px 18px; font-size: 18px; }
-
 /* the live QR card leaning out of the Add screen */
 .ss-qr {
   position: absolute;

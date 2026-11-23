@@ -62,19 +62,43 @@ export const TABLET_SCENE_BOX = { width: TABLET.width, height: TABLET.height - P
  */
 const CAPTIONS: Record<Lang, Record<Shot, { title: string; sub?: string }> & { feature: string }> = {
   en: {
-    circle: { title: "It's a smaller world than you think." },
-    need: { title: 'Sarah lost her job.\nYou hear about it through Tom' },
-    join: { title: 'You decide whether to take part, and how much', sub: 'Nothing is paid in the app. You agree in your own chat.' },
-    ask: { title: 'Tomorrow it could be you.\nPeople you know hear first' },
-    add: { title: 'It starts with people you know in person' },
+    circle: {
+      title: "It's a smaller world than you think.",
+      sub: 'If everyone adds 30+ people they know, the network grows exponentially: tens of thousands within three handshakes.',
+    },
+    need: {
+      title: 'Sarah lost her job.\nYou hear about it through Tom',
+      sub: 'You see who links you to her and her activity history in the network.',
+    },
+    join: {
+      title: 'You decide whether to take part, and how much',
+      sub: 'No money moves through the app; you agree in your own chat. Taking part adds to your history.',
+    },
+    ask: { title: 'Tomorrow it could be you.\nPeople you know hear first', sub: 'By taking part now, you also back your future self.' },
+    add: {
+      title: 'Join by invitation\nor start your own network',
+      sub: 'Build it in advance: on a hard day there is no time or energy for it.',
+    },
     feature: "It's a smaller world than you think.",
   },
   ru: {
-    circle: { title: 'Мир теснее, чем кажется.' },
-    need: { title: 'Мария потеряла работу.\nВы узнаёте об этом через Олега' },
-    join: { title: 'Участвовать ли и с какой суммой, решаете вы', sub: 'Через приложение деньги не идут. Договариваетесь в своём чате.' },
-    ask: { title: 'Завтра на её месте можете оказаться вы.\nПервыми узнают ваши знакомые' },
-    add: { title: 'Всё начинается с тех, кого вы знаете лично' },
+    circle: {
+      title: 'Мир теснее, чем кажется.',
+      sub: 'Если у каждого от 30 знакомых, сеть растёт по экспоненте: за три рукопожатия в ней десятки тысяч человек.',
+    },
+    need: {
+      title: 'Мария потеряла работу.\nВы узнаёте об этом через Олега',
+      sub: 'Вы видите, через кого она с вами связана, и её историю активности в сети.',
+    },
+    join: {
+      title: 'Участвовать ли и сколько, решаете вы',
+      sub: 'Деньги через приложение не проходят, вы договариваетесь в своём чате. Участие пополняет вашу историю.',
+    },
+    ask: { title: 'Завтра на месте Марии можете оказаться вы.\nПервыми узнают ваши знакомые', sub: 'Участвуя сейчас, вы подстраховываете и себя.' },
+    add: {
+      title: 'Войдите по приглашению\nили начните свою сеть сами',
+      sub: 'Сеть лучше собрать заранее: в трудный день на это не будет ни времени, ни сил.',
+    },
     feature: 'Мир теснее, чем кажется.',
   },
 };
@@ -210,10 +234,6 @@ function Frame({ shot, tablet, k, children }: { shot: Shot; tablet: boolean; k: 
   );
 }
 
-function ExampleTag() {
-  return <span className="ss-tag">{i18n.t('landing.v2.app.example')}</span>;
-}
-
 /** The live QR card (QrPage) over the Add screen, as on the landing: a real code that opens the download page. */
 function QrCard({ k }: { k: number }) {
   return (
@@ -269,7 +289,6 @@ function StoreShot({ device, shot, lang }: { device: Exclude<Device, 'feature'>;
       <div ref={stage} className="ss-stage">
         {k > 0 ? (
           <Frame shot={shot} tablet={tablet} k={k}>
-            <ExampleTag />
             {shot === 'add' ? <QrCard k={k * (tablet ? 1.2 : 0.8)} /> : null}
           </Frame>
         ) : null}
