@@ -426,10 +426,15 @@ html[lang="th"] .lv :is(h1, h2) { line-height: 1.25; }
   .lv .badge { gap: 8px; padding-inline: 10px; }
   .lv .badge span { font-size: 14px; }
 }
-@media (max-width: 440px) {
+@media (max-width: 480px) {
+  /* Solid header on a phone: logo, language and the start button on one line; the name and the FAQ shortcut step aside */
+  .lv .nav.solid .brand span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .lv .nav.solid .jump { display: none; }
   .lv .nav .wrap, .lv .nav .tools { gap: 8px; }
-  /* Long start labels can wrap within the header. */
   .lv .nav .tools { min-width: 0; }
+}
+@media (max-width: 359px) {
+  /* The narrowest phones: a long start label may wrap rather than leave the screen */
   .lv .nav .btn { min-width: 0; padding-inline: 12px; white-space: normal; overflow-wrap: anywhere; text-align: center; line-height: 1.15; }
 }
 @media (max-width: 340px) {
