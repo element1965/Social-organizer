@@ -428,6 +428,17 @@ html[lang="th"] .lv :is(h1, h2) { line-height: 1.25; }
   .lv .badge { gap: 8px; padding-inline: 10px; }
   .lv .badge span { font-size: 14px; }
 }
+@media (max-width: 440px) {
+  /* Once the header is solid it shows the start button: drop the FAQ shortcut so the row fits a phone */
+  .lv .nav.solid .jump { display: none; }
+  .lv .nav .tools { min-width: 0; gap: 8px; }
+  /* A long label (Serbian, Vietnamese…) wraps to two lines instead of pushing the button off screen */
+  .lv .nav .btn { min-width: 0; padding-inline: 12px; white-space: normal; text-align: center; line-height: 1.15; }
+}
+@media (max-width: 360px) {
+  /* The narrowest phones: the language switch stays in the top-of-page header only */
+  .lv .nav.solid .site-lang { display: none; }
+}
 @media (max-width: 340px) {
   .lv .stores { grid-template-columns: minmax(0, 1fr); }
 }
