@@ -713,7 +713,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer: tanıdığınız insanların ağı",
-        "description": "Birbirini yüz yüze tanıyan insanların ağı. Biri zor durumda kaldığında pek çok kişi yardım edebilir."
+        "description": "Birbirini yüz yüze tanıyan insanların ağı. Biri zor durumda kaldığında pek çok kişi katılabilir."
       },
       "nav": {
         "label": "Bölümler",
@@ -779,7 +779,7 @@
         "b9": {
           "label": "Uygulamada",
           "say": "Ağınız uygulamada böyle görünür: siz ortadasınız, çevrenizde tanıdıklarınız, daha dışarıda onların tanıdıkları.",
-          "late": "Birinin yardıma ihtiyacı olduğunda, o kişiden size uzanan tanıdık zincirini görürsünüz."
+          "late": "Biri bir ihtiyaç bildirdiğinde, o kişiden size uzanan tanıdık zincirini görürsünüz."
         },
         "rail": {
           "1": "Sürü",
@@ -822,33 +822,32 @@
       },
       "grow": {
         "title": "Ağ nasıl büyür",
-        "text": "Her yeni gelen, tanıdığı kişileri davet eder. Ortalama kaç kişi olacağını seçin ve ağa ne olduğunu izleyin.",
-        "canvasAria": "Ağ büyüme modeli: davetler tek bir kişiden yayılıyor",
-        "slider": "Kişi başına ortalama davet",
-        "unit": "kişi",
-        "threshold": "eşik",
+        "text": "Herkes şahsen tanıdığı kişileri ekler. Kişi başına ortalama kaç tanıdık eklendiğini seç, birkaç el sıkışmasıyla kaç kişiye ulaşabildiğini gör.",
+        "canvasAria": "Ağ büyüme modeli: bağlantılar bir kişiden onun tanıdıklarına yayılır",
+        "slider": "Herkes ortalama şu kadar kişi ekler:",
+        "unit_one": "tanıdık",
+        "unit_other": "tanıdık",
         "statPeople_one": "kişi ağda",
         "statPeople_other": "kişi ağda",
-        "statWaves_one": "davet dalgası",
-        "statWaves_other": "davet dalgası",
-        "dies": "Büyüme durdu",
-        "grows": "Bu modelde ağ büyümeye devam ediyor.",
-        "full": "Modelde yeni insan kalmadı",
+        "statWaves_one": "el sıkışması",
+        "statWaves_other": "el sıkışması",
+        "insight": "Kişi başına yaklaşık 30 tanıdıktan itibaren ağ üstel olarak büyür: üç el sıkışmasında on binlerce kişiye ulaşır. Böyle bir ağda katılımın sana da somut bir faydası olur: zor durumda kaldığında karşılık verecek insanlar vardır.",
+        "full": "Bu noktadan sonra ağın büyümesini gerçek toplulukların büyüklüğü sınırlar",
         "restart": "Baştan başla",
         "hint": "Başka birinden başlamak için modele dokunun",
-        "note": "Basitleştirilmiş bir model. Tanıdık çevreleri birbiriyle kesişir ve kimse kimseyi davet etmek zorunda değil.",
-        "axisX": "dalgalar",
+        "note": "Bu basitleştirilmiş bir model. Tanıdık çevreleri örtüştüğü için sonraki her el sıkışmasında ağa daha az yeni kişi katılır.",
+        "axisX": "el sıkışması",
         "axisY": "kişi"
       },
       "next": {
         "label": "Sonrası",
-        "title": "{{min}} ile yardım etmek yalnızca başlangıç",
-        "text": "Zamanla insanların tanıdık ağı üzerinden birinin tavsiye ettiği bir usta, bir proje için ortaklar, kendi girişimleri için fikirdaşlar bulmalarını istiyoruz. Ve bunu, bugün olduğu gibi, doğrudan aralarında kararlaştırmalarını.",
+        "title": "{{min}} tutarından başlayan katılım yalnızca başlangıç",
+        "text": "Şimdi katılarak kendini de düşünmüş olursun: bir dahaki sefere ağ senin ihtiyacına karşılık verir. Zamanla insanların tanıdık ağı üzerinden tavsiye edilen bir usta, ortak bir projeye ekip arkadaşı ya da kendi girişimleri için benzer düşünen kişiler bulmalarını istiyoruz. Kendi aralarında da bugünkü gibi doğrudan anlaşabilirler.",
         "now": "Şimdi",
         "later": "Sonra",
         "need": "İhtiyaç",
         "participation": "Katılım",
-        "tradesperson": "Güvenilir usta",
+        "tradesperson": "Tavsiye edilen usta",
         "project": "Ortak proje"
       },
       "join": {
@@ -864,8 +863,8 @@
         "w1": "Kendi topluluğunuz varsa uygulamayı orada deneyin. Onu topluluğunuzun kullandığı kelimelerle anlatmanıza yardım ederiz.",
         "w2Title": "Projeyi başkalarına anlatın",
         "w2": "Bu sayfayı ilgilenebilecek kişilere gönderin ya da Social Organizer hakkında kendiniz yazın.",
-        "w3Title": "Araştırmaya ya da koda yardım edin",
-        "w3": "Teori <report>araştırma raporunda</report> anlatılıyor, kod ise <code>GitHub</code>'da açık. Teoriyi sınamaya ya da uygulama üzerinde çalışmaya yardım edin.",
+        "w3Title": "Araştırmaya veya geliştirmeye katılın",
+        "w3": "Teori <report>araştırma raporunda</report> anlatılıyor; kaynak kodu <code>GitHub</code>’da açık. Teoriyi sınamaya veya uygulamayı geliştirmeye katılın.",
         "selectLink": "Aşağıdaki alandan bağlantıyı kopyalayın.",
         "nowLive_one": "kişi ağda bağlantılı",
         "nowLive_other": "kişi ağda bağlantılı"
@@ -873,28 +872,27 @@
       "faq": {
         "title": "Sorular",
         "q1": "İnsanların sözünü tutmasını kim sağlıyor?",
-        "a1": "Aracı yok. Kime güveneceğinize siz karar verirsiniz, insanlarla doğrudan anlaşırsınız. Tanıdık zinciri sayesinde kiminle muhatap olduğunuzu da öğrenebilirsiniz.",
-        "q2": "Bu bir sigorta ya da fon mu?",
-        "a2": "Hayır. Kimse önceden ödeme yapmaz, kimse ödeme vaat etmez. Ortak bir kasa da sayman da yok.",
-        "q3": "Bu bir bağış kampanyası mı?",
+        "a1": "Aracı yok. Kiminle muhatap olacağına sen karar verirsin ve o kişinin ağdaki etkinlik geçmişini görebilirsin. Katıldıkça kendi geçmişini oluşturursun.",
+        "q2": "Katılmak için önceden ödeme yapmam gerekiyor mu?",
+        "a2": "Hayır. Katılım bir niyetle başlar. Uygulama para tutmaz ve kimse ödeme sözü vermez.",
+        "q3": "Uygulama bildirilen bir ihtiyacı herkese haber verir mi?",
         "a3": "Hayır. İhtiyaç yalnızca sahibiyle tanıdıklar üzerinden bağlantılı kişilere ulaşır ve bir dahaki sefere isteyen siz olabilirsiniz.",
         "q4": "Bu bir saadet zinciri mi?",
         "a4": "Hayır. Kimse katılmak için para ödemez, kimse davetlerden kazanç sağlamaz.",
         "q6": "Hangi verileri saklıyorsunuz?",
         "data": {
           "account": "Ad, e-posta, giriş yaptığınız hizmetteki hesap kimlikleri ve eklediğiniz fotoğraf, telefon numarası veya konum gibi hesap ve profil bilgilerini saklarız.",
-          "activity": "Dil ve tema gibi ayarları, davet ve bağlantı geçmişini, bildirilen ihtiyaçları, katılımı ve belirtilen tutarları da saklarız.",
+          "activity": "Dil ve tema gibi ayarlarını, davet ve bağlantı geçmişini, bildirilen ihtiyaçları, katılımı ve niyet olarak belirttiğin tutarları saklıyoruz.",
           "notifications": "Giriş kodlarını, bildirim gönderme verilerini ve bildirim geçmişini, ayrıca gönderdiğiniz şikâyet ve destek mesajlarını saklarız.",
           "money": "Uygulama paraya dokunmaz, kart veya banka bilgisi istemez."
         }
       },
       "start": {
         "label": "Uygulama",
-        "title": "Ağınızı önceden kurun",
-        "text": "Zor bir günde buna ne zaman ne de güç kalır.",
+        "title": "Bir tanıdığının davetiyle katıl veya kendi ağını kurmaya başla",
+        "text": "Ağını önceden kurman daha iyi: zor bir günde buna ne zamanın ne de gücün olur.",
         "s1": "Tanıdığınız birinden gelen bağlantıyı açın ya da kendiniz Google, Apple, Telegram veya e-postayla gelen bir kodla giriş yapın. Şifre gerekmez.",
         "s2": "Yüz yüze tanıdığınız kişileri ekleyin: bir bağlantıyla, QR kodla ya da telefonlarınızı yan yana sallayarak.",
-        "s3": "Niyetinizi belirleyin: ağdaki biri zor durumda kaldığında genellikle belirtmeye hazır olduğunuz tutar.",
         "qr": "Telefonunuzun kamerasını buraya tutun, doğru mağaza açılır.",
         "playTop": "Şimdi edinin",
         "play": "Google Play'den",

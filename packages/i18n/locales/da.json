@@ -713,7 +713,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer: et netværk af mennesker, du kender",
-        "description": "Et netværk af mennesker, der kender hinanden personligt. Når nogen er i knibe, kan mange hjælpe."
+        "description": "Et netværk af mennesker, der kender hinanden personligt. Når nogen er i knibe, kan mange deltage."
       },
       "nav": {
         "label": "Sektioner",
@@ -779,7 +779,7 @@
         "b9": {
           "label": "I appen",
           "say": "Sådan ser dit netværk ud i appen: dig i midten, dine bekendte rundt om dig og længere ude deres bekendte.",
-          "late": "Når nogen har brug for hjælp, ser du kæden af bekendte fra den person til dig."
+          "late": "Når nogen melder et behov, ser du kæden af bekendte fra den person til dig."
         },
         "rail": {
           "1": "Flok",
@@ -822,28 +822,27 @@
       },
       "grow": {
         "title": "Sådan vokser netværket",
-        "text": "Hver ny person inviterer sine bekendte. Indstil, hvor mange i gennemsnit, og se, hvad der sker med netværket.",
-        "canvasAria": "Model af netværkets vækst: invitationer spreder sig ud fra én person",
-        "slider": "Hver person inviterer i gennemsnit",
-        "unit": "personer",
-        "threshold": "tærskel",
+        "text": "Alle tilføjer dem, de kender personligt. Vælg, hvor mange det er i gennemsnit, og se, hvor mange mennesker der kun er få håndtryk fra dig.",
+        "canvasAria": "Model af netværkets vækst: Fra én person går der forbindelser ud til personens bekendte",
+        "slider": "Hver person tilføjer i gennemsnit",
+        "unit_one": "bekendt",
+        "unit_other": "bekendte",
         "statPeople_one": "person i netværket",
         "statPeople_other": "mennesker i netværket",
-        "statWaves_one": "bølge af invitationer",
-        "statWaves_other": "bølger af invitationer",
-        "dies": "Væksten er gået i stå",
-        "grows": "I denne model bliver netværket ved med at vokse.",
-        "full": "Der er ikke flere nye mennesker i modellen",
+        "statWaves_one": "håndtryk",
+        "statWaves_other": "håndtryk",
+        "insight": "Med omkring 30 bekendte pr. person vokser netværket eksponentielt: Allerede efter tre håndtryk tæller det titusinder af mennesker. I sådan et netværk gør deltagelse en forskel for dig: Når du selv står i en svær situation, er der nogen til at reagere.",
+        "full": "Herfra sætter virkelige fællesskabers størrelse grænsen for netværket",
         "restart": "Start forfra",
         "hint": "Tryk på modellen for at starte fra en anden",
-        "note": "En forenklet model. Omgangskredse overlapper hinanden, og ingen behøver at invitere nogen.",
-        "axisX": "bølger",
+        "note": "Det er en forenklet model. Bekendtskabskredse overlapper, så der kommer færre nye mennesker til for hvert håndtryk.",
+        "axisX": "håndtryk",
         "axisY": "mennesker"
       },
       "next": {
         "label": "Fremover",
-        "title": "Hjælp med {{min}} er kun begyndelsen",
-        "text": "Med tiden vil vi gerne have, at folk gennem deres netværk af bekendte også finder en anbefalet håndværker, partnere til et fælles projekt og ligesindede til deres eget initiativ. Og at de, som nu, aftaler det direkte.",
+        "title": "Deltagelse fra {{min}} er kun begyndelsen",
+        "text": "Når du deltager nu, tænker du også på dig selv: Næste gang er det dit behov, netværket reagerer på. På sigt vil vi gerne gøre det muligt at finde en håndværker på anbefaling, partnere til et fælles projekt og ligesindede til sit eget initiativ gennem netværket. Og at aftale det direkte, som i dag.",
         "now": "Nu",
         "later": "Senere",
         "need": "Behov",
@@ -864,8 +863,8 @@
         "w1": "Har du dit eget fællesskab, så prøv appen der. Vi hjælper dig med at forklare den med de ord, fællesskabet bruger.",
         "w2Title": "Fortæl andre om projektet",
         "w2": "Send siden til folk, den kan betyde noget for, eller skriv selv om Social Organizer.",
-        "w3Title": "Hjælp med forskningen eller koden",
-        "w3": "Teorien er beskrevet i <report>forskningsrapporten</report>, og koden er åben på <code>GitHub</code>. Hjælp med at teste teorien eller med at udvikle appen.",
+        "w3Title": "Deltag i forskningen eller udviklingen",
+        "w3": "Teorien er beskrevet i <report>forskningsrapporten</report>, og koden er offentligt tilgængelig på <code>GitHub</code>. Deltag i afprøvningen af teorien eller udviklingen af appen.",
         "selectLink": "Kopiér linket i feltet nedenfor.",
         "nowLive_one": "person med forbindelser i netværket",
         "nowLive_other": "personer med forbindelser i netværket"
@@ -873,28 +872,27 @@
       "faq": {
         "title": "Spørgsmål",
         "q1": "Hvem sørger for, at folk holder ord?",
-        "a1": "Der er ingen mellemled. Du bestemmer selv, hvem du stoler på, og aftaler tingene direkte med folk. Gennem kæden af bekendte kan du finde ud af, hvem du har med at gøre.",
-        "q2": "Er det en forsikring eller en fond?",
-        "a2": "Nej. Ingen betaler på forhånd, og ingen lover en udbetaling. Der er ingen fælles kasse og ingen kasserer.",
-        "q3": "Er det en indsamling?",
-        "a3": "Nej. Et behov når kun mennesker, der er forbundet med afsenderen gennem bekendte, og næste gang er det måske dig, der beder om hjælp.",
+        "a1": "Der er ingen mellemled. Du vælger selv, hvem du vil have med at gøre, og du kan se personens aktivitetshistorik i netværket. Ved at deltage opbygger du din egen historik.",
+        "q2": "Skal jeg betale på forhånd for at deltage?",
+        "a2": "Nej. Deltagelse begynder med en hensigt. Appen opbevarer ingen penge, og ingen lover en udbetaling.",
+        "q3": "Får alle besked om et behov?",
+        "a3": "Nej. Et behov når kun mennesker, der er forbundet med afsenderen gennem bekendte. Næste gang er det måske dig, der melder et behov.",
         "q4": "Er det et pyramidespil?",
         "a4": "Nej. Ingen betaler for at være med, og ingen tjener på invitationer.",
         "q6": "Hvilke data gemmer I?",
         "data": {
           "account": "Vi gemmer konto- og profiloplysninger som navn, e-mail og id fra den tjeneste, du logger ind med, samt det, du tilføjer, for eksempel foto, telefonnummer og placering.",
-          "activity": "Vi gemmer også indstillinger som sprog og tema, invitationer og forbindelser samt anmeldte behov, deltagelse og angivne beløb.",
+          "activity": "Vi gemmer dine indstillinger, bl.a. sprog og tema, din invitations- og forbindelseshistorik, anmeldte behov, deltagelse og de beløb, du angiver som din hensigt.",
           "notifications": "Vi gemmer loginkoder, data til notifikationer og deres historik samt de klager og beskeder, du sender til support.",
           "money": "Appen håndterer ikke penge og beder ikke om kort- eller bankoplysninger."
         }
       },
       "start": {
         "label": "Appen",
-        "title": "Byg dit netværk, før du får brug for det",
-        "text": "På en dårlig dag er der hverken tid eller kræfter til det.",
+        "title": "Bliv medlem via en invitation fra en bekendt, eller begynd at bygge dit eget netværk",
+        "text": "Byg helst netværket på forhånd: Når du har en svær dag, har du hverken tid eller kræfter til det.",
         "s1": "Åbn et link fra en, du kender, eller log selv ind med Google, Apple, Telegram eller en kode på e-mail. Du behøver ingen adgangskode.",
         "s2": "Tilføj mennesker, du kender personligt: med et link, en QR-kode eller ved at ryste telefonerne ved siden af hinanden.",
-        "s3": "Vælg det beløb, du normalt vil angive, hvis nogen i netværket har det svært.",
         "qr": "Ret telefonens kamera hertil, så åbner den rigtige butik.",
         "playTop": "Hent den i",
         "play": "Google Play",

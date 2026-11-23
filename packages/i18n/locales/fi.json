@@ -713,7 +713,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer: tuttujen ihmisten verkosto",
-        "description": "Verkosto ihmisistä, jotka tuntevat toisensa henkilökohtaisesti. Kun joku on pulassa, moni voi auttaa."
+        "description": "Verkosto ihmisistä, jotka tuntevat toisensa henkilökohtaisesti. Kun joku on pulassa, moni voi osallistua."
       },
       "nav": {
         "label": "Osiot",
@@ -779,7 +779,7 @@
         "b9": {
           "label": "Sovelluksessa",
           "say": "Näin verkostosi näkyy sovelluksessa: sinä keskellä, ympärilläsi tuttusi ja kauempana heidän tuttunsa.",
-          "late": "Kun joku tarvitsee apua, näet tuttujen ketjun hänestä sinuun asti."
+          "late": "Kun joku ilmoittaa tarpeesta, näet tuttujen ketjun hänestä sinuun asti."
         },
         "rail": {
           "1": "Parvi",
@@ -822,28 +822,27 @@
       },
       "grow": {
         "title": "Näin verkosto kasvaa",
-        "text": "Jokainen uusi tulija kutsuu tuttujaan. Valitse, montako kukin kutsuu keskimäärin, ja katso, mitä verkostolle tapahtuu.",
-        "canvasAria": "Verkoston kasvun malli: kutsut leviävät yhdestä ihmisestä",
-        "slider": "Jokainen kutsuu keskimäärin",
-        "unit": "ihmistä",
-        "threshold": "kynnys",
+        "text": "Jokainen lisää verkostoon ihmisiä, jotka tuntee henkilökohtaisesti. Valitse tuttavien keskimääräinen määrä ja katso, kuinka monta ihmistä on vain muutaman kädenpuristuksen päässä sinusta.",
+        "canvasAria": "Verkoston kasvumalli: yhdestä henkilöstä lähtee yhteyksiä hänen tuttaviinsa",
+        "slider": "Jokainen lisää keskimäärin",
+        "unit_one": "tuttavan",
+        "unit_other": "tuttavaa",
         "statPeople_one": "ihminen verkostossa",
         "statPeople_other": "ihmistä verkostossa",
-        "statWaves_one": "kutsuaalto",
-        "statWaves_other": "kutsuaaltoa",
-        "dies": "Kasvu pysähtyi",
-        "grows": "Tässä mallissa verkosto jatkaa kasvuaan.",
-        "full": "Mallista loppuivat uudet ihmiset",
+        "statWaves_one": "kädenpuristus",
+        "statWaves_other": "kädenpuristusta",
+        "insight": "Kun jokaisella on noin 30 tuttavaa, verkosto kasvaa eksponentiaalisesti: jo kolmen kädenpuristuksen päässä on kymmeniätuhansia ihmisiä. Tällaisessa verkostossa osallistumisesta on konkreettista hyötyä: kun sinulla on vaikeaa, on ihmisiä, jotka voivat vastata tarpeeseesi.",
+        "full": "Tästä eteenpäin verkoston kasvua rajoittaa todellisten yhteisöjen koko",
         "restart": "Aloita alusta",
         "hint": "Napauta mallia, niin verkosto alkaa toisesta ihmisestä",
-        "note": "Yksinkertaistettu malli. Tuttavapiirit menevät päällekkäin, eikä kenenkään ole pakko kutsua ketään.",
-        "axisX": "aallot",
+        "note": "Tämä on yksinkertaistettu malli. Tuttavapiirit limittyvät, joten jokainen uusi kädenpuristus tuo verkostoon vähemmän uusia ihmisiä.",
+        "axisX": "kädenpuristukset",
         "axisY": "ihmiset"
       },
       "next": {
         "label": "Seuraavaksi",
-        "title": "{{min}} apua on vasta alkua",
-        "text": "Ajan mittaan haluamme, että ihmiset löytävät tuttavaverkostonsa kautta myös suositellun ammattilaisen, kumppaneita yhteiseen hankkeeseen ja samanhenkisiä omaan aloitteeseensa. Ja sopivat asioista, kuten nytkin, suoraan.",
+        "title": "Osallistuminen alkaen {{min}} on vasta alku",
+        "text": "Osallistumalla nyt pidät huolta myös itsestäsi: ensi kerralla verkosto vastaa sinun tarpeeseesi. Ajan mittaan haluamme, että tuttavaverkoston kautta voi löytää suositellun ammattilaisen, kumppaneita yhteiseen projektiin tai samanhenkisiä ihmisiä omaan hankkeeseen. Asioista sovitaan suoraan, kuten nykyäänkin.",
         "now": "Nyt",
         "later": "Myöhemmin",
         "need": "Tarve",
@@ -864,8 +863,8 @@
         "w1": "Jos sinulla on oma yhteisö, kokeile sovellusta siellä. Autamme selittämään sen yhteisösi omin sanoin.",
         "w2Title": "Kerro hankkeesta muille",
         "w2": "Lähetä tämä sivu ihmisille, joille se voi olla tärkeä, tai kirjoita itse Social Organizerista.",
-        "w3Title": "Auta tutkimuksessa tai koodissa",
-        "w3": "Teoria on kuvattu <report>tutkimusraportissa</report>, ja koodi on avoimesti saatavilla <code>GitHub</code>issa. Auta testaamaan teoriaa tai kehittämään sovellusta.",
+        "w3Title": "Osallistu tutkimukseen tai kehitykseen",
+        "w3": "Teoria on kuvattu <report>tutkimusraportissa</report>, ja lähdekoodi on julkinen <code>GitHubissa</code>. Osallistu teorian testaamiseen tai sovelluksen kehittämiseen.",
         "selectLink": "Kopioi linkki alla olevasta kentästä.",
         "nowLive_one": "ihminen, jolla on yhteyksiä verkostossa",
         "nowLive_other": "ihmistä, joilla on yhteyksiä verkostossa"
@@ -873,28 +872,27 @@
       "faq": {
         "title": "Kysymykset",
         "q1": "Kuka huolehtii, että ihmiset pitävät sanansa?",
-        "a1": "Välikäsiä ei ole. Päätät itse, keihin luotat, ja sovit asioista suoraan ihmisten kanssa. Tuttavaketjun kautta voit selvittää, kenen kanssa olet tekemisissä.",
-        "q2": "Onko tämä vakuutus vai rahasto?",
-        "a2": "Ei. Kukaan ei maksa etukäteen eikä kukaan lupaa korvausta. Yhteistä kassaa tai rahastonhoitajaa ei ole.",
-        "q3": "Onko tämä lahjoituskeräys?",
+        "a1": "Välikäsiä ei ole. Päätät itse, kenen kanssa asioit, ja näet, miten hän on aiemmin toiminut verkostossa. Osallistumalla kerrytät omaa historiaasi.",
+        "q2": "Pitääkö osallistumisesta maksaa etukäteen?",
+        "a2": "Ei. Osallistuminen alkaa aikeen ilmoittamisesta. Sovellus ei säilytä rahaa, eikä kukaan lupaa suoritusta.",
+        "q3": "Ilmoittaako sovellus tarpeesta kaikille?",
         "a3": "Ei. Tarve tavoittaa vain ihmiset, jotka ovat tuttujen kautta yhteydessä sen ilmoittajaan, ja ensi kerralla pyytäjä voit olla sinä.",
         "q4": "Onko tämä pyramidipeli?",
         "a4": "Ei. Kukaan ei maksa liittymisestä eikä kukaan ansaitse kutsuilla.",
         "q6": "Mitä tietoja säilytätte?",
         "data": {
           "account": "Säilytämme tili- ja profiilitietoja, kuten nimen, sähköpostin ja kirjautumispalvelun tunnisteet, sekä lisäämäsi tiedot, kuten kuvan, puhelinnumeron tai sijainnin.",
-          "activity": "Säilytämme myös asetukset, kuten kielen ja teeman, kutsu- ja yhteyshistorian, ilmoitetut tarpeet, osallistumisen sekä ilmoitetut summat.",
+          "activity": "Tallennamme asetuksesi, kuten kielen ja teeman, kutsu- ja yhteyshistorian, ilmoitetut tarpeet, osallistumisen ja aikeeksi ilmoittamasi summat.",
           "notifications": "Lisäksi tallennamme kirjautumiskoodit, ilmoituksiin tarvittavat tiedot ja ilmoitushistorian sekä lähettämäsi valitukset ja tukiviestit.",
           "money": "Sovellus ei käsittele rahaa eikä pyydä kortti- tai pankkitietoja."
         }
       },
       "start": {
         "label": "Sovellus",
-        "title": "Rakenna verkostosi ennen kuin tarvitset sitä",
-        "text": "Huonona päivänä siihen ei ole aikaa eikä voimia.",
+        "title": "Liity tuttavan kutsusta tai ala rakentaa omaa verkostoasi",
+        "text": "Verkosto kannattaa rakentaa etukäteen: vaikeana päivänä siihen ei riitä aikaa eikä voimia.",
         "s1": "Avaa tutulta saamasi linkki tai kirjaudu itse Googlella, Applella, Telegramilla tai sähköpostiin tulevalla koodilla. Salasanaa ei tarvita.",
         "s2": "Lisää ihmiset, jotka tunnet henkilökohtaisesti: linkillä, QR-koodilla tai ravistamalla puhelimia vierekkäin.",
-        "s3": "Valitse summa, jonka voisit yleensä ilmoittaa, kun joku verkostossa joutuu pulaan.",
         "qr": "Osoita puhelimen kameralla tähän, niin oikea kauppa avautuu.",
         "playTop": "Saatavilla",
         "play": "Google Playssa",

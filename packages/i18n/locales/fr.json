@@ -717,7 +717,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer : un réseau de personnes que vous connaissez",
-        "description": "Un réseau de personnes qui se connaissent personnellement. Quand quelqu’un est en difficulté, beaucoup peuvent l’aider."
+        "description": "Un réseau de personnes qui se connaissent personnellement. Quand quelqu’un est en difficulté, beaucoup peuvent participer."
       },
       "nav": {
         "label": "Sections",
@@ -783,7 +783,7 @@
         "b9": {
           "label": "Dans l’application",
           "say": "Voici votre réseau dans l’application : vous au centre, vos connaissances autour de vous, puis leurs connaissances plus loin.",
-          "late": "Quand quelqu’un a besoin d’aide, vous voyez la chaîne de connaissances qui va de cette personne jusqu’à vous."
+          "late": "Quand quelqu’un signale un besoin, vous voyez la chaîne de connaissances qui relie cette personne à vous."
         },
         "rail": {
           "1": "Nuée",
@@ -828,35 +828,35 @@
       },
       "grow": {
         "title": "Comment le réseau grandit",
-        "text": "Chaque nouvel arrivant invite ses connaissances. Choisissez combien en moyenne, et voyez ce que devient le réseau.",
-        "canvasAria": "Modèle de croissance du réseau : les invitations partent d’une seule personne",
-        "slider": "Chaque personne invite en moyenne",
-        "unit": "pers.",
-        "threshold": "seuil",
+        "text": "Chacun ajoute les personnes qu’il connaît personnellement. Choisissez combien de connaissances chacun ajoute en moyenne et voyez combien de personnes se trouvent à quelques poignées de main de vous.",
+        "canvasAria": "Modèle de croissance du réseau : des liens partent d’une personne vers ses connaissances",
+        "slider": "Chaque personne ajoute en moyenne",
+        "unit_one": "connaissance",
+        "unit_many": "connaissances",
+        "unit_other": "connaissances",
         "statPeople_one": "personne dans le réseau",
         "statPeople_many": "de personnes dans le réseau",
         "statPeople_other": "personnes dans le réseau",
-        "statWaves_one": "vague d’invitations",
-        "statWaves_many": "de vagues d’invitations",
-        "statWaves_other": "vagues d’invitations",
-        "dies": "La croissance s’est arrêtée",
-        "grows": "Dans ce modèle, le réseau continue de grandir.",
-        "full": "Le modèle est à court de nouvelles personnes",
+        "statWaves_one": "poignée de main",
+        "statWaves_many": "poignées de main",
+        "statWaves_other": "poignées de main",
+        "insight": "À partir d’environ 30 connaissances par personne, le réseau croît de façon exponentielle : en trois poignées de main, il compte déjà des dizaines de milliers de personnes. Dans un tel réseau, la participation vous apporte aussi quelque chose : quand vous traverserez un moment difficile, des personnes pourront répondre à votre besoin.",
+        "full": "Au-delà, la taille des communautés réelles limite la croissance du réseau",
         "restart": "Recommencer",
         "hint": "Touchez le modèle pour repartir d’une autre personne",
-        "note": "Modèle simplifié. Les cercles de connaissances se recoupent, et personne n’est obligé d’inviter qui que ce soit.",
-        "axisX": "vagues",
+        "note": "C’est un modèle simplifié. Les cercles de connaissances se recoupent, de sorte que chaque poignée de main supplémentaire ajoute moins de nouvelles personnes.",
+        "axisX": "poignées de main",
         "axisY": "personnes"
       },
       "next": {
         "label": "Ensuite",
-        "title": "Aider avec {{min}}, ce n’est qu’un début",
-        "text": "Avec le temps, nous voulons que les gens trouvent grâce à leur réseau de connaissances un artisan recommandé par quelqu’un, des partenaires pour un projet commun, des gens qui pensent comme eux pour leur propre initiative. Et qu’ils s’arrangent, comme aujourd’hui, directement.",
+        "title": "La participation à partir de {{min}}, ce n’est que le début",
+        "text": "En participant dès maintenant, vous pensez aussi à vous : la prochaine fois, le réseau répondra à votre besoin. À terme, nous voulons que chacun puisse, grâce à son réseau de connaissances, trouver un artisan sur recommandation, des partenaires pour un projet commun ou des personnes qui partagent ses idées pour sa propre initiative. Et se mettre d’accord directement, comme aujourd’hui.",
         "now": "Aujourd’hui",
         "later": "Plus tard",
         "need": "Besoin",
         "participation": "Participation",
-        "tradesperson": "Un artisan de confiance",
+        "tradesperson": "Un artisan recommandé",
         "project": "Un projet commun"
       },
       "join": {
@@ -872,8 +872,8 @@
         "w1": "Si vous avez votre propre communauté, essayez l’application avec elle. Nous vous aiderons à la présenter avec les mots de votre communauté.",
         "w2Title": "Parlez du projet autour de vous",
         "w2": "Envoyez cette page à ceux que cela pourrait toucher, ou écrivez vous-même sur Social Organizer.",
-        "w3Title": "Aidez à la recherche ou au code",
-        "w3": "La théorie est exposée dans le <report>rapport de recherche</report>, et le code est ouvert sur <code>GitHub</code>. Aidez-nous à tester la théorie ou à développer l’application.",
+        "w3Title": "Participez à la recherche ou au développement",
+        "w3": "La théorie est présentée dans <report>le rapport de recherche</report> et le code est accessible sur <code>GitHub</code>. Participez en testant la théorie ou en travaillant sur l’application.",
         "selectLink": "Copiez le lien dans le champ ci-dessous.",
         "nowLive_one": "personne reliée au réseau",
         "nowLive_many": "personnes reliées au réseau",
@@ -882,28 +882,27 @@
       "faq": {
         "title": "Questions",
         "q1": "Qui veille à ce que les gens tiennent parole ?",
-        "a1": "Il n’y a pas d’intermédiaire. Vous décidez à qui faire confiance et vous traitez directement avec les gens. Et la chaîne de connaissances vous permet de savoir à qui vous avez affaire.",
-        "q2": "Est-ce une assurance ou un fonds ?",
-        "a2": "Non. Personne ne paie à l’avance et personne ne promet de versement. Il n’y a ni caisse commune ni trésorier.",
-        "q3": "Est-ce une collecte de dons ?",
-        "a3": "Non. Un besoin n’atteint que des personnes reliées à son auteur par des connaissances, et la prochaine fois, c’est peut-être vous qui demanderez de l’aide.",
+        "a1": "Il n’y a pas d’intermédiaire. Vous choisissez avec qui traiter et vous pouvez consulter l’historique d’activité de cette personne dans le réseau. En participant, vous construisez votre propre historique.",
+        "q2": "Faut-il payer à l’avance pour participer ?",
+        "a2": "Non. La participation commence par une intention. L’application ne conserve pas d’argent et personne ne promet de versement.",
+        "q3": "L’application notifie-t-elle tout le monde lorsqu’un besoin est signalé ?",
+        "a3": "Non. Un besoin n’atteint que les personnes reliées à son auteur par des connaissances. La prochaine fois, c’est peut-être vous qui signalerez un besoin.",
         "q4": "Est-ce un système pyramidal ?",
         "a4": "Non. Personne ne paie pour entrer et personne ne gagne d’argent grâce aux invitations.",
         "q6": "Quelles données conservez-vous ?",
         "data": {
           "account": "Nous conservons les données de compte et de profil, dont le nom, l’adresse e-mail, les identifiants du service de connexion et les informations ajoutées comme la photo, le numéro de téléphone ou la localisation.",
-          "activity": "Nous conservons aussi les réglages (langue, thème), l’historique des invitations et des liens, les besoins signalés, la participation et les montants indiqués.",
+          "activity": "Nous conservons vos paramètres, comme la langue et le thème, l’historique des invitations et des liens, les besoins signalés, les participations et les montants que vous indiquez comme intentions.",
           "notifications": "Nous gardons également les codes de connexion, les données d’envoi et l’historique des notifications, ainsi que les signalements et messages envoyés à l’assistance.",
           "money": "L’application ne manipule pas d’argent et ne demande aucune coordonnée bancaire ni donnée de carte."
         }
       },
       "start": {
         "label": "L’application",
-        "title": "Le réseau se construit à l’avance",
-        "text": "Un jour difficile, on n’a ni le temps ni l’énergie pour ça.",
+        "title": "Rejoignez le réseau sur invitation d’une connaissance ou commencez à créer le vôtre",
+        "text": "Mieux vaut créer son réseau à l’avance : le jour où ça ira mal, vous n’en aurez ni le temps ni l’énergie.",
         "s1": "Ouvrez le lien d’une personne que vous connaissez, ou connectez-vous vous-même avec Google, Apple, Telegram ou un code reçu par e-mail. Aucun mot de passe requis.",
         "s2": "Ajoutez les personnes que vous connaissez personnellement : avec un lien, un code QR ou en secouant vos téléphones côte à côte.",
-        "s3": "Fixez votre intention : le montant que vous indiqueriez d’ordinaire si quelqu’un du réseau traversait une période difficile.",
         "qr": "Scannez ce code avec votre téléphone : la bonne boutique s’ouvrira.",
         "playTop": "Disponible sur",
         "play": "Google Play",

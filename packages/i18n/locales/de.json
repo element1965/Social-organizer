@@ -713,7 +713,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer: ein Netzwerk aus Menschen, die Sie kennen",
-        "description": "Ein Netzwerk aus Menschen, die sich persönlich kennen. Steckt jemand in Schwierigkeiten, können viele helfen."
+        "description": "Ein Netzwerk aus Menschen, die sich persönlich kennen. Gerät jemand in Schwierigkeiten, können sich viele beteiligen."
       },
       "nav": {
         "label": "Bereiche",
@@ -779,7 +779,7 @@
         "b9": {
           "label": "In der App",
           "say": "So sieht Ihr Netzwerk in der App aus: Sie in der Mitte, um Sie herum Ihre Bekannten, weiter außen deren Bekannte.",
-          "late": "Braucht jemand Hilfe, sehen Sie die Kette der Bekannten, die von dieser Person zu Ihnen führt."
+          "late": "Wenn jemand Bedarf meldet, sehen Sie die Kette der Bekannten, die von dieser Person zu Ihnen führt."
         },
         "rail": {
           "1": "Schwarm",
@@ -822,28 +822,27 @@
       },
       "grow": {
         "title": "Wie das Netzwerk wächst",
-        "text": "Jede neue Person lädt eigene Bekannte ein. Stellen Sie ein, wie viele im Schnitt, und sehen Sie, was mit dem Netzwerk passiert.",
-        "canvasAria": "Modell des Netzwerkwachstums: Von einer Person gehen Einladungen aus",
-        "slider": "Im Schnitt eingeladen pro Person",
-        "unit": "Menschen",
-        "threshold": "Schwelle",
+        "text": "Jeder fügt die Menschen hinzu, die er persönlich kennt. Stellen Sie ein, wie viele es im Schnitt sind, und sehen Sie, wie viele Menschen nur wenige Handschläge von Ihnen entfernt sind.",
+        "canvasAria": "Modell des Netzwerkwachstums: Von einer Person gehen Verbindungen zu ihren Bekannten aus",
+        "slider": "Jede Person fügt im Schnitt hinzu:",
+        "unit_one": "Bekannte",
+        "unit_other": "Bekannte",
         "statPeople_one": "Mensch im Netzwerk",
         "statPeople_other": "Menschen im Netzwerk",
-        "statWaves_one": "Einladungswelle",
-        "statWaves_other": "Einladungswellen",
-        "dies": "Das Wachstum hat aufgehört",
-        "grows": "In diesem Modell wächst das Netzwerk weiter.",
-        "full": "Im Modell gibt es keine neuen Menschen mehr",
+        "statWaves_one": "Handschlag",
+        "statWaves_other": "Handschläge",
+        "insight": "Ab etwa 30 Bekannten pro Person wächst das Netzwerk exponentiell: Schon nach drei Handschlägen umfasst es Zehntausende Menschen. In einem solchen Netzwerk lohnt sich die Beteiligung: Wenn Sie selbst in eine schwierige Lage geraten, gibt es Menschen, die reagieren können.",
+        "full": "Ab hier begrenzt die Größe realer Gemeinschaften das Wachstum",
         "restart": "Neu starten",
         "hint": "Tippen Sie auf das Modell, um bei einer anderen Person zu beginnen",
-        "note": "Ein vereinfachtes Modell. Bekanntenkreise überschneiden sich, und niemand muss jemanden einladen.",
-        "axisX": "Wellen",
+        "note": "Das Modell ist vereinfacht. Bekanntenkreise überschneiden sich, deshalb kommen mit jedem weiteren Handschlag weniger neue Menschen hinzu.",
+        "axisX": "Handschläge",
         "axisY": "Menschen"
       },
       "next": {
         "label": "Ausblick",
-        "title": "Hilfe mit {{min}} ist erst der Anfang",
-        "text": "Wir möchten, dass Menschen mit der Zeit über ihr Netzwerk aus Bekannten Handwerker auf Empfehlung, Partner für ein gemeinsames Projekt und Gleichgesinnte für eigene Vorhaben finden. Und dass sie sich, wie jetzt, direkt absprechen.",
+        "title": "Beteiligung ab {{min}} ist erst der Anfang",
+        "text": "Wenn Sie sich jetzt beteiligen, denken Sie auch an sich selbst: Beim nächsten Mal reagiert das Netzwerk auf Ihren Bedarf. Langfristig sollen Menschen über ihr Netzwerk Handwerker auf Empfehlung, Partner für gemeinsame Projekte und Gleichgesinnte für eigene Initiativen finden. Absprechen können sie sich direkt, wie heute schon.",
         "now": "Jetzt",
         "later": "Später",
         "need": "Bedarf",
@@ -864,8 +863,8 @@
         "w1": "Wenn Sie eine eigene Gemeinschaft haben, probieren Sie die App dort aus. Wir helfen Ihnen, sie mit den Worten zu erklären, die man dort benutzt.",
         "w2Title": "Erzählen Sie anderen vom Projekt",
         "w2": "Schicken Sie diese Seite an Menschen, denen sie etwas bedeuten könnte, oder schreiben Sie selbst über Social Organizer.",
-        "w3Title": "Helfen Sie bei Forschung oder Entwicklung",
-        "w3": "Die Theorie steht im <report>Forschungsbericht</report>, der Code liegt offen auf <code>GitHub</code>. Helfen Sie, die Theorie zu prüfen, oder arbeiten Sie an der App mit.",
+        "w3Title": "Beteiligen Sie sich an Forschung oder Entwicklung",
+        "w3": "Die Theorie ist im <report>Forschungsbericht</report> beschrieben. Der Quellcode ist auf <code>GitHub</code> öffentlich zugänglich. Beteiligen Sie sich daran, die Theorie zu testen oder die App weiterzuentwickeln.",
         "selectLink": "Kopieren Sie den Link aus dem Feld unten.",
         "nowLive_one": "Person mit Verbindungen im Netzwerk",
         "nowLive_other": "Menschen mit Verbindungen im Netzwerk"
@@ -873,28 +872,27 @@
       "faq": {
         "title": "Fragen",
         "q1": "Wer sorgt dafür, dass Menschen ihr Wort halten?",
-        "a1": "Es gibt keine Vermittler. Sie entscheiden selbst, wem Sie vertrauen, und sprechen sich direkt mit den Menschen ab. Über die Kette der Bekannten können Sie herausfinden, mit wem Sie es zu tun haben.",
-        "q2": "Ist das eine Versicherung oder ein Fonds?",
-        "a2": "Nein. Niemand zahlt im Voraus, und niemand verspricht eine Auszahlung. Es gibt keine gemeinsame Kasse und niemanden, der sie verwaltet.",
-        "q3": "Ist das eine Spendensammlung?",
+        "a1": "Es gibt keine Vermittler. Sie entscheiden selbst, mit wem Sie zu tun haben wollen, und sehen, wie die Person bisher im Netzwerk aktiv war. Mit Ihrer Beteiligung bauen Sie Ihre eigene Historie auf.",
+        "q2": "Muss ich im Voraus zahlen, um mich zu beteiligen?",
+        "a2": "Nein. Beteiligung beginnt mit einer Absichtserklärung. Die App verwahrt kein Geld, und niemand verspricht eine Auszahlung.",
+        "q3": "Werden alle über einen gemeldeten Bedarf informiert?",
         "a3": "Nein. Ein Bedarf erreicht nur Menschen, die über Bekannte mit der meldenden Person verbunden sind. Und beim nächsten Mal fragen vielleicht Sie.",
         "q4": "Ist das ein Schneeballsystem?",
         "a4": "Nein. Niemand zahlt für den Einstieg, und niemand verdient an Einladungen.",
         "q6": "Welche Daten speichern Sie?",
         "data": {
           "account": "Wir speichern Konto- und Profildaten wie Name, E-Mail-Adresse und Kennungen des Anmeldedienstes sowie Angaben, die Sie hinzufügen, etwa Foto, Telefonnummer und Standort.",
-          "activity": "Wir speichern Einstellungen wie Sprache und Design, Einladungen und Verbindungen sowie gemeldete Bedarfe, Beteiligungen und genannte Beträge.",
+          "activity": "Wir speichern Ihre Einstellungen, etwa Sprache und Design, den Verlauf Ihrer Einladungen und Verbindungen, gemeldeten Bedarf, Beteiligungen und die Beträge Ihrer Absichtserklärungen.",
           "notifications": "Hinzu kommen Anmeldecodes, Daten für Benachrichtigungen und deren Verlauf sowie eingereichte Beschwerden und Nachrichten an den Support.",
           "money": "Die App verwaltet kein Geld und fragt keine Karten- oder Bankdaten ab."
         }
       },
       "start": {
         "label": "Die App",
-        "title": "Bauen Sie Ihr Netzwerk auf, bevor Sie es brauchen",
-        "text": "An einem schlechten Tag fehlen dafür Zeit und Kraft.",
+        "title": "Treten Sie auf Einladung eines Bekannten bei oder bauen Sie Ihr eigenes Netzwerk auf",
+        "text": "Bauen Sie Ihr Netzwerk am besten im Voraus auf: An einem schwierigen Tag fehlen Ihnen dafür Zeit und Kraft.",
         "s1": "Öffnen Sie einen Link von jemandem, den Sie kennen, oder melden Sie sich selbst an: mit Google, Apple, Telegram oder einem Code per E-Mail. Ein Passwort brauchen Sie nicht.",
         "s2": "Fügen Sie Menschen hinzu, die Sie persönlich kennen: per Link, per QR-Code oder indem Sie die Handys nebeneinander schütteln.",
-        "s3": "Legen Sie fest, welchen Betrag Sie normalerweise nennen würden, wenn jemand im Netzwerk in Schwierigkeiten gerät.",
         "qr": "Halten Sie die Kamera Ihres Telefons auf den Code, dann öffnet sich der passende Store.",
         "playTop": "Jetzt bei",
         "play": "Google Play",

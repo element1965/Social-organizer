@@ -319,6 +319,11 @@ reaches it; the new blocks looked bad on phones.
 - The growth model starts when at least 60 % of the model's own frame is on screen and pauses when it
   leaves.
 
+The current landing keeps that visibility rule. It models 30–150 acquaintances per person,
+discounts overlapping circles at each handshake, and stops at five handshakes or one million people.
+The canvas draws a sample and the chart shows cumulative reach. The prototype versions documented
+here use the original growth threshold.
+
 ### 16. Prototype v9 (2026-11-18): people for the experiment, not money
 
 The user: «Мы не ищем деньги через сайт, мы больше ищем людей, кто хочет поучаствовать в эксперименте и

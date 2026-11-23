@@ -717,7 +717,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer: o rețea de oameni pe care îi cunoști",
-        "description": "O rețea de oameni care se cunosc personal. Când cuiva îi e greu, mulți pot ajuta."
+        "description": "O rețea de oameni care se cunosc personal. Când cuiva îi e greu, mulți se pot implica."
       },
       "nav": {
         "label": "Secțiuni",
@@ -783,7 +783,7 @@
         "b9": {
           "label": "În aplicație",
           "say": "Așa arată rețeaua ta în aplicație: tu în centru, în jur cunoscuții tăi, mai departe cunoscuții lor.",
-          "late": "Când cineva are nevoie de ajutor, vezi lanțul de cunoscuți de la acea persoană până la tine."
+          "late": "Când cineva raportează o nevoie, vezi lanțul de cunoscuți care leagă acea persoană de tine."
         },
         "rail": {
           "1": "Stol",
@@ -828,35 +828,35 @@
       },
       "grow": {
         "title": "Cum crește rețeaua",
-        "text": "Fiecare om nou își invită cunoscuții. Alege câți, în medie, și vezi ce se întâmplă cu rețeaua.",
-        "canvasAria": "Modelul de creștere a rețelei: invitațiile pornesc de la un singur om",
-        "slider": "Fiecare invită în medie",
-        "unit": "persoane",
-        "threshold": "prag",
+        "text": "Fiecare adaugă persoanele pe care le cunoaște personal. Alege câte persoane adaugă în medie și vezi câți oameni sunt la doar câteva strângeri de mână de tine.",
+        "canvasAria": "Model de creștere a rețelei: de la o persoană pornesc legături către cunoștințele sale",
+        "slider": "Fiecare adaugă în medie",
+        "unit_one": "cunoștință",
+        "unit_few": "cunoștințe",
+        "unit_other": "de cunoștințe",
         "statPeople_one": "persoană în rețea",
         "statPeople_few": "persoane în rețea",
         "statPeople_other": "de persoane în rețea",
-        "statWaves_one": "val de invitații",
-        "statWaves_few": "valuri de invitații",
-        "statWaves_other": "de valuri de invitații",
-        "dies": "Creșterea s-a oprit",
-        "grows": "În acest model, rețeaua continuă să crească.",
-        "full": "În model nu mai sunt oameni noi",
+        "statWaves_one": "strângere de mână",
+        "statWaves_few": "strângeri de mână",
+        "statWaves_other": "de strângeri de mână",
+        "insight": "Cu aproximativ 30 de cunoștințe de persoană, rețeaua crește exponențial: în doar trei strângeri de mână ajunge la zeci de mii de oameni. Într-o astfel de rețea, participarea are un avantaj concret: când îți va fi ție greu, va avea cine să răspundă.",
+        "full": "De aici, creșterea rețelei este limitată de dimensiunea comunităților reale",
         "restart": "Ia-o de la capăt",
         "hint": "Atinge modelul ca să începi de la altcineva",
-        "note": "Modelul e simplificat. Cercurile de cunoscuți se suprapun și nimeni nu e obligat să invite pe nimeni.",
-        "axisX": "valuri",
+        "note": "Acesta este un model simplificat. Cercurile de cunoștințe se suprapun, așa că fiecare strângere de mână aduce mai puțini oameni noi.",
+        "axisX": "strângeri de mână",
         "axisY": "oameni"
       },
       "next": {
         "label": "Mai departe",
-        "title": "Ajutorul de {{min}} e doar începutul",
-        "text": "Ne dorim ca, în timp, oamenii să găsească prin rețeaua de cunoscuți un meșter recomandat de cineva, parteneri pentru un proiect comun, oameni cu aceleași idei pentru propria inițiativă. Și să se înțeleagă direct, ca acum.",
+        "title": "Participarea de la {{min}} e doar începutul",
+        "text": "Când participi acum, te gândești și la tine: data viitoare, rețeaua va răspunde nevoii tale. În timp, vrem ca oamenii să găsească prin rețeaua de cunoștințe un meșter recomandat, parteneri pentru un proiect comun sau persoane cu idei similare pentru propria inițiativă. Și să se înțeleagă direct, ca și acum.",
         "now": "Acum",
         "later": "Mai târziu",
         "need": "Nevoie",
         "participation": "Participare",
-        "tradesperson": "Un meșter de încredere",
+        "tradesperson": "Un meșter recomandat",
         "project": "Un proiect comun"
       },
       "join": {
@@ -872,8 +872,8 @@
         "w1": "Dacă ai o comunitate a ta, încearcă aplicația acolo. Te ajutăm s-o explici pe limba oamenilor tăi.",
         "w2Title": "Povestește despre proiect",
         "w2": "Trimite pagina asta celor care ar putea fi interesați sau scrie tu despre Social Organizer.",
-        "w3Title": "Ajută la cercetare sau la dezvoltare",
-        "w3": "Teoria e descrisă în <report>raportul de cercetare</report>, iar codul e public pe <code>GitHub</code>. Ajută la verificarea teoriei sau la dezvoltarea aplicației.",
+        "w3Title": "Participă la cercetare sau la dezvoltare",
+        "w3": "Teoria este prezentată în <report>raportul de cercetare</report>, iar codul este public pe <code>GitHub</code>. Participă la testarea teoriei sau la dezvoltarea aplicației.",
         "selectLink": "Copiază linkul din câmpul de mai jos.",
         "nowLive_one": "om cu legături în rețea",
         "nowLive_few": "oameni cu legături în rețea",
@@ -882,28 +882,27 @@
       "faq": {
         "title": "Întrebări",
         "q1": "Cine se asigură că oamenii se țin de cuvânt?",
-        "a1": "Nu există intermediari. Tu decizi în cine ai încredere și te înțelegi direct cu oamenii. Iar prin lanțul de cunoscuți poți afla cu cine ai de-a face.",
-        "q2": "Este o asigurare sau un fond?",
-        "a2": "Nu. Nimeni nu plătește în avans și nimeni nu promite vreo plată. Nu se strâng bani la comun și nu există casier.",
-        "q3": "Este o campanie de donații?",
+        "a1": "Fără intermediari. Tu decizi cu cine ai de-a face și poți vedea istoricul activității persoanei în rețea. Participând, îți construiești propriul istoric.",
+        "q2": "Trebuie să plătesc în avans ca să particip?",
+        "a2": "Nu. Participarea începe cu o intenție. Aplicația nu păstrează bani și nimeni nu promite o plată.",
+        "q3": "Aplicația îi notifică pe toți despre o nevoie raportată?",
         "a3": "Nu. O nevoie ajunge doar la oameni legați de autor prin cunoscuți, iar data viitoare s-ar putea să ceri tu.",
         "q4": "Este o schemă piramidală?",
         "a4": "Nu. Nimeni nu plătește ca să intre și nimeni nu câștigă din invitații.",
         "q6": "Ce date păstrați?",
         "data": {
           "account": "Păstrăm datele contului și ale profilului, cum ar fi numele, adresa de e-mail, identificatorii serviciului de autentificare și informațiile adăugate, cum ar fi fotografia, numărul de telefon sau locația.",
-          "activity": "Păstrăm și setările, precum limba și tema, istoricul invitațiilor și al legăturilor, nevoile anunțate, participarea și sumele indicate.",
+          "activity": "Păstrăm setările tale, cum ar fi limba și tema, istoricul invitațiilor și al legăturilor, nevoile raportate, participarea și sumele pe care le-ai indicat ca intenție.",
           "notifications": "Mai păstrăm codurile de autentificare, datele pentru trimiterea notificărilor și istoricul lor, precum și sesizările și mesajele trimise echipei de asistență.",
           "money": "Aplicația nu gestionează bani și nu solicită datele cardului sau ale contului bancar."
         }
       },
       "start": {
         "label": "Aplicația",
-        "title": "Rețeaua se construiește din timp",
-        "text": "Într-o zi grea nu ai nici timp, nici putere pentru asta.",
+        "title": "Alătură-te prin invitația unei cunoștințe sau începe să-ți construiești propria rețea",
+        "text": "E mai bine să-ți construiești rețeaua din timp: într-o zi grea nu vei avea nici timp, nici energie pentru asta.",
         "s1": "Deschide linkul primit de la un cunoscut sau conectează-te direct cu Google, Apple, Telegram ori cu un cod primit pe e-mail. Nu-ți trebuie parolă.",
         "s2": "Adaugă oamenii pe care îi cunoști personal: cu un link, cu un cod QR sau scuturând telefoanele unul lângă altul.",
-        "s3": "Alege suma pe care ai fi dispus să o indici dacă cineva din rețea ar trece printr-o perioadă grea.",
         "qr": "Îndreaptă aici camera telefonului și se va deschide magazinul potrivit.",
         "playTop": "Disponibil pe",
         "play": "Google Play",

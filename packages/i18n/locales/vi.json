@@ -709,7 +709,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer: mạng lưới người quen",
-        "description": "Mạng lưới những người quen nhau ngoài đời. Khi ai đó gặp khó khăn, nhiều người có thể giúp."
+        "description": "Mạng lưới những người quen nhau ngoài đời. Khi ai đó gặp khó khăn, nhiều người có thể tham gia."
       },
       "nav": {
         "label": "Các mục",
@@ -775,7 +775,7 @@
         "b9": {
           "label": "Trong ứng dụng",
           "say": "Trong ứng dụng, mạng lưới của bạn trông như thế này: bạn ở giữa, xung quanh là người quen của bạn, xa hơn là người quen của họ.",
-          "late": "Khi ai đó cần giúp đỡ, bạn thấy chuỗi người quen nối từ người đó đến bạn."
+          "late": "Khi ai đó báo một nhu cầu, bạn thấy chuỗi người quen nối từ người đó đến bạn."
         },
         "rail": {
           "1": "Đàn chim",
@@ -816,31 +816,29 @@
       },
       "grow": {
         "title": "Mạng lưới lớn lên thế nào",
-        "text": "Mỗi người mới đều mời người quen của mình. Hãy chọn trung bình bao nhiêu người và xem mạng lưới thay đổi ra sao.",
-        "canvasAria": "Mô hình phát triển mạng lưới: lời mời lan ra từ một người",
-        "slider": "Mỗi người mời trung bình",
-        "unit": "người",
-        "threshold": "ngưỡng",
+        "text": "Mỗi người thêm những người mình quen ngoài đời. Hãy chọn số người trung bình được thêm và xem bạn có thể kết nối với bao nhiêu người chỉ qua vài cái bắt tay.",
+        "canvasAria": "Mô hình phát triển mạng lưới: các kết nối tỏa ra từ một người đến những người họ quen",
+        "slider": "Trung bình mỗi người thêm",
+        "unit_other": "người quen",
         "statPeople_other": "người trong mạng lưới",
-        "statWaves_other": "đợt mời",
-        "dies": "Mạng lưới ngừng phát triển",
-        "grows": "Trong mô hình này, mạng lưới tiếp tục mở rộng.",
-        "full": "Mô hình đã hết người mới",
+        "statWaves_other": "cái bắt tay",
+        "insight": "Với khoảng 30 người quen mỗi người, mạng lưới tăng theo cấp số nhân: chỉ sau ba cái bắt tay đã kết nối được hàng chục nghìn người. Tham gia một mạng lưới như vậy mang lại lợi ích thiết thực: khi đến lượt bạn gặp khó khăn, sẽ có người hồi đáp.",
+        "full": "Từ đây, quy mô của các cộng đồng ngoài đời giới hạn đà phát triển của mạng lưới",
         "restart": "Bắt đầu lại",
         "hint": "Chạm vào mô hình để bắt đầu từ một người khác",
-        "note": "Đây là mô hình đơn giản hóa. Các vòng người quen chồng lên nhau, và không ai bắt buộc phải mời ai.",
-        "axisX": "đợt",
+        "note": "Đây là mô hình đơn giản hóa. Các nhóm người quen có phần trùng nhau, nên mỗi cái bắt tay tiếp theo kết nối được với tỷ lệ người mới thấp hơn.",
+        "axisX": "số cái bắt tay",
         "axisY": "người"
       },
       "next": {
         "label": "Tiếp theo",
-        "title": "Giúp nhau {{min}} mới chỉ là khởi đầu",
-        "text": "Về sau, chúng tôi muốn mọi người dùng mạng lưới người quen để tìm thợ có người giới thiệu, đối tác cho một dự án chung, người cùng chí hướng cho sáng kiến của mình, rồi thỏa thuận trực tiếp với nhau như bây giờ.",
+        "title": "Tham gia từ {{min}} mới chỉ là khởi đầu",
+        "text": "Tham gia hôm nay cũng là lo cho chính mình: lần tới mạng lưới sẽ hồi đáp nhu cầu của bạn. Về lâu dài, chúng tôi muốn mọi người có thể tìm thợ qua lời giới thiệu, tìm cộng sự cho dự án chung hoặc tìm người cùng chí hướng cho sáng kiến của mình qua mạng lưới người quen. Mọi người vẫn tự trao đổi và thỏa thuận trực tiếp như hiện nay.",
         "now": "Bây giờ",
         "later": "Sau này",
         "need": "Nhu cầu",
         "participation": "Tham gia",
-        "tradesperson": "Thợ đáng tin",
+        "tradesperson": "Thợ được giới thiệu",
         "project": "Dự án chung"
       },
       "join": {
@@ -856,36 +854,35 @@
         "w1": "Nếu bạn có một cộng đồng riêng, hãy thử ứng dụng ở đó. Chúng tôi sẽ giúp bạn giải thích bằng lời lẽ mà mọi người ở đó vẫn dùng.",
         "w2Title": "Kể về dự án",
         "w2": "Gửi trang này cho những người có thể quan tâm, hoặc tự viết về Social Organizer.",
-        "w3Title": "Giúp nghiên cứu hoặc viết mã",
-        "w3": "Lý thuyết được trình bày trong <report>báo cáo nghiên cứu</report>, còn mã nguồn được công khai trên <code>GitHub</code>. Hãy giúp kiểm chứng lý thuyết hoặc phát triển ứng dụng.",
+        "w3Title": "Tham gia nghiên cứu hoặc phát triển ứng dụng",
+        "w3": "Lý thuyết được trình bày trong <report>báo cáo nghiên cứu</report>, còn mã nguồn được công khai trên <code>GitHub</code>. Bạn có thể tham gia kiểm chứng lý thuyết hoặc phát triển ứng dụng.",
         "selectLink": "Sao chép liên kết trong ô bên dưới.",
         "nowLive_other": "người có kết nối trong mạng lưới"
       },
       "faq": {
         "title": "Câu hỏi",
         "q1": "Ai đảm bảo mọi người giữ lời?",
-        "a1": "Không có trung gian. Bạn tự quyết định tin ai và làm việc trực tiếp với mọi người, còn qua chuỗi người quen, bạn có thể biết mình đang giao thiệp với ai.",
-        "q2": "Đây có phải bảo hiểm hay quỹ không?",
-        "a2": "Không. Không ai trả tiền trước và không ai hứa chi trả. Không có két chung, cũng không có thủ quỹ.",
-        "q3": "Đây có phải một đợt quyên góp không?",
+        "a1": "Không có bên trung gian. Bạn tự quyết định sẽ làm việc với ai và có thể xem lịch sử hoạt động của họ trên mạng lưới. Khi tham gia, bạn cũng xây dựng lịch sử của riêng mình.",
+        "q2": "Tôi có phải trả tiền trước để tham gia không?",
+        "a2": "Không. Việc tham gia bắt đầu bằng việc bày tỏ ý định. Ứng dụng không giữ tiền, và không ai hứa sẽ chi trả.",
+        "q3": "Ứng dụng có thông báo cho tất cả mọi người về một nhu cầu không?",
         "a3": "Không. Nhu cầu chỉ tới những người có liên hệ với người đăng qua người quen, và lần sau người cần nhờ có thể là bạn.",
         "q4": "Đây có phải mô hình kim tự tháp không?",
         "a4": "Không. Không ai phải trả tiền để vào, và không ai kiếm tiền từ lời mời.",
         "q6": "Các bạn lưu những dữ liệu nào?",
         "data": {
           "account": "Chúng tôi lưu thông tin tài khoản và hồ sơ, như tên, email, mã định danh của dịch vụ đăng nhập và thông tin bạn thêm như ảnh, số điện thoại hoặc vị trí.",
-          "activity": "Chúng tôi lưu các cài đặt như ngôn ngữ và giao diện, lịch sử lời mời và kết nối, nhu cầu đã thông báo, việc tham gia và số tiền đã nêu.",
+          "activity": "Chúng tôi lưu các tùy chọn như ngôn ngữ và giao diện, lịch sử lời mời và kết nối, các nhu cầu đã báo, thông tin tham gia và số tiền bạn nhập để thể hiện ý định.",
           "notifications": "Chúng tôi cũng lưu mã đăng nhập, dữ liệu gửi thông báo và lịch sử thông báo, cùng các báo cáo vi phạm hoặc tin nhắn bạn gửi cho bộ phận hỗ trợ.",
           "money": "Ứng dụng không đụng tới tiền và không hỏi thông tin thẻ hay tài khoản ngân hàng."
         }
       },
       "start": {
         "label": "Ứng dụng",
-        "title": "Hãy xây mạng lưới trước khi cần đến",
-        "text": "Vào ngày khó khăn, bạn sẽ không còn thời gian hay sức lực cho việc này.",
+        "title": "Tham gia qua lời mời của người quen hoặc tự bắt đầu xây dựng mạng lưới của bạn",
+        "text": "Nên xây dựng mạng lưới từ trước: khi gặp khó khăn, bạn sẽ không còn thời gian hay sức lực để làm việc đó.",
         "s1": "Mở liên kết từ người bạn quen, hoặc tự đăng nhập bằng Google, Apple, Telegram hay mã gửi qua email. Không cần mật khẩu.",
         "s2": "Thêm những người bạn quen ngoài đời: bằng liên kết, mã QR hoặc lắc hai điện thoại cạnh nhau.",
-        "s3": "Hãy ghi số tiền bạn thường sẵn sàng đề xuất khi có người trong mạng lưới gặp khó khăn.",
         "qr": "Hướng camera điện thoại vào đây, cửa hàng phù hợp sẽ mở ra.",
         "playTop": "Tải nội dung trên",
         "play": "Google Play",

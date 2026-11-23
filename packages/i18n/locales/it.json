@@ -717,7 +717,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer: una rete di persone che conosci",
-        "description": "Una rete di persone che si conoscono di persona. Quando qualcuno è in difficoltà, in tanti possono aiutare."
+        "description": "Una rete di persone che si conoscono di persona. Quando qualcuno è in difficoltà, in tanti possono partecipare."
       },
       "nav": {
         "label": "Sezioni",
@@ -783,7 +783,7 @@
         "b9": {
           "label": "Nell'app",
           "say": "Ecco come appare la tua rete nell'app: tu al centro, intorno i tuoi conoscenti, più in là i loro conoscenti.",
-          "late": "Quando qualcuno ha bisogno di aiuto, vedi la catena di conoscenti che va da quella persona fino a te."
+          "late": "Quando qualcuno segnala un bisogno, vedi la catena di conoscenze che va da quella persona fino a te."
         },
         "rail": {
           "1": "Stormo",
@@ -828,35 +828,35 @@
       },
       "grow": {
         "title": "Come cresce la rete",
-        "text": "Ogni nuovo arrivato invita le persone che conosce. Scegli quante in media e guarda cosa succede alla rete.",
-        "canvasAria": "Modello di crescita della rete: gli inviti partono da una sola persona",
-        "slider": "Ognuno invita in media",
-        "unit": "persone",
-        "threshold": "soglia",
+        "text": "Ognuno aggiunge le persone che conosce di persona. Imposta quante ne aggiunge in media e guarda quante persone si trovano a poche strette di mano da te.",
+        "canvasAria": "Modello di crescita della rete: da una persona partono i collegamenti con i suoi conoscenti",
+        "slider": "Ciascuno aggiunge in media",
+        "unit_one": "conoscente",
+        "unit_many": "conoscenti",
+        "unit_other": "conoscenti",
         "statPeople_one": "persona nella rete",
         "statPeople_many": "di persone nella rete",
         "statPeople_other": "persone nella rete",
-        "statWaves_one": "ondata di inviti",
-        "statWaves_many": "di ondate di inviti",
-        "statWaves_other": "ondate di inviti",
-        "dies": "La crescita si è fermata",
-        "grows": "In questo modello, la rete continua a crescere.",
-        "full": "Nel modello non ci sono più persone nuove",
+        "statWaves_one": "stretta di mano",
+        "statWaves_many": "strette di mano",
+        "statWaves_other": "strette di mano",
+        "insight": "Con circa 30 conoscenti a testa, la rete cresce in modo esponenziale: dopo appena tre strette di mano conta già decine di migliaia di persone. In una rete così, partecipare conviene anche a te: quando sarai tu in difficoltà, ci sarà chi potrà rispondere.",
+        "full": "Da qui in poi la crescita è limitata dalle dimensioni delle comunità reali",
         "restart": "Ricomincia",
         "hint": "Tocca il modello per ripartire da un'altra persona",
-        "note": "È un modello semplificato. I cerchi di conoscenti si sovrappongono, e nessuno è obbligato a invitare nessuno.",
-        "axisX": "ondate",
+        "note": "È un modello semplificato. Le cerchie di conoscenti si sovrappongono, quindi a ogni stretta di mano si aggiungono meno persone nuove.",
+        "axisX": "strette di mano",
         "axisY": "persone"
       },
       "next": {
         "label": "Prossimi passi",
-        "title": "Aiutare con {{min}} è solo l'inizio",
-        "text": "Con il tempo vorremmo che le persone usassero la loro rete di conoscenti per trovare un artigiano consigliato da qualcuno, soci per un progetto comune, persone affini per una propria iniziativa. E che si accordassero direttamente, come oggi.",
+        "title": "La partecipazione a partire da {{min}} è solo l’inizio",
+        "text": "Partecipare ora è anche un modo per pensare a te: la prossima volta la rete risponderà al tuo bisogno. Col tempo vogliamo che, grazie alla rete di conoscenze, si possano trovare un artigiano su raccomandazione, partner per un progetto comune o persone con idee affini per una propria iniziativa. E accordarsi direttamente, come si fa già oggi.",
         "now": "Oggi",
         "later": "Più avanti",
         "need": "Bisogno",
         "participation": "Partecipazione",
-        "tradesperson": "Un artigiano fidato",
+        "tradesperson": "Un artigiano consigliato",
         "project": "Un progetto comune"
       },
       "join": {
@@ -872,8 +872,8 @@
         "w1": "Se hai una comunità tua, prova l'app lì. Ti aiutiamo a spiegarla con le parole della tua gente.",
         "w2Title": "Parla del progetto",
         "w2": "Manda questa pagina a chi potrebbe interessare, o scrivi tu di Social Organizer.",
-        "w3Title": "Aiuta con la ricerca o il codice",
-        "w3": "La teoria è descritta nel <report>rapporto di ricerca</report>, e il codice è pubblico su <code>GitHub</code>. Aiuta a mettere alla prova la teoria o a sviluppare l'app.",
+        "w3Title": "Partecipa alla ricerca o allo sviluppo",
+        "w3": "La teoria è esposta nel <report>rapporto di ricerca</report> e il codice è pubblico su <code>GitHub</code>. Partecipa alla verifica della teoria o allo sviluppo dell’app.",
         "selectLink": "Copia il link dal campo qui sotto.",
         "nowLive_one": "persona con legami nella rete",
         "nowLive_many": "persone con legami nella rete",
@@ -882,28 +882,27 @@
       "faq": {
         "title": "Domande",
         "q1": "Chi garantisce che le persone mantengano la parola?",
-        "a1": "Non ci sono intermediari. Decidi tu di chi fidarti e tratti direttamente con le persone. E attraverso la catena di conoscenti puoi sapere con chi hai a che fare.",
-        "q2": "È un'assicurazione o un fondo?",
-        "a2": "No. Nessuno paga in anticipo e nessuno promette indennizzi. Non c'è una cassa comune né un tesoriere.",
-        "q3": "È una raccolta fondi?",
+        "a1": "Non ci sono intermediari. Decidi tu con chi avere a che fare e puoi vedere la cronologia delle attività di quella persona nella rete. Partecipando, costruisci la tua storia.",
+        "q2": "Devo pagare in anticipo per partecipare?",
+        "a2": "No. La partecipazione inizia con un’intenzione. L’app non custodisce denaro e nessuno promette un pagamento.",
+        "q3": "L’app avvisa tutti quando viene segnalato un bisogno?",
         "a3": "No. Un bisogno raggiunge solo persone legate all'autore tramite conoscenti, e la prossima volta potresti essere tu a chiedere.",
         "q4": "È uno schema piramidale?",
         "a4": "No. Nessuno paga per entrare e nessuno guadagna dagli inviti.",
         "q6": "Quali dati conservate?",
         "data": {
           "account": "Conserviamo i dati dell’account e del profilo, come nome, e-mail, identificativi del servizio di accesso e dati che aggiungi, come foto, numero di telefono o posizione.",
-          "activity": "Conserviamo anche le impostazioni, come lingua e tema, la cronologia di inviti e collegamenti, i bisogni comunicati, la partecipazione e gli importi indicati.",
+          "activity": "Conserviamo le tue impostazioni, come lingua e tema, la cronologia di inviti e collegamenti, i bisogni segnalati, la partecipazione e gli importi che indichi come intenzione.",
           "notifications": "Conserviamo i codici di accesso, i dati per l’invio e la cronologia delle notifiche, oltre alle segnalazioni e ai messaggi inviati all’assistenza.",
           "money": "L’app non gestisce denaro e non chiede dati della carta o del conto bancario."
         }
       },
       "start": {
         "label": "L'app",
-        "title": "La rete va costruita prima che serva",
-        "text": "In una giornata difficile non ci sono né il tempo né le forze per farlo.",
+        "title": "Unisciti su invito di una persona che conosci o inizia a costruire la tua rete",
+        "text": "Meglio costruire la rete in anticipo: in una giornata difficile non ne avrai né il tempo né le energie.",
         "s1": "Apri il link di una persona che conosci, oppure accedi direttamente con Google, Apple, Telegram o con un codice via e-mail. Non serve una password.",
         "s2": "Aggiungi le persone che conosci di persona: con un link, un codice QR o scuotendo i telefoni uno accanto all'altro.",
-        "s3": "Indica la tua intenzione: la cifra che proporresti di solito se qualcuno nella rete fosse in difficoltà.",
         "qr": "Inquadra qui con la fotocamera del telefono e si aprirà lo store giusto.",
         "playTop": "Disponibile su",
         "play": "Google Play",

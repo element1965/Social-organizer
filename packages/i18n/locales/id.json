@@ -709,7 +709,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer: jaringan orang yang Anda kenal",
-        "description": "Jaringan orang yang saling kenal secara langsung. Saat seseorang kesulitan, banyak orang bisa membantu."
+        "description": "Jaringan orang yang saling kenal secara langsung. Saat seseorang kesulitan, banyak orang bisa ikut serta."
       },
       "nav": {
         "label": "Bagian",
@@ -775,7 +775,7 @@
         "b9": {
           "label": "Di aplikasi",
           "say": "Seperti inilah jaringan Anda di aplikasi: Anda di tengah, di sekitar Anda orang yang Anda kenal, lebih jauh lagi orang yang mereka kenal.",
-          "late": "Saat seseorang butuh bantuan, Anda melihat rantai kenalan dari orang itu sampai ke Anda."
+          "late": "Saat seseorang melaporkan kebutuhan, Anda melihat rantai kenalan yang menghubungkan orang itu dengan Anda."
         },
         "rail": {
           "1": "Kawanan",
@@ -816,31 +816,29 @@
       },
       "grow": {
         "title": "Bagaimana jaringan tumbuh",
-        "text": "Setiap pendatang baru mengundang orang yang ia kenal. Atur berapa rata-ratanya, lalu lihat apa yang terjadi pada jaringan.",
-        "canvasAria": "Model pertumbuhan jaringan: undangan menyebar dari satu orang",
-        "slider": "Setiap orang rata-rata mengundang",
-        "unit": "orang",
-        "threshold": "ambang",
+        "text": "Setiap orang menambahkan orang yang mereka kenal secara pribadi. Tentukan rata-ratanya, lalu lihat berapa banyak orang yang hanya berjarak beberapa jabat tangan dari Anda.",
+        "canvasAria": "Model pertumbuhan jaringan: dari satu orang, hubungan menyebar ke orang-orang yang mereka kenal",
+        "slider": "Setiap orang rata-rata menambahkan",
+        "unit_other": "kenalan",
         "statPeople_other": "orang di jaringan",
-        "statWaves_other": "gelombang undangan",
-        "dies": "Pertumbuhan berhenti",
-        "grows": "Dalam model ini, jaringan terus berkembang.",
-        "full": "Model kehabisan orang baru",
+        "statWaves_other": "jabat tangan",
+        "insight": "Dengan sekitar 30 kenalan per orang, jaringan tumbuh secara eksponensial. Dalam tiga jabat tangan saja, sudah ada puluhan ribu orang di dalamnya. Di jaringan seperti ini, partisipasi membawa manfaat nyata: ketika Anda sendiri kesulitan, ada yang bisa menanggapi kebutuhan Anda.",
+        "full": "Setelah titik ini, ukuran komunitas nyata membatasi pertumbuhan jaringan",
         "restart": "Mulai lagi",
         "hint": "Ketuk modelnya untuk mulai dari orang lain",
-        "note": "Model ini disederhanakan. Lingkaran kenalan saling tumpang tindih, dan tidak ada yang wajib mengundang siapa pun.",
-        "axisX": "gelombang",
+        "note": "Ini model yang disederhanakan. Lingkaran kenalan saling bertumpang tindih, jadi setiap jabat tangan berikutnya menjangkau lebih sedikit orang baru.",
+        "axisX": "jabat tangan",
         "axisY": "orang"
       },
       "next": {
         "label": "Berikutnya",
-        "title": "Bantuan {{min}} hanyalah awal",
-        "text": "Ke depan, kami ingin orang memakai jaringan kenalannya untuk menemukan tukang yang direkomendasikan seseorang, rekan untuk proyek bersama, orang yang sepemikiran untuk inisiatif sendiri. Dan bersepakat langsung, seperti sekarang.",
+        "title": "Partisipasi mulai dari {{min}} hanyalah awal",
+        "text": "Dengan berpartisipasi sekarang, Anda juga memikirkan diri sendiri: lain kali jaringan akan menanggapi kebutuhan Anda. Ke depannya, kami ingin orang bisa menemukan tukang lewat rekomendasi, rekan untuk proyek bersama, atau orang sepemikiran untuk inisiatif mereka melalui jaringan kenalan. Mereka bisa membuat kesepakatan langsung seperti sekarang.",
         "now": "Sekarang",
         "later": "Nanti",
         "need": "Kebutuhan",
         "participation": "Partisipasi",
-        "tradesperson": "Tukang tepercaya",
+        "tradesperson": "Tukang yang direkomendasikan",
         "project": "Proyek bersama"
       },
       "join": {
@@ -856,36 +854,35 @@
         "w1": "Kalau Anda punya komunitas sendiri, coba aplikasinya di sana. Kami akan membantu menjelaskannya dengan bahasa yang dipakai di komunitas Anda.",
         "w2Title": "Ceritakan proyek ini",
         "w2": "Kirim halaman ini kepada orang yang mungkin peduli, atau tulis sendiri tentang Social Organizer.",
-        "w3Title": "Bantu riset atau kode",
-        "w3": "Teorinya dijelaskan dalam <report>laporan penelitian</report>, dan kodenya terbuka di <code>GitHub</code>. Bantu uji teorinya atau kembangkan aplikasinya.",
+        "w3Title": "Ikut serta dalam riset atau pengembangan",
+        "w3": "Teorinya dijelaskan dalam <report>laporan riset</report>, dan kode sumbernya terbuka di <code>GitHub</code>. Ikutlah menguji teori atau mengembangkan aplikasi.",
         "selectLink": "Salin tautan dari kolom di bawah ini.",
         "nowLive_other": "orang punya koneksi di jaringan"
       },
       "faq": {
         "title": "Pertanyaan",
         "q1": "Siapa yang memastikan orang menepati janji?",
-        "a1": "Tidak ada perantara. Anda sendiri yang memutuskan siapa yang dipercaya dan berurusan langsung dengan orangnya. Lewat rantai kenalan, Anda bisa tahu dengan siapa Anda berurusan.",
-        "q2": "Apakah ini asuransi atau dana bersama?",
-        "a2": "Bukan. Tidak ada yang membayar di muka dan tidak ada yang menjanjikan pembayaran. Tidak ada kas bersama dan tidak ada bendahara.",
-        "q3": "Apakah ini penggalangan donasi?",
+        "a1": "Tanpa perantara. Anda sendiri yang menentukan dengan siapa Anda berurusan, dan Anda bisa melihat riwayat aktivitasnya di jaringan. Dengan berpartisipasi, Anda membangun riwayat sendiri.",
+        "q2": "Apakah saya perlu membayar di muka untuk berpartisipasi?",
+        "a2": "Tidak. Partisipasi dimulai dengan menyatakan niat. Aplikasi tidak menyimpan uang, dan tidak ada yang menjanjikan pembayaran.",
+        "q3": "Apakah aplikasi memberi tahu semua orang tentang suatu kebutuhan?",
         "a3": "Bukan. Kebutuhan hanya sampai ke orang yang terhubung dengan penyampainya lewat kenalan, dan lain kali mungkin Anda yang meminta.",
         "q4": "Apakah ini skema piramida?",
         "a4": "Bukan. Tidak ada yang membayar untuk bergabung dan tidak ada yang mendapat uang dari undangan.",
         "q6": "Data apa yang kalian simpan?",
         "data": {
           "account": "Kami menyimpan data akun dan profil, seperti nama, email, pengenal layanan masuk, serta data yang Anda tambahkan, seperti foto, nomor telepon, atau lokasi.",
-          "activity": "Kami juga menyimpan pengaturan seperti bahasa dan tema, riwayat undangan dan hubungan, kebutuhan yang dilaporkan, partisipasi, serta jumlah yang disebutkan.",
+          "activity": "Kami menyimpan pengaturan Anda, seperti bahasa dan tema, riwayat undangan dan koneksi, kebutuhan yang dilaporkan, partisipasi, serta nominal yang Anda masukkan sebagai niat.",
           "notifications": "Kami menyimpan kode masuk, data untuk mengirim notifikasi dan riwayatnya, serta keluhan dan pesan dukungan yang Anda kirim.",
           "money": "Aplikasi tidak menangani uang dan tidak meminta data kartu atau rekening bank."
         }
       },
       "start": {
         "label": "Aplikasi",
-        "title": "Bangun jaringan sebelum Anda membutuhkannya",
-        "text": "Di hari yang berat, tidak ada waktu dan tenaga untuk itu.",
+        "title": "Bergabung lewat undangan kenalan atau mulai bangun jaringan Anda sendiri",
+        "text": "Sebaiknya bangun jaringan sejak awal: saat keadaan sulit, Anda tidak punya waktu atau tenaga untuk melakukannya.",
         "s1": "Buka tautan dari orang yang Anda kenal, atau masuk sendiri dengan Google, Apple, Telegram, atau kode yang dikirim lewat email. Tanpa kata sandi.",
         "s2": "Tambahkan orang yang Anda kenal secara langsung: lewat tautan, kode QR, atau dengan menggoyangkan ponsel berdampingan.",
-        "s3": "Tetapkan niat Anda: jumlah yang biasanya akan Anda sebutkan saat seseorang di jaringan sedang kesulitan.",
         "qr": "Arahkan kamera ponsel ke sini, toko yang sesuai akan terbuka.",
         "playTop": "Tersedia di",
         "play": "Google Play",

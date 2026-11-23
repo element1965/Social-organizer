@@ -713,7 +713,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer: et nettverk av folk du kjenner",
-        "description": "Et nettverk av folk som kjenner hverandre personlig. Når noen er i knipe, kan mange hjelpe."
+        "description": "Et nettverk av folk som kjenner hverandre personlig. Når noen er i knipe, kan mange delta."
       },
       "nav": {
         "label": "Seksjoner",
@@ -779,7 +779,7 @@
         "b9": {
           "label": "I appen",
           "say": "Slik ser nettverket ditt ut i appen: du i midten, rundt deg dine bekjente, lenger ute deres bekjente.",
-          "late": "Når noen trenger hjelp, ser du kjeden av bekjente fra den personen til deg."
+          "late": "Når noen melder et behov, ser du kjeden av bekjente fra den personen til deg."
         },
         "rail": {
           "1": "Flokk",
@@ -822,28 +822,27 @@
       },
       "grow": {
         "title": "Slik vokser nettverket",
-        "text": "Hver ny person inviterer sine bekjente. Still inn hvor mange i snitt, og se hva som skjer med nettverket.",
-        "canvasAria": "Modell av nettverksvekst: invitasjoner sprer seg ut fra én person",
-        "slider": "Hver person inviterer i snitt",
-        "unit": "personer",
-        "threshold": "terskel",
+        "text": "Alle legger til dem de kjenner personlig. Velg hvor mange i gjennomsnitt, og se hvor mange mennesker som bare er noen få håndtrykk unna deg.",
+        "canvasAria": "Modell av nettverksvekst: Fra én person går forbindelsene videre til dem personen kjenner",
+        "slider": "Hver person legger i gjennomsnitt til",
+        "unit_one": "bekjent",
+        "unit_other": "bekjente",
         "statPeople_one": "person i nettverket",
         "statPeople_other": "personer i nettverket",
-        "statWaves_one": "bølge av invitasjoner",
-        "statWaves_other": "bølger av invitasjoner",
-        "dies": "Veksten har stoppet opp",
-        "grows": "I denne modellen fortsetter nettverket å vokse.",
-        "full": "Modellen er tom for nye mennesker",
+        "statWaves_one": "håndtrykk",
+        "statWaves_other": "håndtrykk",
+        "insight": "Med rundt 30 bekjente per person vokser nettverket eksponentielt: Etter bare tre håndtrykk består det av titusener av mennesker. I et slikt nettverk lønner det seg å delta: Når du selv får det vanskelig, er det noen der som kan svare.",
+        "full": "Videre vekst begrenses av størrelsen på faktiske fellesskap",
         "restart": "Start på nytt",
         "hint": "Trykk på modellen for å starte fra en annen",
-        "note": "En forenklet modell. Omgangskretser overlapper hverandre, og ingen trenger å invitere noen.",
-        "axisX": "bølger",
+        "note": "Dette er en forenklet modell. Bekjentskapskretsene overlapper, så for hvert håndtrykk kommer det færre nye personer til.",
+        "axisX": "håndtrykk",
         "axisY": "personer"
       },
       "next": {
         "label": "Fremover",
-        "title": "Hjelp med {{min}} er bare begynnelsen",
-        "text": "Over tid vil vi at folk skal kunne bruke nettverket av bekjente til å finne en anbefalt håndverker, partnere til et felles prosjekt og likesinnede til et eget initiativ. Og at de, som nå, avtaler det direkte.",
+        "title": "Deltakelse fra {{min}} er bare begynnelsen",
+        "text": "Når du deltar nå, tenker du også på deg selv: Neste gang er det ditt behov nettverket svarer på. Etter hvert vil vi at folk skal kunne finne en håndverker på anbefaling, partnere til et felles prosjekt og likesinnede til et eget initiativ gjennom nettverket. Og gjøre avtaler direkte, slik de gjør nå.",
         "now": "Nå",
         "later": "Senere",
         "need": "Behov",
@@ -864,8 +863,8 @@
         "w1": "Har du et eget fellesskap, så prøv appen der. Vi hjelper deg å forklare den med ordene fellesskapet bruker.",
         "w2Title": "Fortell andre om prosjektet",
         "w2": "Send denne siden til folk den kan bety noe for, eller skriv om Social Organizer selv.",
-        "w3Title": "Hjelp til med forskningen eller koden",
-        "w3": "Teorien er beskrevet i <report>forskningsrapporten</report>, og koden er åpen på <code>GitHub</code>. Hjelp til med å teste teorien eller med å utvikle appen.",
+        "w3Title": "Delta i forskningen eller utviklingen",
+        "w3": "Teorien er beskrevet i <report>forskningsrapporten</report>, og koden er offentlig på <code>GitHub</code>. Delta i utprøvingen av teorien eller utviklingen av appen.",
         "selectLink": "Kopier lenken fra feltet nedenfor.",
         "nowLive_one": "person med forbindelser i nettverket",
         "nowLive_other": "personer med forbindelser i nettverket"
@@ -873,28 +872,27 @@
       "faq": {
         "title": "Spørsmål",
         "q1": "Hvem passer på at folk holder ord?",
-        "a1": "Det finnes ingen mellomledd. Du bestemmer selv hvem du stoler på, og gjør avtaler direkte med folk. Gjennom kjeden av bekjente kan du finne ut hvem du har med å gjøre.",
-        "q2": "Er dette en forsikring eller et fond?",
-        "a2": "Nei. Ingen betaler på forhånd, og ingen lover noen utbetaling. Det finnes ingen felles kasse og ingen kasserer.",
-        "q3": "Er dette en innsamlingsaksjon?",
-        "a3": "Nei. Et behov når bare folk som via bekjente er knyttet til den som meldte det, og neste gang kan det være du som ber om hjelp.",
+        "a1": "Ingen mellomledd. Du bestemmer selv hvem du vil ha med å gjøre, og kan se personens aktivitetshistorikk i nettverket. Ved å delta bygger du opp din egen historikk.",
+        "q2": "Må jeg betale på forhånd for å delta?",
+        "a2": "Nei. Deltakelse starter med en intensjon. Appen oppbevarer ingen penger, og ingen lover en utbetaling.",
+        "q3": "Får alle varsel om et meldt behov?",
+        "a3": "Nei. Bare personer som er knyttet til den som meldte behovet gjennom bekjente, får varsel. Neste gang kan det være du som melder et behov.",
         "q4": "Er dette et pyramidespill?",
         "a4": "Nei. Ingen betaler for å bli med, og ingen tjener på invitasjoner.",
         "q6": "Hvilke data lagrer dere?",
         "data": {
           "account": "Vi lagrer konto- og profilopplysninger som navn, e-post og identifikatorer fra innloggingstjenesten, og det du legger til, som bilde, telefonnummer eller sted.",
-          "activity": "Vi lagrer også innstillinger som språk og tema, invitasjons- og forbindelseshistorikk, meldte behov, deltakelse og oppgitte beløp.",
+          "activity": "Vi lagrer innstillingene dine, som språk og tema, historikken for invitasjoner og forbindelser, meldte behov, deltakelse og beløpene du oppgir som intensjon.",
           "notifications": "Vi lagrer innloggingskoder, data til varsler og varslingshistorikk, samt klager og meldinger du sender til brukerstøtte.",
           "money": "Appen håndterer ikke penger og ber ikke om kort- eller bankopplysninger."
         }
       },
       "start": {
         "label": "Appen",
-        "title": "Bygg nettverket ditt før du trenger det",
-        "text": "På en dårlig dag har du verken tid eller krefter til det.",
+        "title": "Bli med via en invitasjon fra en bekjent, eller begynn å bygge ditt eget nettverk",
+        "text": "Bygg helst nettverket på forhånd: På en vanskelig dag har du verken tid eller krefter til det.",
         "s1": "Åpne en lenke fra noen du kjenner, eller logg inn selv med Google, Apple, Telegram eller en kode på e-post. Du trenger ikke passord.",
         "s2": "Legg til folk du kjenner personlig: med en lenke, en QR-kode eller ved å riste telefonene ved siden av hverandre.",
-        "s3": "Sett intensjonen din: beløpet du vanligvis vil oppgi hvis noen i nettverket kommer i knipe.",
         "qr": "Pek telefonkameraet hit, så åpnes riktig butikk.",
         "playTop": "Hent den på",
         "play": "Google Play",

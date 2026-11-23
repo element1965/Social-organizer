@@ -713,7 +713,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer: een netwerk van mensen die je kent",
-        "description": "Een netwerk van mensen die elkaar persoonlijk kennen. Zit iemand in de problemen, dan kunnen velen helpen."
+        "description": "Een netwerk van mensen die elkaar persoonlijk kennen. Zit iemand in de problemen, dan kunnen veel mensen meedoen."
       },
       "nav": {
         "label": "Onderdelen",
@@ -779,7 +779,7 @@
         "b9": {
           "label": "In de app",
           "say": "Zo ziet je netwerk eruit in de app: jij in het midden, om je heen je kennissen, verder weg hun kennissen.",
-          "late": "Heeft iemand hulp nodig, dan zie je de keten van kennissen die van die persoon naar jou loopt."
+          "late": "Meldt iemand een behoefte, dan zie je de keten van bekenden die van die persoon naar jou loopt."
         },
         "rail": {
           "1": "Zwerm",
@@ -822,28 +822,27 @@
       },
       "grow": {
         "title": "Hoe het netwerk groeit",
-        "text": "Iedere nieuwkomer nodigt eigen kennissen uit. Stel in hoeveel het er gemiddeld zijn en kijk wat er met het netwerk gebeurt.",
-        "canvasAria": "Model van netwerkgroei: uitnodigingen verspreiden zich vanaf één persoon",
-        "slider": "Gemiddeld uitgenodigd per persoon",
-        "unit": "mensen",
-        "threshold": "drempel",
+        "text": "Iedereen voegt de mensen toe die ze persoonlijk kennen. Stel in hoeveel dat er gemiddeld zijn en kijk hoeveel mensen maar een paar handdrukken van je verwijderd zijn.",
+        "canvasAria": "Groeimodel van het netwerk: vanuit één persoon lopen verbindingen naar mensen die diegene kent",
+        "slider": "Iedereen voegt gemiddeld toe:",
+        "unit_one": "bekende",
+        "unit_other": "bekenden",
         "statPeople_one": "persoon in het netwerk",
         "statPeople_other": "mensen in het netwerk",
-        "statWaves_one": "golf van uitnodigingen",
-        "statWaves_other": "golven van uitnodigingen",
-        "dies": "De groei is gestopt",
-        "grows": "In dit model blijft het netwerk groeien.",
-        "full": "Het model heeft geen nieuwe mensen meer",
+        "statWaves_one": "handdruk",
+        "statWaves_other": "handdrukken",
+        "insight": "Met zo’n 30 bekenden per persoon groeit het netwerk exponentieel: na slechts drie handdrukken telt het al tienduizenden mensen. In zo’n netwerk loont deelname: als jij het moeilijk krijgt, zijn er mensen die kunnen reageren.",
+        "full": "Vanaf hier begrenst de omvang van echte gemeenschappen de groei",
         "restart": "Opnieuw beginnen",
         "hint": "Tik op het model om bij iemand anders te beginnen",
-        "note": "Een vereenvoudigd model. Kennissenkringen overlappen, en niemand hoeft iemand uit te nodigen.",
-        "axisX": "golven",
+        "note": "Dit is een vereenvoudigd model. Kennissenkringen overlappen elkaar, waardoor er bij elke volgende handdruk minder nieuwe mensen bijkomen.",
+        "axisX": "handdrukken",
         "axisY": "mensen"
       },
       "next": {
         "label": "Vooruitblik",
-        "title": "Helpen met {{min}} is pas het begin",
-        "text": "Op termijn willen we dat mensen via hun netwerk van kennissen ook een vakman op aanbeveling vinden, partners voor een gezamenlijk project en gelijkgestemden voor een eigen initiatief. En dat ze, net als nu, rechtstreeks afspraken maken.",
+        "title": "Deelname vanaf {{min}} is pas het begin",
+        "text": "Door nu mee te doen, denk je ook aan jezelf: de volgende keer reageert het netwerk op jouw behoefte. Op termijn willen we dat mensen via hun netwerk een vakman op aanbeveling vinden, partners voor een gezamenlijk project of gelijkgestemden voor een eigen initiatief. En dat ze rechtstreeks afspraken maken, zoals nu al gebeurt.",
         "now": "Nu",
         "later": "Later",
         "need": "Behoefte",
@@ -864,8 +863,8 @@
         "w1": "Heb je een eigen gemeenschap, probeer de app daar dan uit. We helpen je om hem uit te leggen in de woorden die ze daar gebruiken.",
         "w2Title": "Vertel anderen over het project",
         "w2": "Stuur deze pagina naar mensen voor wie het iets kan betekenen, of schrijf zelf over Social Organizer.",
-        "w3Title": "Help mee met het onderzoek of de code",
-        "w3": "De theorie staat in <report>het onderzoeksrapport</report>, en de code is openbaar op <code>GitHub</code>. Help de theorie te testen of werk mee aan de app.",
+        "w3Title": "Doe mee aan onderzoek of ontwikkeling",
+        "w3": "De theorie staat in <report>het onderzoeksrapport</report> en de code is openbaar op <code>GitHub</code>. Doe mee door de theorie te testen of aan de app te werken.",
         "selectLink": "Kopieer de link uit het veld hieronder.",
         "nowLive_one": "persoon met connecties in het netwerk",
         "nowLive_other": "mensen met connecties in het netwerk"
@@ -873,28 +872,27 @@
       "faq": {
         "title": "Vragen",
         "q1": "Wie zorgt ervoor dat mensen hun woord houden?",
-        "a1": "Er zijn geen tussenpersonen. Jij beslist wie je vertrouwt en spreekt rechtstreeks met mensen af. Via de keten van kennissen kun je nagaan met wie je te maken hebt.",
-        "q2": "Is dit een verzekering of een fonds?",
-        "a2": "Nee. Niemand betaalt vooraf en niemand belooft een uitkering. Er is geen gezamenlijke pot en geen penningmeester.",
-        "q3": "Is dit een inzamelingsactie?",
+        "a1": "Er zijn geen tussenpersonen. Je bepaalt zelf met wie je zaken doet en ziet hoe die persoon eerder actief was in het netwerk. Door mee te doen bouw je zelf ook een geschiedenis op.",
+        "q2": "Moet ik vooraf betalen om mee te doen?",
+        "a2": "Nee. Deelname begint met een voornemen. De app houdt geen geld in beheer en niemand belooft een uitbetaling.",
+        "q3": "Stuurt de app iedereen een melding over een gemelde behoefte?",
         "a3": "Nee. Een behoefte bereikt alleen mensen die via kennissen met de indiener verbonden zijn, en de volgende keer ben jij misschien degene die vraagt.",
         "q4": "Is dit een piramidespel?",
         "a4": "Nee. Niemand betaalt om mee te doen en niemand verdient aan uitnodigingen.",
         "q6": "Welke gegevens bewaren jullie?",
         "data": {
           "account": "We bewaren account- en profielgegevens zoals je naam, e-mailadres, gegevens die je account bij de inlogdienst identificeren en wat je zelf toevoegt, zoals een foto, telefoonnummer of locatie.",
-          "activity": "We bewaren ook je instellingen (zoals taal en thema), je uitnodigingen en verbindingen, gemelde behoeften, deelname en genoemde bedragen.",
+          "activity": "We bewaren je instellingen, zoals taal en thema, je uitnodigings- en verbindingsgeschiedenis, gemelde behoeften, deelname en de bedragen die je als voornemen opgeeft.",
           "notifications": "Ook bewaren we inlogcodes, gegevens voor meldingen en je meldingsgeschiedenis, en klachten of supportberichten die je stuurt.",
           "money": "De app verwerkt geen geld en vraagt geen kaart- of bankgegevens."
         }
       },
       "start": {
         "label": "De app",
-        "title": "Bouw je netwerk voordat je het nodig hebt",
-        "text": "Op een slechte dag heb je daar geen tijd of energie voor.",
+        "title": "Doe mee via een uitnodiging van een bekende of begin je eigen netwerk op te bouwen",
+        "text": "Bouw je netwerk liever vooraf op: op een moeilijke dag heb je er de tijd noch de energie voor.",
         "s1": "Open een link van iemand die je kent, of log zelf in met Google, Apple, Telegram of een code per e-mail. Een wachtwoord is niet nodig.",
         "s2": "Voeg mensen toe die je persoonlijk kent: met een link, een QR-code of door jullie telefoons naast elkaar te schudden.",
-        "s3": "Stel je intentie in: het bedrag dat je normaal zou noemen als iemand in het netwerk in de problemen zit.",
         "qr": "Richt de camera van je telefoon hierop, dan gaat de juiste winkel open.",
         "playTop": "Ontdek het op",
         "play": "Google Play",

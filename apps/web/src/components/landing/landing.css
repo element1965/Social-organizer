@@ -163,7 +163,7 @@ html[dir="rtl"] .lv.graph .tag.t-maria.flip { transform: translate(18px, -50%); 
 
 /* growth model */
 .lv .grow { background: var(--lv-deep); min-height: var(--screen); display: flex; flex-direction: column; justify-content: center; padding: 100px 0; }
-.lv .grow > canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; }
+.lv .grow > canvas { position: absolute; inset: 50% 0 auto; width: 100%; height: min(100%, var(--screen)); transform: translateY(-50%); cursor: crosshair; }
 .lv .grow::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, rgb(var(--lv-grow-shade-rgb) / calc(235 / 255)) 0%, rgb(var(--lv-grow-shade-rgb) / calc(184 / 255)) 30%, rgb(var(--lv-grow-shade-rgb) / 0) 54%); }
 .lv .grow .wrap { position: relative; z-index: 2; pointer-events: none; }
 .lv .grow .copy { max-width: 480px; pointer-events: auto; }
@@ -171,31 +171,30 @@ html[dir="rtl"] .lv.graph .tag.t-maria.flip { transform: translate(18px, -50%); 
 .lv .ctrl { margin-top: 30px; padding: 20px; border-radius: var(--r); background: rgb(var(--lv-scene-rgb) / calc(199 / 255)); border: 1px solid rgb(var(--lv-white-rgb) / .1); }
 .lv .ctrl label.q { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; font: 500 12px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: rgb(var(--lv-white-rgb) / calc(191 / 255)); margin: 0 0 10px; }
 .lv .ctrl label.q b { font: 400 26px/1 var(--sans); letter-spacing: -.02em; text-transform: none; color: var(--lv-white); font-variant-numeric: tabular-nums; }
-.lv .range { position: relative; padding-bottom: 24px; direction: ltr; }
+.lv .range { position: relative; padding-bottom: 24px; }
 .lv .range input { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; background: transparent; cursor: pointer; margin: 0; }
-.lv .range input::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: linear-gradient(90deg, rgb(var(--lv-sos-scene-rgb) / calc(191 / 255)) 0 25%, rgb(var(--lv-care-scene-rgb) / calc(217 / 255)) 25% 100%); }
-.lv .range input::-moz-range-track { height: 4px; border-radius: 4px; background: linear-gradient(90deg, rgb(var(--lv-sos-scene-rgb) / calc(191 / 255)) 0 25%, rgb(var(--lv-care-scene-rgb) / calc(217 / 255)) 25% 100%); }
+.lv .range input::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: rgb(var(--lv-care-scene-rgb) / calc(217 / 255)); }
+.lv .range input::-moz-range-track { height: 4px; border-radius: 4px; background: rgb(var(--lv-care-scene-rgb) / calc(217 / 255)); }
 .lv .range input::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--lv-white); margin-top: -9px; box-shadow: 0 0 0 6px rgb(var(--lv-care-scene-rgb) / calc(56 / 255)); transition: transform .15s; }
 .lv .range input::-moz-range-thumb { width: 22px; height: 22px; border: 0; border-radius: 50%; background: var(--lv-white); box-shadow: 0 0 0 6px rgb(var(--lv-care-scene-rgb) / calc(56 / 255)); }
 .lv .range input:active::-webkit-slider-thumb { transform: scale(1.12); }
 .lv .ticks { position: absolute; left: 11px; right: 11px; bottom: 0; height: 20px; font: 500 11px/1 var(--mono); color: rgb(var(--lv-white-rgb) / calc(140 / 255)); }
 .lv .ticks span { position: absolute; top: 6px; white-space: nowrap; }
-.lv .ticks .lo { left: -11px; }
-.lv .ticks .hi { right: -11px; }
-.lv .ticks .thr { left: 25%; transform: translateX(-50%); color: var(--lv-white); }
-.lv .ticks .thr i { position: absolute; left: 50%; top: -16px; width: 1px; height: 10px; background: rgb(var(--lv-white-rgb) / .8); }
-.lv .ticks .thr em { font-style: normal; color: rgb(var(--lv-white-rgb) / .6); }
-.lv .stats { display: grid; grid-template-columns: auto auto 1fr; gap: 22px; align-items: end; margin-top: 18px; }
+.lv .ticks .lo { inset-inline-start: -11px; }
+.lv .ticks .hi { inset-inline-end: -11px; }
+.lv .stats { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .8fr) minmax(0, 1fr); gap: 16px; align-items: end; margin-top: 18px; }
 .lv .stats div { display: flex; flex-direction: column; gap: 6px; }
-.lv .stats b { font: 300 38px/1 var(--sans); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.lv .stats b { font: 300 clamp(27px, 4vw, 38px)/1 var(--sans); letter-spacing: -.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .lv .stats .n { color: var(--lv-care-scene); }
 .lv .stats span { font: 500 11px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; overflow-wrap: anywhere; color: rgb(var(--lv-white-rgb) / calc(158 / 255)); }
 .lv .stats canvas { width: 100%; height: 64px; }
 .lv .state { display: flex; justify-content: space-between; align-items: baseline; margin-top: 16px; gap: 12px; }
-.lv .state b { font-weight: 400; font-size: 22px; letter-spacing: -.01em; min-height: 1.2em; }
+.lv .state b { font-weight: 400; font-size: 18px; letter-spacing: -.01em; min-height: 2.4em; }
+.lv .state button { flex: none; max-inline-size: 38%; }
 .lv .state button { position: relative; font: 500 13px/1 var(--sans); background: none; border: 0; padding: 0; color: var(--lv-care-scene); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .lv .state button::before { content: ""; position: absolute; inset-block: -21px -10px; inset-inline-end: 0; inline-size: 100%; min-inline-size: 44px; }
 .lv .note { font-size: 13px; color: var(--lv-text-3); margin-top: 12px; }
+.lv .grow .insight { margin-top: 16px; color: var(--lv-text-2); font-size: 15px; line-height: 1.5; }
 .lv .grow .hint { margin-top: 14px; font: 500 12px/1.4 var(--mono); color: rgb(var(--lv-white-rgb) / calc(128 / 255)); letter-spacing: .03em; }
 
 /* next: a live network carrying signals now and later */
@@ -351,7 +350,7 @@ html[lang="th"] .lv :is(h1, h2) { line-height: 1.25; }
   .lv .hud span { font-size: 11px; max-width: 96px; overflow-wrap: anywhere; }
   /* phones: words, then the model in its own frame, then the controls */
   .lv .grow { justify-content: flex-start; padding: 96px 0 40px; min-height: 0; }
-  .lv .grow > canvas { position: relative; inset: auto; order: 2; width: 100%; height: calc(var(--screen) * .46); margin: 8px 0 0; }
+  .lv .grow > canvas { position: relative; inset: auto; order: 2; width: 100%; height: calc(var(--screen) * .46); margin: 8px 0 0; transform: none; }
   .lv .grow .gtop { order: 1; }
   .lv .grow .gpanel { order: 3; }
   .lv .grow .gpanel .ctrl { margin-top: 8px; }

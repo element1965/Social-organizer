@@ -717,7 +717,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer: uma rede de pessoas que você conhece",
-        "description": "Uma rede de pessoas que se conhecem pessoalmente. Quando alguém passa por um aperto, muita gente pode ajudar."
+        "description": "Uma rede de pessoas que se conhecem pessoalmente. Quando alguém passa por um aperto, muita gente pode participar."
       },
       "nav": {
         "label": "Seções",
@@ -783,7 +783,7 @@
         "b9": {
           "label": "No aplicativo",
           "say": "É assim que a sua rede aparece no aplicativo: você no centro, em volta os seus conhecidos e, mais adiante, os conhecidos deles.",
-          "late": "Quando alguém precisa de ajuda, você vê a cadeia de conhecidos que vai dessa pessoa até você."
+          "late": "Quando alguém informa uma necessidade, você vê a cadeia de conhecidos que liga essa pessoa a você."
         },
         "rail": {
           "1": "Bando",
@@ -828,35 +828,35 @@
       },
       "grow": {
         "title": "Como a rede cresce",
-        "text": "Cada pessoa nova convida os próprios conhecidos. Escolha quantos, em média, e veja o que acontece com a rede.",
-        "canvasAria": "Modelo de crescimento da rede: os convites partem de uma só pessoa",
-        "slider": "Cada pessoa convida em média",
-        "unit": "pessoas",
-        "threshold": "limiar",
+        "text": "Cada pessoa adiciona quem conhece pessoalmente. Defina quantos conhecidos são adicionados em média e veja quantas pessoas estão a poucos apertos de mão de você.",
+        "canvasAria": "Modelo de crescimento da rede: as conexões partem de uma pessoa e chegam aos seus conhecidos",
+        "slider": "Cada pessoa adiciona, em média,",
+        "unit_one": "conhecido",
+        "unit_many": "conhecidos",
+        "unit_other": "conhecidos",
         "statPeople_one": "pessoa na rede",
         "statPeople_many": "de pessoas na rede",
         "statPeople_other": "pessoas na rede",
-        "statWaves_one": "onda de convites",
-        "statWaves_many": "de ondas de convites",
-        "statWaves_other": "ondas de convites",
-        "dies": "O crescimento parou",
-        "grows": "Neste modelo, a rede continua crescendo.",
-        "full": "O modelo ficou sem pessoas novas",
+        "statWaves_one": "aperto de mão",
+        "statWaves_many": "apertos de mão",
+        "statWaves_other": "apertos de mão",
+        "insight": "Com cerca de 30 conhecidos por pessoa, a rede cresce exponencialmente: em apenas três apertos de mão, já reúne dezenas de milhares de pessoas. Numa rede assim, participar traz um benefício concreto: quando for você a passar por um momento difícil, vai ter gente para responder.",
+        "full": "A partir daqui, o tamanho das comunidades reais limita o crescimento da rede",
         "restart": "Recomeçar",
         "hint": "Toque no modelo para começar por outra pessoa",
-        "note": "É um modelo simplificado. Os círculos de conhecidos se sobrepõem, e ninguém é obrigado a convidar ninguém.",
-        "axisX": "ondas",
+        "note": "É um modelo simplificado. Os círculos de conhecidos têm pessoas em comum, por isso cada novo aperto de mão acrescenta menos gente à rede.",
+        "axisX": "apertos de mão",
         "axisY": "pessoas"
       },
       "next": {
         "label": "Próximos passos",
-        "title": "Ajudar com {{min}} é só o começo",
-        "text": "Com o tempo, queremos que as pessoas usem a rede de conhecidos para encontrar um profissional indicado por alguém, parceiros para um projeto em comum, pessoas com as mesmas ideias para uma iniciativa própria. E que combinem tudo diretamente, como hoje.",
+        "title": "A participação a partir de {{min}} é só o começo",
+        "text": "Ao participar agora, você também cuida de si: da próxima vez, a rede vai responder à sua necessidade. Com o tempo, queremos que as pessoas encontrem, por meio da sua rede de conhecidos, um profissional por recomendação, parceiros para um projeto em comum ou pessoas com interesses parecidos para uma iniciativa própria. E que combinem tudo diretamente, como já fazem hoje.",
         "now": "Agora",
         "later": "Depois",
         "need": "Necessidade",
         "participation": "Participação",
-        "tradesperson": "Um profissional de confiança",
+        "tradesperson": "Um profissional recomendado",
         "project": "Um projeto em comum"
       },
       "join": {
@@ -872,8 +872,8 @@
         "w1": "Se você tem uma comunidade, experimente o aplicativo nela. Ajudamos a explicá-lo com as palavras que ela usa.",
         "w2Title": "Conte sobre o projeto",
         "w2": "Mande esta página para quem possa se interessar, ou escreva sobre o Social Organizer nos seus canais.",
-        "w3Title": "Ajude na pesquisa ou no código",
-        "w3": "A teoria está no <report>relatório de pesquisa</report>, e o código aberto está no <code>GitHub</code>. Ajude a testar a teoria ou a desenvolver o aplicativo.",
+        "w3Title": "Participe da pesquisa ou do desenvolvimento",
+        "w3": "A teoria está descrita no <report>relatório de pesquisa</report> e o código é aberto no <code>GitHub</code>. Participe dos testes da teoria ou do desenvolvimento do aplicativo.",
         "selectLink": "Copie o link do campo abaixo.",
         "nowLive_one": "pessoa com conexões na rede",
         "nowLive_many": "pessoas com conexões na rede",
@@ -882,28 +882,27 @@
       "faq": {
         "title": "Perguntas",
         "q1": "Quem garante que as pessoas cumpram a palavra?",
-        "a1": "Não há intermediários. Você decide em quem confiar e trata direto com as pessoas. E pela cadeia de conhecidos dá para saber com quem você está lidando.",
-        "q2": "Isso é um seguro ou um fundo?",
-        "a2": "Não. Ninguém paga adiantado e ninguém promete pagamento. Não existe caixa comum nem tesoureiro.",
-        "q3": "Isso é uma campanha de doações?",
+        "a1": "Não há intermediários. Você decide com quem lidar e pode consultar o histórico de atividade dessa pessoa na rede. Ao participar, você cria seu próprio histórico.",
+        "q2": "Preciso pagar adiantado para participar?",
+        "a2": "Não. A participação começa com uma intenção. O aplicativo não guarda dinheiro e ninguém promete um pagamento.",
+        "q3": "O aplicativo avisa todo mundo sobre uma necessidade?",
         "a3": "Não. Uma necessidade chega só a pessoas ligadas ao autor por conhecidos, e na próxima vez quem pede pode ser você.",
         "q4": "Isso é uma pirâmide?",
         "a4": "Não. Ninguém paga para entrar e ninguém ganha com convites.",
         "q6": "Que dados vocês guardam?",
         "data": {
           "account": "Guardamos dados da conta e do perfil, como nome, e-mail, identificadores do serviço de login e informações que você adiciona, como foto, telefone ou localização.",
-          "activity": "Guardamos também configurações como idioma e tema, histórico de convites e conexões, necessidades informadas, participação e valores indicados.",
+          "activity": "Guardamos suas configurações, como idioma e tema, o histórico de convites e conexões, as necessidades comunicadas, a participação e os valores que você informa como intenção.",
           "notifications": "Também guardamos códigos de acesso, dados para envio de notificações e seu histórico, além das denúncias e mensagens que você envia ao suporte.",
           "money": "O aplicativo não movimenta dinheiro nem pede dados de cartão ou conta bancária."
         }
       },
       "start": {
         "label": "O aplicativo",
-        "title": "A rede se monta com antecedência",
-        "text": "Num dia difícil, não sobra tempo nem energia para isso.",
+        "title": "Entre pelo convite de alguém que você conhece ou comece a construir sua própria rede",
+        "text": "É melhor montar a rede com antecedência: num dia difícil, você não vai ter tempo nem energia para isso.",
         "s1": "Abra o link de um conhecido ou entre por conta própria com Google, Apple, Telegram ou um código enviado por e-mail. Não precisa de senha.",
         "s2": "Adicione pessoas que você conhece pessoalmente: por link, por QR code ou agitando os celulares lado a lado.",
-        "s3": "Defina sua intenção: o valor que você indicaria normalmente se alguém da rede passasse por um aperto.",
         "qr": "Aponte a câmera do celular para cá e a loja certa vai abrir.",
         "playTop": "Disponível no",
         "play": "Google Play",

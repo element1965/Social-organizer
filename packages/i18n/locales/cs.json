@@ -721,7 +721,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer: síť známých",
-        "description": "Síť lidí, kteří se znají osobně. Když je někomu těžko, může pomoct hodně lidí."
+        "description": "Síť lidí, kteří se znají osobně. Když je někomu těžko, může se zapojit mnoho lidí."
       },
       "nav": {
         "label": "Sekce",
@@ -787,7 +787,7 @@
         "b9": {
           "label": "V aplikaci",
           "say": "Takhle vypadá vaše síť v aplikaci: vy uprostřed, kolem vaši známí, dál jejich známí.",
-          "late": "Když někdo potřebuje pomoc, vidíte řetězec známých od tohoto člověka až k vám."
+          "late": "Když někdo nahlásí potřebu, vidíte řetězec známých od tohoto člověka až k vám."
         },
         "rail": {
           "1": "Hejno",
@@ -834,37 +834,38 @@
       },
       "grow": {
         "title": "Jak síť roste",
-        "text": "Každý nový člověk pozve své známé. Nastavte, kolik jich v průměru pozve, a uvidíte, co se se sítí stane.",
-        "canvasAria": "Model růstu sítě: pozvánky se šíří od jednoho člověka",
-        "slider": "Každý pozve v průměru",
-        "unit": "člověka",
-        "threshold": "práh",
+        "text": "Každý přidává lidi, které osobně zná. Nastavte průměr a podívejte se, kolik lidí od vás dělí jen pár podání ruky.",
+        "canvasAria": "Model růstu sítě: od jednoho člověka vedou spojení k jeho známým",
+        "slider": "Každý přidá v průměru",
+        "unit_one": "známého",
+        "unit_few": "známé",
+        "unit_many": "známého",
+        "unit_other": "známých",
         "statPeople_one": "člověk v síti",
         "statPeople_few": "lidé v síti",
         "statPeople_many": "člověka v síti",
         "statPeople_other": "lidí v síti",
-        "statWaves_one": "vlna pozvánek",
-        "statWaves_few": "vlny pozvánek",
-        "statWaves_many": "vlny pozvánek",
-        "statWaves_other": "vln pozvánek",
-        "dies": "Růst se zastavil",
-        "grows": "V tomto modelu síť dál roste.",
-        "full": "V modelu už nejsou noví lidé",
+        "statWaves_one": "podání ruky",
+        "statWaves_few": "podání ruky",
+        "statWaves_many": "podání ruky",
+        "statWaves_other": "podání ruky",
+        "insight": "Při zhruba 30 známých na člověka roste síť exponenciálně: už po třech podáních ruky čítá desítky tisíc lidí. V takové síti má účast konkrétní přínos: až bude těžko vám, bude mít kdo zareagovat.",
+        "full": "Další růst sítě omezuje velikost skutečných komunit",
         "restart": "Začít znovu",
         "hint": "Klepnutím na model začnete od někoho jiného",
-        "note": "Model je zjednodušený. Kruhy známých se překrývají a nikdo nemusí nikoho zvát.",
-        "axisX": "vlny",
+        "note": "Jde o zjednodušený model. Okruhy známých se překrývají, takže každé další podání ruky přidá méně nových lidí.",
+        "axisX": "podání ruky",
         "axisY": "lidé"
       },
       "next": {
         "label": "Dál",
-        "title": "Pomoc po {{min}} je teprve začátek",
-        "text": "Chceme, aby lidé časem přes síť známých našli řemeslníka na doporučení, partnery pro společný projekt nebo stejně smýšlející lidi pro vlastní iniciativu. A domlouvali se, stejně jako teď, přímo.",
+        "title": "Účast od {{min}} je jen začátek",
+        "text": "Když se zapojíte teď, myslíte i na sebe: příště se síť ozve, až budete mít potřebu vy. Časem chceme, aby lidé přes síť známých našli řemeslníka na doporučení, partnery pro společný projekt nebo lidi se stejným zájmem pro vlastní iniciativu. A domluvili se přímo, jako dnes.",
         "now": "Teď",
         "later": "Později",
         "need": "Potřeba",
         "participation": "Účast",
-        "tradesperson": "Prověřený řemeslník",
+        "tradesperson": "Řemeslník na doporučení",
         "project": "Společný projekt"
       },
       "join": {
@@ -880,8 +881,8 @@
         "w1": "Pokud máte vlastní komunitu, vyzkoušejte aplikaci tam. Pomůžeme vám o ní mluvit slovy, která používá vaše komunita.",
         "w2Title": "Řekněte o projektu dalším",
         "w2": "Pošlete tuto stránku lidem, kterým by mohla být blízká, nebo o Social Organizer napište sami.",
-        "w3Title": "Pomozte s výzkumem nebo kódem",
-        "w3": "Teorii najdete ve <report>výzkumné zprávě</report>, kód je otevřený na <code>GitHub</code>u. Pomozte ověřit teorii nebo se zapojte do práce na aplikaci.",
+        "w3Title": "Zapojte se do výzkumu nebo vývoje",
+        "w3": "Teorie je popsána ve <report>výzkumné zprávě</report> a kód je veřejně dostupný na <code>GitHubu</code>. Zapojte se do ověřování teorie nebo vývoje aplikace.",
         "selectLink": "Zkopírujte odkaz z pole níže.",
         "nowLive_one": "člověk má v síti známé",
         "nowLive_few": "lidé mají v síti známé",
@@ -891,28 +892,27 @@
       "faq": {
         "title": "Otázky",
         "q1": "Kdo dohlédne na to, aby lidé dodrželi slovo?",
-        "a1": "Žádní prostředníci nejsou. Sami se rozhodujete, komu věřit, a s lidmi se domlouváte přímo. A přes řetězec známých zjistíte, s kým máte co do činění.",
-        "q2": "Je to pojištění nebo fond?",
-        "a2": "Ne. Nikdo neplatí předem a nikdo neslibuje výplatu. Není tu žádná společná kasa ani pokladník.",
-        "q3": "Je to sbírka darů?",
-        "a3": "Ne. Potřebu vidí jen lidé, kteří jsou s autorem spojeni přes známé, a příště můžete o pomoc žádat vy.",
+        "a1": "Bez prostředníků. Sami rozhodujete, s kým budete jednat, a vidíte historii jeho činnosti v síti. Svou účastí si vytváříte vlastní historii.",
+        "q2": "Musím za účast platit předem?",
+        "a2": "Ne. Účast začíná vyjádřením záměru. Aplikace nedrží žádné peníze a nikdo neslibuje výplatu.",
+        "q3": "Dostanou o potřebě oznámení všichni?",
+        "a3": "Ne. Oznámení dostanou jen lidé, kteří jsou s autorem spojeni přes známé. Příště můžete potřebu nahlásit vy.",
         "q4": "Je to pyramidová hra?",
         "a4": "Ne. Nikdo neplatí za vstup a nikdo nevydělává na pozvánkách.",
         "q6": "Jaká data uchováváte?",
         "data": {
           "account": "Uchováváme údaje o účtu a profilu, například jméno, e-mail, identifikátory přihlašovací služby a údaje, které přidáte, třeba fotku, telefon či polohu.",
-          "activity": "Dále uchováváme nastavení, jako je jazyk a motiv, historii pozvánek a spojení, nahlášené potřeby, účast i uvedené částky.",
+          "activity": "Ukládáme nastavení, například jazyk a motiv, historii pozvánek a spojení, nahlášené potřeby, účast a uvedené částky záměrů.",
           "notifications": "Ukládáme také přihlašovací kódy, údaje pro oznámení a jejich historii i stížnosti a zprávy, které pošlete podpoře.",
           "money": "Aplikace s penězi nenakládá a nežádá údaje o kartě ani bankovním účtu."
         }
       },
       "start": {
         "label": "Aplikace",
-        "title": "Síť se staví předem",
-        "text": "V těžký den na to není čas ani síla.",
+        "title": "Připojte se na pozvání známého nebo začněte budovat vlastní síť",
+        "text": "Síť je lepší vytvořit předem: až bude těžko, nezbude na to čas ani síla.",
         "s1": "Otevřete odkaz od známého, nebo se přihlaste sami: přes Google, Apple, Telegram nebo kódem z e-mailu. Heslo nepotřebujete.",
         "s2": "Přidejte lidi, které znáte osobně: odkazem, QR kódem nebo protřepáním telefonů vedle sebe.",
-        "s3": "Uveďte částku, kterou byste obvykle byli ochotni nabídnout jako svou účast, kdyby se někdo v síti ocitl v nesnázích.",
         "qr": "Namiřte sem fotoaparát telefonu a otevře se ten správný obchod.",
         "playTop": "Nyní na",
         "play": "Google Play",

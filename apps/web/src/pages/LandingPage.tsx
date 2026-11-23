@@ -14,7 +14,7 @@ import { REPORT_URL, TEAM_URL } from '../components/site/team';
 import { SITE_ORIGIN, storeLinks, useDevice } from '../lib/device';
 import { IconGlobe } from '../components/site/icons';
 import { initGlide } from '../components/landing/glide';
-import { initGrow, type GrowHandle, type GrowOptions } from '../components/landing/grow';
+import { GROW_MAX, GROW_MIN, initGrow, type GrowHandle, type GrowOptions } from '../components/landing/grow';
 import { initNextNet, type NextNetHandle } from '../components/landing/nextNet';
 import type { SceneHandle, SceneOptions } from '../components/landing/scene';
 import { storyMoney } from '../components/landing/money';
@@ -131,7 +131,6 @@ export function LandingPage() {
   useDocumentTitle(t('landing.v2.meta.title'), t('landing.v2.meta.description'));
 
   const nf = useMemo(() => new Intl.NumberFormat(lang), [lang]);
-  const nf1 = useMemo(() => new Intl.NumberFormat(lang, { minimumFractionDigits: 1, maximumFractionDigits: 1 }), [lang]);
   const nf2 = useMemo(() => new Intl.NumberFormat(lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 }), [lang]);
   // the story's sums in dollars: the shortfall at the price level of the reader's country, up to one person
   // reached per dollar, the smallest share and yours
@@ -165,6 +164,7 @@ export function LandingPage() {
   const growChartRef = useRef<HTMLCanvasElement>(null);
   const growSliderRef = useRef<HTMLInputElement>(null);
   const growValueRef = useRef<HTMLElement>(null);
+  const growUnitRef = useRef<HTMLSpanElement>(null);
   const growPeopleRef = useRef<HTMLElement>(null);
   const growWavesRef = useRef<HTMLElement>(null);
   const growPeopleLabelRef = useRef<HTMLSpanElement>(null);
@@ -189,10 +189,9 @@ export function LandingPage() {
   };
   const growOptions: GrowOptions = {
     rtl,
-    formatValue: (v) => nf1.format(v),
     formatInt: (v) => nf.format(v),
-    labels: { grows: t('landing.v2.grow.grows'), dies: t('landing.v2.grow.dies'), full: t('landing.v2.grow.full'), axisX: t('landing.v2.grow.axisX'), axisY: t('landing.v2.grow.axisY') },
-    count: (key, n) => (key === 'statPeople' ? t('landing.v2.grow.statPeople', { count: n }) : t('landing.v2.grow.statWaves', { count: n })),
+    labels: { full: t('landing.v2.grow.full'), axisX: t('landing.v2.grow.axisX'), axisY: t('landing.v2.grow.axisY') },
+    count: (key, n) => t(`landing.v2.grow.${key}`, { count: n }),
   };
   const optionsRef = useRef({ scene: sceneOptions, grow: growOptions, rtl });
   optionsRef.current = { scene: sceneOptions, grow: growOptions, rtl };
@@ -342,6 +341,7 @@ export function LandingPage() {
       chart: growChartRef.current,
       slider: growSliderRef.current,
       value: growValueRef.current,
+      unit: growUnitRef.current,
       people: growPeopleRef.current,
       waves: growWavesRef.current,
       peopleLabel: growPeopleLabelRef.current,
@@ -349,9 +349,9 @@ export function LandingPage() {
       state: growStateRef.current,
       restart: growRestartRef.current,
     };
-    if (els.canvas && els.chart && els.slider && els.value && els.people && els.waves && els.peopleLabel && els.wavesLabel && els.state && els.restart) {
+    if (els.canvas && els.chart && els.slider && els.value && els.unit && els.people && els.waves && els.peopleLabel && els.wavesLabel && els.state && els.restart) {
       growHandle.current = initGrow(
-        { canvas: els.canvas, chart: els.chart, slider: els.slider, value: els.value, people: els.people, peopleLabel: els.peopleLabel, waves: els.waves, wavesLabel: els.wavesLabel, state: els.state, restart: els.restart },
+        { canvas: els.canvas, chart: els.chart, slider: els.slider, value: els.value, unit: els.unit, people: els.people, peopleLabel: els.peopleLabel, waves: els.waves, wavesLabel: els.wavesLabel, state: els.state, restart: els.restart },
         optionsRef.current.grow,
       );
     }
@@ -603,17 +603,13 @@ export function LandingPage() {
                 <label className="q" htmlFor="lv-grow-r">
                   <span>{t('landing.v2.grow.slider')}</span>
                   <b ref={growValueRef} />
-                  <span>{t('landing.v2.grow.unit')}</span>
+                  <span ref={growUnitRef} />
                 </label>
                 <div className="range">
-                  <input ref={growSliderRef} type="range" id="lv-grow-r" min="0.5" max="2.5" step="0.1" defaultValue="1.5" />
+                  <input ref={growSliderRef} type="range" id="lv-grow-r" min={GROW_MIN} max={GROW_MAX} step={5} defaultValue={GROW_MIN} />
                   <div className="ticks" aria-hidden="true">
-                    <span className="lo">{nf1.format(0.5)}</span>
-                    <span className="thr">
-                      <i />
-                      <em>{t('landing.v2.grow.threshold')}</em> {nf.format(1)}
-                    </span>
-                    <span className="hi">{nf1.format(2.5)}</span>
+                    <span className="lo">{nf.format(GROW_MIN)}</span>
+                    <span className="hi">{nf.format(GROW_MAX)}</span>
                   </div>
                 </div>
                 <div className="stats">
@@ -627,6 +623,7 @@ export function LandingPage() {
                   </div>
                   <canvas ref={growChartRef} aria-hidden="true" />
                 </div>
+                <p className="insight">{t('landing.v2.grow.insight')}</p>
                 <div className="state">
                   <b ref={growStateRef} aria-live="polite" />
                   <button type="button" ref={growRestartRef}>
@@ -715,7 +712,6 @@ export function LandingPage() {
               <ol className="steps">
                 <li>{t('landing.v2.start.s1')}</li>
                 <li>{t('landing.v2.start.s2')}</li>
-                <li>{t('landing.v2.start.s3')}</li>
               </ol>
               <div className="stores">
                 {(primary ? [primary, ...STORES.filter((id) => id !== primary)] : STORES).map((id) => {

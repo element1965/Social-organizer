@@ -713,7 +713,7 @@
     "v2": {
       "meta": {
         "title": "Social Organizer: a network of people you know",
-        "description": "A network of people who know each other in person. When someone is in trouble, many can help."
+        "description": "A network of people who know each other in person. When someone is in trouble, many can take part."
       },
       "nav": {
         "label": "Sections",
@@ -779,7 +779,7 @@
         "b9": {
           "label": "In the app",
           "say": "This is how your network looks in the app: you in the middle, the people you know around you, the people they know further out.",
-          "late": "When someone needs help, you see the chain of acquaintances from them to you."
+          "late": "When someone reports a Need, you see the chain of acquaintances from them to you."
         },
         "rail": {
           "1": "Flock",
@@ -822,33 +822,32 @@
       },
       "grow": {
         "title": "How the network grows",
-        "text": "Every newcomer invites people they know. Set how many on average and see what happens to the network.",
-        "canvasAria": "Network growth model: invitations spread out from one person",
-        "slider": "Each person invites on average",
-        "unit": "people",
-        "threshold": "threshold",
+        "text": "Everyone adds the people they know personally. Set how many on average and see how many people end up a few handshakes away from you.",
+        "canvasAria": "Network growth model: connections spread out from one person to the people they know",
+        "slider": "Each person adds on average",
+        "unit_one": "acquaintance",
+        "unit_other": "acquaintances",
         "statPeople_one": "person in the network",
         "statPeople_other": "people in the network",
-        "statWaves_one": "wave of invitations",
-        "statWaves_other": "waves of invitations",
-        "dies": "Growth has stopped",
-        "grows": "In this model, the network keeps growing.",
-        "full": "The model has run out of new people",
+        "statWaves_one": "handshake",
+        "statWaves_other": "handshakes",
+        "insight": "From about 30 acquaintances each, the network grows exponentially: within three handshakes it holds tens of thousands of people. With a network like that, Participation pays off: when you are the one in need, there will be people to respond.",
+        "full": "From here the network runs into the size of real communities",
         "restart": "Start over",
         "hint": "Tap the model to start from someone else",
-        "note": "A simplified model. Circles of acquaintances overlap, and nobody has to invite anyone.",
-        "axisX": "waves",
+        "note": "This is a simplified model. Circles of acquaintances overlap, so each handshake adds fewer new people.",
+        "axisX": "handshakes",
         "axisY": "people"
       },
       "next": {
         "label": "Next",
-        "title": "Helping with {{min}} is only the beginning",
-        "text": "Over time, we want people to use their network of acquaintances to find a tradesperson someone vouches for, partners for a shared project, like-minded people for an initiative of their own. And to agree on it directly, as they do now.",
+        "title": "Participation from {{min}} is only the beginning",
+        "text": "By taking part now, you also back your future self: next time the network responds to your Need. Over time we want people to use the network of acquaintances to find a recommended tradesperson, partners for a joint project, like-minded people for their own initiative, and to agree with each other directly, as they do now.",
         "now": "Now",
         "later": "Later",
         "need": "Need",
         "participation": "Participation",
-        "tradesperson": "A trusted tradesperson",
+        "tradesperson": "A recommended tradesperson",
         "project": "A shared project"
       },
       "join": {
@@ -864,8 +863,8 @@
         "w1": "If you have a community of your own, try the app there. We'll help you explain it in words your community uses.",
         "w2Title": "Tell others about the project",
         "w2": "Send this page to people who might care, or write about Social Organizer yourself.",
-        "w3Title": "Help with the research or the code",
-        "w3": "The theory is set out in <report>the research report</report>, and the code is open on <code>GitHub</code>. Help test the theory or work on the app.",
+        "w3Title": "Take part in research or development",
+        "w3": "The theory is set out in <report>the research report</report>, and the code is open on <code>GitHub</code>. Take part by testing the theory or working on the app.",
         "selectLink": "Copy the link from the field below.",
         "nowLive_one": "person connected in the network",
         "nowLive_other": "people connected in the network"
@@ -873,28 +872,27 @@
       "faq": {
         "title": "Questions",
         "q1": "Who makes sure people keep their word?",
-        "a1": "There are no middlemen. You decide whom to trust and deal with people directly, and through the chain of acquaintances you can find out who you're dealing with.",
-        "q2": "Is this insurance or a fund?",
-        "a2": "No. Nobody pays in advance and nobody promises a payout. There's no common pot and no treasurer.",
-        "q3": "Is this a donation drive?",
-        "a3": "No. A Need reaches only people linked to its author through acquaintances, and next time you may be the one who asks.",
+        "a1": "There are no middlemen. You decide who to deal with, and you can see a person's history of activity in the network. By taking part, you build a history of your own.",
+        "q2": "Do I have to pay in advance to take part?",
+        "a2": "No. Participation starts with an intention. The app holds no money, and nobody promises a payout.",
+        "q3": "Does the app notify everyone about a Need?",
+        "a3": "No. The app notifies only people linked to the author through acquaintances. Next time, you may be the one who reports a Need.",
         "q4": "Is this a pyramid scheme?",
         "a4": "No. Nobody pays to join and nobody earns from invites.",
         "q6": "What data do you keep?",
         "data": {
           "account": "We keep account and profile details, including your name, email, sign-in account identifiers and anything you add, such as a photo, phone number or location.",
-          "activity": "We keep your settings (such as language and theme), invitation and connection history, reported Needs, Participation and the amounts you name.",
+          "activity": "We keep your settings (such as language and theme), invitation and connection history, reported Needs, Participation and the intention figures you enter.",
           "notifications": "We also keep sign-in codes, push tokens and notification history, and any complaints or support messages you send.",
           "money": "The app never touches money and asks for no card or bank details."
         }
       },
       "start": {
         "label": "The app",
-        "title": "Build your network before you need it",
-        "text": "On a bad day there's no time or energy for it.",
+        "title": "Join through an acquaintance's invitation or start building your own network",
+        "text": "It is better to build the network in advance: on a hard day there will be neither time nor energy for it.",
         "s1": "Open a link from someone you know, or sign in yourself with Google, Apple, Telegram or a code sent by e-mail. No password needed.",
         "s2": "Add people you know in person: with a link, a QR code or by shaking your phones side by side.",
-        "s3": "Set your intention: the amount you’d usually be ready to name when someone in the network is in trouble.",
         "qr": "Point your phone's camera here and the right store will open.",
         "playTop": "Get it on",
         "play": "Google Play",
