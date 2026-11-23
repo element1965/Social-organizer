@@ -137,8 +137,6 @@
     "attention": "आपका इंतज़ार है"
   },
   "circle": {
-    "pauseMotion": "गति रोकें",
-    "resumeMotion": "गति फिर शुरू करें",
     "toSelf": "मेरे पास वापस",
     "backToFeed": "फ़ीड",
     "openGraph": "ग्राफ़ बड़ा करें",
@@ -460,6 +458,9 @@
     "notifyCycles": "चक्र",
     "notifyCyclesHint": "चक्र से 3 दिन पहले याद दिलाना, और जिस दिन वह शुरू हो उस दिन भी।",
     "largeType": "बड़ा टेक्स्ट",
+    "graphAnimation": "ग्राफ़ का ऐनिमेशन",
+    "graphAnimationHint": "वृत्त स्क्रीन पर ग्राफ़ का घूमना और स्पंदनों की हलचल",
+    "graphAnimationReduced": "आपके डिवाइस की सेटिंग में बंद है",
     "more": "और",
     "about": "ऐप के बारे में",
     "logoutTitle": "साइन आउट करें?",

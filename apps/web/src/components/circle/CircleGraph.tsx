@@ -136,6 +136,7 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
             motionPaused={motionPaused}
             hiddenRings={hiddenRings}
             initialView={initialView}
+            resumeRotationOnRestore
             focusId={focusId ?? null}
             focusLift={focusLift}
             farRings={farRings}

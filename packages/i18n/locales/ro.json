@@ -137,8 +137,6 @@
     "attention": "te așteaptă"
   },
   "circle": {
-    "pauseMotion": "Oprește temporar animația",
-    "resumeMotion": "Reia animația",
     "toSelf": "Înapoi la mine",
     "backToFeed": "Flux",
     "openGraph": "Extinde graful",
@@ -463,6 +461,9 @@
     "notifyCycles": "Cicluri",
     "notifyCyclesHint": "O reamintire cu 3 zile înainte de un ciclu și din nou în ziua în care începe.",
     "largeType": "Text mai mare",
+    "graphAnimation": "Animația grafului",
+    "graphAnimationHint": "Rotirea grafului și deplasarea impulsurilor pe ecranul Cercul",
+    "graphAnimationReduced": "Dezactivată în setările dispozitivului",
     "more": "Mai mult",
     "about": "Despre aplicație",
     "logoutTitle": "Te deconectezi?",

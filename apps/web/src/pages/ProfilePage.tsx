@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { languageNames, type SupportedLanguage } from '@so/i18n/languages';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
+import { useGraphAnimation } from '../hooks/useGraphAnimation';
 import { useTheme } from '../hooks/useTheme';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { useNetworkFigure } from '../hooks/useNetworkFigure';
@@ -29,6 +30,7 @@ import { ACCOUNT_NOTICE_KEY } from '../components/profile/constants';
 import { formatLongDate } from '../components/profile/dates';
 import { applyFontScale, storedFontScale } from '../components/profile/fontScale';
 import { hasPendingSetting, saveDisplaySetting } from '../lib/pendingSettings';
+import { usePrefersReducedMotion } from '../lib/scrollPlay';
 import { kyivDayCount } from '../components/admin/adminDay';
 
 function networkKey(count: number, lang: string): 'profile.networkOne' | 'profile.networkFew' | 'profile.networkMany' {
@@ -52,6 +54,9 @@ export function ProfilePage() {
   const logout = useAuth((state) => state.logout);
   const mode = useTheme((state) => state.mode);
   const setMode = useTheme((state) => state.setMode);
+  const graphAnimation = useGraphAnimation((state) => state.enabled);
+  const setGraphAnimation = useGraphAnimation((state) => state.setEnabled);
+  const reduceMotion = usePrefersReducedMotion();
   const push = usePushNotifications();
 
   const me = trpc.user.me.useQuery();
@@ -292,6 +297,15 @@ export function ProfilePage() {
             setFontScale(scale);
             saveDisplaySetting(utils.client, userId, 'fontScale', scale, refreshSettings);
           }}
+        />
+        <Row
+          title={t('profile.graphAnimation')}
+          subtitle={t(reduceMotion ? 'profile.graphAnimationReduced' : 'profile.graphAnimationHint')}
+          variant="toggle"
+          checked={graphAnimation && !reduceMotion}
+          disabled={reduceMotion}
+          onCheckedChange={setGraphAnimation}
+          wrap
         />
         <Row title={t('settings.language')} variant="value" value={languageLabel} onClick={() => setLanguageOpen(true)} />
       </Group>

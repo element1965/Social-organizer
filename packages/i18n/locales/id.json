@@ -137,8 +137,6 @@
     "attention": "menunggu Anda"
   },
   "circle": {
-    "pauseMotion": "Jeda gerakan",
-    "resumeMotion": "Lanjutkan gerakan",
     "toSelf": "Kembali ke saya",
     "backToFeed": "Umpan",
     "openGraph": "Perluas graf",
@@ -457,6 +455,9 @@
     "notifyCycles": "Siklus",
     "notifyCyclesHint": "Pengingat 3 hari sebelum siklus, dan lagi pada hari siklus dimulai.",
     "largeType": "Teks lebih besar",
+    "graphAnimation": "Animasi graf",
+    "graphAnimationHint": "Graf berputar dan denyut bergerak di layar Lingkaran",
+    "graphAnimationReduced": "Dinonaktifkan di pengaturan perangkat Anda",
     "more": "Lainnya",
     "about": "Tentang",
     "logoutTitle": "Keluar?",

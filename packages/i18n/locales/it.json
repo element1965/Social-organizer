@@ -137,8 +137,6 @@
     "attention": "ti aspetta"
   },
   "circle": {
-    "pauseMotion": "Metti in pausa il movimento",
-    "resumeMotion": "Riprendi il movimento",
     "toSelf": "Torna a me",
     "backToFeed": "Bacheca",
     "openGraph": "Espandi il grafo",
@@ -463,6 +461,9 @@
     "notifyCycles": "Cicli",
     "notifyCyclesHint": "Un promemoria 3 giorni prima di un ciclo e di nuovo il giorno in cui inizia.",
     "largeType": "Testo più grande",
+    "graphAnimation": "Animazione del grafo",
+    "graphAnimationHint": "Rotazione del grafo e movimento degli impulsi nella schermata Cerchio",
+    "graphAnimationReduced": "Disattivata nelle impostazioni del dispositivo",
     "more": "Altro",
     "about": "Informazioni",
     "logoutTitle": "Uscire?",

@@ -137,8 +137,6 @@
     "attention": "čeká na vás"
   },
   "circle": {
-    "pauseMotion": "Pozastavit pohyb",
-    "resumeMotion": "Obnovit pohyb",
     "toSelf": "Zpět ke mně",
     "backToFeed": "Přehled",
     "openGraph": "Rozbalit graf",
@@ -466,6 +464,9 @@
     "notifyCycles": "Cykly",
     "notifyCyclesHint": "Připomínka 3 dny před cyklem a znovu v den, kdy začíná.",
     "largeType": "Větší text",
+    "graphAnimation": "Animace grafu",
+    "graphAnimationHint": "Otáčení grafu a pohyb pulzů na obrazovce Kruh",
+    "graphAnimationReduced": "Vypnuto v nastavení zařízení",
     "more": "Další",
     "about": "O aplikaci",
     "logoutTitle": "Odhlásit se?",

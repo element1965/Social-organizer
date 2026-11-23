@@ -59,10 +59,6 @@ html.lv-page body { background-color: rgb(var(--so-scene)); }
 .lv .nav .signin { text-decoration: none; font-size: 15px; opacity: .85; white-space: nowrap; }
 .lv .nav .signin:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
 .lv .site-lang { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 44px; min-width: 44px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1px rgb(var(--lv-white-rgb) / calc(77 / 255)); color: rgb(var(--lv-white-rgb) / calc(219 / 255)); font: 700 13px/1 var(--sans); text-transform: uppercase; cursor: pointer; transition: color .2s, box-shadow .2s; }
-.lv .motion { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex: none; padding: 0; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1px rgb(var(--lv-white-rgb) / calc(77 / 255)); color: rgb(var(--lv-white-rgb) / calc(219 / 255)); cursor: pointer; }
-.lv .motion:hover { color: var(--lv-white); box-shadow: inset 0 0 0 1px rgb(var(--lv-white-rgb) / .6); }
-.lv .motion[aria-disabled="true"] { cursor: default; opacity: .72; }
-.lv .motion svg { width: 16px; height: 16px; }
 .lv .nav .jump { display: none; align-items: center; min-height: 44px; padding-inline: 2px; font-size: 14px; text-decoration: none; white-space: nowrap; opacity: .85; }
 .lv .nav .jump:hover { opacity: 1; }
 .lv .site-lang:hover { color: var(--lv-white); box-shadow: inset 0 0 0 1px rgb(var(--lv-white-rgb) / .6); }
@@ -289,8 +285,10 @@ html[dir="rtl"] .lv.graph .tag.t-maria.flip { transform: translate(18px, -50%); 
 .lv footer img { height: 18px; width: auto; opacity: .8; }
 .lv footer .fl { display: flex; align-items: center; gap: 12px; }
 .lv footer .fr { display: flex; flex-wrap: wrap; gap: 20px; }
-.lv footer .fr a { color: var(--lv-foot-link); text-decoration: none; }
-.lv footer .fr a:hover { color: var(--lv-white); text-decoration: underline; text-underline-offset: 3px; }
+.lv footer .fr :is(a, button) { color: var(--lv-foot-link); text-decoration: none; }
+.lv footer .fr button { border: 0; background: none; padding: 0; font: inherit; letter-spacing: inherit; text-align: start; cursor: pointer; }
+.lv footer .fr :is(a, button:not([aria-disabled="true"])):hover { color: var(--lv-white); text-decoration: underline; text-underline-offset: 3px; }
+.lv footer .fr button[aria-disabled="true"] { cursor: default; }
 .lv footer .credits { grid-column: 1 / -1; margin: 0; color: var(--lv-foot-fine); }
 
 /* right-to-left languages: the words move to the right, so the shades and photographs turn round */
@@ -429,15 +427,10 @@ html[lang="th"] .lv :is(h1, h2) { line-height: 1.25; }
   .lv .badge span { font-size: 14px; }
 }
 @media (max-width: 440px) {
-  /* Once the header is solid it shows the start button: drop the FAQ shortcut so the row fits a phone */
-  .lv .nav.solid .jump { display: none; }
-  .lv .nav .tools { min-width: 0; gap: 8px; }
-  /* A long label (Serbian, Vietnamese…) wraps to two lines instead of pushing the button off screen */
-  .lv .nav .btn { min-width: 0; padding-inline: 12px; white-space: normal; text-align: center; line-height: 1.15; }
-}
-@media (max-width: 360px) {
-  /* The narrowest phones: the language switch stays in the top-of-page header only */
-  .lv .nav.solid .site-lang { display: none; }
+  .lv .nav .wrap, .lv .nav .tools { gap: 8px; }
+  /* Long start labels can wrap within the header. */
+  .lv .nav .tools { min-width: 0; }
+  .lv .nav .btn { min-width: 0; padding-inline: 12px; white-space: normal; overflow-wrap: anywhere; text-align: center; line-height: 1.15; }
 }
 @media (max-width: 340px) {
   .lv .stores { grid-template-columns: minmax(0, 1fr); }

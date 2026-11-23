@@ -137,8 +137,6 @@
     "attention": "venter på dig"
   },
   "circle": {
-    "pauseMotion": "Sæt bevægelsen på pause",
-    "resumeMotion": "Genoptag bevægelsen",
     "toSelf": "Tilbage til mig",
     "backToFeed": "Feed",
     "openGraph": "Fold grafen ud",
@@ -460,6 +458,9 @@
     "notifyCycles": "Cyklusser",
     "notifyCyclesHint": "En påmindelse 3 dage før en cyklus og igen den dag, den starter.",
     "largeType": "Større tekst",
+    "graphAnimation": "Grafanimation",
+    "graphAnimationHint": "Grafen roterer, og pulser bevæger sig på skærmen Kreds",
+    "graphAnimationReduced": "Slået fra i enhedens indstillinger",
     "more": "Mere",
     "about": "Om",
     "logoutTitle": "Log ud?",

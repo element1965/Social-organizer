@@ -6,6 +6,7 @@ import { trpc } from '../lib/trpc';
 import { currentNavigation, raiseActionError } from '../lib/errors';
 import { cn } from '../lib/utils';
 import { useAuth } from '../hooks/useAuth';
+import { useGraphAnimation } from '../hooks/useGraphAnimation';
 import { useNetworkFigure } from '../hooks/useNetworkFigure';
 import { useCircleAttention } from '../hooks/useCircleAttention';
 import { useAskAccess } from '../hooks/useAskAccess';
@@ -17,7 +18,7 @@ import { Sheet } from '../components/ui2/Sheet';
 import { useShellMode } from '../components/ui2/shell-mode';
 import { BrandMark } from '../components/ui2/BrandMark';
 import { Avatar } from '../components/ui2/Avatar';
-import { IconBack, IconBell, IconPlay, IconSearch } from '../components/ui2/icons';
+import { IconBack, IconBell, IconSearch } from '../components/ui2/icons';
 import { CircleGraph, type CircleGraphHandle } from '../components/circle/CircleGraph';
 import { useCircleStore, type Ring } from '../components/circle/circle-store';
 import { AcquaintSheet, type AcquaintRequest } from '../components/circle/AcquaintSheet';
@@ -33,31 +34,13 @@ import { WaitingCard, type WaitingPerson } from '../components/circle/WaitingCar
 import { JoinCard } from '../components/circle/JoinCard';
 import { GetAppCard } from '../components/app/GetApp';
 import { useCircleNetwork } from '../components/circle/network';
-import { IconAim, IconFit, IconMinus, IconPause, IconPlus, IconShrink, IconUp } from '../components/circle/icons';
+import { IconAim, IconFit, IconMinus, IconPlus, IconShrink, IconUp } from '../components/circle/icons';
 import { ASK_MIN_DIRECT } from '@so/shared';
 import type { GraphLabelExclusion } from '@so/graph-3d';
 
 type Layer = 'feed' | 'graph' | 'person';
-type GraphMotion = { paused: boolean; toggle: () => void };
 const GRAPH_CONTROL =
   'so-focus grid h-11 w-11 place-items-center rounded-md border border-node-1/15 bg-scene-2/80 text-node-1 backdrop-blur-md hover:bg-scene-3';
-
-function GraphMotionButton({ motion, className }: { motion: GraphMotion; className?: string }) {
-  const { t } = useTranslation();
-  const label = t(motion.paused ? 'circle.resumeMotion' : 'circle.pauseMotion');
-  const Icon = motion.paused ? IconPlay : IconPause;
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      title={label}
-      onClick={motion.toggle}
-      className={cn(GRAPH_CONTROL, 'motion-reduce:hidden', className)}
-    >
-      <Icon className="h-5 w-5" aria-hidden />
-    </button>
-  );
-}
 
 const HINT_KEY = 'so.circle.gestureHint';
 /**
@@ -173,7 +156,7 @@ export function CirclePage() {
   }, [unseenAccepted, feedVisible, markAcceptedSeen]);
 
   const graphRef = useRef<CircleGraphHandle | null>(null);
-  const [motionPaused, setMotionPaused] = useState(false);
+  const graphAnimation = useGraphAnimation((state) => state.enabled);
   const lastNodeTap = useRef(0);
   const [acquaint, setAcquaint] = useState<AcquaintRequest | null>(null);
   const [pathOpen, setPathOpen] = useState(false);
@@ -451,7 +434,7 @@ export function CirclePage() {
   ) : (
     <CircleGraph
       ref={graphRef}
-      motionPaused={motionPaused}
+      motionPaused={!graphAnimation}
       myId={net.myId}
       people={net.people}
       edges={net.edges}
@@ -527,17 +510,12 @@ export function CirclePage() {
     </>
   );
 
-  const graphMotion = {
-    paused: motionPaused,
-    toggle: () => setMotionPaused((paused) => !paused),
-  };
   if (!phone) {
     return (
       <DesktopCircle
         sidebar={mode === 'sidebar'}
         renderGraph={renderGraph}
         graphRef={graphRef}
-        graphMotion={graphMotion}
         empty={empty}
         counts={counts}
         farLabel={far.label}
@@ -556,7 +534,6 @@ export function CirclePage() {
       layer={layer}
       renderGraph={renderGraph}
       graphRef={graphRef}
-      graphMotion={graphMotion}
       empty={empty}
       counts={counts}
       farLabel={far.label}
@@ -586,7 +563,6 @@ type PhoneProps = {
   layer: Layer;
   renderGraph: RenderGraph;
   graphRef: React.RefObject<CircleGraphHandle | null>;
-  graphMotion: GraphMotion;
   empty: boolean;
   counts: Record<Ring, number>;
   farLabel: string | undefined;
@@ -605,7 +581,6 @@ function PhoneCircle({
   layer,
   renderGraph,
   graphRef,
-  graphMotion,
   empty,
   counts,
   farLabel,
@@ -818,7 +793,6 @@ function PhoneCircle({
         <div className="mb-2.5 flex items-center gap-2 text-body-s font-extrabold tracking-tight text-node-1">
           <BrandMark size={26} />
           {t('common.appName')}
-          {!empty && feedLayer && !expanded && <GraphMotionButton motion={graphMotion} className="pointer-events-auto ms-auto shrink-0" />}
         </div>
         <div className={feedLayer ? 'pointer-events-auto' : undefined}>{stats}</div>
       </div>
@@ -837,12 +811,6 @@ function PhoneCircle({
         <IconBack className="h-[18px] w-[18px]" />
         {t('nav.circle')}
       </button>
-      {!empty && !feedLayer && (
-        <GraphMotionButton
-          motion={graphMotion}
-          className="absolute end-4 top-[calc(0.5rem+var(--sa-top))] z-20"
-        />
-      )}
       <p
         className={cn(
           'pointer-events-none absolute inset-x-0 top-[calc(3.5rem+var(--sa-top))] z-10 text-center text-micro font-semibold text-node-2',
@@ -997,7 +965,6 @@ type DesktopProps = {
   sidebar: boolean;
   renderGraph: RenderGraph;
   graphRef: React.RefObject<CircleGraphHandle | null>;
-  graphMotion: GraphMotion;
   empty: boolean;
   counts: Record<Ring, number>;
   farLabel: string | undefined;
@@ -1009,7 +976,7 @@ type DesktopProps = {
   sheets: React.ReactNode;
 };
 
-function DesktopCircle({ sidebar, renderGraph, graphRef, graphMotion, empty, counts, farLabel, hiddenRings, stats, newCount, feed, person, sheets }: DesktopProps) {
+function DesktopCircle({ sidebar, renderGraph, graphRef, empty, counts, farLabel, hiddenRings, stats, newCount, feed, person, sheets }: DesktopProps) {
   const { t, i18n } = useTranslation();
   const [sceneRef, toolbarRef, exclusions] = useLabelExclusion(!empty, i18n.dir());
   const [chipsRef, chipsHeight] = useBoxMetrics<HTMLDivElement>(!empty);
@@ -1056,7 +1023,6 @@ function DesktopCircle({ sidebar, renderGraph, graphRef, graphMotion, empty, cou
             <>
               <RingChips ref={chipsRef} counts={counts} farLabel={farLabel} hiddenRings={hiddenRings} className="absolute start-4 top-4 z-10" />
               <div ref={toolbarRef} className="absolute end-4 top-4 z-10 flex flex-col gap-2">
-                <GraphMotionButton motion={graphMotion} />
                 <button type="button" className={GRAPH_CONTROL} aria-label={t('circle.zoomIn')} onClick={() => graphRef.current?.zoomIn()}>
                   <IconPlus className="h-5 w-5" />
                 </button>

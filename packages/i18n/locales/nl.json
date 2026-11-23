@@ -137,8 +137,6 @@
     "attention": "wacht op jou"
   },
   "circle": {
-    "pauseMotion": "Beweging pauzeren",
-    "resumeMotion": "Beweging hervatten",
     "toSelf": "Terug naar mij",
     "backToFeed": "Feed",
     "openGraph": "Graaf uitklappen",
@@ -460,6 +458,9 @@
     "notifyCycles": "Cycli",
     "notifyCyclesHint": "Een herinnering 3 dagen voor een cyclus, en nog eens op de dag dat hij begint.",
     "largeType": "Grotere tekst",
+    "graphAnimation": "Graafanimatie",
+    "graphAnimationHint": "Draaiende graaf en bewegende pulsen op het scherm Kring",
+    "graphAnimationReduced": "Uitgeschakeld in je apparaatinstellingen",
     "more": "Meer",
     "about": "Over",
     "logoutTitle": "Uitloggen?",

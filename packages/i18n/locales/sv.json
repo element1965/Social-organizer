@@ -137,8 +137,6 @@
     "attention": "väntar på dig"
   },
   "circle": {
-    "pauseMotion": "Pausa rörelsen",
-    "resumeMotion": "Återuppta rörelsen",
     "toSelf": "Tillbaka till mig",
     "backToFeed": "Flöde",
     "openGraph": "Fäll ut grafen",
@@ -460,6 +458,9 @@
     "notifyCycles": "Cykler",
     "notifyCyclesHint": "En påminnelse 3 dagar före en cykel, och igen den dag den börjar.",
     "largeType": "Större text",
+    "graphAnimation": "Grafanimering",
+    "graphAnimationHint": "Grafen roterar och pulser rör sig i Krets-vyn",
+    "graphAnimationReduced": "Avstängd i enhetens inställningar",
     "more": "Mer",
     "about": "Om",
     "logoutTitle": "Logga ut?",

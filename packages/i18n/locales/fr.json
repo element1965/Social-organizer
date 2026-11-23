@@ -137,8 +137,6 @@
     "attention": "vous attend"
   },
   "circle": {
-    "pauseMotion": "Mettre l’animation en pause",
-    "resumeMotion": "Reprendre l’animation",
     "toSelf": "Retour vers moi",
     "backToFeed": "Fil",
     "openGraph": "Déplier le graphe",
@@ -463,6 +461,9 @@
     "notifyCycles": "Cycles",
     "notifyCyclesHint": "Un rappel 3 jours avant un cycle, puis le jour où il commence.",
     "largeType": "Texte plus grand",
+    "graphAnimation": "Animation du graphe",
+    "graphAnimationHint": "Rotation du graphe et déplacement des impulsions dans le Cercle",
+    "graphAnimationReduced": "Désactivée dans les réglages de votre appareil",
     "more": "Plus",
     "about": "À propos",
     "logoutTitle": "Se déconnecter ?",

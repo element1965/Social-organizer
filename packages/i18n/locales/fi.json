@@ -137,8 +137,6 @@
     "attention": "odottaa sinua"
   },
   "circle": {
-    "pauseMotion": "Pysäytä liike",
-    "resumeMotion": "Jatka liikettä",
     "toSelf": "Takaisin minuun",
     "backToFeed": "Syöte",
     "openGraph": "Laajenna graafi",
@@ -460,6 +458,9 @@
     "notifyCycles": "Jaksot",
     "notifyCyclesHint": "Muistutus 3 päivää ennen jaksoa ja uudelleen sinä päivänä, kun se alkaa.",
     "largeType": "Suurempi teksti",
+    "graphAnimation": "Graafin animaatio",
+    "graphAnimationHint": "Graafin pyöriminen ja liikkuvat pulssit Piiri-näkymässä",
+    "graphAnimationReduced": "Pois käytöstä laitteen asetuksissa",
     "more": "Lisää",
     "about": "Tietoja",
     "logoutTitle": "Kirjaudutaanko ulos?",

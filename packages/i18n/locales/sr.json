@@ -137,8 +137,6 @@
     "attention": "чека вас"
   },
   "circle": {
-    "pauseMotion": "Паузирај кретање",
-    "resumeMotion": "Настави кретање",
     "toSelf": "Назад ка мени",
     "backToFeed": "Трака",
     "openGraph": "Проширите граф",
@@ -463,6 +461,9 @@
     "notifyCycles": "Циклуси",
     "notifyCyclesHint": "Подсетник 3 дана пре циклуса, и поново на дан кад почиње.",
     "largeType": "Већи текст",
+    "graphAnimation": "Анимација графа",
+    "graphAnimationHint": "Окретање графа и кретање импулса на екрану „Круг”",
+    "graphAnimationReduced": "Искључено у подешавањима уређаја",
     "more": "Још",
     "about": "О апликацији",
     "logoutTitle": "Одјавити се?",

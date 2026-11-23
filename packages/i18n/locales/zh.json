@@ -137,8 +137,6 @@
     "attention": "有事等你处理"
   },
   "circle": {
-    "pauseMotion": "暂停动画",
-    "resumeMotion": "继续动画",
     "toSelf": "回到我",
     "backToFeed": "动态",
     "openGraph": "展开图谱",
@@ -457,6 +455,9 @@
     "notifyCycles": "周期",
     "notifyCyclesHint": "一轮开始前 3 天提醒一次，开始当天再提醒一次。",
     "largeType": "更大文字",
+    "graphAnimation": "图谱动画",
+    "graphAnimationHint": "圈子页面上的图谱旋转和脉冲移动",
+    "graphAnimationReduced": "已在设备设置中关闭",
     "more": "更多",
     "about": "关于",
     "logoutTitle": "退出登录？",

@@ -21,13 +21,15 @@ interface Signal {
   reply?: boolean;
 }
 
+type NextNetOptions = { rtl: boolean; paused: boolean };
+
 export interface NextNetHandle {
-  update(options: { rtl: boolean }): void;
+  update(options: NextNetOptions): void;
   destroy(): void;
 }
 
-export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): NextNetHandle {
-  let rtl = initial.rtl;
+export function initNextNet(cv: HTMLCanvasElement, initial: NextNetOptions): NextNetHandle {
+  let { rtl, paused } = initial;
   const cx = cv.getContext('2d');
   if (!cx) return { update() {}, destroy() {} };
   const palette = landingCanvasPalette(cv);
@@ -48,6 +50,12 @@ export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): N
   let visible = false;
   let last = 0;
   let base: HTMLCanvasElement | null = null;
+
+  const paintBase = () => {
+    if (!base) return;
+    cx.clearRect(0, 0, W, H);
+    cx.drawImage(base, 0, 0, W, H);
+  };
 
   const build = () => {
     const d = Math.min(window.devicePixelRatio || 1, 2);
@@ -112,6 +120,7 @@ export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): N
       bx.arc(nd.x, nd.y, 2, 0, 6.283);
       bx.fill();
     });
+    if (paused) paintBase();
   };
   const walk = (from: number, len: number) => {
     const path = [from];
@@ -141,8 +150,7 @@ export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): N
       last = now;
       spawn(now);
     }
-    cx.clearRect(0, 0, W, H);
-    cx.drawImage(base, 0, 0, W, H);
+    paintBase();
     for (let s = sig.length - 1; s >= 0; s--) {
       const g = sig[s]!;
       const segs = g.path.length - 1;
@@ -210,13 +218,21 @@ export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): N
     { threshold: 0.1 },
   );
   io.observe(cv);
-  raf = requestAnimationFrame(draw);
+  if (!paused) raf = requestAnimationFrame(draw);
   return {
     update(next) {
-      if (next.rtl !== rtl) {
-        rtl = next.rtl;
-        build();
+      const mirror = next.rtl !== rtl;
+      rtl = next.rtl;
+      if (paused !== next.paused) {
+        paused = next.paused;
+        if (paused) {
+          cancelAnimationFrame(raf);
+          sig = [];
+          nodes.forEach((n) => { n.glow = 0; });
+          paintBase();
+        } else raf = requestAnimationFrame(draw);
       }
+      if (mirror) build();
     },
     destroy() {
       cancelAnimationFrame(raf);

@@ -137,8 +137,6 @@
     "attention": "מחכה לכם"
   },
   "circle": {
-    "pauseMotion": "השהיית התנועה",
-    "resumeMotion": "חידוש התנועה",
     "toSelf": "חזרה אליי",
     "backToFeed": "פיד",
     "openGraph": "פתיחת הגרף",
@@ -463,6 +461,9 @@
     "notifyCycles": "מחזורים",
     "notifyCyclesHint": "תזכורת 3 ימים לפני מחזור, ושוב ביום שהוא מתחיל.",
     "largeType": "טקסט גדול יותר",
+    "graphAnimation": "הנפשת הגרף",
+    "graphAnimationHint": "סיבוב הגרף ותנועת הפעימות במסך המעגל",
+    "graphAnimationReduced": "כבויה בהגדרות המכשיר שלך",
     "more": "עוד",
     "about": "על האפליקציה",
     "logoutTitle": "לצאת מהחשבון?",

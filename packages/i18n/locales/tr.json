@@ -137,8 +137,6 @@
     "attention": "sizi bekliyor"
   },
   "circle": {
-    "pauseMotion": "Hareketi duraklat",
-    "resumeMotion": "Hareketi sürdür",
     "toSelf": "Bana dön",
     "backToFeed": "Akış",
     "openGraph": "Grafiği genişlet",
@@ -460,6 +458,9 @@
     "notifyCycles": "Döngüler",
     "notifyCyclesHint": "Döngüden 3 gün önce ve başladığı gün bir hatırlatma.",
     "largeType": "Daha büyük yazı",
+    "graphAnimation": "Grafik animasyonu",
+    "graphAnimationHint": "Çevre ekranında grafik döner ve atımlar hareket eder",
+    "graphAnimationReduced": "Cihaz ayarlarınızda kapalı",
     "more": "Daha fazla",
     "about": "Hakkında",
     "logoutTitle": "Çıkış yapılsın mı?",

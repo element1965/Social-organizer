@@ -78,6 +78,8 @@ export interface NetworkGraphProps {
   logoUrl?: string;
   /** Applied once on mount instead of the intro fit. No intro fly. */
   initialView?: GraphView;
+  /** Allow auto-rotation from the restored camera position. */
+  resumeRotationOnRestore?: boolean;
   width?: number;
   height?: number;
   onNodeClick?: (nodeId: string) => void;
@@ -1329,6 +1331,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   showControls = true,
   logoUrl = '/logo.png',
   initialView,
+  resumeRotationOnRestore = false,
   focusId,
   focusLift = 0,
   farRings,
@@ -1670,7 +1673,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     z0: 1,
     z1: 1,
   });
-  const initialViewRef = useRef(initialView);
+  const initialViewRef = useRef({ view: initialView, resumeRotationOnRestore });
   const simRef = useRef(true);
 
   /** Fly the camera to `pos` while the look-at point moves to `look` (keeps the current zoom). */
@@ -3024,10 +3027,10 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
 
     // --- Camera intro: fly in while the graph blooms. A restored view and reduced motion skip the fly. ---
     const timers: Array<ReturnType<typeof setTimeout>> = [];
-    const restored = initialViewRef.current;
+    const { view: restored, resumeRotationOnRestore } = initialViewRef.current;
     if (restored) {
       life.userTouched = true;
-      rotTarget = 0;
+      if (!resumeRotationOnRestore) rotTarget = 0;
       rotCur = 0;
       if (controls) controls.autoRotateSpeed = 0;
       fg.cameraPosition(restored.position, restored.target);
@@ -3651,7 +3654,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
             n.fy = undefined;
             n.fz = undefined;
           }
-          if (lifeRef.current.userTouched || initialViewRef.current) return;
+          if (lifeRef.current.userTouched || initialViewRef.current.view) return;
           fitCameraRef.current(reducedRef.current ? 0 : 1400);
         }}
         enableNodeDrag={false}

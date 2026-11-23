@@ -137,8 +137,6 @@
     "attention": "รอคุณอยู่"
   },
   "circle": {
-    "pauseMotion": "หยุดการเคลื่อนไหวชั่วคราว",
-    "resumeMotion": "ให้เคลื่อนไหวต่อ",
     "toSelf": "กลับมาที่ฉัน",
     "backToFeed": "ฟีด",
     "openGraph": "ขยายกราฟ",
@@ -457,6 +455,9 @@
     "notifyCycles": "รอบ",
     "notifyCyclesHint": "เตือนล่วงหน้า 3 วันก่อนถึงรอบ และอีกครั้งในวันที่รอบเริ่ม",
     "largeType": "ตัวอักษรขนาดใหญ่",
+    "graphAnimation": "ภาพเคลื่อนไหวของกราฟ",
+    "graphAnimationHint": "การหมุนของกราฟและการเคลื่อนที่ของพัลส์บนหน้าวง",
+    "graphAnimationReduced": "ปิดอยู่ในการตั้งค่าอุปกรณ์",
     "more": "เพิ่มเติม",
     "about": "เกี่ยวกับ",
     "logoutTitle": "ออกจากระบบ?",

@@ -4,16 +4,18 @@ type SwitchProps = {
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
   label?: string;
+  describedBy?: string;
   disabled?: boolean;
 };
 
-export function Switch({ checked, onCheckedChange, label, disabled }: SwitchProps) {
+export function Switch({ checked, onCheckedChange, label, describedBy, disabled }: SwitchProps) {
   return (
     <button
       type="button"
       role="switch"
       aria-checked={checked}
       aria-label={label}
+      aria-describedby={describedBy}
       disabled={disabled}
       onClick={() => onCheckedChange(!checked)}
       className={cn(

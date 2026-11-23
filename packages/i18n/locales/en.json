@@ -137,8 +137,6 @@
     "attention": "waiting for you"
   },
   "circle": {
-    "pauseMotion": "Pause motion",
-    "resumeMotion": "Resume motion",
     "toSelf": "Back to me",
     "backToFeed": "Feed",
     "openGraph": "Expand the graph",
@@ -460,6 +458,9 @@
     "notifyCycles": "Cycles",
     "notifyCyclesHint": "A reminder 3 days before a cycle, and again on the day it starts.",
     "largeType": "Larger text",
+    "graphAnimation": "Graph animation",
+    "graphAnimationHint": "Rotation and moving pulses on the Circle",
+    "graphAnimationReduced": "Turned off in your device settings",
     "more": "More",
     "about": "About",
     "logoutTitle": "Sign out?",

@@ -137,8 +137,6 @@
     "attention": "بانتظارك"
   },
   "circle": {
-    "pauseMotion": "إيقاف الحركة مؤقتًا",
-    "resumeMotion": "استئناف الحركة",
     "toSelf": "العودة إليّ",
     "backToFeed": "الخلاصة",
     "openGraph": "توسيع الرسم",
@@ -472,6 +470,9 @@
     "notifyCycles": "الدورات",
     "notifyCyclesHint": "تذكير قبل 3 أيام من الدورة، ومرة أخرى في يوم بدئها.",
     "largeType": "نص أكبر",
+    "graphAnimation": "حركة الرسم",
+    "graphAnimationHint": "دوران الرسم وتحرك النبضات على شاشة الدائرة",
+    "graphAnimationReduced": "معطّلة في إعدادات جهازك",
     "more": "المزيد",
     "about": "حول التطبيق",
     "logoutTitle": "تسجيل الخروج؟",

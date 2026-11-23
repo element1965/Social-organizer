@@ -137,8 +137,6 @@
     "attention": "あなたを待っています"
   },
   "circle": {
-    "pauseMotion": "動きを一時停止",
-    "resumeMotion": "動きを再開",
     "toSelf": "自分に戻る",
     "backToFeed": "フィード",
     "openGraph": "グラフを広げる",
@@ -457,6 +455,9 @@
     "notifyCycles": "周期",
     "notifyCyclesHint": "周期の3日前と、始まる当日にもう一度知らせます。",
     "largeType": "大きい文字",
+    "graphAnimation": "グラフのアニメーション",
+    "graphAnimationHint": "サークル画面でグラフが回転し、パルスが移動します",
+    "graphAnimationReduced": "端末の設定でオフになっています",
     "more": "その他",
     "about": "このアプリについて",
     "logoutTitle": "ログアウトしますか？",

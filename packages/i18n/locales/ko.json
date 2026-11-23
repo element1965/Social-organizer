@@ -137,8 +137,6 @@
     "attention": "확인할 항목이 있어요"
   },
   "circle": {
-    "pauseMotion": "움직임 일시 정지",
-    "resumeMotion": "움직임 재개",
     "toSelf": "나에게",
     "backToFeed": "피드",
     "openGraph": "그래프 펼치기",
@@ -457,6 +455,9 @@
     "notifyCycles": "주기",
     "notifyCyclesHint": "주기가 시작되기 3일 전과, 시작되는 날에 알려 드려요.",
     "largeType": "큰 글자",
+    "graphAnimation": "그래프 애니메이션",
+    "graphAnimationHint": "서클 화면에서 그래프가 회전하고 펄스가 움직입니다",
+    "graphAnimationReduced": "기기 설정에서 꺼져 있습니다",
     "more": "더보기",
     "about": "앱 정보",
     "logoutTitle": "로그아웃할까요?",

@@ -36,17 +36,14 @@ const STUDY_URL = 'https://research.facebook.com/blog/2016/02/three-and-a-half-d
 const BOT_URL = TELEGRAM_BOT_URL;
 const ICON_CREDITS = 'Gil Barbara logos (CC0)';
 const STORES = ['play', 'appstore', 'web', 'telegram'] as const;
+const MOTION_PAUSED_KEY = 'so.landing.motionPaused';
 
-function MotionGlyph({ mark }: { mark: 'pause' | 'play' }) {
-  return mark === 'play' ? (
-    <svg viewBox="0 0 16 16" aria-hidden="true">
-      <path fill="currentColor" d="M5 3.2v9.6L13 8z" />
-    </svg>
-  ) : (
-    <svg viewBox="0 0 16 16" aria-hidden="true">
-      <path fill="currentColor" d="M4 3h2.2v10H4zm5.8 0H12v10H9.8z" />
-    </svg>
-  );
+function storedMotionPause() {
+  try {
+    return localStorage.getItem(MOTION_PAUSED_KEY) === 'true';
+  } catch {
+    return false;
+  }
 }
 
 function LandingPhoto({ name, hero = false }: { name: 'sky' | 'starlings' | 'wave'; hero?: boolean }) {
@@ -115,7 +112,7 @@ export function LandingPage() {
   const invite = usePendingInvite();
   const phone = useSitePhone();
   const reduceMotion = usePrefersReducedMotion();
-  const [scenePaused, setScenePaused] = useState(false);
+  const [scenePaused, setScenePaused] = useState(storedMotionPause);
   const motionPlaying = !scenePaused && !reduceMotion;
   const device = useDevice();
   const primary = phone ? ({ android: 'play', ios: 'appstore', desktop: 'web' } as const)[device] : null;
@@ -193,8 +190,9 @@ export function LandingPage() {
     labels: { full: t('landing.v2.grow.full'), axisX: t('landing.v2.grow.axisX'), axisY: t('landing.v2.grow.axisY') },
     count: (key, n) => t(`landing.v2.grow.${key}`, { count: n }),
   };
-  const optionsRef = useRef({ scene: sceneOptions, grow: growOptions, rtl });
-  optionsRef.current = { scene: sceneOptions, grow: growOptions, rtl };
+  const nextOptions = { rtl, paused: scenePaused };
+  const optionsRef = useRef({ scene: sceneOptions, grow: growOptions, next: nextOptions });
+  optionsRef.current = { scene: sceneOptions, grow: growOptions, next: nextOptions };
 
   // the page owns the document while it is shown: smooth anchors, a dark overscroll, the section in the address
   useEffect(() => {
@@ -334,7 +332,7 @@ export function LandingPage() {
     };
   }, []);
 
-  // scroll finishing, the growth model and the "next" network
+  // The growth model and the "next" network.
   useEffect(() => {
     const els = {
       canvas: growCvRef.current,
@@ -355,7 +353,7 @@ export function LandingPage() {
         optionsRef.current.grow,
       );
     }
-    if (nextCvRef.current) nextHandle.current = initNextNet(nextCvRef.current, { rtl: optionsRef.current.rtl });
+    if (nextCvRef.current) nextHandle.current = initNextNet(nextCvRef.current, optionsRef.current.next);
     return () => {
       growHandle.current?.destroy();
       growHandle.current = null;
@@ -378,8 +376,19 @@ export function LandingPage() {
   useEffect(() => {
     sceneHandle.current?.update(optionsRef.current.scene);
     growHandle.current?.update(optionsRef.current.grow);
-    nextHandle.current?.update({ rtl: optionsRef.current.rtl });
+    nextHandle.current?.update(optionsRef.current.next);
   }, [lang, rtl, money, scenePaused, reduceMotion]);
+
+  const toggleSceneMotion = () => {
+    if (reduceMotion) return;
+    const paused = !scenePaused;
+    setScenePaused(paused);
+    try {
+      localStorage.setItem(MOTION_PAUSED_KEY, String(paused));
+    } catch {
+      // The current page still honours the choice if storage is unavailable.
+    }
+  };
 
   // chapter rail: a click scrolls to the moment the beat is fully told (its middle)
   const goBeat = (e: ReactMouseEvent<HTMLAnchorElement>, n: number) => {
@@ -443,24 +452,6 @@ export function LandingPage() {
           </nav>
           <div className="tools">
             <a className="jump" href="#faq">{t('landing.v2.nav.faq')}</a>
-            <button
-              type="button"
-              className="motion"
-              aria-disabled={reduceMotion ? true : undefined}
-              aria-label={
-                reduceMotion
-                  ? t('landing.v2.motion.paused')
-                  : motionPlaying
-                    ? t('landing.v2.motion.pause')
-                    : t('landing.v2.motion.play')
-              }
-              onClick={() => {
-                if (reduceMotion) return;
-                setScenePaused((value) => !value);
-              }}
-            >
-              <MotionGlyph mark={motionPlaying || reduceMotion ? 'pause' : 'play'} />
-            </button>
             <LanguageSelect />
             <Link className="signin" to={loginHref} onClick={() => recordLandingEvent('header_signin', search)}>
               {t('landing.v2.nav.signin')}
@@ -814,6 +805,9 @@ export function LandingPage() {
               Telegram
             </a>
             <Link to={loginHref} onClick={() => recordLandingEvent('footer_signin', search)}>{t('landing.v2.nav.signin')}</Link>
+            <button type="button" aria-disabled={reduceMotion || undefined} onClick={toggleSceneMotion}>
+              {t(reduceMotion ? 'landing.v2.motion.paused' : motionPlaying ? 'landing.v2.motion.pause' : 'landing.v2.motion.play')}
+            </button>
           </nav>
           <p className="credits">{t('landing.v2.footer.credits', { icons: ICON_CREDITS })}</p>
         </div>

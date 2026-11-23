@@ -137,8 +137,6 @@
     "attention": "czeka na Ciebie"
   },
   "circle": {
-    "pauseMotion": "Wstrzymaj animację",
-    "resumeMotion": "Wznów animację",
     "toSelf": "Wróć do mnie",
     "backToFeed": "Kanał",
     "openGraph": "Rozwiń graf",
@@ -466,6 +464,9 @@
     "notifyCycles": "Cykle",
     "notifyCyclesHint": "Przypomnienie 3 dni przed cyklem i w dniu, w którym się zaczyna.",
     "largeType": "Większy tekst",
+    "graphAnimation": "Animacja grafu",
+    "graphAnimationHint": "Obracanie grafu i ruch impulsów na ekranie Kręgu",
+    "graphAnimationReduced": "Wyłączona w ustawieniach urządzenia",
     "more": "Więcej",
     "about": "O aplikacji",
     "logoutTitle": "Wylogować się?",

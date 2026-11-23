@@ -137,8 +137,6 @@
     "attention": "đang chờ bạn"
   },
   "circle": {
-    "pauseMotion": "Tạm dừng chuyển động",
-    "resumeMotion": "Tiếp tục chuyển động",
     "toSelf": "Quay về bạn",
     "backToFeed": "Bảng tin",
     "openGraph": "Mở rộng sơ đồ",
@@ -457,6 +455,9 @@
     "notifyCycles": "Chu kỳ",
     "notifyCyclesHint": "Nhắc trước 3 ngày khi chu kỳ bắt đầu, và nhắc lại vào đúng ngày đó.",
     "largeType": "Chữ lớn hơn",
+    "graphAnimation": "Hoạt ảnh sơ đồ",
+    "graphAnimationHint": "Sơ đồ xoay và các xung di chuyển trên màn hình Vòng tròn",
+    "graphAnimationReduced": "Đã tắt trong phần cài đặt thiết bị",
     "more": "Thêm",
     "about": "Giới thiệu",
     "logoutTitle": "Đăng xuất?",

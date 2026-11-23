@@ -137,8 +137,6 @@
     "attention": "requiere su atención"
   },
   "circle": {
-    "pauseMotion": "Pausar animación",
-    "resumeMotion": "Reanudar animación",
     "toSelf": "Volver a mí",
     "backToFeed": "Actividad",
     "openGraph": "Ampliar el grafo",
@@ -463,6 +461,9 @@
     "notifyCycles": "Ciclos",
     "notifyCyclesHint": "Un recordatorio 3 días antes de un ciclo y otro el día en que empieza.",
     "largeType": "Texto más grande",
+    "graphAnimation": "Animación del grafo",
+    "graphAnimationHint": "Giro del grafo y movimiento de los pulsos en la pantalla Círculo",
+    "graphAnimationReduced": "Desactivada en los ajustes del dispositivo",
     "more": "Más",
     "about": "Acerca de",
     "logoutTitle": "¿Cerrar sesión?",

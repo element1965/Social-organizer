@@ -137,8 +137,6 @@
     "attention": "wartet auf Sie"
   },
   "circle": {
-    "pauseMotion": "Bewegung pausieren",
-    "resumeMotion": "Bewegung fortsetzen",
     "toSelf": "Zurück zu mir",
     "backToFeed": "Feed",
     "openGraph": "Graph ausklappen",
@@ -460,6 +458,9 @@
     "notifyCycles": "Zyklen",
     "notifyCyclesHint": "Eine Erinnerung 3 Tage vor einem Zyklus und noch einmal am Tag, an dem er beginnt.",
     "largeType": "Größere Schrift",
+    "graphAnimation": "Graphanimation",
+    "graphAnimationHint": "Drehung des Graphen und bewegte Impulse auf der Kreis-Seite",
+    "graphAnimationReduced": "In deinen Geräteeinstellungen deaktiviert",
     "more": "Mehr",
     "about": "Über die App",
     "logoutTitle": "Abmelden?",

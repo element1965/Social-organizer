@@ -137,8 +137,6 @@
     "attention": "чакае вашай увагі"
   },
   "circle": {
-    "pauseMotion": "Прыпыніць рух",
-    "resumeMotion": "Аднавіць рух",
     "toSelf": "Да сябе",
     "backToFeed": "Стужка",
     "openGraph": "Разгарнуць граф",
@@ -466,6 +464,9 @@
     "notifyCycles": "Цыклы",
     "notifyCyclesHint": "Напамін за 3 дні да цыкла і ў дзень, калі ён пачынаецца.",
     "largeType": "Буйны шрыфт",
+    "graphAnimation": "Анімацыя графа",
+    "graphAnimationHint": "Кручэнне графа і рух імпульсаў на экране «Кола»",
+    "graphAnimationReduced": "Адключана ў наладах прылады",
     "more": "Яшчэ",
     "about": "Пра праграму",
     "logoutTitle": "Выйсці з акаўнта?",
