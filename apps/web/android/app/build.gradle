@@ -10,7 +10,7 @@ def appPackage = System.getenv('VITE_ANDROID_APP_PACKAGE') ?: 'com.socialorganiz
 def webOrigin = new URI(System.getenv('VITE_WEB_APP_URL') ?: 'https://www.orginizer.com')
 def alternateHost = System.getenv('VITE_WEB_APP_ALT_URL')
     ? new URI(System.getenv('VITE_WEB_APP_ALT_URL')).host
-    : (webOrigin.host == 'www.orginizer.com' ? 'orginizer.com' : webOrigin.host)
+    : webOrigin.host
 def nativeScheme = System.getenv('VITE_NATIVE_AUTH_SCHEME') ?: 'socialorganizer'
 
 android {

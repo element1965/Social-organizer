@@ -1,0 +1,79 @@
+# Codemagic CI: iOS build of the Capacitor wrapper (apps/web/ios) and upload to App Store Connect / TestFlight.
+# Runs only when started manually or through the Codemagic API (no automatic triggers).
+#
+# Secrets live in Codemagic environment variable groups, never in this file:
+#   ios_signing:
+#     IOS_DIST_P12           Apple Distribution certificate (.p12), base64
+#     IOS_DIST_P12_PASSWORD  password of the .p12
+#     IOS_PROFILE            App Store provisioning profile (.mobileprovision), base64
+#   app_store_connect:
+#     APP_STORE_CONNECT_KEY_IDENTIFIER  App Store Connect API key ID
+#     APP_STORE_CONNECT_ISSUER_ID       App Store Connect API issuer ID
+#     APP_STORE_CONNECT_PRIVATE_KEY     contents of the .p8 key
+#
+# Optional build variable BUILD_NUMBER overrides the build number;
+# by default it is the latest App Store Connect build + 1.
+
+workflows:
+  ios-testflight:
+    name: iOS -> TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      groups:
+        - ios_signing
+        - app_store_connect
+      node: 22
+      xcode: latest
+      vars:
+        XCODE_PROJECT: apps/web/ios/App/App.xcodeproj
+        XCODE_SCHEME: App
+        APP_STORE_APPLE_ID: 6768132198
+    scripts:
+      - name: Install dependencies
+        script: |
+          corepack enable
+          pnpm install --frozen-lockfile
+      - name: Generate brand assets
+        script: node scripts/generate-site-icons.mjs
+      - name: Build web app
+        script: |
+          pnpm --filter '@so/web...' build
+          # The wrapper loads the production URL, so large static media stays out of the bundle.
+          rm -rf apps/web/dist/videos
+      - name: Sync Capacitor iOS project
+        script: |
+          cd apps/web
+          npx cap sync ios
+      - name: Set up code signing
+        script: |
+          keychain initialize
+          echo "$IOS_DIST_P12" | base64 --decode > /tmp/ios_dist.p12
+          keychain add-certificates --certificate /tmp/ios_dist.p12 --certificate-password "$IOS_DIST_P12_PASSWORD"
+          rm -f /tmp/ios_dist.p12
+          PROFILES_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PROFILES_DIR"
+          echo "$IOS_PROFILE" | base64 --decode > "$PROFILES_DIR/so_app_store_ci.mobileprovision"
+          xcode-project use-profiles --project "$XCODE_PROJECT"
+      - name: Set build number
+        script: |
+          if [ -z "${BUILD_NUMBER:-}" ]; then
+            LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" --platform IOS || echo 0)
+            BUILD_NUMBER=$((LATEST + 1))
+          fi
+          echo "Build number: $BUILD_NUMBER"
+          cd apps/web/ios/App
+          agvtool new-version -all "$BUILD_NUMBER"
+      - name: Build ipa
+        script: xcode-project build-ipa --project "$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        # Upload only: the build appears in TestFlight for internal testers, no beta review, no App Store submission.
+        submit_to_testflight: false
+        submit_to_app_store: false
