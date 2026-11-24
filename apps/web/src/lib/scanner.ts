@@ -84,6 +84,12 @@ export function parseScannedText(raw: string): ScanTarget {
     return second && TOKEN.test(second) ? { kind: 'sos', id: second } : { kind: 'unknown' };
   }
 
+  // `/i/<slug>`: the short personal link on the invite card (SlugRedirect opens it as /invite/<slug>).
+  if (head === 'i' && parts.length === 2) {
+    const token = second ? tokenOf(second) : null;
+    return token ? { kind: 'invite', token } : { kind: 'unknown' };
+  }
+
   const inviteAt = parts.findIndex((part) => decodePart(part) === 'invite');
   const inviteToken = inviteAt >= 0 ? parts[inviteAt + 1] : undefined;
   if (inviteToken) {
