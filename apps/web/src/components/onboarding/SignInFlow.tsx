@@ -141,6 +141,20 @@ export function SignInFlow({
     }
   };
 
+  // The e-mail step was opened before the server said codes are off (or the server refused to send):
+  // swap it for the password form in place, keeping the typed address, so nobody is stuck on a dead form
+  const emailOff = !signIn.emailCodes || signIn.errorCode === 'EMAIL_UNAVAILABLE';
+  useEffect(() => {
+    if (step !== 'email' || !emailOff) return;
+    signIn.setError('');
+    const nextParams = new URLSearchParams(params);
+    clearUrlError(nextParams);
+    nextParams.delete('step');
+    nextParams.set('mode', 'password');
+    setParams(nextParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, emailOff]);
+
   // A rejected code is cleared so the next attempt starts from the first cell; the cells stay red until typing
   useEffect(() => {
     if (signIn.error && step === 'code') setCode('');
@@ -418,9 +432,11 @@ export function SignInFlow({
             </Button>
           </Card>
         </form>
-        <TextButton tone="care" onClick={() => goTo('email')}>
-          {t('login.pwUseCode')}
-        </TextButton>
+        {emailOff ? null : (
+          <TextButton tone="care" onClick={() => goTo('email')}>
+            {t('login.pwUseCode')}
+          </TextButton>
+        )}
         <p className="mt-1 text-center text-label text-ink-muted">{t('login.pwOnlyOld')}</p>
       </OnboardingFrame>
     );
